@@ -18,11 +18,11 @@
 			</picture>
 		</span>
 
-		to your new<br />SvelteKit app
+		oldennia <br />SvelteKit app
 	</h1>
 
 	<h2>
-		try editing <strong>src/routes/+page.svelte</strong>
+		trying to tediting <strong>src/routes/+page.svelte</strong>
 	</h2>
 
 	<Counter />
