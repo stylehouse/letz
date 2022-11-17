@@ -13,13 +13,18 @@
         }
 
     // EditorView
-	import Codemirror from './Codemirror.svelte';
+	    import Codemirror from './Codemirror.svelte';
+
+        let lemit = 3
 </script>
 
 <p> {b} </p>
 <Codemirror value={flub}></Codemirror>
+<label>
+    {lemit} <input type=range bind:value={lemit} min=0 max=10>
+</label>
 <ul >
-    {#each lems as lem}
+    {#each lems.slice(0,lemit*10) as lem}
         <li> {lem} </li>
     {/each}
 </ul>
