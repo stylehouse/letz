@@ -13,28 +13,11 @@
         }
 
     // EditorView
-        import {EditorState} from "@codemirror/state"
-        import {EditorView, keymap} from "@codemirror/view"
-        import {defaultKeymap} from "@codemirror/commands"
-
-        let startState = EditorState.create({
-            doc: flub,
-            extensions: [keymap.of(defaultKeymap)]
-        })
-        
-        let ele
-        let view
-        onMount(() => {
-            view = new EditorView({
-                state: startState,
-                parent: ele
-            })
-        })
+	import Codemirror from './Codemirror.svelte';
 </script>
 
-
 <p> {b} </p>
-<div bind:this={ele}></div>
+<Codemirror value={flub}></Codemirror>
 <ul >
     {#each lems as lem}
         <li> {lem} </li>

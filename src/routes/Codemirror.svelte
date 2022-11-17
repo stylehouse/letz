@@ -1,42 +1,38 @@
 <script lang="ts">
-  import type {
-    Editor,
-    EditorConfiguration,
-    EditorFromTextArea,
-  } from "codemirror";
-  import { onMount, createEventDispatcher } from "svelte";
+  import { onMount, createEventDispatcher } from "svelte"
+  import {EditorState} from "@codemirror/state"
+  import {EditorView, keymap} from "@codemirror/view"
+  import {defaultKeymap} from "@codemirror/commands"
 
-  const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher()
 
-  let klass = "";
-  export { klass as class };
+  export let ele
+  export let view: EditorView
+  export let value = ""
 
-  let textArea: HTMLTextAreaElement;
-  export let value = "";
+  let startState = EditorState.create({
+      doc: value,
+      extensions: [keymap.of(defaultKeymap)]
+  })
 
-  export let CodeMirror: {
-    fromTextArea: (
-      element: HTMLTextAreaElement,
-      options?: EditorConfiguration
-    ) => EditorFromTextArea;
-  };
-  export let options: EditorConfiguration = {};
-
-  // Why initialize with null:
-  // <Codemirror> was created without expected prop 'editor'
-  export let editor: Editor = null;
   onMount(() => {
-    editor = CodeMirror.fromTextArea(textArea, options);
+    view = new EditorView({
+        state: startState,
+        parent: ele
+    })
 
-    editor.on("change", (e: Editor) => {
-      dispatch("change", e);
-    });
-    editor.on("scroll", (e: Editor) => {
-      dispatch("scroll", e);
-    });
-  });
+    // editor.on("change", (e: Editor) => {
+    //   dispatch("change", e);
+    // });
+    // editor.on("scroll", (e: Editor) => {
+    //   dispatch("scroll", e);
+    // });
+  })
 </script>
 
-<div class={klass}>
-  <textarea bind:this={textArea} {value} readonly />
-</div>
+<style type="css">
+  .Codemirror {
+      border: 1px solid black
+  }
+</style>
+<div class="Codemirror" bind:this={ele}></div>
