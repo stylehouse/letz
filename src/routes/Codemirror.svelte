@@ -3,6 +3,7 @@
   import {EditorState} from "@codemirror/state"
   import {EditorView, keymap} from "@codemirror/view"
   import {defaultKeymap} from "@codemirror/commands"
+	import { sto } from './stores.js';
 
   const dispatch = createEventDispatcher()
 
@@ -10,10 +11,35 @@
   export let view: EditorView
   export let value = ""
 
+  // possible...
+  let via_store = (e) => {
+    let val = view.state.doc.toString()
+    value = val+"thiryto"
+    sto.set(value)
+    console.log("Yep",value)
+  }
+  let via_dispatch = (e) => {
+    console.log("Innit")
+    dispatch('message', {
+      text: view.state.doc.toString()
+    });
+  }
+
   let startState = EditorState.create({
       doc: value,
-      extensions: [keymap.of(defaultKeymap)]
+      extensions: [
+        keymap.of(defaultKeymap),
+        keymap.of([{key:"Escape", run: via_dispatch}]),
+        EditorView.updateListener.of((v:ViewUpdate) => {
+            if (v.docChanged) {
+              // Document changed
+              console.log("Listener",view.state.doc.toString(),v, value)
+              sto.update(ol => view.state.doc.toString())
+            }
+        }) 
+      ]
   })
+  
 
   onMount(() => {
     view = new EditorView({
@@ -36,3 +62,4 @@
   }
 </style>
 <div class="Codemirror" bind:this={ele}></div>
+<button on:click={via_store}></button>
