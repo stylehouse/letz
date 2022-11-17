@@ -9,6 +9,7 @@
     let parseout = (s: string) => {
         let tree = parser.parse(s)
         let cursor = tree.cursor()
+        lems = []
         while (cursor.next()) {
             lems.push(`Node ${cursor.name} from ${cursor.from} to ${cursor.to}`)
         }
