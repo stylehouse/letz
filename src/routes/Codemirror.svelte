@@ -32,7 +32,7 @@
         keymap.of(defaultKeymap),
         keymap.of([{key:"Escape", run: via_dispatch}]),
         EditorView.updateListener.of((v:ViewUpdate) => {
-            if (v.docChanged) {
+            if (1 || v.docChanged) {
               // Document changed
               console.log("Listener",view.state.doc.toString(),v, value)
               sto.set(view.state.doc.toString())
