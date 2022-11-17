@@ -3,7 +3,8 @@
   import {EditorState} from "@codemirror/state"
   import {EditorView, keymap} from "@codemirror/view"
   import {defaultKeymap} from "@codemirror/commands"
-	import { sto } from './stores.js';
+	import { sto,ge } from './stores.js';
+  let updge = () => ge.update(ge => ge+'e')
 
   const dispatch = createEventDispatcher()
 
@@ -34,7 +35,7 @@
             if (v.docChanged) {
               // Document changed
               console.log("Listener",view.state.doc.toString(),v, value)
-              sto.update(ol => view.state.doc.toString())
+              sto.set(view.state.doc.toString())
             }
         }) 
       ]
@@ -62,4 +63,4 @@
   }
 </style>
 <div class="Codemirror" bind:this={ele}></div>
-<button on:click={via_store}></button>
+<button on:click={updge}></button>
