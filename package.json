@@ -11,6 +11,7 @@
 	},
 	"devDependencies": {
 		"@fontsource/fira-mono": "^4.5.0",
+		"@lezer/generator": "^1.1.1",
 		"@neoconfetti/svelte": "^1.0.0",
 		"@playwright/test": "^1.25.0",
 		"@sveltejs/adapter-auto": "next",
@@ -23,5 +24,8 @@
 		"typescript": "^4.7.4",
 		"vite": "^3.1.0"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"@lezer/lr": "^1.2.3"
+	}
 }

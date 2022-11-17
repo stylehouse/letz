@@ -1,0 +1,16 @@
+@top Program { expression }
+
+expression { Name | Number | IOing }
+
+IOing { IOness IOpath }
+
+IOpath { Leg ("/" Leg)* }
+Leg { Name }
+
+
+@tokens {
+    IOness { "i" | "o" }
+    Name { @asciiLetter+ }
+    Number { @digit+ }
+    @precedence {IOness, Name}
+}

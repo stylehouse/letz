@@ -1,5 +1,6 @@
 <script>
 	import Counter from './Counter.svelte';
+	import Code from './Code.svelte';
 	import welcome from '$lib/images/svelte-welcome.webp';
 	import welcome_fallback from '$lib/images/svelte-welcome.png';
 </script>
@@ -18,8 +19,10 @@
 			</picture>
 		</span>
 
-		oldennia <br />SvelteKit app
+		oldetynnia <br />SvelteKit app
 	</h1>
+
+	<Code />
 
 	<h2>
 		trying to tediting <strong>src/routes/+page.svelte</strong>
