@@ -12,8 +12,11 @@
 	    import Codemirror from './Codemirror.svelte';
 	    import Lezing from './Lezing.svelte';
 
+    function dobla(ev) {
+        b = "---"
+    }
 </script>
 
 <p> {b} </p>
-<Codemirror value={$sto}></Codemirror>
+<Codemirror value={$sto} on:kommit={dobla}></Codemirror>
 <Lezing $sto></Lezing>

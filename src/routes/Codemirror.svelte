@@ -21,7 +21,7 @@
   }
   let via_dispatch = (e) => {
     console.log("Innit")
-    dispatch('message', {
+    dispatch('kommit', {
       text: view.state.doc.toString()
     });
   }
@@ -32,9 +32,8 @@
         keymap.of(defaultKeymap),
         keymap.of([{key:"Escape", run: via_dispatch}]),
         EditorView.updateListener.of((v:ViewUpdate) => {
-            if (1 || v.docChanged) {
+            if (v.docChanged) {
               // Document changed
-              console.log("Listener",view.state.doc.toString(),v, value)
               sto.set(view.state.doc.toString())
             }
         }) 
