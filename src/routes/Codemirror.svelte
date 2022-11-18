@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount, createEventDispatcher } from "svelte"
-  import {EditorState} from "@codemirror/state"
+  import {EditorState, Prec} from "@codemirror/state"
   import {EditorView, keymap} from "@codemirror/view"
   import {defaultKeymap} from "@codemirror/commands"
 	import { sto,ge } from './stores.js';
@@ -20,17 +20,17 @@
     console.log("Yep",value)
   }
   let via_dispatch = (e) => {
-    console.log("Innit")
-    dispatch('kommit', {
-      text: view.state.doc.toString()
-    });
+    console.log("Inniyt")
+    view.dispatch(view.state.replaceSelection("★"))
+    0 && dispatch('kommit', {text: view.state.doc.toString()})
+    return 1
   }
 
   let startState = EditorState.create({
       doc: value,
       extensions: [
         keymap.of(defaultKeymap),
-        keymap.of([{key:"Escape", run: via_dispatch}]),
+        Prec.high(keymap.of([{key:"Escape", run: via_dispatch}])),
         EditorView.updateListener.of((v:ViewUpdate) => {
             if (v.docChanged) {
               // Document changed
