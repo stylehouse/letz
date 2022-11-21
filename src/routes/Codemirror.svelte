@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount, createEventDispatcher } from "svelte"
-  import {EditorState, Prec} from "@codemirror/state"
+  import {EditorState} from "@codemirror/state"
   import {EditorView, keymap} from "@codemirror/view"
   import {defaultKeymap} from "@codemirror/commands"
 	import { sto,ge } from './stores.js';
@@ -29,8 +29,8 @@
   let startState = EditorState.create({
       doc: value,
       extensions: [
+        keymap.of([{key:"Escape", run: via_dispatch}]),
         keymap.of(defaultKeymap),
-        Prec.high(keymap.of([{key:"Escape", run: via_dispatch}])),
         EditorView.updateListener.of((v:ViewUpdate) => {
             if (v.docChanged) {
               // Document changed
