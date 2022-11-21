@@ -1,12 +1,12 @@
-@top Program { expression }
+@top Program { expression* }
 
 expression { Name | Number | IOing }
 
-IOing { IOness IOpath }
+IOing { IOness ' ' IOpath "\n" }
 
 IOpath { Leg ("/" Leg)* }
-Leg { Name }
-
+Leg { Sigil? Name }
+Sigil { "@" | "#" }
 
 @tokens {
     IOness { "i" | "o" }
