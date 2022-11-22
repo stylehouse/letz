@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
 	import { sto } from './stores.js';
+
     let b = ':3'
     let lemit = 4
 

@@ -1,8 +1,13 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
 	import { sto,ge } from './stores.js';
-    import {parser} from '../lang/style.js'
-    
+    // either:
+    // import {parser} from '../lang/style.js'
+    // or:
+    import grammar from '../lang/style.grammar?raw'
+    import { buildParser } from '@lezer/generator'
+    const parser = buildParser(grammar)
+    console.log("Parser:",parser)
 
     let lems: string[] = []
     let lemit = 3
