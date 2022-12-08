@@ -7,7 +7,6 @@
     import grammar from '../lang/style.grammar?raw'
     import { buildParser } from '@lezer/generator'
     const parser = buildParser(grammar)
-    console.log("Parser:",parser)
 
     let lems: string[] = []
     let lemit = 3
@@ -22,7 +21,7 @@
     }
     let latest: string
     onDestroy(sto.subscribe(flub => {
-        console.log("Parstores!!"+flub)
+        //console.log("Parstores!!"+flub)
         latest = flub
         //parseout(flub)
         //lems = lems

@@ -20,4 +20,4 @@
 
 <p> {b} </p>
 <Codemirror value={$sto} on:kommit={dobla}></Codemirror>
-<Lezing $sto></Lezing>
+<Lezing></Lezing>
