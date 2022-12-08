@@ -14,6 +14,7 @@
   export let ele
   export let view: EditorView
   export let value = ""
+  export let parser
 
   // < "Esc" should escalate committal of the editor contents
   let firmup = (e) => {

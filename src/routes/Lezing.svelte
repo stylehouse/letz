@@ -4,9 +4,8 @@
     // either:
     // import {parser} from '../lang/style.js'
     // or:
-    import grammar from '../lang/style.grammar?raw'
-    import { buildParser } from '@lezer/generator'
-    const parser = buildParser(grammar)
+    export let parser
+    
 
     let lems: string[] = []
     let lemit = 3

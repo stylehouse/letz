@@ -1,6 +1,10 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
 	import { sto } from './stores.js';
+    
+    import grammar from '../lang/style.grammar?raw'
+    import { buildParser } from '@lezer/generator'
+    let parser = buildParser(grammar)
 
     let b = ':3'
     let lemit = 4
@@ -19,5 +23,5 @@
 </script>
 
 <p> {b} </p>
-<Codemirror value={$sto} on:kommit={dobla}></Codemirror>
-<Lezing></Lezing>
+<Codemirror value={$sto} {parser} on:kommit={dobla}></Codemirror>
+<Lezing {parser}></Lezing>
