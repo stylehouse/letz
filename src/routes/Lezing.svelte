@@ -25,7 +25,7 @@
         //parseout(flub)
         //lems = lems
     }))
-    $: parseout(latest)
+    $: parseout(latest, lemit)
     $: lems.push("Yod")
     //parseout($sto)
 </script>
