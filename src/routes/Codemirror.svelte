@@ -1,11 +1,11 @@
 <script lang="ts">
+  import { Le } from "../lib/Le"
   import { onMount, createEventDispatcher } from "svelte"
   import {EditorState} from "@codemirror/state"
   import {EditorView, keymap, ViewUpdate} from "@codemirror/view"
   import {
     LanguageSupport,
-    LRLanguage,
-    syntaxTree
+    LRLanguage
   } from "@codemirror/language"
   import {defaultKeymap} from "@codemirror/commands"
   import {basicSetup} from "codemirror"
@@ -14,9 +14,8 @@
 
   const dispatch = createEventDispatcher()
 
-    import gram from '../lang/style.grammar?raw'
-  export let ele
-  export let view: EditorView
+  export let ele = undefined
+  export let view: EditorView = undefined
   export let value = ""
   export let parser
   let language = LRLanguage.define({ parser: parser });
@@ -24,20 +23,8 @@
 
   // < "Esc" should escalate committal of the editor contents
   let firmup = (e) => {
-    let str = view.state.sliceDoc(
-      view.state.selection.main.from,
-      view.state.selection.main.to
-    )
-    let here = view.state.selection.main.anchor
-    let tree = syntaxTree(view.state)
-    let cursor = tree.cursor()
-    let lems = []
-    while (cursor.next()) {
-        lems.push(`Node ${cursor.name} from ${cursor.from} to ${cursor.to}`)
-    }
-    console.log("Treewalk:",lems)
+    let look = new Le(view.state);
 
-    console.log("Fiup:",{here,tree});
     0 && view.dispatch(view.state.replaceSelection("★"))
     0 && dispatch('kommit', {text: view.state.doc.toString()})
     return 1
@@ -62,6 +49,7 @@
   
 
   onMount(() => {
+    // now that ele has a value
     view = new EditorView({
         state: startState,
         parent: ele
@@ -75,4 +63,3 @@
   }
 </style>
 <div class="Codemirror" bind:this={ele}></div>
-<button on:click={updge}></button>

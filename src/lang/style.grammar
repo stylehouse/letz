@@ -1,8 +1,8 @@
 @top Program { expression* }
 
-expression { Name | Number | IOing }
+expression { Name | Number | IOing | "\n" }
 
-IOing { IOness ' ' IOpath "\n" }
+IOing { IOness ' ' IOpath }
 
 IOpath { Leg ("/" Leg)* }
 Leg { Sigil? Name }
