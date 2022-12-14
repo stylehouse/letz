@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { Le } from "../lib/Le"
   import { onMount, createEventDispatcher } from "svelte"
   import {EditorState} from "@codemirror/state"
   import {EditorView, keymap, ViewUpdate} from "@codemirror/view"
@@ -22,11 +21,7 @@
   let langsup = new LanguageSupport(language);
 
   // < "Esc" should escalate committal of the editor contents
-  let firmup = (e) => {
-    let look = new Le(view.state);
-
-    0 && view.dispatch(view.state.replaceSelection("★"))
-    0 && dispatch('kommit', {text: view.state.doc.toString()})
+  let firmup = (e,v) => {
     return 1
   }
   
@@ -35,7 +30,10 @@
       doc: value,
       extensions: [
         langsup,
-        keymap.of([{key:"Escape", run: firmup}]),
+        keymap.of([{key:"Escape", run: () => {
+            dispatch('kommit', {view})
+            return 1
+        }}]),
         keymap.of(defaultKeymap),
         EditorView.updateListener.of((v:ViewUpdate) => {
             if (v.docChanged) {

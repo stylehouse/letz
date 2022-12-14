@@ -1,31 +1,16 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
 	import { sto,ge } from './stores.js';
-    // either:
-    // import {parser} from '../lang/style.js'
-    // or:
-    export let parser
-    
+    import { Le } from "../lib/Le"
+    export let look:Le = undefined
 
     let lems: string[] = []
     let lemit = 3
-    let parseout = (s: string) => {
-        let tree = parser.parse(s)
-        let cursor = tree.cursor()
-        lems = []
-        while (cursor.next()) {
-            lems.push(`Node ${cursor.name} from ${cursor.from} to ${cursor.to}`)
-        }
+    let parseout = (Le) => {
+        lems = Le.lems
         lems = lems.slice(0,lemit*5)
     }
-    let latest: string
-    onDestroy(sto.subscribe(flub => {
-        //console.log("Parstores!!"+flub)
-        latest = flub
-        //parseout(flub)
-        //lems = lems
-    }))
-    $: parseout(latest, lemit)
+    $: parseout(look)
     $: lems.push("Yod")
     //parseout($sto)
 </script>

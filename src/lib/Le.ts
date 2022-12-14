@@ -1,6 +1,9 @@
 import {syntaxTree} from "@codemirror/language"
+import type { EditorState } from "@codemirror/state"
 export class Le {
-    constructor (state) {
+    state: EditorState
+    lems: string[]
+    constructor (state: EditorState) {
         this.state = state
         let about = state.selection.main
         let str = state.sliceDoc(
@@ -16,6 +19,7 @@ export class Le {
             lems.push(`Node ${cursor.name} from ${cursor.from} to ${cursor.to}`)
         }
         console.log("Treewalk:"+about.from+'-'+about.to+":"+str,lems)
+        this.lems = lems
     }
 }
 export function tz () {
