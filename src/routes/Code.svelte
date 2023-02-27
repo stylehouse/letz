@@ -9,7 +9,7 @@
     let b = ':3'
 
     // lezer
-        let flub = "i thing/with/etc\n\no yeses/because\n"
+        let flub = "i thung/with/etc\n\no yeses/because\n"
         sto.set(flub)
 
     // EditorView

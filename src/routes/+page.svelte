@@ -1,8 +1,6 @@
 <script>
 	import Counter from './Counter.svelte';
 	import Code from './Code.svelte';
-	import welcome from '$lib/images/svelte-welcome.webp';
-	import welcome_fallback from '$lib/images/svelte-welcome.png';
     import { onMount } from 'svelte';
 	onMount(() => {
 
@@ -10,8 +8,8 @@
 </script>
 
 <svelte:head>
-	<title>Home</title>
-	<meta name="description" content="Svelte demo app" />
+	<title>letz</title>
+	<meta name="description" content="letz wording" />
 </svelte:head>
 
 <section>

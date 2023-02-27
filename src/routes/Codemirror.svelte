@@ -25,7 +25,6 @@
     return 1
   }
   
-
   let startState = EditorState.create({
       doc: value,
       extensions: [
@@ -46,7 +45,7 @@
   })
   
 
-  onMount(() => {
+  onMount(async () => {
     // now that ele has a value
     view = new EditorView({
         state: startState,
