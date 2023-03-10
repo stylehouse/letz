@@ -1,12 +1,14 @@
 <script lang="ts">
 	import { sto } from './stores.js';
     import { Le } from "../lib/Le"
+    import { realisme } from "../lib/St"
     
     import grammar from '../lang/style.grammar?raw'
     import { buildParser } from '@lezer/generator'
     let parser = buildParser(grammar)
 
     let b = ':3'
+    console.log(['y',,,{thin:1}])
 
     // lezer
         let flub = "i thung/with/etc\n\no yeses/because\n"
