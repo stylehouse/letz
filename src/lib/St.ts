@@ -22,12 +22,12 @@ interface A extends C {
     }
     c: {
         ip: number[]; // IP address of variable length
-        ips?: number[]; // how many children it has had
+        ips?: number; // how many children it has had
     }
 }
 
 // make new C, specifying innards
-function C_(t: string|Array|C, y?:number|gh, c?:gh, sc?:gh):C {
+function C_(t: string|Array|C, y?:number|gc, c?:gc, sc?:gc):C {
     if (isar(t)) {
         [t,y,c,sc] = t
     }
