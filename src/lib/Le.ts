@@ -15,7 +15,7 @@ export class Le {
         let lems = []
         while (!lems.length || cursor.next()) {
             if (cursor.from > about.to)
-            break
+                break
             lems.push(`Node ${cursor.name} from ${cursor.from} to ${cursor.to}`)
         }
         console.log("Treewalk:"+about.from+'-'+about.to+":"+str,lems)

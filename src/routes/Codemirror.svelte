@@ -60,3 +60,4 @@
   }
 </style>
 <div class="Codemirror" bind:this={ele}></div>
+<button on:click={() => updge()} > updge() </button>
