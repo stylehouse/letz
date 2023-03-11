@@ -8,7 +8,7 @@
     let parser = buildParser(grammar)
 
     let b = ':3'
-    console.log(['y',,,{thin:1}])
+    console.log(realisme())
 
     // lezer
         let flub = "i thung/with/etc\n\no yeses/because\n"

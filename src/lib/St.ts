@@ -2,7 +2,55 @@ export function realisme () {
     let A1 = C_('toplevel')
     A1.c.ip = [1]
 
-    let A11 = A_(A,'glamphor')
+    let A11 = A_(A1,'glamphor')
+
+    // create some Cs for authors
+    let Joyce = C_('Joyce',{},{}, {style: 'modernist', theatrics: ['experimental', 'stream of consciousness']})
+    let Faulkner = C_('Faulkner',{},{}, {style: 'southern gothic', theatrics: ['tragic', 'haunting']})
+    let Woolf = C_('Woolf',{},{}, {style: 'feminist', theatrics: ['intimate', 'psychological']})
+    let Ginsberg = C_('Ginsberg',{},{}, {style: 'beat', theatrics: ['rebellious', 'spontaneous']})
+    let Kerouac = C_('Kerouac',{},{}, {style: 'beat', theatrics: ['wandering', 'energetic']})
+    let Burroughs = C_('Burroughs',{},{}, {style: 'Cut-up Technique', nationality: 'American', theatrics: 'avant-garde'})
+    let Rimbaud = C_('Rimbaud',{},{}, {style: 'Symbolism', nationality: 'French', theatrics: 'haunting'})
+    let Baudelaire = C_('Baudelaire',{},{}, {style: 'Modernism', nationality: 'French', theatrics: 'decadent'})
+
+    // create some As with authors
+    let A111 = A_(A11, 'Dublin')
+    i_(A111, Joyce)
+
+    let A1111 = A_(A111, 'Sandymount')
+    i_(A1111, Joyce)
+
+    let A1112 = A_(A111, 'Malahide')
+    i_(A1112, Faulkner)
+
+    let A1113 = A_(A111, 'Bray')
+    i_(A1113, Woolf)
+    i_(A1113, Burroughs)
+
+    let A112 = A_(A11, 'Paris')
+    i_(A112, Joyce)
+    i_(A112, Rimbaud)
+    i_(A112, Baudelaire)
+
+    let A1121 = A_(A112, 'Montparnasse')
+    i_(A1121, Faulkner)
+
+    let A1122 = A_(A112, 'Saint-Germain')
+    i_(A1122, Woolf)
+
+    let A113 = A_(A11, 'London')
+    i_(A113, Woolf)
+
+    let A1131 = A_(A113, 'Bloomsbury')
+    i_(A1131, Woolf)
+
+    // create a district with a writer in it
+    let A1114 = A_(A1111, 'Dublin City')
+    i_(A1114, Joyce)
+    i_(A1114, Kerouac)
+    i_(A1114, Ginsberg)
+
 
     return [A1, A11]
 }
@@ -60,12 +108,9 @@ function A_(A:A, t?:string):A {
     i_(A,A2)
     return A2
 }
-function i_(C1:C, C2:C) {
-    C1.sc.z ||= []
-    if (C1.sc.z.includes(C2)) {
-        return
-    }
-    C1.sc.z.push(C2)
+function i_(C1: C, C2: C, qua: string = 'z') {
+    let N = C1.sc[qua] ||= []
+    N.push(C2)
 }
 
 // type checking, ported from Fividy
