@@ -1,6 +1,7 @@
-export function realisme () {
+export function realisme (): A {
     let A1 = C_('toplevel')
     A1.c.ip = [1]
+    A1:A
 
     let A11 = A_(A1,'glamphor')
 
@@ -51,8 +52,8 @@ export function realisme () {
     i_(A1114, Kerouac)
     i_(A1114, Ginsberg)
 
-
-    return [A1, A11]
+    
+    return A1
 }
 // the baskets of properties that are C.y|c|sc
 interface gc {
