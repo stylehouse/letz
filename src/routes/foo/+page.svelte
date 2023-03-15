@@ -15,4 +15,4 @@
 	</label>
 </form>
 
-<img src={data.png} in:fly={{ y: 20 }} out:slide class=inscreen alt="Page {data.page} of my PDF file" />
+<img src={data.png} out:slide alt="Page {data.page} of my PDF file" />
