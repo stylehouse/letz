@@ -109,8 +109,8 @@ function i_(C1: C, C2: C, qua: string = 'z') {
     export function realisme (): A {
         let A1 = C_('toplevel')
         A1.c.ip = [1]
-        A1:A
-        
+        // < aren't thisn't?
+        // A1:A
     
         let A11 = A_(A1,'glamphor')
     
