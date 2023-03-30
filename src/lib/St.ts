@@ -21,7 +21,7 @@ type A = C & {
 }
 
 // make new C, specifying innards
-function C_(t: string|Array|C, y?:number|gc, c?:gc, sc?:gc):C {
+function C_(t: string|Array<any>|C, y?:number|gc, c?:gc, sc?:gc):C {
     if (isar(t)) {
         [t,y,c,sc] = t
     }
@@ -42,6 +42,7 @@ function C_(t: string|Array|C, y?:number|gc, c?:gc, sc?:gc):C {
     sc ||= {}
     return {t,y,c,sc}
 }
+// A spawns A
 function A_(A:A, t?:string):A {
     t ||= A.t
     let A2 = C_(t)
@@ -51,9 +52,11 @@ function A_(A:A, t?:string):A {
     A2.c.ip = [...A.c.ip,A.c.ips]
     // parent
     A2.y.up = A
+    // A.sc.z is the way to A/A
     i_(A,A2)
     return A2
 }
+// C inside C (C/C)
 function i_(C1: C, C2: C, qua: string = 'z') {
     let N = C1.sc[qua] ||= []
     N.push(C2)
@@ -61,6 +64,7 @@ function i_(C1: C, C2: C, qua: string = 'z') {
 
 
 // type and data handling helpers
+
     // type checking, ported from Fividy
     function isst(s) {
         return typeof s == 'string'
@@ -105,13 +109,42 @@ function i_(C1: C, C2: C, qua: string = 'z') {
     }
 
 
+
+
+
+    // the main functions, somewhat mocked up
+    
     // have a play
-    export function realisme (): A {
+    export function St_main (): A {
         let A1 = C_('toplevel')
         A1.c.ip = [1]
         // < aren't thisn't?
         // A1:A
-    
+        St_writers(A1)
+
+        // make A1.sc.mind=Cmind /Cthing/Cact
+        St_minds(A1)
+        
+        return A1
+    }
+
+    // construct a one-trick mind
+    function St_minds (A1) {
+        let mind = C_('mind')
+        let thing = C_('wear')
+        let act = C_('act',3)
+        i_(mind, thing)
+        i_(thing, act)
+        act.c.code = function (A,C,G,T) {
+            // knock a letter off anywhere
+            let i = Math.floor(Math.random()*C.t.length)
+            let t = C.t
+            let t2 = t.slice(0,i) + t.slice(i+1)
+            
+        }
+        A1.sc.mind = mind
+    }
+    function St_writers (A1) {
         let A11 = A_(A1,'glamphor')
     
         // create some Cs for authors
@@ -160,8 +193,18 @@ function i_(C1: C, C2: C, qua: string = 'z') {
         i_(A1114, Joyce)
         i_(A1114, Kerouac)
         i_(A1114, Ginsberg)
-    
+
+
+
+        // check A.c.ip of a few of these, eg A1114's .c.ip == [1,1,1,4]
+        let samp = {A113, A1114, A1111, A111}
+        for (let k in samp) {
+            let A = samp[k]
+            let k_ipbits = k.slice(1).split('').join('.')
+            let A_ipbits = A.c.ip.join('.')
+            if (k_ipbits != A_ipbits) {
+                throw `k_ipbits != A_ipbits: ${k_ipbits} != ${A_ipbits}`
+            }
+        }
         
-        return A1
     }
-    
