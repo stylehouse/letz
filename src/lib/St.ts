@@ -56,15 +56,19 @@ function A_(A:A, t?:string):A {
     i_(A,A2)
     return A2
 }
-// C inside C (C/C)
+// put C inside C (C/C)
 function i_(C1: C, C2: C, qua: string = 'z') {
     let N = C1.sc[qua] ||= []
     N.push(C2)
 }
+// get C inside C (C/C)
+function o_(C1: C, qua: string = 'z') {
+    let N = C1.sc[qua] || []
+    return N
+}
 
 
 // type and data handling helpers
-
     // type checking, ported from Fividy
     function isst(s) {
         return typeof s == 'string'
@@ -112,7 +116,7 @@ function i_(C1: C, C2: C, qua: string = 'z') {
 
 
 
-    // the main functions, somewhat mocked up
+// the main functions, mocked up
     
     // have a play
     export function St_main (): A {
@@ -124,8 +128,35 @@ function i_(C1: C, C2: C, qua: string = 'z') {
 
         // make A1.sc.mind=Cmind /Cthing/Cact
         St_minds(A1)
+
+        // walk the A** tree with the mind
+        St_walkies(A1)
         
         return A1
+    }
+    
+    // walk the A** tree with the mind
+    function St_walkies (A) {
+        // find A** in the same timespace as A
+        let N = o_partitioning(A,function(A2) {
+            // lets call A==A.3 a timespace boundary
+            return !(A2[3] && A2[3] != A[3])
+        })
+        console.log(N)
+    }
+
+    // find C** until y() returns false
+    function o_partitioning (C,y:Function,qua:string = 'z') {
+        let N = []
+        o_(C,qua).map(function(D) {
+            // C/D are all found
+            N.push(D)
+            if (y(D)) {
+                // and D/** shall be too
+                N.push(...o_partitioning(D,y,qua))
+            }
+        })
+        return N
     }
 
     // construct a one-trick mind
@@ -145,7 +176,7 @@ function i_(C1: C, C2: C, qua: string = 'z') {
         A1.sc.mind = mind
     }
     function St_writers (A1) {
-        let A11 = A_(A1,'glamphor')
+        let A11 = A_(A1,'Earth')
     
         // create some Cs for authors
         let Joyce = C_('Joyce',{},{}, {style: 'modernist', theatrics: ['experimental', 'stream of consciousness']})
@@ -189,7 +220,7 @@ function i_(C1: C, C2: C, qua: string = 'z') {
         i_(A1131, Woolf)
     
         // create a district with a writer in it
-        let A1114 = A_(A1111, 'Dublin City')
+        let A1114 = A_(A111, 'Dublin City')
         i_(A1114, Joyce)
         i_(A1114, Kerouac)
         i_(A1114, Ginsberg)
