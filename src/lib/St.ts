@@ -124,43 +124,104 @@ function o_(C1: C, qua: string = 'z') {
         A1.c.ip = [1]
         // < aren't thisn't?
         // A1:A
-        St_writers(A1)
+        let dub = St_writers(A1)
 
         // make A1.sc.mind=Cmind /Cthing/Cact
         St_minds(A1)
 
         // walk the A** tree with the mind
-        St_walkies(A1)
+        St_walkies(dub)
         
         return A1
     }
     
     // walk the A** tree with the mind
     function St_walkies (A) {
-        // find A** in the same timespace as A
-        let N = o_partitioning(A,function(A2) {
-            // lets call A==A.3 a timespace boundary
-            return !(A2[3] && A2[3] != A[3])
-        })
+        // o A^%mind (the to return a singular %mind above, not an array)
+        let N = o_up(A,{thes:'mind'})
         console.log(N)
     }
 
-    // find C** until y() returns false
-    function o_partitioning (C,y:Function,qua:string = 'z') {
-        let N = []
-        o_(C,qua).map(function(D) {
-            // C/D are all found
-            N.push(D)
-            if (y(D)) {
-                // and D/** shall be too
-                N.push(...o_partitioning(D,y,qua))
+
+    // climb A^^ til c.(for|until|before) is found
+    function o_up (A,c) {
+        // default what to look for: everything
+        c ||= {}
+        if (!c.til) {
+            // only up to A.3==A2.3
+            //   use c.til to include the first A.3!=A2.3
+            c.until ||= AyAsuch_unsame(A,'3')
+        }
+        c.climb ||= Y => [Y.y.up]
+        if (c.thes) {
+            c.sing = 1
+            c.grab = Y => Y.sc[c.thes]
+        }
+        return o_climbing_while(A,c)
+    }
+    //   make c.til|until to keep A^^ within A.y.such in common
+    function AyAsuch_unsame (A:C,such:string) {
+        return function (A2:C) {
+            return A2.y[such] && A2.y[such] != A.y[such]
+        }
+    }
+    // find C** until c.(un)til returns true
+    // see also me.inlace
+    function o_climbing_while (C:C,c,qua:string = 'z') {
+        c ||= {}
+        c.climb ||= (C:C) => o_(C,qua)
+        
+        // this is lexical to this visit, but so c.not can be reached from callbacks
+        c.not = 0
+        // list of stuff here (tends not to c.inc-lude the first C)
+        let N = c.inc ? [C] : []
+        c.inc = 1
+        // avoid returning C if we're grabbing a Cs&thing (til->not before grab)
+        if (c.grab) N = []
+        // if c.til is true, stop
+        let til = c.til || c.until
+        if (til && til(C)) {
+            c.not = 1
+            if (c.until)
+                N = []
+        }
+
+        if (c.not) {
+            return N
+        }
+
+        // start to visit here
+        if (c.grab) {
+            let v = c.grab(C)
+            if (v) {
+                if (c.sing) {
+                    return v
+                }
+                else {
+                    if (!isar(v)) throw "!array"
+                    N.push(...v)
+                }
+            }
+        }
+
+
+        c.climb(C,c) .filter(D => {
+            // recurse to D:C/*:D
+            let zN = o_climbing_while(D,c,qua)
+            if (c.sing) {
+                N.push(zN)
+            }
+            else {
+                if (!isar(v)) throw "!array"
+                N.push(...zN)
             }
         })
-        return N
+
+        return c.sing ? N[0] : N
     }
 
     // construct a one-trick mind
-    function St_minds (A1) {
+    function St_minds (A1:A) {
         let mind = C_('mind')
         let thing = C_('wear')
         let act = C_('act',3)
@@ -237,5 +298,5 @@ function o_(C1: C, qua: string = 'z') {
                 throw `k_ipbits != A_ipbits: ${k_ipbits} != ${A_ipbits}`
             }
         }
-        
+        return A1114
     }

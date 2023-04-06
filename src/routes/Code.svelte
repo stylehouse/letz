@@ -9,8 +9,9 @@
     let parser = buildParser(grammar)
 
     let b = ':3'
-    if (browser) {
+    function bloop() {
         console.log(St_main())
+        if (!browser) throw "!?"
     }
 
     // lezer
@@ -27,6 +28,7 @@
     }
 </script>
 
+<button on:click={() => bloop()} > bloop() </button>
 <p> {b} </p>
 <Codemirror value={$sto} {parser} on:kommit={dobla}></Codemirror>
 {#if look}<Lezing {look}></Lezing>{/if}
