@@ -138,15 +138,17 @@ function o_(C1: C, qua: string = 'z') {
     // walk the A** tree with the mind
     function St_walkies (A) {
         // o A^%mind (the to return a singular %mind above, not an array)
-        let N = o_up(A,{thes:'mind'})
-        console.log(N)
+        let mind = o_up(A,{thes:'mind'})
+        let branch = o_up(A)
+
+        console.log({mind,branch})
     }
 
 
     // climb A^^ til c.(for|until|before) is found
     function o_up (A,c) {
         // default what to look for: everything
-        c ||= {}
+        c ||= {inc:1}
         if (!c.til) {
             // only up to A.3==A2.3
             //   use c.til to include the first A.3!=A2.3
@@ -178,6 +180,7 @@ function o_(C1: C, qua: string = 'z') {
         c.inc = 1
         // avoid returning C if we're grabbing a Cs&thing (til->not before grab)
         if (c.grab) N = []
+
         // if c.til is true, stop
         let til = c.til || c.until
         if (til && til(C)) {
@@ -185,7 +188,6 @@ function o_(C1: C, qua: string = 'z') {
             if (c.until)
                 N = []
         }
-
         if (c.not) {
             return N
         }
@@ -204,15 +206,16 @@ function o_(C1: C, qua: string = 'z') {
             }
         }
 
-
+        // onwards
         c.climb(C,c) .filter(D => {
+            if (!D) return
             // recurse to D:C/*:D
             let zN = o_climbing_while(D,c,qua)
             if (c.sing) {
                 N.push(zN)
             }
             else {
-                if (!isar(v)) throw "!array"
+                if (!isar(zN)) throw "!array"
                 N.push(...zN)
             }
         })

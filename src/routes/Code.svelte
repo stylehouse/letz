@@ -10,7 +10,7 @@
 
     let b = ':3'
     function bloop() {
-        console.log(St_main())
+        St_main()
         if (!browser) throw "!?"
     }
 
