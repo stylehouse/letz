@@ -140,10 +140,29 @@ function o_(C1: C, qua: string = 'z') {
         // o A^%mind (the to return a singular %mind above, not an array)
         let mind = o_up(A,{thes:'mind'})
         let branch = o_up(A)
+        // TODO the nearest mind is branched out to index happenings for us here
+        //   so various walkies can be reset, etc.
+        // TODO interate mind
+
 
         console.log({mind,branch})
     }
 
+    // construct a one-trick mind
+    function St_minds (A1:A) {
+        let mind = C_('mind')
+        let thing = C_('wear')
+        let act = C_('act',3)
+        i_(mind, thing)
+        i_(thing, act)
+        act.c.code = function (A,C,G,T) {
+            // knock a letter off anywhere
+            let i = Math.floor(Math.random()*C.t.length)
+            let t = C.t
+            let t2 = t.slice(0,i) + t.slice(i+1)
+        }
+        A1.sc.mind = mind
+    }
 
     // climb A^^ til c.(for|until|before) is found
     function o_up (A,c) {
@@ -223,22 +242,6 @@ function o_(C1: C, qua: string = 'z') {
         return c.sing ? N[0] : N
     }
 
-    // construct a one-trick mind
-    function St_minds (A1:A) {
-        let mind = C_('mind')
-        let thing = C_('wear')
-        let act = C_('act',3)
-        i_(mind, thing)
-        i_(thing, act)
-        act.c.code = function (A,C,G,T) {
-            // knock a letter off anywhere
-            let i = Math.floor(Math.random()*C.t.length)
-            let t = C.t
-            let t2 = t.slice(0,i) + t.slice(i+1)
-            
-        }
-        A1.sc.mind = mind
-    }
     function St_writers (A1) {
         let A11 = A_(A1,'Earth')
     
