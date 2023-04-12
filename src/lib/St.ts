@@ -163,22 +163,21 @@ function o_(C1: C, qua: string = 'z') {
         }
         A1.sc.mind = mind
     }
-
-    // climb A^^ til c.(for|until|before) is found
-    function o_up (A,c) {
+    // climb A^^ til d.(for|until|before) is found
+    function o_up(A, d) {
         // default what to look for: everything
-        c ||= {inc:1}
-        if (!c.til) {
+        d ||= { inc: 1 };
+        if (!d.til) {
             // only up to A.3==A2.3
-            //   use c.til to include the first A.3!=A2.3
-            c.until ||= AyAsuch_unsame(A,'3')
+            //   use d.til to include the first A.3!=A2.3
+            d.until ||= AyAsuch_unsame(A, '3');
         }
-        c.climb ||= Y => [Y.y.up]
-        if (c.thes) {
-            c.sing = 1
-            c.grab = Y => Y.sc[c.thes]
+        d.climb ||= Y => [Y.y.up];
+        if (d.thes) {
+            d.sing = 1;
+            d.grab = Y => Y.sc[d.thes];
         }
-        return o_climbing_while(A,c)
+        return o_climbing_while(A, d);
     }
     //   make c.til|until to keep A^^ within A.y.such in common
     function AyAsuch_unsame (A:C,such:string) {
@@ -186,36 +185,37 @@ function o_(C1: C, qua: string = 'z') {
             return A2.y[such] && A2.y[such] != A.y[such]
         }
     }
-    // find C** until c.(un)til returns true
+    // find C** until d.(un)til returns true
     // see also me.inlace
-    function o_climbing_while (C:C,c,qua:string = 'z') {
-        c ||= {}
-        c.climb ||= (C:C) => o_(C,qua)
-        
-        // this is lexical to this visit, but so c.not can be reached from callbacks
-        c.not = 0
-        // list of stuff here (tends not to c.inc-lude the first C)
-        let N = c.inc ? [C] : []
-        c.inc = 1
-        // avoid returning C if we're grabbing a Cs&thing (til->not before grab)
-        if (c.grab) N = []
+    function o_climbing_while (C:C,d) {
+        d ||= {}
+        d.climb ||= (C:C) => o_(C,d.qua||'z')
 
-        // if c.til is true, stop
-        let til = c.til || c.until
+        
+        // this is lexical to this visit, but so d.not can be reached from callbacks
+        d.not = 0
+        // list of stuff here (tends not to d.inc-lude the first C)
+        let N = d.inc ? [C] : []
+        d.inc = 1
+        // avoid returning C if we're grabbing a Cs&thing (til->not before grab)
+        if (d.grab) N = []
+
+        // if d.(un)til returns true, stop
+        let til = d.til || d.until
         if (til && til(C)) {
-            c.not = 1
-            if (c.until)
+            d.not = 1
+            if (d.until)
                 N = []
         }
-        if (c.not) {
+        if (d.not) {
             return N
         }
 
         // start to visit here
-        if (c.grab) {
-            let v = c.grab(C)
+        if (d.grab) {
+            let v = d.grab(C,d)
             if (v) {
-                if (c.sing) {
+                if (d.sing) {
                     return v
                 }
                 else {
@@ -226,11 +226,11 @@ function o_(C1: C, qua: string = 'z') {
         }
 
         // onwards
-        c.climb(C,c) .filter(D => {
+        d.climb(C,d) .filter(D => {
             if (!D) return
             // recurse to D:C/*:D
-            let zN = o_climbing_while(D,c,qua)
-            if (c.sing) {
+            let zN = o_climbing_while(D,d)
+            if (d.sing) {
                 N.push(zN)
             }
             else {
@@ -239,7 +239,7 @@ function o_(C1: C, qua: string = 'z') {
             }
         })
 
-        return c.sing ? N[0] : N
+        return d.sing ? N[0] : N
     }
 
     function St_writers (A1) {
