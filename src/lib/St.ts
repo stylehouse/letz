@@ -189,57 +189,68 @@ function o_(C1: C, qua: string = 'z') {
     // see also me.inlace
     function o_climbing_while (C:C,d) {
         d ||= {}
+        if (d.z) {
+            d = {...d, up:d}
+            // d/d+
+            d.up.z.push(d)
+        }
+        // starts with here (if inc)
+        //  then appends from C/D+ (or what d.grab maps them to)
+        //   and whatever they 
+        d.N = d.inc ? [C] : []
+        d.inc = 1
+        d.z = []
+        d.s = C
         d.climb ||= (C:C) => o_(C,d.qua||'z')
 
-        
-        // this is lexical to this visit, but so d.not can be reached from callbacks
-        d.not = 0
-        // list of stuff here (tends not to d.inc-lude the first C)
-        let N = d.inc ? [C] : []
-        d.inc = 1
         // avoid returning C if we're grabbing a Cs&thing (til->not before grab)
-        if (d.grab) N = []
+        if (d.grab) d.N = []
 
         // if d.(un)til returns true, stop
         let til = d.til || d.until
         if (til && til(C)) {
             d.not = 1
-            if (d.until)
-                N = []
-        }
-        if (d.not) {
-            return N
+            if (d.until) {
+                // un-returning C (and avoiding middle callbacks eg grab)
+                d.N = []
+            }
         }
 
-        // start to visit here
-        if (d.grab) {
-            let v = d.grab(C,d)
-            if (v) {
-                if (d.sing) {
-                    return v
-                }
-                else {
-                    if (!isar(v)) throw "!array"
-                    N.push(...v)
+        while (1) {
+            if (d.not) break
+
+            // start to visit here
+            if (d.grab) {
+                let v = d.grab(C,d)
+                if (v) {
+                    dN_from_middle(d, v)
                 }
             }
+
+            if (d.not) break
+
+            // onwards
+            // TODO subtypes of climb that emit d+ 
+            d.climb(C,d) .filter(D => {
+                if (!D) return
+                // recurse to C/D+
+                let zN = o_climbing_while(D,d)
+                dN_from_middle(d, zN)
+            })
+
+            break
         }
 
-        // onwards
-        d.climb(C,d) .filter(D => {
-            if (!D) return
-            // recurse to D:C/*:D
-            let zN = o_climbing_while(D,d)
-            if (d.sing) {
-                N.push(zN)
-            }
-            else {
-                if (!isar(zN)) throw "!array"
-                N.push(...zN)
-            }
-        })
-
-        return d.sing ? N[0] : N
+        return d.sing ? d.N[0] : d.N
+    }
+    function dN_from_middle (d,zN) {
+        if (d.sing) {
+            d.N.push(zN)
+        }
+        else {
+            if (!isar(zN)) throw "!array"
+            d.N.push(...zN)
+        }
     }
 
     function St_writers (A1) {
