@@ -1,4 +1,4 @@
-
+// Stylehouse, a dreamy coding paradigm in ts/js
 
 // the baskets of properties that are C.y|c|sc
 type gc = {
@@ -19,6 +19,10 @@ type A = C & {
         ips?: number; // how many children it has had
     }
 }
+// variable and class names clash!
+//  these types at runtime help sort piles of objects for intelligibility
+class TheC {}
+class TheA extends TheC {}
 
 // make new C, specifying innards
 function C_(t: string|Array<any>|C, y?:number|gc, c?:gc, sc?:gc):C {
@@ -40,20 +44,25 @@ function C_(t: string|Array<any>|C, y?:number|gc, c?:gc, sc?:gc):C {
     y ||= {}
     c ||= {}
     sc ||= {}
-    return {t,y,c,sc}
+    let Ce = new TheC();
+    ex(Ce,{t,y,c,sc})
+    return Ce
 }
 // A spawns A
-function A_(A:A, t?:string):A {
-    t ||= A.t
-    let A2 = C_(t)
+function A_(V:A, t?:string):A {
+    t ||= V.t
+    let A2 = new TheA()
+    ex(A2, C_(t))
+
+    
     // ip address (infinite position)
-    A.c.ips ||= 0
-    A.c.ips++
-    A2.c.ip = [...A.c.ip,A.c.ips]
+    V.c.ips ||= 0
+    V.c.ips++
+    A2.c.ip = [...V.c.ip,V.c.ips]
     // parent
-    A2.y.up = A
+    A2.y.up = V
     // A.sc.z is the way to A/A
-    i_(A,A2)
+    i_(V,A2)
     return A2
 }
 // put C inside C (C/C)
