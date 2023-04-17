@@ -111,6 +111,16 @@ function o_(C1: C, qua: string = 'z') {
         }
         return N
     }
+    function ex(s,c) {
+        if (!s || typeof s != 'object') throw "ex!s"
+        if (!c || typeof c != 'object') throw "ex!c"
+        for (let k in c) {
+            let v = c[k]
+            s[k] = v
+        }
+        if (arguments[2]) throw "ex: too many arguments"
+        return s
+    }
 
 
 
@@ -130,9 +140,7 @@ function o_(C1: C, qua: string = 'z') {
         St_minds(A1)
 
         // walk the A** tree with the mind
-        St_walkies(dub)
-        
-        return A1
+        return St_walkies(dub)
     }
     
     // walk the A** tree with the mind
@@ -143,9 +151,45 @@ function o_(C1: C, qua: string = 'z') {
         // TODO the nearest mind is branched out to index happenings for us here
         //   so various walkies can be reset, etc.
         // TODO interate mind
+        let things = o_path(mind,['mind','thing','act'])
+        things.map(d => d.sc).map(({thing,act}) => {
+            console.log("-->", {thing,act})
+        })
 
+        debugger
 
-        console.log({mind,branch})
+        return {mind,branch}
+    }
+
+    // multi stage o_ with named columns (~~ "o ..." io expr)
+    function o_path (A, d) {
+        if (isst(d)) d = d.split('/')
+        if (isar(d)) d = { path: d }
+        d.path = d.path.map(pa => isst(pa) ? {t:pa} : pa)
+        if (!d.path) throw "!d.path"
+        // d+ with complete d.path
+        let N = []
+        d.grab = function (C:C,d) {
+            // d have rows spreading down joins
+            d.c = ex({},d.c||{})
+            d.sc = ex({},d.sc||{})
+
+            // somewhere named in path
+            let pa = d.path[d.d]
+            if (pa == null) throw "off path"
+            let ark = pa.ark || pa.t
+            d.c[ark] = d
+            d.sc[ark] = C
+            d.ark = ark
+
+            if (!d.path[d.d+1]) {
+                // only go as far as the path
+                d.not = 1
+                N.push(d)
+            }
+        }
+        o_climbing_while(A, d)
+        return N
     }
 
     // construct a one-trick mind
@@ -193,6 +237,7 @@ function o_(C1: C, qua: string = 'z') {
             d = {...d, up:d}
             // d/d+
             d.up.z.push(d)
+            d.d += 1
         }
         // starts with here (if inc)
         //  then appends from C/D+ (or what d.grab maps them to)
@@ -201,6 +246,7 @@ function o_(C1: C, qua: string = 'z') {
         d.inc = 1
         d.z = []
         d.s = C
+        d.d ||= 0
         d.climb ||= (C:C) => o_(C,d.qua||'z')
 
         // avoid returning C if we're grabbing a Cs&thing (til->not before grab)
