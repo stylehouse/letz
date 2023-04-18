@@ -44,26 +44,26 @@ function C_(t: string|Array<any>|C, y?:number|gc, c?:gc, sc?:gc):C {
     y ||= {}
     c ||= {}
     sc ||= {}
-    let Ce = new TheC();
-    ex(Ce,{t,y,c,sc})
-    return Ce
+    let C = new TheC();
+    ex(C,{t,y,c,sc})
+    return C
 }
 // A spawns A
 function A_(V:A, t?:string):A {
     t ||= V.t
-    let A2 = new TheA()
-    ex(A2, C_(t))
+    let A = new TheA()
+    ex(A, C_(t))
 
     
     // ip address (infinite position)
     V.c.ips ||= 0
     V.c.ips++
-    A2.c.ip = [...V.c.ip,V.c.ips]
+    A.c.ip = [...V.c.ip,V.c.ips]
     // parent
-    A2.y.up = V
+    A.y.up = V
     // A.sc.z is the way to A/A
-    i_(V,A2)
-    return A2
+    i_(V,A)
+    return A
 }
 // put C inside C (C/C)
 function i_(C1: C, C2: C, qua: string = 'z') {
@@ -78,6 +78,53 @@ function o_(C1: C, qua: string = 'z') {
 
 
 // type and data handling helpers
+    export function detect_type(s:any) {
+        let typ = {}
+        if (s instanceof Object) {
+            typ.ob = 1
+            if (s instanceof Array) {
+                typ.array = 1
+                typ.bracket = '['
+            }
+            else if (s instanceof TheC) {
+                typ.Cish = 1
+                if (s instanceof TheA) {
+                    typ.A = 1
+                    typ.sym = 'A'
+    
+                }
+                else {
+                    typ.C = 1
+                    typ.sym = 'C'
+                }
+            }
+            else {
+                // unknown type until contextualised
+                typ.Ob = 1
+                typ.bracket = '{'
+            }
+        }
+        else if (typeof s == 'string') {
+            if (isnum(s)) {
+                typ.num = 1
+            }
+            else {
+                typ.str = 1
+            }
+        }
+        else if (typeof s == 'number') {
+            typ.num = 1
+        }
+        else if (typeof s == 'boolean') {
+            typ.bool = 1
+        }
+        else {
+            typ.unk = 1
+        }
+        // a space, not a thing
+        if (typ.Ob || typ.array) typ.iter = 1
+        return typ
+    }
     // type checking, ported from Fividy
     function isst(s) {
         return typeof s == 'string'
@@ -85,7 +132,7 @@ function o_(C1: C, qua: string = 'z') {
     function isnu(s) {
         return typeof s == 'number'
     }
-    function isnum(s) {
+    export function isnum(s) {
         return (isnu(s) || s && s.length && !isspace(s)) && s*1 == s
     }
     function isar(s) {
@@ -164,10 +211,10 @@ function o_(C1: C, qua: string = 'z') {
         things.map(d => d.sc).map(({thing,act}) => {
             console.log("-->", {thing,act})
         })
-
-        debugger
-
-        return {mind,branch}
+        
+        let dat = {mind,branch}
+        console.log(dat)
+        return dat
     }
 
     // multi stage o_ with named columns (~~ "o ..." io expr)
