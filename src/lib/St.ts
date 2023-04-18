@@ -78,7 +78,24 @@ function o_(C1: C, qua: string = 'z') {
 
 
 // type and data handling helpers
-    export function detect_type(s:any) {
+    type typ = {
+        ob?:1
+            array?:1
+            Cish?:1
+                A?:1
+                C?:1
+            Ob?:1
+
+            sym?:string
+            bracket?:string
+        num?:1
+        str?:1
+        bool?:1
+        unk?:1
+
+        iter?:1
+    }
+    export function detect_type(s:any):typ {
         let typ = {}
         if (s instanceof Object) {
             typ.ob = 1
@@ -208,12 +225,12 @@ function o_(C1: C, qua: string = 'z') {
         //   so various walkies can be reset, etc.
         // TODO interate mind
         let things = o_path(mind,['mind','thing','act'])
+        let got = []
         things.map(d => d.sc).map(({thing,act}) => {
-            console.log("-->", {thing,act})
+            got.push({thing,act})
         })
         
-        let dat = {mind,branch}
-        console.log(dat)
+        let dat = {mind,branch,got}
         return dat
     }
 
@@ -264,7 +281,7 @@ function o_(C1: C, qua: string = 'z') {
         A1.sc.mind = mind
     }
     // climb A^^ til d.(for|until|before) is found
-    function o_up(A, d) {
+    function o_up(A, d?) {
         // default what to look for: everything
         d ||= { inc: 1 };
         if (!d.til) {
@@ -287,7 +304,7 @@ function o_(C1: C, qua: string = 'z') {
     }
     // find C** until d.(un)til returns true
     // see also me.inlace
-    function o_climbing_while (C:C,d) {
+    function o_climbing_while (C:C,d?) {
         d ||= {}
         if (d.z) {
             d = {...d, up:d}

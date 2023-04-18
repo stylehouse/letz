@@ -2,7 +2,7 @@
     import {detect_type}  from '$lib/St'
     export let t = 'Con'
     export let s = undefined
-    export let d:Number = 0
+    export let d:number = 0
 
     // params for children
     let chattr = {d: d+1}
@@ -11,7 +11,8 @@
     let sym = typ.bracket || typ.sym
     let Ct
     // separate to the t this component got
-    if (typ.Cish && t != s.t) {
+    if (typ.Cish) {
+        // < sometimes we avoid stating this if == t
         Ct = s.t
     }
 
@@ -41,7 +42,11 @@
 {#if Ct} <span style="color:gainsboro">{Ct}</span>{/if}
 {#if say} <span style="color:darkcyan"> {say} </span>{/if}
 {#if typ.iter}
+    <nodules style="display:inline-block; vertical-align: middle; border:1px solid gainsboro; border-right:none; padding: 0 3px; margin: 0 3px; border-radius: 3px;">
     {#each nodules as n}
-        <svelte:self {...n}/>
+        <nodule style="display:block">
+            <svelte:self {...n} />
+        </nodule>
     {/each}
+    </nodules>
 {/if}
