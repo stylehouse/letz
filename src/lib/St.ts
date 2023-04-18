@@ -71,7 +71,7 @@ function i_(C1: C, C2: C, qua: string = 'z') {
     N.push(C2)
 }
 // get C inside C (C/C)
-function o_(C1: C, qua: string = 'z') {
+export function o_(C1: C, qua: string = 'z') {
     let N = C1.sc[qua] || []
     return N
 }

@@ -1,5 +1,7 @@
 <script lang="ts">
-    import {detect_type}  from '$lib/St'
+	import { scale } from 'svelte/transition';
+
+    import {detect_type, o_}  from '$lib/St'
     export let t = 'Con'
     export let s = undefined
     export let d:number = 0
@@ -17,16 +19,36 @@
     }
 
     let nodules = []
-    if (typ.iter && d <3) {
-        // many parts of this object, or s/*
-        // multiply chattr to make children
-        for (let [k, v] of Object.entries(s)) {
-            nodules.push({
-                ...chattr,
-                t: k,
-                s: v
-            })
+    function nodulate() {
+        let nodules = []
+        if (typ.iter && (d <3 || boost > 0)) {
+            // many parts of this object, or s/*
+            // multiply chattr to make children
+            for (let [k, v] of Object.entries(s)) {
+                nodules.push({
+                    ...chattr,
+                    t: k,
+                    s: v
+                })
+            }
         }
+        if (typ.Cish && (d <2 || boost > 0)) {
+            let N = o_(s)
+            for (let [k, v] of Object.entries(N)) {
+                nodules.push({
+                    ...chattr,
+                    t: k,
+                    s: v
+                })
+            }
+        }
+        return nodules
+    }
+    $: nodules = nodulate(boost)
+
+    function boosting (e, negate=false) {
+        boost += e.ctrlKey || negate ? -1 : 1
+        console.log("Boosting", boost)
     }
 
     let say
@@ -37,14 +59,16 @@
     
 </script>
 
-<span style="color:deepskyblue">{t}</span>
+<span style="color:deepskyblue" on:pointerdown={(e) => boosting(e)}>{t}</span>
+{#if 0} <span style="color:blueviolet" >&lt;&lt;</span>{/if}
+{#if boost} <span style="color:blueviolet" on:pointerdown={(e) => boosting(e,'negate')}>+{boost}</span>{/if}
 {#if sym} <span style="color:cornsilk">{sym}</span>{/if}
 {#if Ct} <span style="color:gainsboro">{Ct}</span>{/if}
 {#if say} <span style="color:darkcyan"> {say} </span>{/if}
-{#if typ.iter}
-    <nodules style="display:inline-block; vertical-align: middle; border:1px solid gainsboro; border-right:none; padding: 0 3px; margin: 0 3px; border-radius: 3px;">
+{#if nodules.length}
+    <nodules transition:scale style="display:inline-block; vertical-align: middle; border:1px solid gainsboro; border-right:none; padding: 0 3px; margin: 0 3px; border-radius: 3px;">
     {#each nodules as n}
-        <nodule style="display:block">
+        <nodule transition:scale style="display:block">
             <svelte:self {...n} />
         </nodule>
     {/each}
