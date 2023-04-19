@@ -1,5 +1,6 @@
 // Stylehouse, a dreamy coding paradigm in ts/js
 
+//#region basics
 // the baskets of properties that are C.y|c|sc
 type gc = {
     [key: string]: any
@@ -75,9 +76,9 @@ export function o_(C1: C, qua: string = 'z') {
     let N = C1.sc[qua] || []
     return N
 }
+//#endregion
 
-
-// type and data handling helpers
+//#region type and data handling helpers
     type typ = {
         ob?:1
             array?:1
@@ -196,21 +197,21 @@ export function o_(C1: C, qua: string = 'z') {
     }
 
 
+//#endregion
 
 
-
-// the main functions, mocked up
+//#region the main functions, mocked up -
     
     // have a play
     export function St_main (): A {
-        let A1 = C_('toplevel')
-        A1.c.ip = [1]
+        let A = C_('toplevel')
+        A.c.ip = [1]
         // < aren't thisn't?
         // A1:A
-        let dub = St_writers(A1)
+        let dub = St_writers(A)
 
         // make A1.sc.mind=Cmind /Cthing/Cact
-        St_minds(A1)
+        St_minds(A)
 
         // walk the A** tree with the mind
         return St_walkies(dub)
@@ -230,9 +231,97 @@ export function o_(C1: C, qua: string = 'z') {
             got.push({thing,act})
         })
         
-        let dat = {mind,branch,got}
+        let dat = {A,mind,branch,got}
         return dat
     }
+    // keep going, same things
+    export function St_loop (dat) {
+
+        return dat
+    }
+
+    // construct a one-trick mind
+    function St_minds (A1:A) {
+        let mind = C_('mind')
+        let thing = C_('wear')
+        let act = C_('act',3)
+        i_(mind, thing)
+        i_(thing, act)
+        act.c.code = function (A,C,G,T) {
+            // knock a letter off anywhere
+            let i = Math.floor(Math.random()*C.t.length)
+            let t = C.t
+            let t2 = t.slice(0,i) + t.slice(i+1)
+        }
+        A1.sc.mind = mind
+    }
+    function St_writers (A1) {
+        let A11 = A_(A1,'Earth')
+    
+        // create some Cs for authors
+        let Joyce = C_('Joyce',{},{}, {style: 'modernist', theatrics: ['experimental', 'stream of consciousness']})
+        let Faulkner = C_('Faulkner',{},{}, {style: 'southern gothic', theatrics: ['tragic', 'haunting']})
+        let Woolf = C_('Woolf',{},{}, {style: 'feminist', theatrics: ['intimate', 'psychological']})
+        let Ginsberg = C_('Ginsberg',{},{}, {style: 'beat', theatrics: ['rebellious', 'spontaneous']})
+        let Kerouac = C_('Kerouac',{},{}, {style: 'beat', theatrics: ['wandering', 'energetic']})
+        let Burroughs = C_('Burroughs',{},{}, {style: 'Cut-up Technique', nationality: 'American', theatrics: 'avant-garde'})
+        let Rimbaud = C_('Rimbaud',{},{}, {style: 'Symbolism', nationality: 'French', theatrics: 'haunting'})
+        let Baudelaire = C_('Baudelaire',{},{}, {style: 'Modernism', nationality: 'French', theatrics: 'decadent'})
+    
+        // create some As with authors
+        let A111 = A_(A11, 'Dublin')
+        i_(A111, Joyce)
+    
+        let A1111 = A_(A111, 'Sandymount')
+        i_(A1111, Joyce)
+    
+        let A1112 = A_(A111, 'Malahide')
+        i_(A1112, Faulkner)
+    
+        let A1113 = A_(A111, 'Bray')
+        i_(A1113, Woolf)
+        i_(A1113, Burroughs)
+    
+        let A112 = A_(A11, 'Paris')
+        i_(A112, Joyce)
+        i_(A112, Rimbaud)
+        i_(A112, Baudelaire)
+    
+        let A1121 = A_(A112, 'Montparnasse')
+        i_(A1121, Faulkner)
+    
+        let A1122 = A_(A112, 'Saint-Germain')
+        i_(A1122, Woolf)
+    
+        let A113 = A_(A11, 'London')
+        i_(A113, Woolf)
+    
+        let A1131 = A_(A113, 'Bloomsbury')
+        i_(A1131, Woolf)
+    
+        // create a district with a writer in it
+        let A1114 = A_(A111, 'Dublin City')
+        i_(A1114, Joyce)
+        i_(A1114, Kerouac)
+        i_(A1114, Ginsberg)
+
+
+
+        // check A.c.ip of a few of these, eg A1114's .c.ip == [1,1,1,4]
+        let samp = {A113, A1114, A1111, A111}
+        for (let k in samp) {
+            let A = samp[k]
+            let k_ipbits = k.slice(1).split('').join('.')
+            let A_ipbits = A.c.ip.join('.')
+            if (k_ipbits != A_ipbits) {
+                throw `k_ipbits != A_ipbits: ${k_ipbits} != ${A_ipbits}`
+            }
+        }
+        return A1114
+    }
+//#endregion
+
+//#region climbing
 
     // multi stage o_ with named columns (~~ "o ..." io expr)
     function o_path (A, d) {
@@ -263,22 +352,6 @@ export function o_(C1: C, qua: string = 'z') {
         }
         o_climbing_while(A, d)
         return N
-    }
-
-    // construct a one-trick mind
-    function St_minds (A1:A) {
-        let mind = C_('mind')
-        let thing = C_('wear')
-        let act = C_('act',3)
-        i_(mind, thing)
-        i_(thing, act)
-        act.c.code = function (A,C,G,T) {
-            // knock a letter off anywhere
-            let i = Math.floor(Math.random()*C.t.length)
-            let t = C.t
-            let t2 = t.slice(0,i) + t.slice(i+1)
-        }
-        A1.sc.mind = mind
     }
     // climb A^^ til d.(for|until|before) is found
     function o_up(A, d?) {
@@ -371,68 +444,5 @@ export function o_(C1: C, qua: string = 'z') {
             d.N.push(...zN)
         }
     }
+//#endregion
 
-    function St_writers (A1) {
-        let A11 = A_(A1,'Earth')
-    
-        // create some Cs for authors
-        let Joyce = C_('Joyce',{},{}, {style: 'modernist', theatrics: ['experimental', 'stream of consciousness']})
-        let Faulkner = C_('Faulkner',{},{}, {style: 'southern gothic', theatrics: ['tragic', 'haunting']})
-        let Woolf = C_('Woolf',{},{}, {style: 'feminist', theatrics: ['intimate', 'psychological']})
-        let Ginsberg = C_('Ginsberg',{},{}, {style: 'beat', theatrics: ['rebellious', 'spontaneous']})
-        let Kerouac = C_('Kerouac',{},{}, {style: 'beat', theatrics: ['wandering', 'energetic']})
-        let Burroughs = C_('Burroughs',{},{}, {style: 'Cut-up Technique', nationality: 'American', theatrics: 'avant-garde'})
-        let Rimbaud = C_('Rimbaud',{},{}, {style: 'Symbolism', nationality: 'French', theatrics: 'haunting'})
-        let Baudelaire = C_('Baudelaire',{},{}, {style: 'Modernism', nationality: 'French', theatrics: 'decadent'})
-    
-        // create some As with authors
-        let A111 = A_(A11, 'Dublin')
-        i_(A111, Joyce)
-    
-        let A1111 = A_(A111, 'Sandymount')
-        i_(A1111, Joyce)
-    
-        let A1112 = A_(A111, 'Malahide')
-        i_(A1112, Faulkner)
-    
-        let A1113 = A_(A111, 'Bray')
-        i_(A1113, Woolf)
-        i_(A1113, Burroughs)
-    
-        let A112 = A_(A11, 'Paris')
-        i_(A112, Joyce)
-        i_(A112, Rimbaud)
-        i_(A112, Baudelaire)
-    
-        let A1121 = A_(A112, 'Montparnasse')
-        i_(A1121, Faulkner)
-    
-        let A1122 = A_(A112, 'Saint-Germain')
-        i_(A1122, Woolf)
-    
-        let A113 = A_(A11, 'London')
-        i_(A113, Woolf)
-    
-        let A1131 = A_(A113, 'Bloomsbury')
-        i_(A1131, Woolf)
-    
-        // create a district with a writer in it
-        let A1114 = A_(A111, 'Dublin City')
-        i_(A1114, Joyce)
-        i_(A1114, Kerouac)
-        i_(A1114, Ginsberg)
-
-
-
-        // check A.c.ip of a few of these, eg A1114's .c.ip == [1,1,1,4]
-        let samp = {A113, A1114, A1111, A111}
-        for (let k in samp) {
-            let A = samp[k]
-            let k_ipbits = k.slice(1).split('').join('.')
-            let A_ipbits = A.c.ip.join('.')
-            if (k_ipbits != A_ipbits) {
-                throw `k_ipbits != A_ipbits: ${k_ipbits} != ${A_ipbits}`
-            }
-        }
-        return A1114
-    }
