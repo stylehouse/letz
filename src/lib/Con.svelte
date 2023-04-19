@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { scale } from 'svelte/transition';
+	import { scale } from 'svelte/transition'
+    import { onMount } from 'svelte'
 
     import {detect_type, o_}  from '$lib/St'
     export let t = 'Con'
@@ -21,7 +22,10 @@
     let nodules = []
     function nodulate() {
         let nodules = []
-        if (typ.iter && (d <3 || boost > 0)) {
+        // mix up an esteem for more
+        let boots = ((typ.Cish && d < 2
+            || typ.iter && d<3) ? 1 : 0) + boost
+        if (typ.iter && boots > 0) {
             // many parts of this object, or s/*
             // multiply chattr to make children
             for (let [k, v] of Object.entries(s)) {
@@ -32,7 +36,7 @@
                 })
             }
         }
-        if (typ.Cish && (d <2 || boost > 0)) {
+        if (typ.Cish && boots > 0) {
             let N = o_(s)
             for (let [k, v] of Object.entries(N)) {
                 nodules.push({
@@ -56,9 +60,18 @@
         say = s
         if (typ.str) say = '"' + say + '"'
     }
+
+    let wrapper
+    onMount((e,t,c) => {
+        if (Ct == 'Dublin City') {
+            let geo = wrapper.getBoundingClientRect()
+            console.log("Con onMount", geo)
+        }
+    })
     
 </script>
 
+<div bind:this={wrapper}>
 <span style="color:deepskyblue" on:pointerdown={(e) => boosting(e)}>{t}</span>
 {#if 0} <span style="color:blueviolet" >&lt;&lt;</span>{/if}
 {#if boost} <span style="color:blueviolet" on:pointerdown={(e) => boosting(e,'negate')}>+{boost}</span>{/if}
@@ -74,3 +87,4 @@
     {/each}
     </nodules>
 {/if}
+</div>

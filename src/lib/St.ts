@@ -225,9 +225,8 @@ export function o_(C1: C, qua: string = 'z') {
         // TODO the nearest mind is branched out to index happenings for us here
         //   so various walkies can be reset, etc.
         // TODO interate mind
-        let things = o_path(mind,['mind','thing','act'])
         let got = []
-        things.map(d => d.sc).map(({thing,act}) => {
+        o_path(mind,['mind','thing','act']) .map(({thing,act}) => {
             got.push({thing,act})
         })
         
@@ -236,7 +235,25 @@ export function o_(C1: C, qua: string = 'z') {
     }
     // keep going, same things
     export function St_loop (dat) {
+        let A = dat.A
 
+        // code to run
+        let mind = o_up(A,{thes:'mind'})
+        // communication channel|electrode to this iterator
+        let T = {}
+        for (let {thing,act} of o_path(mind,['mind','thing','act'])) {
+            // when to
+            //if (A.c.cv >= act.y.cv) return
+            if (act.c.for == 'C') {
+                // what to: C** until A
+                let N = o_climbing_while(A,{until: s => s instanceof TheA})
+                for (let C of N) {
+                    act.c.code(A,C,{t:'Gee'},T)
+                }
+            } 
+            else { throw 'act.c?'}
+            A.c.cv = act.y.cv
+        }
         return dat
     }
 
@@ -251,8 +268,9 @@ export function o_(C1: C, qua: string = 'z') {
             // knock a letter off anywhere
             let i = Math.floor(Math.random()*C.t.length)
             let t = C.t
-            let t2 = t.slice(0,i) + t.slice(i+1)
+            C.t = t.slice(0,i) + t.slice(i+1)
         }
+        act.c.for = 'C'
         A1.sc.mind = mind
     }
     function St_writers (A1) {
@@ -343,6 +361,7 @@ export function o_(C1: C, qua: string = 'z') {
             d.c[ark] = d
             d.sc[ark] = C
             d.ark = ark
+            d.sc.d = d
 
             if (!d.path[d.d+1]) {
                 // only go as far as the path
@@ -351,7 +370,9 @@ export function o_(C1: C, qua: string = 'z') {
             }
         }
         o_climbing_while(A, d)
-        return N
+        // return many d.sc of many .$ark=C (and .d=d)
+        // < group by?
+        return N.map(d => d.sc)
     }
     // climb A^^ til d.(for|until|before) is found
     function o_up(A, d?) {
@@ -377,6 +398,9 @@ export function o_(C1: C, qua: string = 'z') {
     }
     // find C** until d.(un)til returns true
     // see also me.inlace
+    // caveats:
+    //  d.(un)til avoids the first thing
+    //   til may d.not before grab can happen
     function o_climbing_while (C:C,d?) {
         d ||= {}
         if (d.z) {
@@ -400,7 +424,8 @@ export function o_(C1: C, qua: string = 'z') {
 
         // if d.(un)til returns true, stop
         let til = d.til || d.until
-        if (til && til(C)) {
+        let is_top = d.d == 0
+        if (til && !is_top && til(C)) {
             d.not = 1
             if (d.until) {
                 // un-returning C (and avoiding middle callbacks eg grab)

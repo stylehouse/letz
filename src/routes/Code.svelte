@@ -15,7 +15,7 @@
         dat = St_main()
     }
     function bloop() {
-        dat = St_loop(dat)
+        St_loop(dat)
     }
 
     // lezer
