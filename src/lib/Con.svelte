@@ -25,19 +25,10 @@
         // mix up an esteem for more
         let boots = ((typ.Cish && d < 2
             || typ.iter && d<3) ? 1 : 0) + boost
-        if (typ.iter && boots > 0) {
-            // many parts of this object, or s/*
-            // multiply chattr to make children
-            for (let [k, v] of Object.entries(s)) {
-                nodules.push({
-                    ...chattr,
-                    t: k,
-                    s: v
-                })
-            }
-        }
-        if (typ.Cish && boots > 0) {
-            let N = o_(s)
+        if (boots) {
+            let N = typ.iter ? s
+                : typ.Cish ? o_(s)
+                : []
             for (let [k, v] of Object.entries(N)) {
                 nodules.push({
                     ...chattr,

@@ -236,6 +236,8 @@ export function o_(C1: C, qua: string = 'z') {
     // keep going, same things
     export function St_loop (dat) {
         let A = dat.A
+        dat.i ||= 0
+        dat.i += 1
 
         // code to run
         let mind = o_up(A,{thes:'mind'})
