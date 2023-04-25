@@ -6,6 +6,7 @@
     export let t = 'Con'
     export let s = undefined
     export let d:number = 0
+    export let refresh = 0
 
     // params for children
     let chattr = {d: d+1}
@@ -70,9 +71,9 @@
 {#if Ct} <span style="color:gainsboro">{Ct}</span>{/if}
 {#if say} <span style="color:darkcyan"> {say} </span>{/if}
 {#if nodules.length}
-    <nodules transition:scale style="display:inline-block; vertical-align: middle; border:1px solid gainsboro; border-right:none; padding: 0 3px; margin: 0 3px; border-radius: 3px;">
+    <nodules style="display:inline-block; vertical-align: middle; border:1px solid gainsboro; border-right:none; padding: 0 3px; margin: 0 3px; border-radius: 3px;">
     {#each nodules as n}
-        <nodule transition:scale style="display:block">
+        <nodule in:scale style="display:block">
             <svelte:self {...n} />
         </nodule>
     {/each}

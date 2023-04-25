@@ -10,13 +10,18 @@
     let parser = buildParser(grammar)
 
     let b = ':3'
-    let dat
+    let dat, refresh
     function bleep() {
         dat = St_main()
     }
     function bloop() {
-        St_loop(dat)
+        dat = St_loop(dat)
+
+
+        refresh = dat.i
+
     }
+    $: refresh = dat?.i
 
     // lezer
         let flub = "i thung/with/etc\n\no yeses/because\n"
@@ -34,7 +39,13 @@
 
 <button on:click={() => bleep()} > bleep() </button>
 <button on:click={() => bloop()} > bloop() </button>
-{#if dat}<p> <Con s={dat}></Con> </p>{/if}
+{#if dat}
+    {#key refresh}
+        <p> <Con s={dat} {refresh}></Con> </p>
+    {/key}
+{/if}
+
+
 <p> {b} </p>
 <Codemirror value={$sto} {parser} on:kommit={dobla}></Codemirror>
 {#if look}<Lezing {look}></Lezing>{/if}
