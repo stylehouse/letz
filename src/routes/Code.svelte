@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { sto } from './stores.js';
     import { Le } from "$lib/Le"
-    import { St_main, St_loop } from "$lib/St"
-    import Con from '$lib/Con.svelte';
+    import { St_main, St_loop, toCon } from "$lib/St"
+    import Con from '$lib/pi/Con.svelte';
     
     import grammar from '../lang/style.grammar?raw'
     import { buildParser } from '@lezer/generator'
@@ -13,13 +13,20 @@
     let dat, refresh
     function bleep() {
         dat = St_main()
+        tocon(dat)
     }
     function bloop() {
         dat = St_loop(dat)
-
-
+        tocon(dat)
         refresh = dat.i
 
+    }
+    let laCon
+    let con
+    // scan into (-Con/(-Cont|-Conz))**
+    function tocon(dat) {
+        con = toCon(dat, {D:laCon})
+        laCon = con
     }
     $: refresh = dat?.i
 
@@ -30,6 +37,7 @@
     // EditorView
 	    import Codemirror from './Codemirror.svelte';
 	    import Lezing from './Lezing.svelte';
+    import { set_custom_element_data } from 'svelte/internal';
 
     let look:Le = undefined
     function dobla({detail:{view}}) {
@@ -39,9 +47,9 @@
 
 <button on:click={() => bleep()} > bleep() </button>
 <button on:click={() => bloop()} > bloop() </button>
-{#if dat}
+{#if con}
     {#key refresh}
-        <p> <Con s={dat} {refresh}></Con> </p>
+    <p> <Con C={con}/> </p>
     {/key}
 {/if}
 

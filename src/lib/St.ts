@@ -258,6 +258,88 @@ export function o_(C1: C, qua: string = 'z') {
         }
         return dat
     }
+    //#region toCon a dumper for the A** tree
+    export function toCon (s,d) {
+        if (d.t == null) d.t = 'toCon'
+        // producing C** for recursive dumper instructions: (-Con/(-Cont|-Conz))**
+        let C = toCon_newCon(s,d)
+        
+        // < all C.c.ip for getContext-ing
+        // < comparing to D from last time
+        // < producing versioned C** to interpret for minimal newsup
+
+        // try to know s
+        toCon_newCont(s,d)
+        // and beyond, recursing toCon
+        toCon_newConz(s,d)
+
+        return C
+    }
+    // producing new C** -Con
+    function toCon_newCon (s,d) {
+        let upC = d.up?.C
+        let C = d.C = C_(d.t,1,{pi:'Con',s})
+        if (upC) {
+            // -Con/-Conz/-Con
+            let Conz = upC.c.Conz
+            i_(Conz,C)
+            C.c.d = upC.c.d + 1
+        }
+        else {
+            C.c.d = 0
+        }
+        return C
+    }
+    // new -Con/-Cont detailing s
+    function toCon_newCont (s,d) {
+        let Con = d.C
+        let Cont = Con.c.Cont = C_('Cont',1,{pi:'Cont'})
+        i_(Con,Cont)
+
+        // from the way in:
+        let t = Con.t
+        // now all about this item:
+        let typ = d.typ = detect_type(s)
+        let sym = typ.bracket || typ.sym
+        let Ct
+        if (typ.Cish) {
+            // < sometimes we avoid stating this if == t
+            Ct = s.t
+        }
+
+        let say
+        if (typ.num || typ.str || typ.bool) {
+            say = s
+            if (typ.str) say = '"' + say + '"'
+        }
+
+        ex(Cont.sc,{t,sym,Ct,say})
+    }
+    // new -Con/-Conz listing s/*
+    function toCon_newConz (s,d) {
+        let Con = d.C
+        let typ = d.typ
+        // mix up an esteem for more
+        let depth = Con.c.d || 0
+        let boost = Con.c.boost || 0
+        let early = typ.Cish && depth < 2 || typ.iter && depth<3
+        let boots = (early ? 1 : 0) + boost
+        if (!boots) return
+
+        // Con/Conz/*
+        let Conz = Con.c.Conz = C_('Conz',1,{pi:'Conz'})
+        i_(Con,Conz)
+
+        let nodules = []
+        let N = typ.iter ? s
+            : typ.Cish ? o_(s)
+            : []
+        for (let [t,s] of Object.entries(N)) {
+            let dd = ex(ex({},d),{up:d,t,s})
+            // they put -Conz/-Con*
+            toCon(s,dd)
+        }
+    }
 
     // construct a one-trick mind
     function St_minds (A1:A) {
