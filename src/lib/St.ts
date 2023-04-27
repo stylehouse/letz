@@ -57,14 +57,18 @@ function A_(V:A, t?:string):A {
 
     
     // ip address (infinite position)
-    V.c.ips ||= 0
-    V.c.ips++
-    A.c.ip = [...V.c.ip,V.c.ips]
+    VA_ip(V,A)
     // parent
     A.y.up = V
     // A.sc.z is the way to A/A
     i_(V,A)
     return A
+}
+// ip address (infinite position)
+function VA_ip (V:A,A:A) {
+    V.c.ips ||= 0
+    V.c.ips++
+    A.c.ip = [...(V.c.ip||[]),V.c.ips]
 }
 // put C inside C (C/C)
 function i_(C1: C, C2: C, qua: string = 'z') {
@@ -276,7 +280,7 @@ export function o_(C1: C, qua: string = 'z') {
         return C
     }
     // defines an adder of d.C or its C.c.$pi=C/*
-    function DCpartor (d,nodepi) {
+    function DCpartor (nodepi) {
         // arrow functions don't provide their own this binding
         return function (t,pi,c) {
             // compat: this is the current d where this function is called
@@ -323,11 +327,18 @@ export function o_(C1: C, qua: string = 'z') {
             }
             
             if (parent) {
+                // C** as in C%z += C
                 i_(parent,C)
-                // < ip
             }
-            else {
+            if (!parent) {
+                // here's the root
                 if (C.c.d !== 0) throw "whatd"
+                C.c.ip = [1]
+            }
+            if (parent) {
+                // C** as ip, a different network to A.c.ip
+                if (!parent.c.ip) throw "!ip"
+                VA_ip(parent,C)
             }
             return C
         }
@@ -335,7 +346,7 @@ export function o_(C1: C, qua: string = 'z') {
     // producing new C** -Con
     function toCon_newCon (s,d) {
         // handles creating C** once told the scheme
-        d.partor ||= DCpartor(d,'Con')
+        d.partor ||= DCpartor('Con')
         let C = d.partor(d.t,'Con',{s})
         return C
     }

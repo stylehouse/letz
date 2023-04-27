@@ -1,5 +1,5 @@
 <script lang="ts">
-
+    import {getContext} from 'svelte'
     import {o_}  from '$lib/St'
     import Cont from '$lib/pi/Cont.svelte';
     import Conz from '$lib/pi/Conz.svelte';
@@ -7,8 +7,12 @@
     // our instructions: (-Con/(-Cont|-Conz))**
     export let C
     
+    let sip = C.c.ip.join('.')
+    let update
+    $: update = getContext(sip)
 
-    export let t = C.t
+
+    let t = C.t
     // layers of identity leading onwards
     let bits = o_(C)
 
@@ -24,6 +28,9 @@
 
 <span style="color:deepskyblue" on:pointerdown={(e) => boosting(e)}>{t}</span>
 {#if boost} <span style="color:blueviolet" on:pointerdown={(e) => boosting(e,'negate')}>+{boost}</span>{/if}
+
+<small> {sip}</small>
+{#if update} <span style="color:darkcyan; text-decoration:underline">{update}</span>{/if}
 
 {#each bits as n}
     <span style="display:inline-block; vertical-align: middle; border:1px solid gainsboro; border-right:none; padding: 0 3px; margin: 0 3px; border-radius: 3px;">

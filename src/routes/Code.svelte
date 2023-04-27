@@ -1,4 +1,5 @@
 <script lang="ts">
+    import {setContext} from 'svelte'
 	import { sto } from './stores.js';
     import { Le } from "$lib/Le"
     import { St_main, St_loop, toCon } from "$lib/St"
@@ -14,13 +15,18 @@
     function bleep() {
         dat = St_main()
         tocon(dat)
+        // repeated bleep()s version negatively (then dat.i -> 1,2,3...)
+        conver = conver < 0 ? conver - 1 : -1
     }
     function bloop() {
         dat = St_loop(dat)
         tocon(dat)
         refresh = dat.i
-
     }
+    // < ping changes carefully
+    $: refresh, setContext('1.2.1.2.2',refresh);
+
+
     let laCon
     let con
     // scan into (-Con/(-Cont|-Conz))**
@@ -28,7 +34,10 @@
         con = toCon(dat, {D:laCon})
         laCon = con
     }
-    $: refresh = dat?.i
+    let conver = 0
+    function refresh_Con() {
+        conver = conver + 1
+    }
 
     // lezer
         let flub = "i thung/with/etc\n\no yeses/because\n"
@@ -47,8 +56,9 @@
 
 <button on:click={() => bleep()} > bleep() </button>
 <button on:click={() => bloop()} > bloop() </button>
+<button on:click={() => refresh_Con()} > refresh({refresh}) </button>
 {#if con}
-    {#key refresh}
+    {#key conver}
     <p> <Con C={con}/> </p>
     {/key}
 {/if}
