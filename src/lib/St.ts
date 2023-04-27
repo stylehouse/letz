@@ -275,26 +275,63 @@ export function o_(C1: C, qua: string = 'z') {
 
         return C
     }
+    // defines an adder of d.C or its C.c.$pi=C/*
+    function DCpartor (d,nodepi) {
+        // arrow functions don't provide their own this binding
+        return function (t,pi,c) {
+            // compat: this is the current d where this function is called
+            let d = this
+            pi ||= t
+            let C = C_(t,1,{pi})
+            if (c) ex(C.c,c)
+
+            // in eg toCon_newCon(),
+            // the -Conz immediately above this -Con
+            //  bit of a hack, upC is set in the new d spawned in toCon_newConz()
+            //  < rowing providing the latest upC (last nodepi column), a kind of slope
+            let upC = d.upC
+            // the -Con above this -Con
+            let upCon = d.up?.C
+
+            if (pi == nodepi) {
+                // is the main (stable|normal) type of node
+                d.C = C
+
+                // inside here
+                if (upC) {
+                    // eg -Con/-Conz/-Con
+                    i_(upC,C)
+                }
+
+                // depth++
+                if (upCon) {
+                    // eg -Con/-Conz/-Con
+                    if (upCon.c.pi != nodepi) throw "!nodepi"
+                    C.c.d = upCon.c.d + 1
+                }
+                else {
+                    C.c.d = 0
+                }
+            }
+            else {
+                // supposing only one of each pi
+                d.C.c[pi] = C
+                i_(d.C,C)
+            }
+            return C
+        }
+    }
     // producing new C** -Con
     function toCon_newCon (s,d) {
-        let upC = d.up?.C
-        let C = d.C = C_(d.t,1,{pi:'Con',s})
-        if (upC) {
-            // -Con/-Conz/-Con
-            let Conz = upC.c.Conz
-            i_(Conz,C)
-            C.c.d = upC.c.d + 1
-        }
-        else {
-            C.c.d = 0
-        }
+        // handles creating C** once told the node pi
+        d.partor ||= DCpartor(d,'Con')
+        let C = d.partor(d.t,'Con',{s})
         return C
     }
     // new -Con/-Cont detailing s
     function toCon_newCont (s,d) {
         let Con = d.C
-        let Cont = Con.c.Cont = C_('Cont',1,{pi:'Cont'})
-        i_(Con,Cont)
+        let Cont = d.partor('Cont')
 
         // from the way in:
         let t = Con.t
@@ -326,20 +363,20 @@ export function o_(C1: C, qua: string = 'z') {
         let boots = (early ? 1 : 0) + boost
         if (!boots) return
 
-        // Con/Conz/*
-        let Conz = Con.c.Conz = C_('Conz',1,{pi:'Conz'})
-        i_(Con,Conz)
+        // -Con/-Conz/*
+        let Conz = d.partor('Conz')
 
         let nodules = []
         let N = typ.iter ? s
             : typ.Cish ? o_(s)
             : []
         for (let [t,s] of Object.entries(N)) {
-            let dd = ex(ex({},d),{up:d,t,s})
+            let dd = ex(ex({},d),{up:d,upC:Conz,t,s})
             // they put -Conz/-Con*
             toCon(s,dd)
         }
     }
+    //#endregion
 
     // construct a one-trick mind
     function St_minds (A1:A) {
