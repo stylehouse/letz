@@ -285,6 +285,9 @@ export function o_(C1: C, qua: string = 'z') {
             let C = C_(t,1,{pi})
             if (c) ex(C.c,c)
 
+            // what we turn out to be inside of:
+            let parent
+
             // in eg toCon_newCon(),
             // the -Conz immediately above this -Con
             //  bit of a hack, upC is set in the new d spawned in toCon_newConz()
@@ -299,13 +302,13 @@ export function o_(C1: C, qua: string = 'z') {
 
                 // inside here
                 if (upC) {
-                    // eg -Con/-Conz/-Con
-                    i_(upC,C)
+                    // eg -Con/-Conz:upC/-Con:C
+                    parent = upC
                 }
 
                 // depth++
                 if (upCon) {
-                    // eg -Con/-Conz/-Con
+                    // eg -Con:upCon/-Conz/-Con:C
                     if (upCon.c.pi != nodepi) throw "!nodepi"
                     C.c.d = upCon.c.d + 1
                 }
@@ -316,14 +319,22 @@ export function o_(C1: C, qua: string = 'z') {
             else {
                 // supposing only one of each pi
                 d.C.c[pi] = C
-                i_(d.C,C)
+                parent = d.C
+            }
+            
+            if (parent) {
+                i_(parent,C)
+                // < ip
+            }
+            else {
+                if (C.c.d !== 0) throw "whatd"
             }
             return C
         }
     }
     // producing new C** -Con
     function toCon_newCon (s,d) {
-        // handles creating C** once told the node pi
+        // handles creating C** once told the scheme
         d.partor ||= DCpartor(d,'Con')
         let C = d.partor(d.t,'Con',{s})
         return C
