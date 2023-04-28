@@ -1,5 +1,6 @@
 <script lang="ts">
     import {setContext} from 'svelte'
+    import {writable} from 'svelte/store'
 	import { sto } from './stores.js';
     import { Le } from "$lib/Le"
     import { St_main, St_loop, toCon } from "$lib/St"
@@ -24,8 +25,11 @@
         refresh = dat.i
     }
     // < ping changes carefully
-    $: refresh, setContext('1.2.1.2.2',refresh);
+    let sips = {}
+    let newsips = {}
+    $: refresh, console.log("Was"+refresh), sips['1.2.1.2.2']?.set(refresh);
 
+    let moment = 0
 
     let laCon
     let con
@@ -33,7 +37,25 @@
     function tocon(dat) {
         con = toCon(dat, {D:laCon})
         laCon = con
+        // set up stores to update them all (con.c.visit[Con+])
+        for (let C of con.c.visit) {
+            let sip = C.c.ip.join('.')
+            if (sips[sip]) continue
+            newsips[sip] = C
+        }
+        moment = moment+1
     }
+
+    $: moment, syncsips()
+    function syncsips() {
+        for (let [sip, C] of Object.entries(newsips)) {
+            let wire = sips[sip] = writable(0)
+            // allow **-Con to find their wires
+            setContext(sip, wire)
+        }
+    }
+
+
     let conver = 0
     function refresh_Con() {
         conver = conver + 1

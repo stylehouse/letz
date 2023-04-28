@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {getContext} from 'svelte'
+    import {onMount, onDestroy, getContext} from 'svelte'
     import {o_}  from '$lib/St'
     import Cont from '$lib/pi/Cont.svelte';
     import Conz from '$lib/pi/Conz.svelte';
@@ -7,9 +7,21 @@
     // our instructions: (-Con/(-Cont|-Conz))**
     export let C
     
-    let sip = C.c.ip.join('.')
-    let update
-    $: update = getContext(sip)
+    let sip = C.c.ip.join('.');
+    let wire
+    let update:number
+    let unsubscribe:Function
+
+    wire = getContext(sip)
+    unsubscribe = wire.subscribe((v) => {
+        if (!v) return
+        console.log("Got:"+v)
+        update = v
+    });
+
+    onDestroy(() => {
+        unsubscribe();
+    });
 
 
     let t = C.t
@@ -31,10 +43,10 @@
 
 <small> {sip}</small>
 {#if update} <span style="color:darkcyan; text-decoration:underline">{update}</span>{/if}
-
+{#key update}
 {#each bits as n}
     <span style="display:inline-block; vertical-align: middle; border:1px solid gainsboro; border-right:none; padding: 0 3px; margin: 0 3px; border-radius: 3px;">
         <svelte:component this={pis[n.c.pi]} C={n}/>
     </span>
 {/each}
-
+{/key}

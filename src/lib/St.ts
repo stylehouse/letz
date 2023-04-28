@@ -277,6 +277,9 @@ export function o_(C1: C, qua: string = 'z') {
         // and beyond, recursing toCon
         toCon_newConz(s,d)
 
+        // a list of all -Con
+        C.c.visit = d.visit
+
         return C
     }
     // defines an adder of d.C or its C.c.$pi=C/*
@@ -339,6 +342,11 @@ export function o_(C1: C, qua: string = 'z') {
                 // C** as ip, a different network to A.c.ip
                 if (!parent.c.ip) throw "!ip"
                 VA_ip(parent,C)
+            }
+            if (d.C == C) {
+                // list of all the main type of node (eg -Con)
+                d.visit ||= []
+                d.visit.push(C)
             }
             return C
         }
