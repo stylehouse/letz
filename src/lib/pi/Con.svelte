@@ -8,9 +8,6 @@
     export let C
     // label from above (key into here - Cont%Ct is the s.t on the inside)
     let t = C.t
-    // layers of identity leading onwards
-    let bits
-    $: bits = o_(C)
     
     let sip = C.c.ip.join('.')
     let wire
@@ -57,7 +54,7 @@
 <small> {sip} </small>
 <span style="color:darkcyan; text-decoration:underline">{quee}</span>
 {#key quee}
-{#each bits as n}
+{#each o_(C) as n}
     <span style="display:inline-block; vertical-align: middle; border:2px solid gainsboro; border-right:none; padding: 0 3px; margin: 0 3px; border-radius: 3px;">
         <svelte:component this={pis[n.c.pi]} C={n}/>
     </span>
