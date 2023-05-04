@@ -5,7 +5,7 @@
     import Con from '$lib/pi/Con.svelte'
 
     export let C
-    
+
     let nodules = o_(C)
 </script>
 

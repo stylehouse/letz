@@ -27,7 +27,7 @@
     // < ping changes carefully
     let sips = {}
     let newsips = {}
-    $: refresh, console.log("Was"+refresh), sips['1.2.1.2.2']?.set(refresh);
+    $: if (refresh) console.log("Was"+refresh), sips['1.2.1.2.2'].set('v'+refresh)
 
     let moment = 0
 
@@ -53,8 +53,8 @@
             // allow **-Con to find their wires
             setContext(sip, wire)
         }
+        newsips = {}
     }
-
 
     let conver = 0
     function refresh_Con() {
@@ -76,9 +76,11 @@
     }
 </script>
 
+
 <button on:click={() => bleep()} > bleep() </button>
 <button on:click={() => bloop()} > bloop() </button>
 <button on:click={() => refresh_Con()} > refresh({refresh}) </button>
+
 {#if con}
     {#key conver}
     <p> <Con C={con}/> </p>

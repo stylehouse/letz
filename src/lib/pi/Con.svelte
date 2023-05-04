@@ -13,12 +13,12 @@
     let unsubscribe:Function
 
     wire = getContext(sip)
+
     unsubscribe = wire.subscribe((v) => {
         if (!v) return
         console.log("Got:"+v)
         update = v
     });
-
     onDestroy(() => {
         unsubscribe();
     });
@@ -27,6 +27,8 @@
     let t = C.t
     // layers of identity leading onwards
     let bits = o_(C)
+    let quee
+    $: quee = update || 'no update'
 
 
     // TODO not sure how to get boost into the toCon process
@@ -42,8 +44,8 @@
 {#if boost} <span style="color:blueviolet" on:pointerdown={(e) => boosting(e,'negate')}>+{boost}</span>{/if}
 
 <small> {sip}</small>
-{#if update} <span style="color:darkcyan; text-decoration:underline">{update}</span>{/if}
-{#key update}
+{#if update} <span style="color:darkcyan; text-decoration:underline">{quee}</span>{/if}
+{#key quee}
 {#each bits as n}
     <span style="display:inline-block; vertical-align: middle; border:1px solid gainsboro; border-right:none; padding: 0 3px; margin: 0 3px; border-radius: 3px;">
         <svelte:component this={pis[n.c.pi]} C={n}/>
