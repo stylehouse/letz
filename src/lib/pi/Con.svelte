@@ -9,7 +9,8 @@
     // label from above (key into here - Cont%Ct is the s.t on the inside)
     let t = C.t
     // layers of identity leading onwards
-    let bits = o_(C)
+    let bits
+    $: bits = o_(C)
     
     let sip = C.c.ip.join('.')
     let wire
@@ -23,7 +24,6 @@
         console.log(sip+" got: "+v)
         C = v
         update = C.c.version
-        bits = bits
     });
     onDestroy(() => {
         unsubscribe()
