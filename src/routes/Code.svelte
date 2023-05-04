@@ -25,9 +25,9 @@
         refresh = dat.i
     }
     // < ping changes carefully
-    let sips = {}
+    let sip_C = {}
+    let sip_wire = {}
     let newsips = {}
-    $: if (refresh) console.log("Was"+refresh), sips['1.2.1.2.2'].set('v'+refresh)
 
     let moment = 0
 
@@ -40,7 +40,12 @@
         // set up stores to update them all (con.c.visit[Con+])
         for (let C of con.c.visit) {
             let sip = C.c.ip.join('.')
-            if (sips[sip]) continue
+
+            // to find the current version of C by sip
+            sip_C[sip] = C
+
+            // make connector to other -Con
+            if (sip_wire[sip]) continue
             newsips[sip] = C
         }
         moment = moment+1
@@ -49,12 +54,27 @@
     $: moment, syncsips()
     function syncsips() {
         for (let [sip, C] of Object.entries(newsips)) {
-            let wire = sips[sip] = writable(0)
+            let wire = sip_wire[sip] = writable(0)
             // allow **-Con to find their wires
             setContext(sip, wire)
         }
         newsips = {}
     }
+
+    function renew (sip,version) {
+        let Con = sip_C[sip]
+        if (!Con) throw "!sip"
+        console.log("Was"+version)
+        // send it a replacement C
+        sip_wire[sip].set(Con)
+    }
+    function busybusy () {
+        renew('1.2.1.2.2',refresh)
+        // < ping only the -Cont etc? only -Con subscribe so far
+        //renew('1.2.1.2.2.1',refresh)
+    }
+    $: refresh && busybusy()
+    
 
     let conver = 0
     function refresh_Con() {

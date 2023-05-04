@@ -274,11 +274,20 @@ export function o_(C1: C, qua: string = 'z') {
 
         // try to know s
         toCon_newCont(s,d)
-        // and beyond, recursing toCon
+        // and s/* beyond, recursing back to toCon in here
         toCon_newConz(s,d)
 
         // a list of all -Con
-        C.c.visit = d.visit
+        if (!d.up) {
+            C.c.visit = d.visit
+            // give them all an incrementing version
+            // < individuated by changes
+            let D = d.D
+            let version = (D && D.c.version || 0) + 1
+            for (let Co of d.visit) {
+                Co.c.version = version
+            }
+        }
 
         return C
     }
@@ -332,6 +341,7 @@ export function o_(C1: C, qua: string = 'z') {
             if (parent) {
                 // C** as in C%z += C
                 i_(parent,C)
+                C.y.up = parent
             }
             if (!parent) {
                 // here's the root
