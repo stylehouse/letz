@@ -1,4 +1,4 @@
-import {ex,C_,i_,o_,VA_ip} from '$lib/St'
+import {ex,C_,i_,o_,VA_ip,detect_type} from '$lib/St'
 //#region toCon a dumper for the A** tree
 export function toCon (s,d) {
     if (d.t == null) d.t = 'toCon'
@@ -159,8 +159,9 @@ function toCon_newConz (s,d) {
 import {setContext} from 'svelte'
 import {writable} from 'svelte/store'
 
-class sip_dispatch {
+export class sip_dispatch {
     constructor () {
+        this.reset()
         this.sip_C = {}
         this.sip_wire = {}
         this.newsips = {}
@@ -190,12 +191,16 @@ class sip_dispatch {
         this.newsips = {}
     }
 
-    o () {
+    o (sip) {
         let Con = this.sip_C[sip]
         if (!Con) throw "!sip"
         console.log("Vass"+Con.c.version)
         // send it a replacement C
         this.sip_wire[sip].set(Con)
     }
-
+    reset () {
+        this.sip_C = {}
+        this.sip_wire = {}
+        this.newsips = {}
+    }
 }

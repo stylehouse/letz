@@ -22,67 +22,37 @@
         conver = conver < 0 ? conver - 1 : -1
     }
     function bloop() {
+        !dat && bleep()
         dat = St_loop(dat)
         tocon(dat)
         refresh = dat.i
     }
     // < ping changes carefully
-    let sip_C = {}
-    let sip_wire = {}
-    let newsips = {}
     let sipd = new sip_dispatch()
 
     let moment = 0
 
     let laCon
     let con
-    // scan into (-Con/(-Cont|-Conz))**
     function reset_tocon() {
         laCon = undefined
-        sip_C = {}
-        sip_wire = {}
-        newsips = {}
+        sipd.reset()
     }
+    // scan into (-Con/(-Cont|-Conz))**
     function tocon(dat) {
         con = toCon(dat, {D:laCon})
         laCon = con
-        sipd.addN(con.c.visit)
         // set up stores to update them all (con.c.visit[Con+])
-        for (let C of con.c.visit) {
-            let sip = C.c.ip.join('.')
-
-            // to find the current version of C by sip
-            sip_C[sip] = C
-
-            // make connector to other -Con
-            if (sip_wire[sip]) continue
-            newsips[sip] = C
-        }
+        sipd.addN(con.c.visit)
         moment = moment+1
     }
 
-    $: moment, syncsips(), sipd.sync()
-    function syncsips() {
-        for (let [sip, C] of Object.entries(newsips)) {
-            let wire = sip_wire[sip] = writable(0)
-            // allow **-Con to find their wires
-            setContext(sip, wire)
-        }
-        newsips = {}
-    }
+    $: moment, sipd.sync()
 
-    function renew (sip,version) {
-        let Con = sip_C[sip]
-        if (!Con) throw "!sip"
-        console.log("Was"+version)
-        // send it a replacement C
-        sip_wire[sip].set(Con)
-    }
     function busybusy () {
-        //renew('1.2.1.2.2',refresh)
         sipd.o('1.2.1.2.2')
         // < ping only the -Cont etc? only -Con subscribe so far
-        //renew('1.2.1.2.2.1',refresh)
+        //sipd.o('1.2.1.2.2.1',refresh)
     }
     $: refresh && busybusy()
     

@@ -27,7 +27,7 @@
     });
 
     onMount(() => {
-        if (sip == '1.2.1.2.2') debugger
+        //if (sip == '1.2.1.2.2') debugger
     });
 
     let quee
