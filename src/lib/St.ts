@@ -50,7 +50,7 @@ export function C_(t: string|Array<any>|C, y?:number|gc, c?:gc, sc?:gc):C {
     return C
 }
 // A spawns A
-function A_(V:A, t?:string):A {
+export function A_(V:A, t?:string):A {
     t ||= V.t
     let A = new TheA()
     ex(A, C_(t))
@@ -71,7 +71,7 @@ export function VA_ip (V:A,A:A) {
     A.c.ip = [...(V.c.ip||[]),V.c.ips]
 }
 // put C inside C (C/C)
-function i_(C1: C, C2: C, qua: string = 'z') {
+export function i_(C1: C, C2: C, qua: string = 'z') {
     let N = C1.sc[qua] ||= []
     N.push(C2)
 }
@@ -148,32 +148,32 @@ export function o_(C1: C, qua: string = 'z') {
         return typ
     }
     // type checking, ported from Fividy
-    function isst(s) {
+    export function isst(s) {
         return typeof s == 'string'
     }
-    function isnu(s) {
+    export function isnu(s) {
         return typeof s == 'number'
     }
     export function isnum(s) {
         return (isnu(s) || s && s.length && !isspace(s)) && s*1 == s
     }
-    function isar(s) {
+    export function isar(s) {
         return s && s.constructor == Array
     }
     let spacechars = {" ":1,"\n":1,"\t":1}
-    function isspace(s) {
+    export function isspace(s) {
         return hak(s) && !havs(s).some(s => !spacechars[s])
     }
     // and further back
-    function hak(s,d) {
+    export function hak(s,d) {
         if (!s)
             return 0
         return d == null ? Object.keys(s).length : s.hasOwnProperty(d)
     }
-    function havs(s,d) {
+    export function havs(s,d) {
         return haks(s).map(k => s [k])
     }
-    function haks(s,d) {
+    export function haks(s,d) {
         let N = [];
         if (!s) {
             return N
@@ -221,7 +221,7 @@ export function o_(C1: C, qua: string = 'z') {
     }
     
     // walk the A** tree with the mind
-    function St_walkies (A) {
+    export function St_walkies (A) {
         // o A^%mind (the to return a singular %mind above, not an array)
         let mind = o_up(A,{thes:'mind'})
         let branch = o_up(A)
@@ -264,7 +264,7 @@ export function o_(C1: C, qua: string = 'z') {
 
 
     // construct a one-trick mind
-    function St_minds (A1:A) {
+    export function St_minds (A1:A) {
         let mind = C_('mind')
         let thing = C_('wear')
         let act = C_('act',3)
@@ -279,7 +279,7 @@ export function o_(C1: C, qua: string = 'z') {
         act.c.for = 'C'
         A1.sc.mind = mind
     }
-    function St_writers (A1) {
+    export function St_writers (A1) {
         let A11 = A_(A1,'Earth')
     
         // create some Cs for authors
@@ -348,7 +348,7 @@ export function o_(C1: C, qua: string = 'z') {
 //#region climbing
 
     // multi stage o_ with named columns (~~ "o ..." io expr)
-    function o_path (A, d) {
+    export function o_path (A, d) {
         if (isst(d)) d = d.split('/')
         if (isar(d)) d = { path: d }
         d.path = d.path.map(pa => isst(pa) ? {t:pa} : pa)
@@ -381,7 +381,7 @@ export function o_(C1: C, qua: string = 'z') {
         return N.map(d => d.sc)
     }
     // climb A^^ til d.(for|until|before) is found
-    function o_up(A, d?) {
+    export function o_up(A, d?) {
         // default what to look for: everything
         d ||= { inc: 1 };
         if (!d.til) {
@@ -397,7 +397,7 @@ export function o_(C1: C, qua: string = 'z') {
         return o_climbing_while(A, d);
     }
     //   make c.til|until to keep A^^ within A.y.such in common
-    function AyAsuch_unsame (A:C,such:string) {
+    export function AyAsuch_unsame (A:C,such:string) {
         return function (A2:C) {
             return A2.y[such] && A2.y[such] != A.y[such]
         }
@@ -407,7 +407,7 @@ export function o_(C1: C, qua: string = 'z') {
     // caveats:
     //  d.(un)til avoids the first thing
     //   til may d.not before grab can happen
-    function o_climbing_while (C:C,d?) {
+    export function o_climbing_while (C:C,d?) {
         d ||= {}
         if (d.z) {
             d = {...d, up:d}
@@ -466,7 +466,7 @@ export function o_(C1: C, qua: string = 'z') {
 
         return d.sing ? d.N[0] : d.N
     }
-    function dN_from_middle (d,zN) {
+    export function dN_from_middle (d,zN) {
         if (d.sing) {
             d.N.push(zN)
         }
