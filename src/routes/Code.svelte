@@ -3,7 +3,8 @@
     import {writable} from 'svelte/store'
 	import { sto } from './stores.js';
     import { Le } from "$lib/Le"
-    import { St_main, St_loop, toCon } from "$lib/St"
+    import { St_main, St_loop } from "$lib/St"
+    import { toCon } from "$lib/Co"
     import Con from '$lib/pi/Con.svelte';
     
     import grammar from '../lang/style.grammar?raw'
