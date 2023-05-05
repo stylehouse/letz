@@ -26,7 +26,7 @@ class TheC {}
 class TheA extends TheC {}
 
 // make new C, specifying innards
-function C_(t: string|Array<any>|C, y?:number|gc, c?:gc, sc?:gc):C {
+export function C_(t: string|Array<any>|C, y?:number|gc, c?:gc, sc?:gc):C {
     if (isar(t)) {
         [t,y,c,sc] = t
     }
@@ -65,7 +65,7 @@ function A_(V:A, t?:string):A {
     return A
 }
 // ip address (infinite position)
-function VA_ip (V:A,A:A) {
+export function VA_ip (V:A,A:A) {
     V.c.ips ||= 0
     V.c.ips++
     A.c.ip = [...(V.c.ip||[]),V.c.ips]
@@ -189,7 +189,7 @@ export function o_(C1: C, qua: string = 'z') {
         }
         return N
     }
-    function ex(s,c) {
+    export function ex(s,c) {
         if (!s || typeof s != 'object') throw "ex!s"
         if (!c || typeof c != 'object') throw "ex!c"
         for (let k in c) {

@@ -4,7 +4,7 @@
 	import { sto } from './stores.js';
     import { Le } from "$lib/Le"
     import { St_main, St_loop } from "$lib/St"
-    import { toCon } from "$lib/Co"
+    import { toCon, sip_dispatch } from "$lib/Co"
     import Con from '$lib/pi/Con.svelte';
     
     import grammar from '../lang/style.grammar?raw'
@@ -16,6 +16,7 @@
     let dat, refresh
     function bleep() {
         dat = St_main()
+        reset_tocon()
         tocon(dat)
         // repeated bleep()s version negatively (then dat.i -> 1,2,3...)
         conver = conver < 0 ? conver - 1 : -1
@@ -29,15 +30,23 @@
     let sip_C = {}
     let sip_wire = {}
     let newsips = {}
+    let sipd = new sip_dispatch()
 
     let moment = 0
 
     let laCon
     let con
     // scan into (-Con/(-Cont|-Conz))**
+    function reset_tocon() {
+        laCon = undefined
+        sip_C = {}
+        sip_wire = {}
+        newsips = {}
+    }
     function tocon(dat) {
         con = toCon(dat, {D:laCon})
         laCon = con
+        sipd.addN(con.c.visit)
         // set up stores to update them all (con.c.visit[Con+])
         for (let C of con.c.visit) {
             let sip = C.c.ip.join('.')
@@ -52,7 +61,7 @@
         moment = moment+1
     }
 
-    $: moment, syncsips()
+    $: moment, syncsips(), sipd.sync()
     function syncsips() {
         for (let [sip, C] of Object.entries(newsips)) {
             let wire = sip_wire[sip] = writable(0)
@@ -70,7 +79,8 @@
         sip_wire[sip].set(Con)
     }
     function busybusy () {
-        renew('1.2.1.2.2',refresh)
+        //renew('1.2.1.2.2',refresh)
+        sipd.o('1.2.1.2.2')
         // < ping only the -Cont etc? only -Con subscribe so far
         //renew('1.2.1.2.2.1',refresh)
     }
