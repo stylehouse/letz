@@ -271,10 +271,10 @@ export function o_(C1: C, qua: string = 'z') {
         i_(mind, thing)
         i_(thing, act)
         act.c.code = function (A,C,G,T) {
-            // knock a letter off anywhere
-            let i = Math.floor(Math.random()*C.t.length)
+            // knock a letter off anywhere, deterministically
             let t = C.t
-            C.t = t.slice(0,i) + t.slice(i+1)
+            t = t.length % 2 ? t.substring(1) : t.substring(0, t.length - 1)
+            C.t = t
         }
         act.c.for = 'C'
         A1.sc.mind = mind

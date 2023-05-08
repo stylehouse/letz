@@ -37,7 +37,6 @@
         //if (C.t == 'toCon') debugger
         //quee = 'sleepytimenow'
     }
-    //quee = 'sleepy'
 
     // TODO not sure how to get boost into the toCon process
     let boost = 0
@@ -51,8 +50,8 @@
 <span style="color:deepskyblue" on:pointerdown={(e) => boosting(e)}>{t}</span>
 {#if boost} <span style="color:blueviolet" on:pointerdown={(e) => boosting(e,'negate')}>+{boost}</span>{/if}
 
-<small> {sip} </small>
-<span style="color:darkcyan; text-decoration:underline">{quee}</span>
+<c_sip style="font-size:70%"> {sip} </c_sip>
+<revision style="color:darkcyan; text-decoration:underline">{quee}</revision>
 {#key quee}
 {#each o_(C) as n}
     <span style="display:inline-block; vertical-align: middle; border:2px solid gainsboro; border-right:none; padding: 0 3px; margin: 0 3px; border-radius: 3px;">
