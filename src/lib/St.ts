@@ -273,6 +273,7 @@ export function o_(C1: C, qua: string = 'z') {
         act.c.code = function (A,C,G,T) {
             // knock a letter off anywhere, deterministically
             let t = C.t
+            if (t.length == 1) return
             t = t.length % 2 ? t.substring(1) : t.substring(0, t.length - 1)
             C.t = t
         }

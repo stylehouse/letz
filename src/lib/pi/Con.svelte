@@ -1,5 +1,6 @@
 <script lang="ts">
     import {onMount, onDestroy, getContext} from 'svelte'
+	import { scale } from 'svelte/transition'
     import {o_}  from '$lib/St'
     import Cont from '$lib/pi/Cont.svelte';
     import Conz from '$lib/pi/Conz.svelte';
@@ -47,7 +48,7 @@
     
 </script>
 
-<span style="color:deepskyblue" on:pointerdown={(e) => boosting(e)}>{t}</span>
+<span in:scale style="color:deepskyblue" on:pointerdown={(e) => boosting(e)}>{t}</span>
 {#if boost} <span style="color:blueviolet" on:pointerdown={(e) => boosting(e,'negate')}>+{boost}</span>{/if}
 
 <c_sip style="font-size:70%"> {sip} </c_sip>

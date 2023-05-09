@@ -58,7 +58,7 @@
     
 
     let conver = 0
-    function refresh_Con() {
+    function reconver() {
         conver = conver + 1
     }
 
@@ -80,7 +80,7 @@
 
 <button on:click={() => bleep()} > bleep() </button>
 <button on:click={() => bloop()} > bloop() </button>
-<button on:click={() => refresh_Con()} > refresh({refresh}) </button>
+<button on:click={() => reconver()} > reconver({conver}.{refresh}) </button>
 
 {#if con}
     {#key conver}
