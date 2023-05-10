@@ -2,6 +2,7 @@
     import {onMount, onDestroy, getContext} from 'svelte'
 	import { scale } from 'svelte/transition'
     import {o_}  from '$lib/St'
+    import {sip_wiree}  from '$lib/Co'
     import Cont from '$lib/pi/Cont.svelte';
     import Conz from '$lib/pi/Conz.svelte';
     let pis = {Cont, Conz}
@@ -11,22 +12,12 @@
     let t = C.t
     
     let sip = C.c.ip.join('.')
-    let wire
     let update:number
-    let unsubscribe:Function
-
-    wire = getContext(sip)
-    if (!wire) throw "unwired: "+sip
-
-    unsubscribe = wire.subscribe((v) => {
-        if (!v) return
-        console.log(sip+" got: "+v)
+    sip_wiree(C, v => {
         C = v
         update = C.c.version
-    });
-    onDestroy(() => {
-        unsubscribe()
-    });
+    })
+
 
     onMount(() => {
         //if (sip == '1.2.1.2.2') debugger
@@ -51,6 +42,7 @@
 
 <span in:scale style="color:deepskyblue" on:pointerdown={(e) => boosting(e)}>{t}</span>
 {#if boost} <span style="color:blueviolet" on:pointerdown={(e) => boosting(e,'negate')}>+{boost}</span>{/if}
+{#if C.c.unwired} <span style="color:red">!wired</span>{/if}
 
 <c_sip style="font-size:70%"> {sip} </c_sip>
 <revision style="color:darkcyan; text-decoration:underline">{quee}</revision>

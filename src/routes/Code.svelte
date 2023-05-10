@@ -38,7 +38,8 @@
         sipd.addN(con.c.visit)
         moment = moment+1
     }
-    let dat, refresh
+    let dat
+    let refresh = 0
     function bleep() {
         dat = St_main()
         reset_tocon()
@@ -46,19 +47,21 @@
         // repeated bleep()s version negatively (then dat.i -> 1,2,3...)
         conver = conver < 0 ? conver - 1 : -1
         con = con
+        refresh = 0
     }
     function bloop() {
         !dat && bleep()
         dat = St_loop(dat)
         tocon(dat)
         refresh = dat.i
+        console.log('bloop! '+refresh)
     }
 
     $: moment, sipd.sync(), console.log('sync')
 
     function busybusy () {
         sipd.o('1')
-        sipd.o('1.2.1.2.2')
+        //sipd.o('1.2.1.2.2')
         // < ping only the -Cont etc? only -Con subscribe so far
         //sipd.o('1.2.1.2.2.1',refresh)
     }

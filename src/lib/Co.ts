@@ -159,8 +159,30 @@ function toCon_newConz (s,d) {
 
 //#region sip dispatch
 
-import {setContext} from 'svelte'
+import {onDestroy, getContext, setContext} from 'svelte'
 import {writable} from 'svelte/store'
+
+// receive updated version of C inside cb(C) { ...assign somewhere to cause svelte update }
+export function sip_wiree (C,cb) {
+    let sip = C.c.ip.join('.')
+    
+    let wire = getContext(sip)
+    if (!wire) {
+        // < why? creating a new Con//Con can cause old Context reuse apparently...
+        C.c.unwired = 1
+        //throw "unwired: "+sip
+    }
+    else {
+        let unsubscribe = wire.subscribe((v) => {
+            if (!v) return
+            console.log(sip+" got: "+v.c.version)
+            cb(v)
+        });
+        onDestroy(() => {
+            unsubscribe()
+        });
+    }
+}
 
 export class sip_dispatch {
     constructor () {
