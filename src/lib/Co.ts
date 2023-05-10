@@ -154,6 +154,9 @@ function toCon_newConz (s,d) {
     }
 }
 //#endregion
+
+
+
 //#region sip dispatch
 
 import {setContext} from 'svelte'
@@ -183,17 +186,25 @@ export class sip_dispatch {
     //   the addN can occur outside time (the component updating)
     //   then setContext has to occur inside time, hence the jump #guts
     sync () {
+        let added = []
         for (let [sip, C] of Object.entries(this.newsips)) {
             let wire = this.sip_wire[sip] = writable(0)
             // allow **-Con to find their wires
             setContext(sip, wire)
+            added.push(sip)
+        }
+        if (added.length) {
+            console.log("sip sync + "+added.join(','))
+            this.version ||= 0
+            this.version++
+            setContext("sipversion", this.version)
         }
         this.newsips = {}
     }
 
     o (sip) {
         let Con = this.sip_C[sip]
-        if (!Con) throw "!sip"
+        if (!Con) throw "!sip: "+sip
         console.log("Vass"+Con.c.version)
         // send it a replacement C
         this.sip_wire[sip].set(Con)

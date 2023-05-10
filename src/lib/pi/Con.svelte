@@ -16,6 +16,7 @@
     let unsubscribe:Function
 
     wire = getContext(sip)
+    if (!wire) throw "unwired: "+sip
 
     unsubscribe = wire.subscribe((v) => {
         if (!v) return

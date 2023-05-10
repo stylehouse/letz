@@ -1,6 +1,4 @@
 <script lang="ts">
-    import {setContext} from 'svelte'
-    import {writable} from 'svelte/store'
 	import { sto } from './stores.js';
     import { Le } from "$lib/Le"
     import { St_main, St_loop } from "$lib/St"
@@ -9,24 +7,18 @@
     
     import grammar from '../lang/style.grammar?raw'
     import { buildParser } from '@lezer/generator'
-    import { browser } from '$app/environment';
     let parser = buildParser(grammar)
 
     let b = ':3'
-    let dat, refresh
-    function bleep() {
-        dat = St_main()
-        reset_tocon()
-        tocon(dat)
-        // repeated bleep()s version negatively (then dat.i -> 1,2,3...)
-        conver = conver < 0 ? conver - 1 : -1
-    }
-    function bloop() {
-        !dat && bleep()
-        dat = St_loop(dat)
-        tocon(dat)
-        refresh = dat.i
-    }
+
+
+
+
+
+
+
+
+    
     // < ping changes carefully
     let sipd = new sip_dispatch()
 
@@ -46,21 +38,44 @@
         sipd.addN(con.c.visit)
         moment = moment+1
     }
+    let dat, refresh
+    function bleep() {
+        dat = St_main()
+        reset_tocon()
+        tocon(dat)
+        // repeated bleep()s version negatively (then dat.i -> 1,2,3...)
+        conver = conver < 0 ? conver - 1 : -1
+        con = con
+    }
+    function bloop() {
+        !dat && bleep()
+        dat = St_loop(dat)
+        tocon(dat)
+        refresh = dat.i
+    }
 
-    $: moment, sipd.sync()
+    $: moment, sipd.sync(), console.log('sync')
 
     function busybusy () {
+        sipd.o('1')
         sipd.o('1.2.1.2.2')
         // < ping only the -Cont etc? only -Con subscribe so far
         //sipd.o('1.2.1.2.2.1',refresh)
     }
-    $: refresh && busybusy()
+    $: refresh && busybusy(), refresh && console.log('send')
     
 
     let conver = 0
     function reconver() {
         conver = conver + 1
     }
+
+
+
+
+
+
+
 
     // lezer
         let flub = "i thung/with/etc\n\no yeses/because\n"
@@ -83,9 +98,9 @@
 <button on:click={() => reconver()} > reconver({conver}.{refresh}) </button>
 
 {#if con}
-    {#key conver}
+{#key conver}
     <p> <Con C={con}/> </p>
-    {/key}
+{/key}
 {/if}
 
 
