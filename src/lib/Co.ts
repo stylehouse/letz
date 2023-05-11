@@ -1,21 +1,32 @@
 import {ex,C_,i_,o_,VA_ip,detect_type} from '$lib/St'
 //#region toCon a dumper for the A** tree
-export function toCon (s,d) {
+export function toCon (d) {
     if (d.t == null) d.t = 'toCon'
+    // d/d (Con//Con) emerge, then are
+    d.resolving = []
     // producing C** for recursive dumper instructions: (-Con/(-Cont|-Conz))**
-    let C = toCon_newCon(s,d)
+    toCon_newCon(d)
+    let C = d.C
     
     // < all C.c.ip for getContext-ing
     // < comparing to D from last time
     // < producing versioned C** to interpret for minimal newsup
 
     // try to know s
-    toCon_newCont(s,d)
-    // and s/* beyond, recursing back to toCon in here
-    toCon_newConz(s,d)
+    toCon_newCont(d)
 
-    // a list of all -Con
-    if (!d.up) {
+    // < to "resolve $n" sets of Con//Con here, as an elegant A-ism
+    // < how async+await might help this flow control schism?
+    // allow the upper Con//Con to assign ressurrecta with C&Cont
+    if (d.up) {
+        d.up.resolving.push(d)
+        return
+    }
+    else {
+        // start resolving the first Con//Con
+        toCon_resolve(d)
+
+        // a list of all -Con
         C.c.visit = d.visit
         // give them all an incrementing version
         // < individuated by changes
@@ -24,9 +35,31 @@ export function toCon (s,d) {
         for (let Co of d.visit) {
             Co.c.version = version
         }
+
     }
 
     return C
+}
+function toCon_resolve (d) {
+    // and s/* beyond, each recursing -> toCon
+    toCon_newConz(d)
+    // then they, just before doing that themselves, are here:
+
+    if (d.resolving.length) {
+        let names = d.resolving.map(
+            d => d.t + (d.C.c.Cont && d.C.c.Cont.sc.Ct ? ':'+d.C.c.Cont.sc.Ct : '')
+        )
+        console.log("seen "+d.t+": "+names.join("\t"))
+
+
+    }
+
+
+
+    // now we have d.resolving[d+]
+    for (let dd of d.resolving) {
+        toCon_resolve(dd)
+    }
 }
 // defines an adder of d.C or its C.c.$pi=C/*
 function DCpartor (nodepi) {
@@ -99,14 +132,15 @@ function DCpartor (nodepi) {
     }
 }
 // producing new C** -Con
-function toCon_newCon (s,d) {
+function toCon_newCon (d) {
+    let s = d.s
     // handles creating C** once told the scheme
     d.partor ||= DCpartor('Con')
-    let C = d.partor(d.t,'Con',{s})
-    return C
+    d.partor(d.t,'Con',{s})
 }
 // new -Con/-Cont detailing s
-function toCon_newCont (s,d) {
+function toCon_newCont (d) {
+    let s = d.s
     let Con = d.C
     let Cont = d.partor('Cont')
 
@@ -123,14 +157,15 @@ function toCon_newCont (s,d) {
 
     let say
     if (typ.num || typ.str || typ.bool) {
-        say = s
+        say = ''+s
         if (typ.str) say = '"' + say + '"'
     }
 
     ex(Cont.sc,{t,sym,Ct,say})
 }
 // new -Con/-Conz listing s/*
-function toCon_newConz (s,d) {
+function toCon_newConz (d) {
+    let s = d.s
     let Con = d.C
     let typ = d.typ
     // mix up an esteem for more
@@ -150,7 +185,7 @@ function toCon_newConz (s,d) {
     for (let [t,s] of Object.entries(N)) {
         let dd = ex(ex({},d),{up:d,upC:Conz,t,s})
         // they put -Conz/-Con*
-        toCon(s,dd)
+        toCon(dd)
     }
 }
 //#endregion
@@ -216,7 +251,9 @@ export class sip_dispatch {
             added.push(sip)
         }
         if (added.length) {
-            console.log("sip sync + "+added.join(','))
+            let names = added.length > 6 ? "x"+added.length : added.join(',')
+            console.log("sip sync + "+names)
+
             this.version ||= 0
             this.version++
             setContext("sipversion", this.version)
@@ -227,7 +264,6 @@ export class sip_dispatch {
     o (sip) {
         let Con = this.sip_C[sip]
         if (!Con) throw "!sip: "+sip
-        console.log("Vass"+Con.c.version)
         // send it a replacement C
         this.sip_wire[sip].set(Con)
     }

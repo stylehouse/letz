@@ -32,7 +32,7 @@
     }
     // scan into (-Con/(-Cont|-Conz))**
     function tocon(dat) {
-        con = toCon(dat, {D:laCon})
+        con = toCon({s:dat,D:laCon})
         laCon = con
         // set up stores to update them all (con.c.visit[Con+])
         sipd.addN(con.c.visit)
@@ -57,7 +57,7 @@
         console.log('bloop! '+refresh)
     }
 
-    $: moment, sipd.sync(), console.log('sync')
+    $: moment, sipd.sync()
 
     function busybusy () {
         sipd.o('1')
@@ -65,16 +65,13 @@
         // < ping only the -Cont etc? only -Con subscribe so far
         //sipd.o('1.2.1.2.2.1',refresh)
     }
-    $: refresh && busybusy(), refresh && console.log('send')
+    $: refresh && busybusy()
     
 
     let conver = 0
     function reconver() {
         conver = conver + 1
     }
-
-
-
 
 
 
