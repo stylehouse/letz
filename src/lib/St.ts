@@ -22,8 +22,8 @@ type A = C & {
 }
 // variable and class names clash!
 //  these types at runtime help sort piles of objects for intelligibility
-class TheC {}
-class TheA extends TheC {}
+export class TheC {}
+export class TheA extends TheC {}
 
 // make new C, specifying innards
 export function C_(t: string|Array<any>|C, y?:number|gc, c?:gc, sc?:gc):C {
@@ -251,7 +251,7 @@ export function o_(C1: C, qua: string = 'z') {
             //if (A.c.cv >= act.y.cv) return
             if (act.c.for == 'C') {
                 // what to: C** until A
-                let N = o_climbing_while(A,{until: s => s instanceof TheA})
+                let N = inlace(A,{until: s => s instanceof TheA})
                 for (let C of N) {
                     act.c.code(A,C,{t:'Gee'},T)
                 }
@@ -376,7 +376,7 @@ export function o_(C1: C, qua: string = 'z') {
                 N.push(d)
             }
         }
-        o_climbing_while(A, d)
+        inlace(A, d)
         // return many d.sc of many .$ark=C (and .d=d)
         // < group by?
         return N.map(d => d.sc)
@@ -395,7 +395,7 @@ export function o_(C1: C, qua: string = 'z') {
             d.sing = 1;
             d.grab = Y => Y.sc[d.thes];
         }
-        return o_climbing_while(A, d);
+        return inlace(A, d);
     }
     //   make c.til|until to keep A^^ within A.y.such in common
     export function AyAsuch_unsame (A:C,such:string) {
@@ -408,7 +408,8 @@ export function o_(C1: C, qua: string = 'z') {
     // caveats:
     //  d.(un)til avoids the first thing
     //   til may d.not before grab can happen
-    export function o_climbing_while (C:C,d?) {
+    export function inlace (C:C,d?) {
+        if (!C) throw "!C"
         d ||= {}
         if (d.z) {
             d = {...d, up:d}
@@ -430,9 +431,9 @@ export function o_(C1: C, qua: string = 'z') {
         if (d.grab) d.N = []
 
         // if d.(un)til returns true, stop
-        let til = d.til || d.until
+        let til = d.til || d.until || d.all
         let is_top = d.d == 0
-        if (til && !is_top && til(C)) {
+        if (til && (!is_top || d.all) && til(C,d)) {
             d.not = 1
             if (d.until) {
                 // un-returning C (and avoiding middle callbacks eg grab)
@@ -454,11 +455,14 @@ export function o_(C1: C, qua: string = 'z') {
             if (d.not) break
 
             // onwards
-            // TODO subtypes of climb that emit d+ 
-            d.climb(C,d) .filter(D => {
+            // < subtypes of climb that emit d+ (rowing)
+            let climbs = d.climb(C,d) .filter(D => D)
+            if (d.climbs && climbs.length) d.climbs(C,d,climbs)
+            if (d.not) break
+            climbs .filter(D => {
                 if (!D) return
                 // recurse to C/D+
-                let zN = o_climbing_while(D,d)
+                let zN = inlace(D,d)
                 dN_from_middle(d, zN)
             })
 
