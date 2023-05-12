@@ -52,6 +52,7 @@
     function bloop() {
         !dat && bleep()
         dat = St_loop(dat)
+        delete dat.mind
         tocon(dat)
         refresh = dat.i
         console.log('bloop! '+refresh)
@@ -61,7 +62,8 @@
 
     function busybusy () {
         sipd.o('1')
-        //sipd.o('1.2.1.2.2')
+        //sipd.o('1.2')
+        sipd.o('1.2.1.2.2')
         // < ping only the -Cont etc? only -Con subscribe so far
         //sipd.o('1.2.1.2.2.1',refresh)
     }

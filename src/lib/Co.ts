@@ -1,4 +1,4 @@
-import {ex,C_,i_,o_,VA_ip,detect_type} from '$lib/St'
+import {ex,C_,i_,o_,VA_ip,detect_type,inlace,TheC,TheA} from '$lib/St'
 //#region toCon a dumper for the A** tree
 export function toCon (d) {
     if (d.t == null) d.t = 'toCon'
@@ -49,18 +49,109 @@ function toCon_resolve (d) {
         let names = d.resolving.map(
             d => d.t + (d.C.c.Cont && d.C.c.Cont.sc.Ct ? ':'+d.C.c.Cont.sc.Ct : '')
         )
-        console.log("seen "+d.t+": "+names.join("\t"))
+        //console.log("seen "+d.t+": "+names.join("\t"))
+        
+        let C = d.C
+        let D = d.D
 
+        DCresolve({D,C,til:C => C.c.pi == 'Con'})
+        // export to d.D what they (Con//Con) resolved to
+        d.resolving.map(d => {
+            d.D = d.C.y.D
+        })
 
+        if (C.t == 'toCon') console.log("Given:\n"+threelevelprint(C))
     }
-
-
 
     // now we have d.resolving[d+]
     for (let dd of d.resolving) {
         toCon_resolve(dd)
     }
 }
+
+// the q pile visits all C**, wrt D**
+//  including C between those in the d pile (which are only the -Con)
+function DCresolve (c) {
+    inlace(c.C,{
+        all:(C,q) => {
+            if (q.d == 0) {
+                // d.D -> C.y.D, a given fact
+                //  given from resolving or simply an other branch (eg last time of toCon)
+                C.y.D = c.D
+            }
+            else if (c.til) {
+                if (c.til(C,q)) q.not = 1
+            }
+        },
+        climbs:(C,q,N) => {
+            let D = C.y.D
+            if (!D) return C.c.el = 2
+            // D options (past), C given
+            let Dtz = i_tz(o_(D))
+            let Ctz = i_tz(N)
+            // have all t in Dtz
+            for (let t in Ctz) {
+                Dtz[t] ||= []
+            }
+            for (let t in Dtz) {
+                let Dz = Dtz[t] || []
+                let Cz = Ctz[t] || []
+                let Do = Dz.shift()
+                let Co = Cz.shift()
+                if (Do && Co) {
+                    // continuation
+                    Co.y.D = Do
+                }
+                else if (Co) {
+                    // coming - it will have no .y.D
+                    //  so the rest of q will just C.c.el = 2 everything
+                }
+                else if (Do) {
+                    // going - tell most recent still-present thing
+                    C.c.removals ||= []
+                    C.c.removals.push(Do)
+                }
+                !Dz.length && delete Dtz[t]
+                !Cz.length && delete Ctz[t]
+            }
+            Object.keys(Dtz).length && console.log("Dtz left: "+Object.keys(Dtz).join(','))
+            Object.keys(Ctz).length && console.log("Ctz left: "+Object.keys(Ctz).join(','))
+        }
+    })
+}
+// indexes a list of C by their .t
+function i_tz (N) {
+    let tz = {}
+    for (let C of N) {
+        let t = C.t
+        tz[t] ||= []
+        tz[t].push(C)
+    }
+    return tz
+}
+function threelevelprint (C) {
+    if (!C) return "null"
+    let N = []
+    let sip = C => C.c.ip ? C.c.ip.join('.') : ''
+    inlace(C,{all:(C,d) => {
+        let sipdom = d.up && sip(d.up.s)
+        let sipsay = sip(C)
+        if (sipsay && sipdom && sipsay.startsWith(sipdom)) sipsay = sipsay.slice(sipdom.length)
+        if (C.c.removals) {
+            sipsay += " --"+C.c.removals.map(C => C.t).join(',')
+        }
+        let scsay = C.sc.Ct ? "%Ct="+C.sc.Ct : ''
+        if (C.y.D) scsay += '%D'
+        N.push(
+            new Array(d.d).fill('  ').join('')
+            +
+            C.t+"\t-"+C.c.pi+"\t"+sipsay+"\t"+scsay
+        )
+        if (d.d > 2) return 1
+    }})
+    return N.join("\n")
+}
+
 // defines an adder of d.C or its C.c.$pi=C/*
 function DCpartor (nodepi) {
     // arrow functions don't provide their own this binding

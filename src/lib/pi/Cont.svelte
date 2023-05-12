@@ -7,7 +7,7 @@
     onMount((e,t,c) => {
         if (Ct == 'Dublin City') {
             let geo = wrapper.getBoundingClientRect()
-            console.log("Con onMount", geo)
+            //console.log("Con onMount", geo)
         }
         //if (Ct == 'Kerouac') debugger
     })
