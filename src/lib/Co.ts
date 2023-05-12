@@ -25,14 +25,19 @@ export function toCon (d) {
     else {
         // start resolving the first Con//Con
         toCon_resolve(d)
+        // now all C may have .y.D previous self
+        // difference everything, including notifying parents of gone children
+        let diff = DCdiffer(C)
 
-        // a list of all -Con
-        C.c.visit = d.visit
+
+        // a list of all C**
+        C.c.visit = diff.visit
+        C.c.wake = diff.wake
         // give them all an incrementing version
         // < individuated by changes
         let D = d.D
         let version = (D && D.c.version || 0) + 1
-        for (let Co of d.visit) {
+        for (let Co of C.c.visit) {
             Co.c.version = version
         }
 
@@ -45,7 +50,7 @@ function toCon_resolve (d) {
     toCon_newConz(d)
     // then they, just before doing that themselves, are here:
 
-    if (d.resolving.length) {
+    if (1 || d.resolving.length) {
         let names = d.resolving.map(
             d => d.t + (d.C.c.Cont && d.C.c.Cont.sc.Ct ? ':'+d.C.c.Cont.sc.Ct : '')
         )
@@ -59,14 +64,71 @@ function toCon_resolve (d) {
         d.resolving.map(d => {
             d.D = d.C.y.D
         })
-
-        if (C.t == 'toCon') console.log("Given:\n"+threelevelprint(C))
     }
 
     // now we have d.resolving[d+]
     for (let dd of d.resolving) {
         toCon_resolve(dd)
     }
+}
+
+function DCdiffer (C) {
+    // list of everything, to update sip_dispatch
+    let visit = []
+    let wake = []
+    inlace(C,{
+        all:(C,q) => {
+            let uC = C.y.up
+            let D = C.y.D
+            if (C.c.el) {
+                // can only have el=2 already, meaning new
+                // wake new things parent (usu -Conz)
+                wake.push(uC || C)
+                // look no further
+                return 1
+            }
+            if (!D) {
+                console.log("!D|el: "+printaC(C))
+                return
+            }
+            if (C.c.removals) {
+                // C/* need to vanish
+                C.c.el = 8
+                wake.push(C)
+            }
+            // compare data
+            //if (C.sc.Ct == 'oyce') debugger
+            if (!heq(capture_sc(D.sc),capture_sc(C.sc))) {
+                C.c.el = 3
+                wake.push(C)
+            }
+        }
+    })
+    inlace(C,{
+        all:(C,q) => {
+            visit.push(C)
+            //if (C.t == 'A') console.log("Given:\n"+threelevelprint(C))
+        }
+    })
+
+    console.log("Wake:\n"+wake.map(C => printaC(C)).join("\n"))
+    return {visit,wake}
+}
+function heq(s,c) {
+    return Object.keys(s).length == Object.keys(c).length
+        && !Object.keys(s).some(k => s[k] != c[k])
+}
+function capture_sc(s:Object) {
+    let h = {}
+    for (let k in s) {
+        if (k == 'z') continue
+        let v = s[k]
+        if (v && typeof v == 'object') {
+            if (v instanceof TheC) continue
+        }
+        h[k] = v
+    }
+    return h
 }
 
 // the q pile visits all C**, wrt D**
@@ -132,24 +194,27 @@ function i_tz (N) {
 function threelevelprint (C) {
     if (!C) return "null"
     let N = []
-    let sip = C => C.c.ip ? C.c.ip.join('.') : ''
     inlace(C,{all:(C,d) => {
-        let sipdom = d.up && sip(d.up.s)
-        let sipsay = sip(C)
-        if (sipsay && sipdom && sipsay.startsWith(sipdom)) sipsay = sipsay.slice(sipdom.length)
-        if (C.c.removals) {
-            sipsay += " --"+C.c.removals.map(C => C.t).join(',')
-        }
-        let scsay = C.sc.Ct ? "%Ct="+C.sc.Ct : ''
-        if (C.y.D) scsay += '%D'
-        N.push(
-            new Array(d.d).fill('  ').join('')
-            +
-            C.t+"\t-"+C.c.pi+"\t"+sipsay+"\t"+scsay
-        )
+        let uC = d.up?.s
+        let indent = new Array(d.d).fill('  ').join('')
+        N.push(indent + printaC(C,uC))
         if (d.d > 2) return 1
     }})
     return N.join("\n")
+}
+function printaC (C,uC) {
+    let sip = C => C.c.ip ? C.c.ip.join('.') : ''
+    let sipdom = uC && sip(uC)
+    let sipsay = sip(C)
+    if (sipsay && sipdom && sipsay.startsWith(sipdom)) sipsay = sipsay.slice(sipdom.length)
+    if (C.c.el) sipsay += " el="+C.c.el
+    if (C.c.removals) {
+        sipsay += " --"+C.c.removals.map(C => C.t).join(',')
+    }
+    let scsay = C.sc.Ct ? "%Ct="+C.sc.Ct : ''
+    if (C.y.D) scsay += '%D'
+
+    return C.t+"\t-"+C.c.pi+"\t"+sipsay+"\t"+scsay
 }
 
 // defines an adder of d.C or its C.c.$pi=C/*
@@ -353,6 +418,7 @@ export class sip_dispatch {
     }
 
     o (sip) {
+        if (typeof sip == 'object') sip = sip.c.ip.join('.')
         let Con = this.sip_C[sip]
         if (!Con) throw "!sip: "+sip
         // send it a replacement C
