@@ -8,8 +8,6 @@
     let pis = {Cont, Conz}
     // our instructions: (-Con/(-Cont|-Conz))**
     export let C
-    // label from above (key into here - Cont%Ct is the s.t on the inside)
-    let t = C.t
     
     let sip = C.c.ip.join('.')
     let update:number
@@ -17,19 +15,20 @@
         C = v
         update = C.c.version
     })
+    
 
+    // label from above (key into here - Cont%Ct is the s.t on the inside)
+    let t
+    let quee
+    function upto() {
+        t = C.t
+        quee = update || '='
+    }
+    $: upto(C)
 
     onMount(() => {
         //if (sip == '1.2.1.2.2') debugger
     });
-
-    let quee
-    $: quee = update || '='
-    if (!C.y.up) {
-        // sleep the toplevel, only dispatch updates
-        //if (C.t == 'toCon') debugger
-        //quee = 'sleepytimenow'
-    }
 
     // TODO not sure how to get boost into the toCon process
     let boost = 0
@@ -40,7 +39,7 @@
     
 </script>
 
-<span in:scale style="color:deepskyblue" on:pointerdown={(e) => boosting(e)}>{t}</span>
+<span style="color:deepskyblue" on:pointerdown={(e) => boosting(e)}>{t}</span>
 {#if boost} <span style="color:blueviolet" on:pointerdown={(e) => boosting(e,'negate')}>+{boost}</span>{/if}
 {#if C.c.unwired} <span style="color:red">!wired</span>{/if}
 

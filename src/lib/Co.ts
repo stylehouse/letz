@@ -72,6 +72,7 @@ function toCon_resolve (d) {
     }
 }
 
+//#region DC
 function DCdiffer (C) {
     // list of everything, to update sip_dispatch
     let visit = []
@@ -91,16 +92,25 @@ function DCdiffer (C) {
                 console.log("!D|el: "+printaC(C))
                 return
             }
+            let wakey = (el:number,Co) => {
+                C.c.el = el
+                wake.push(Co||C)
+            }
             if (C.c.removals) {
                 // C/* need to vanish
-                C.c.el = 8
-                wake.push(C)
+                wakey(8)
             }
             // compare data
             //if (C.sc.Ct == 'oyce') debugger
             if (!heq(capture_sc(D.sc),capture_sc(C.sc))) {
-                C.c.el = 3
-                wake.push(C)
+                wakey(3)
+            }
+            if (!heq(D.c.ip,C.c.ip) && D.c.ip.join('.') == '1.2.3') {
+                // < isolate change to Con:branch moving up in the list (to 1.2.2)
+                //    not affecting all children... if they only say ip bit?
+                //   mapping D ip space to C ip space...
+                console.log(printaC(D)+"\n"+printaC(C))
+                //wakey(4)
             }
         }
     })
@@ -111,7 +121,11 @@ function DCdiffer (C) {
         }
     })
 
-    console.log("Wake:\n"+wake.map(C => printaC(C)).join("\n"))
+    let byip = {}
+    wake.map(C => byip[C.c.ip.join('.')] = C)
+    let pile = Object.keys(byip).sort().map(k => byip[k])
+
+    console.log("Wake:\n"+pile.map(C => new Array(C.c.ip.length).fill('  ').join('')+printaC(C)).join("\n"))
     return {visit,wake}
 }
 function heq(s,c) {
@@ -287,12 +301,19 @@ function DCpartor (nodepi) {
         return C
     }
 }
+//#endregion
+
+
 // producing new C** -Con
 function toCon_newCon (d) {
     let s = d.s
     // handles creating C** once told the scheme
     d.partor ||= DCpartor('Con')
-    d.partor(d.t,'Con',{s})
+    let C = d.partor(d.t,'Con',{s})
+    0 && ex(C.sc, {
+        sip: C.c.ip.join('.'),
+        t: C.t,
+    })
 }
 // new -Con/-Cont detailing s
 function toCon_newCont (d) {
@@ -430,3 +451,4 @@ export class sip_dispatch {
         this.newsips = {}
     }
 }
+//#endregion
