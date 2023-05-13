@@ -19,8 +19,8 @@
 
 {#if nodules.length}
     <nodules style="display:inline-block; vertical-align: middle; border:1px solid gainsboro; border-right:none; padding: 0 3px; margin: 0 3px; border-radius: 3px;">
-    {#each nodules as n}
-        <nodule transition:scale style="display:block">
+    {#each nodules as n (n.t)}
+        <nodule transition:scale="{{duration:900}}" style="display:block">
             <Con C={n}/>
         </nodule>
     {/each}
