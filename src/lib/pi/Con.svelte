@@ -9,7 +9,6 @@
     // our instructions: (-Con/(-Cont|-Conz))**
     export let C
     
-    let sip = C.c.ip.join('.')
     let update:number
     sip_wiree(C, v => {
         C = v
@@ -19,10 +18,12 @@
 
     // label from above (key into here - Cont%Ct is the s.t on the inside)
     let t
+    let sip
     let quee
     function upto() {
         t = C.t
         quee = update || '='
+        sip = C.c.ip.join('.')
     }
     $: upto(C)
 
