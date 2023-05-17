@@ -1,7 +1,6 @@
 <script>
 	import { page } from '$app/stores';
 	import logo from '$lib/images/svelte-logo.svg';
-	import github from '$lib/images/github.svg';
 </script>
 
 <header>
@@ -33,7 +32,7 @@
 
 	<div class="corner">
 		<a href="https://github.com/sveltejs/kit">
-			<img src={github} alt="GitHub" />
+			<img src="ducks.png" alt="GitHub" />
 		</a>
 	</div>
 </header>
@@ -45,8 +44,8 @@
 	}
 
 	.corner {
-		width: 3em;
-		height: 3em;
+		width: 13em;
+		height: 13em;
 	}
 
 	.corner a {
@@ -58,8 +57,8 @@
 	}
 
 	.corner img {
-		width: 2em;
-		height: 2em;
+		width: 12em;
+		height: 12em;
 		object-fit: contain;
 	}
 
