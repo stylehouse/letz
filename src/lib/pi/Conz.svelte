@@ -1,6 +1,6 @@
 
 <script lang="ts">
-	import { scale } from 'svelte/transition'
+	import { slide } from 'svelte/transition'
     import {o_}  from '$lib/St'
     import {sip_wiree}  from '$lib/Co'
     import Con from '$lib/pi/Con.svelte'
@@ -20,7 +20,7 @@
 {#if nodules.length}
     <nodules style="display:inline-block; vertical-align: middle; border:1px solid gainsboro; border-right:none; padding: 0 3px; margin: 0 3px; border-radius: 3px;">
     {#each nodules as n (n.t)}
-        <nodule transition:scale="{{duration:900}}" style="display:block">
+        <nodule style="display:block">
             <Con C={n}/>
         </nodule>
     {/each}

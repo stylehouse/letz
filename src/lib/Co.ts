@@ -412,25 +412,43 @@ export class sip_dispatch {
     setN (N) {
         // < and more io-friendly expressivity for these implied-coord movements
         // this is the only place to really see what has gone
-        // < i $newsip
+        let tally = {}
+        let tal = k => tally[k] = (tally[k]||0)+1
+        let oldsips = {}
+        let sip = C => C.c.ip.join('.')
         for (let i in N) {
             let C = N[i]
-            let sip = C.c.ip.join('.')
-            this.newsips[sip] = C
+            this.newsips[sip(C)] = C
+            if (C.y.D) {
+                oldsips[sip(C.y.D)] = C
+                tal('CyD')
+            }
         }
         // < o $newsip o $sip_C
         for (let sip in this.sip_C) {
             let D = this.sip_C[sip]
+            let CD = oldsips[sip]
             let C = this.newsips[sip]
             if (C && C.y.D == D) {
-                // stays and resolved
+                // stays still, resolved
                 //  dont need to create wire, only send C over it (via sync())
                 delete this.newsips[sip]
+                if (C != CD) debugger
+                tal('stay')
+            }
+            else if (CD) {
+                // moves, resolved
+                // the C given has CyD that we know about
+                //  see Conz.svelte / {#each nodules as n (n.t)}
+                //   which is svelte resolving things there by the t
+                //    < using a permanent ip, we might recreate if renamed at the moment?
+                tal('still')
             }
             else {
                 // gone or reallocated ip
                 delete this.sip_C[sip]
                 delete this.sip_wire[sip]
+                tal('gone')
             }
         }
         // set the new C
@@ -438,7 +456,9 @@ export class sip_dispatch {
             let C = N[i]
             let sip = C.c.ip.join('.')
             this.sip_C[sip] = C
+            tal('tot')
         }
+        //console.log("sip set",tally)
     }
     // transfer newsips to sip_wire|C
     // < via Svelte::tick promise after an setN?

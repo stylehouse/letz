@@ -1,6 +1,5 @@
 <script lang="ts">
     import {onMount, onDestroy, getContext} from 'svelte'
-	import { scale } from 'svelte/transition'
     import {o_}  from '$lib/St'
     import {sip_wiree}  from '$lib/Co'
     import Cont from '$lib/pi/Cont.svelte';
