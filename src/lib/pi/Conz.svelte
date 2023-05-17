@@ -11,6 +11,7 @@
         C = v
     })
     let nodules
+    console.log("mozwales",C.c.sip)
     function upto() {
         console.log("anbup",C.c.sip)
         nodules = o_(C)
