@@ -5,8 +5,8 @@
 		Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 	--font-mono: 'Fira Mono', monospace;
 	--color-bg-0: rgb(20, 70, 114);
-	--color-bg-1: hsl(76, 68%, 46%);
-	--color-bg-2: hsl(173, 11%, 15%);
+	--color-bg-1: hsl(189, 68%, 46%);
+	--color-bg-2: hsla(256, 51%, 18%, 0.534);
 	--color-theme-1: #ff3e00;
 	--color-theme-2: #40b3ff;
 	--color-text: rgba(0, 0, 0, 0.7);
@@ -24,7 +24,7 @@ body {
 	background-size: 100vw 100vh;
 	background-image: radial-gradient(
 			50% 50% at 50% 50%,
-			rgba(9, 31, 41, 0.75) 0%,
+			rgba(9, 31, 41, 0.75) 80%,
 			rgba(255, 255, 255, 0) 100%
 		),
 		linear-gradient(180deg, var(--color-bg-0) 0%, var(--color-bg-1) 15%, var(--color-bg-2) 50%);
