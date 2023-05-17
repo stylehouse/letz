@@ -107,7 +107,8 @@ function DCdiffer (C) {
             if (!heq(capture_sc(D.sc),capture_sc(C.sc))) {
                 wakey(3)
             }
-            if (!heq(D.c.ip,C.c.ip)) {
+            if (0 && !heq(D.c.ip,C.c.ip)) {
+                // when it moves around
                 // < isolate change to Con:branch moving up in the list (to 1.2.2)
                 //    not affecting all children... if they only say ip bit?
                 //   mapping D ip space to C ip space...
