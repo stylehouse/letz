@@ -12,6 +12,7 @@
     })
     let nodules
     function upto() {
+        console.log("anbup",C.c.sip)
         nodules = o_(C)
     }
     $: upto(C)

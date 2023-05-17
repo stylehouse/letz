@@ -32,10 +32,10 @@
     }
     // scan into (-Con/(-Cont|-Conz))**
     function tocon(dat) {
-        con = toCon({s:dat,D:laCon})
+        con = dat.i > 4 ? laCon : toCon({s:dat,D:laCon})
         laCon = con
         // set up stores to update them all (con.c.visit[Con+])
-        sipd.setN(con.c.visit)
+        //sipd.setN(con.c.visit)
         moment = moment+1
     }
     let dat
@@ -65,11 +65,11 @@
         console.log('bloop! '+refresh)
     }
 
-    $: moment, sipd.sync()
+    //$: moment, sipd.sync()
 
     function busybusy () {
         for (let n of con.c.wake) {
-            sipd.o(n)
+            //sipd.o(n)
         }
         //sipd.o('1')
         //sipd.o('1.2')
@@ -116,6 +116,6 @@
 {/if}
 
 
-<p> {b} </p>
+<p> {b} yes </p>
 <Codemirror value={$sto} {parser} on:kommit={dobla}></Codemirror>
 {#if look}<Lezing {look}></Lezing>{/if}

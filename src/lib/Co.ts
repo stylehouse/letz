@@ -380,7 +380,11 @@ import {writable} from 'svelte/store'
 
 // receive updated version of C inside cb(C) { ...assign somewhere to cause svelte update }
 export function sip_wiree (C,cb) {
+    return
     let sip = C.c.ip.join('.')
+
+    // defines this interface on the C for sip dispatch
+    C.y.dispatch = v => cb(v)
     
     let wire = getContext(sip)
     if (!wire) {
@@ -483,6 +487,8 @@ export class sip_dispatch {
         this.newsips = {}
     }
 
+    
+
     o (sip) {
         let C
         if (typeof sip == 'object') {
@@ -498,7 +504,12 @@ export class sip_dispatch {
             sip = D.c.ip.join('.')
         }
         // send it a replacement C
-        this.sip_wire[sip].set(Con)
+        
+        if (C.y.dispatch) {
+            debugger
+            //C.y.dispatch(Con)
+        }
+        //this.sip_wire[sip].set(Con)
     }
     reset () {
         this.sip_C = {}
