@@ -388,9 +388,10 @@ export function sip_wiree (C,cb) {
         //throw "unwired: "+sip
     }
     else {
+        let lav
         let unsubscribe = wire.subscribe((v) => {
             if (!v) return
-            v.y.D != C && console.log("wiree!D: "+sip+" got: "+v.c.version)
+            lav && v.y.D != lav && console.log("wiree!D: "+sip+" got: "+v.c.version,{v,lav})
             //console.log(sip+" got: "+v.c.version)
             cb(v)
         });
