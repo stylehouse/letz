@@ -49,10 +49,17 @@
         con = con
         refresh = 0
     }
+    let mind
     function bloop() {
         !dat && bleep()
         dat = St_loop(dat)
-        delete dat.mind
+        if (dat.mind) mind = dat.mind
+        if (dat.i % 2) {
+            delete dat.mind
+        }
+        else {
+            dat = {A:dat.a,lie:"bin",mind,street:['ca',['ar']],...dat}
+        }
         tocon(dat)
         refresh = dat.i
         console.log('bloop! '+refresh)

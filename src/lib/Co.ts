@@ -380,14 +380,15 @@ export function sip_wiree (C,cb) {
     
     let wire = getContext(sip)
     if (!wire) {
-        // < why? creating a new Con//Con can cause old Context reuse apparently...
+        // < why? creating a new Con//Con can cause old Context reuse?
         C.c.unwired = 1
         //throw "unwired: "+sip
     }
     else {
         let unsubscribe = wire.subscribe((v) => {
             if (!v) return
-            console.log(sip+" got: "+v.c.version)
+            v.y.D != C && console.log("wiree!D: "+sip+" got: "+v.c.version)
+            //console.log(sip+" got: "+v.c.version)
             cb(v)
         });
         onDestroy(() => {
@@ -439,9 +440,19 @@ export class sip_dispatch {
     }
 
     o (sip) {
-        if (typeof sip == 'object') sip = sip.c.ip.join('.')
+        let C
+        if (typeof sip == 'object') {
+            C = sip
+            sip = C.c.ip.join('.')
+        }
         let Con = this.sip_C[sip]
         if (!Con) throw "!sip: "+sip
+        if (0 && C && C.y.D) {
+            // tell the old ip-space of itself to move
+            //  it has already ascertained .t-continuity
+            let D = C.y.D
+            sip = D.c.ip.join('.')
+        }
         // send it a replacement C
         this.sip_wire[sip].set(Con)
     }
