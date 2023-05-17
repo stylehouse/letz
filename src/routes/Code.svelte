@@ -35,7 +35,7 @@
         con = toCon({s:dat,D:laCon})
         laCon = con
         // set up stores to update them all (con.c.visit[Con+])
-        sipd.addN(con.c.visit)
+        sipd.setN(con.c.visit)
         moment = moment+1
     }
     let dat

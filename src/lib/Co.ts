@@ -1,3 +1,4 @@
+// < comments that start with '<' are TODOs, except this one
 import {ex,C_,i_,o_,VA_ip,detect_type,inlace,TheC,TheA} from '$lib/St'
 //#region toCon a dumper for the A** tree
 export function toCon (d) {
@@ -33,6 +34,7 @@ export function toCon (d) {
         // a list of all C**
         C.c.visit = diff.visit
         C.c.wake = diff.wake
+        
         // give them all an incrementing version
         // < individuated by changes
         let D = d.D
@@ -232,6 +234,7 @@ function printaC (C,uC) {
 }
 
 // defines an adder of d.C or its C.c.$pi=C/*
+// < translate this into io, would be a lot easier
 function DCpartor (nodepi) {
     // arrow functions don't provide their own this binding
     return function (t,pi,c) {
@@ -404,21 +407,40 @@ export class sip_dispatch {
         this.sip_wire = {}
         this.newsips = {}
     }
-    addN (N) {
-        for (let C of N) {
+    setN (N) {
+        // < and more io-friendly expressivity for these implied-coord movements
+        // this is the only place to really see what has gone
+        // < i $newsip
+        for (let i in N) {
+            let C = N[i]
             let sip = C.c.ip.join('.')
-
-            // to find the current version of C by sip
-            this.sip_C[sip] = C
-
-            // make connector to other -Con
-            if (this.sip_wire[sip]) continue
             this.newsips[sip] = C
+        }
+        // < o $newsip o $sip_C
+        for (let sip in this.sip_C) {
+            let D = this.sip_C[sip]
+            let C = this.newsips[sip]
+            if (C && C.y.D == D) {
+                // stays and resolved
+                //  dont need to create wire, only send C over it (via sync())
+                delete this.newsips[sip]
+            }
+            else {
+                // gone or reallocated ip
+                delete this.sip_C[sip]
+                delete this.sip_wire[sip]
+            }
+        }
+        // set the new C
+        for (let i in N) {
+            let C = N[i]
+            let sip = C.c.ip.join('.')
+            this.sip_C[sip] = C
         }
     }
     // transfer newsips to sip_wire|C
-    // < via Svelte::tick promise after an addN?
-    //   the addN can occur outside time (the component updating)
+    // < via Svelte::tick promise after an setN?
+    //   the setN can occur outside time (the component updating)
     //   then setContext has to occur inside time, hence the jump #guts
     sync () {
         let added = []
