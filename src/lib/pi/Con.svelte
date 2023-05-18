@@ -7,6 +7,7 @@
     let pis = {Cont, Conz}
     // our instructions: (-Con/(-Cont|-Conz))**
     export let C
+    let boost = 0
     
     // only changes when we are sent an update specifically
     let update:number
@@ -24,15 +25,18 @@
         t = C.t
         quee = update || '='
         sip = C.c.ip.join('.')
+        let vas = C.y.D?.c.next_boost
+        if (vas) {
+            sip += ' boost:' + vas
+        }
     }
-    $: upto(C)
+    $: upto(C,boost)
 
     onMount(() => {
         //if (sip == '1.2.1.2.2') debugger
     });
 
     // TODO not sure how to get boost into the toCon process
-    let boost = 0
     function boosting (e, negate=false) {
         boost += e.ctrlKey || negate ? -1 : 1
         C.c.next_boost = boost

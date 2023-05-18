@@ -33,13 +33,6 @@
     }
     // scan into (-Con/(-Cont|-Conz))**
     function tocon(dat) {
-        dat.readings = []
-
-        let lapsible = {de:3,g:23}
-        while (dat.readings.length < 200) {
-            dat.readings.push({col:lapsible,tick:[false,false,'te',{le:'o',g:23}]})
-        }
-
         con = toCon({s:dat,D:laCon})
         laCon = con
         // set up stores to update them all (con.c.visit[Con+])
@@ -97,6 +90,8 @@
     let look:Le = undefined
     function dobla({detail:{view}}) {
         look = new Le(view.state)
+        dat.look = look
+        tocon(dat)
     }
 </script>
 
