@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
     import { page } from '$app/stores'
+    import { goto } from '$app/navigation'
 	import { sto } from './stores.js';
     import { Le } from "$lib/Le"
     import { St_main, St_loop } from "$lib/St"
@@ -14,10 +15,16 @@
     let b = ':3'
 
 
+    console.log("Code")
 
-
-
-    console.log("Para",$page.url.searchParams)
+    let a = $page.url.searchParams
+    function para () {
+        let args = {}
+        for (let k of a.keys()) {
+            args[k] = a.get(k)
+        }
+        return args
+    }
 
 
     
@@ -60,11 +67,14 @@
             delete dat.mind
         }
         else {
-            dat = {A:dat.a,lie:"bin",mind,street:['ca',['ar']],...dat}
+            dat = {A:dat.a,mind,...dat}
         }
+        dat.args = para()
         tocon(dat)
         refresh = dat.i
         console.log('bloop! '+refresh)
+        a.set('ierorag',dat.i)
+        goto(`?${a.toString()}`)
     }
     $: moment, sipd.sync()
     $: refresh && sipd.refreshN(con.c.wake)
@@ -80,7 +90,7 @@
         y && y()
     }
     onMount(() => {
-        bleep()
+        bloop()
     })
 
 
@@ -116,6 +126,6 @@
 {/if}
 
 
-<p> {b} yes </p>
+<p> {b} </p>
 <Codemirror value={$sto} {parser} on:kommit={dobla}></Codemirror>
 {#if look}<Lezing {look}></Lezing>{/if}

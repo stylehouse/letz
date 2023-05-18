@@ -212,7 +212,7 @@ export function o_(C1: C, qua: string = 'z') {
 //#region the main functions, mocked up -
     
     // have a play
-    export function St_main (): A {
+    export function St_main () {
         let A = C_('toplevel')
         A.c.ip = [1]
 

@@ -29,8 +29,6 @@ export function toCon (d) {
     toCon_newCon(d)
     let C = d.C
     
-    // < all C.c.ip for getContext-ing
-    // < comparing to D from last time
     // < producing versioned C** to interpret for minimal newsup
 
     // try to know s
