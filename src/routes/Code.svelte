@@ -73,6 +73,11 @@
     function reconver() {
         conver = conver + 1
     }
+    let keys = {w: bloop, e: bleep, r: reconver}
+    window.addEventListener('keydown', (event) => {
+        let y = keys[event.key]
+        y && y()
+    });
 
 
 
