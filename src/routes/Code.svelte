@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
     import { page } from '$app/stores'
 	import { sto } from './stores.js';
     import { Le } from "$lib/Le"
@@ -74,11 +75,13 @@
         conver = conver + 1
     }
     let keys = {w: bloop, e: bleep, r: reconver}
-    window.addEventListener('keydown', (event) => {
+    let handleKeydown = (event) => {
         let y = keys[event.key]
         y && y()
-    });
-
+    }
+    onMount(() => {
+        bleep()
+    })
 
 
 
@@ -101,6 +104,7 @@
 </script>
 
 
+<svelte:window on:keydown={handleKeydown}/>
 <button on:click={() => bleep()} > bleep() </button>
 <button on:click={() => bloop()} > bloop() </button>
 <button on:click={() => reconver()} > reconver({conver}.{refresh}) </button>
