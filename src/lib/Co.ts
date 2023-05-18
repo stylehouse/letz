@@ -1,6 +1,26 @@
 // < comments that start with '<' are TODOs, except this one
-import {ex,C_,i_,o_,VA_ip,detect_type,inlace,TheC,TheA} from '$lib/St'
+import {ex,C_,i_,o_,VA_ip,detect_type,inlace,TheC,TheA,o_up} from '$lib/St'
 //#region toCon a dumper for the A** tree
+// isolate some Con** update
+// < sip_dispatch compat. C.c.visit is not everything
+export function toCon_reentry (C:TheC) {
+    let d = {t:C.t, s:C.c.s, D:C, pretendtoplevel:1}
+    let Cup = C.y.up
+    if (Cup) {
+        // Conz/Con
+        d.upC = Cup
+        // Con//Con, becomes source of C.c.d
+        let upCon = o_up(C,{til:C => C.c.pi == 'Con',sing:1})
+        if (!upCon) debugger
+        d.up = {C:upCon}
+        // let it create itself here
+        // < in order (slice the rest)
+        Cup.sc.z = Cup.sc.z.filter(n => n != C)
+    }
+    let D = C
+    C = toCon(d)
+    return C
+}
 export function toCon (d) {
     if (d.t == null) d.t = 'toCon'
     // d/d (Con//Con) emerge, then are
@@ -19,11 +39,12 @@ export function toCon (d) {
     // < to "resolve $n" sets of Con//Con here, as an elegant A-ism
     // < how async+await might help this flow control schism?
     // allow the upper Con//Con to assign ressurrecta with C&Cont
-    if (d.up) {
+    if (d.up && !d.pretendtoplevel) {
         d.up.resolving.push(d)
         return
     }
     else {
+        delete d.pretendtoplevel
         // start resolving the first Con//Con
         toCon_resolve(d)
         // now all C may have .y.D previous self
@@ -128,7 +149,7 @@ function DCdiffer (C) {
     wake.map(C => byip[C.c.ip.join('.')] = C)
     let pile = Object.keys(byip).sort().map(k => byip[k])
 
-    console.log("Wake:\n"+pile.map(C => new Array(C.c.ip.length).fill('  ').join('')+printaC(C)).join("\n"))
+    // console.log("Wake:\n"+pile.map(C => new Array(C.c.ip.length).fill('  ').join('')+printaC(C)).join("\n"))
     return {visit,wake}
 }
 function heq(s,c) {
@@ -295,7 +316,14 @@ function DCpartor (nodepi) {
         if (parent) {
             // C** as ip, a different network to A.c.ip
             if (!parent.c.ip) throw "!ip"
-            VA_ip(parent,C)
+            if (d.pretendtoplevel) {
+                let D = d.D
+                C.y.D = D
+                C.c.ip = D.c.ip.slice()
+            }
+            else {
+                VA_ip(parent,C)
+            }
         }
         if (d.C == C) {
             // list of all the main type of node (eg -Con)
@@ -314,10 +342,7 @@ function toCon_newCon (d) {
     // handles creating C** once told the scheme
     d.partor ||= DCpartor('Con')
     let C = d.partor(d.t,'Con',{s})
-    0 && ex(C.sc, {
-        sip: C.c.ip.join('.'),
-        t: C.t,
-    })
+    
 }
 // new -Con/-Cont detailing s
 function toCon_newCont (d) {
@@ -341,6 +366,11 @@ function toCon_newCont (d) {
         say = ''+s
         if (typ.str) say = '"' + say + '"'
     }
+    if (typ.unk) {
+        // null or something?
+        say = ''+s
+        Cont.sc.unk = 1
+    }
 
     ex(Cont.sc,{t,sym,Ct,say})
 }
@@ -348,6 +378,8 @@ function toCon_newCont (d) {
 function toCon_newConz (d) {
     let s = d.s
     let Con = d.C
+    let D = Con.y.D
+    if (D && D.c.boost) Con.c.boost = D.c.boost
     let typ = d.typ
     // mix up an esteem for more
     let depth = Con.c.d || 0

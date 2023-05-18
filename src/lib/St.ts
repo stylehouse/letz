@@ -22,7 +22,12 @@ type A = C & {
 }
 // variable and class names clash!
 //  these types at runtime help sort piles of objects for intelligibility
-export class TheC {}
+export class TheC {
+    t: string; // name of object class to apply to C
+    y: gc; // properties derived from the underlying machine
+    c: gc; // properties defining the base identity of C
+    sc: gc; // properties representing the essential qualities of C
+}
 export class TheA extends TheC {}
 
 // make new C, specifying innards
@@ -469,7 +474,7 @@ export function o_(C1: C, qua: string = 'z') {
             break
         }
 
-        return d.sing ? d.N[0] : d.N
+        return d.sing ? d.N.slice(-1)[0] : d.N
     }
     export function dN_from_middle (d,zN) {
         if (d.sing) {

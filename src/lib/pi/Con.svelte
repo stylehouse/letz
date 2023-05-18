@@ -1,13 +1,13 @@
 <script lang="ts">
     import {onMount, onDestroy, getContext} from 'svelte'
     import {o_}  from '$lib/St'
-    import {sip_wiree}  from '$lib/Co'
+    import {sip_wiree, toCon_reentry}  from '$lib/Co'
     import Cont from '$lib/pi/Cont.svelte';
     import Conz from '$lib/pi/Conz.svelte';
     let pis = {Cont, Conz}
     // our instructions: (-Con/(-Cont|-Conz))**
     export let C
-    let boost = 0
+    let boost = C.c.boost || 0
     
     // only changes when we are sent an update specifically
     let update:number
@@ -21,15 +21,14 @@
     let t
     let sip
     let quee
+    let chat = 0
     function upto() {
         t = C.t
         quee = update || '='
         sip = C.c.ip.join('.')
-        let vas = C.y.D?.c.next_boost
-        if (vas) {
-            sip += ' boost:' + vas
-        }
+        chat && console.log("anbup",C.c.ip)
     }
+    chat && console.log("mozwales",C.c.ip)
     $: upto(C,boost)
 
     onMount(() => {
@@ -39,7 +38,8 @@
     // TODO not sure how to get boost into the toCon process
     function boosting (e, negate=false) {
         boost += e.ctrlKey || negate ? -1 : 1
-        C.c.next_boost = boost
+        C.c.boost = boost
+        C = toCon_reentry(C)
     }
     
 </script>
