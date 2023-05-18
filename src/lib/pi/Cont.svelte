@@ -22,6 +22,7 @@
 </script>
 
 <div bind:this={wrapper}>
+
 {#if sym} <span style="color:cornsilk">{sym}</span>{/if}
 {#if Ct} <s_Ct style="color:gainsboro">{Ct}</s_Ct>{/if}
 {#if say} <span style="color:darkcyan"> {say} </span>{/if}

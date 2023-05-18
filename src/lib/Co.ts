@@ -413,7 +413,13 @@ export class sip_dispatch {
         this.sip_wire = {}
         this.newsips = {}
     }
+    reset () {
+        this.sip_C = {}
+        this.sip_wire = {}
+        this.newsips = {}
+    }
     setN (N) {
+        return
         // < and more io-friendly expressivity for these implied-coord movements
         // this is the only place to really see what has gone
         let tally = {}
@@ -465,10 +471,11 @@ export class sip_dispatch {
         //console.log("sip set",tally)
     }
     // transfer newsips to sip_wire|C
-    // < via Svelte::tick promise after an setN?
     //   the setN can occur outside time (the component updating)
     //   then setContext has to occur inside time, hence the jump #guts
+    // < via Svelte::tick promise after an setN?
     sync () {
+        return
         let added = []
         for (let [sip, C] of Object.entries(this.newsips)) {
             let wire = this.sip_wire[sip] = writable(0)
@@ -487,7 +494,12 @@ export class sip_dispatch {
         this.newsips = {}
     }
 
-    
+    refreshN (N) {
+        return
+        for (let n of N) {
+            this.o(n)
+        }
+    }
 
     o (sip) {
         let C
@@ -497,12 +509,7 @@ export class sip_dispatch {
         }
         let Con = this.sip_C[sip]
         if (!Con) throw "!sip: "+sip
-        if (0 && C && C.y.D) {
-            // tell the old ip-space of itself to move
-            //  it has already ascertained .t-continuity
-            let D = C.y.D
-            sip = D.c.ip.join('.')
-        }
+
         // send it a replacement C
         
         if (C.y.dispatch) {
@@ -510,11 +517,6 @@ export class sip_dispatch {
             //C.y.dispatch(Con)
         }
         //this.sip_wire[sip].set(Con)
-    }
-    reset () {
-        this.sip_C = {}
-        this.sip_wire = {}
-        this.newsips = {}
     }
 }
 //#endregion

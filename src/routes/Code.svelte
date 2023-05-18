@@ -1,9 +1,10 @@
 <script lang="ts">
+    import { page } from '$app/stores'
 	import { sto } from './stores.js';
     import { Le } from "$lib/Le"
     import { St_main, St_loop } from "$lib/St"
     import { toCon, sip_dispatch } from "$lib/Co"
-    import Con from '$lib/pi/Con.svelte';
+    import Con from '$lib/pi/Con.svelte'
     
     import grammar from '../lang/style.grammar?raw'
     import { buildParser } from '@lezer/generator'
@@ -15,7 +16,7 @@
 
 
 
-
+    console.log("Para",$page.url.searchParams)
 
 
     
@@ -32,10 +33,17 @@
     }
     // scan into (-Con/(-Cont|-Conz))**
     function tocon(dat) {
-        con = dat.i > 4 ? laCon : toCon({s:dat,D:laCon})
+        dat.readings = []
+
+        let lapsible = {de:3,g:23}
+        while (dat.readings.length < 200) {
+            dat.readings.push({col:lapsible,tick:[false,false,'te',{le:'o',g:23}]})
+        }
+
+        con = toCon({s:dat,D:laCon})
         laCon = con
         // set up stores to update them all (con.c.visit[Con+])
-        //sipd.setN(con.c.visit)
+        sipd.setN(con.c.visit)
         moment = moment+1
     }
     let dat
@@ -64,20 +72,8 @@
         refresh = dat.i
         console.log('bloop! '+refresh)
     }
-
-    //$: moment, sipd.sync()
-
-    function busybusy () {
-        for (let n of con.c.wake) {
-            //sipd.o(n)
-        }
-        //sipd.o('1')
-        //sipd.o('1.2')
-        //sipd.o('1.2.1.2.2')
-        // < ping only the -Cont etc? only -Con subscribe so far
-        //sipd.o('1.2.1.2.2.1',refresh)
-    }
-    $: refresh && busybusy()
+    $: moment, sipd.sync()
+    $: refresh && sipd.refreshN(con.c.wake)
     
 
     let conver = 0

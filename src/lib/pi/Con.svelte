@@ -8,6 +8,7 @@
     // our instructions: (-Con/(-Cont|-Conz))**
     export let C
     
+    // only changes when we are sent an update specifically
     let update:number
     sip_wiree(C, v => {
         C = v
@@ -44,7 +45,7 @@
 {#if C.c.unwired} <span style="color:red">!wired</span>{/if}
 
 <c_sip style="font-size:70%"> {sip} </c_sip>
-<revision style="color:darkcyan; text-decoration:underline">{quee}</revision>
+<!-- <revision style="color:darkcyan; text-decoration:underline">{quee}</revision> -->
 {#each o_(C) as n}
     <span style="display:inline-block; vertical-align: middle; border:2px solid gainsboro; border-right:none; padding: 0 3px; margin: 0 3px; border-radius: 3px;">
         <svelte:component this={pis[n.c.pi]} C={n}/>
