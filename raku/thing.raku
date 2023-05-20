@@ -39,7 +39,6 @@ multi MAIN($dir = "/v",
   files($where).race(:$degree).map: -> $f {
     with ++⚛$considered {
       note "$_ files considered" if $_ %% 100;
-      exit if $_ > 100
     }
     ++⚛$converted if mk-thumb($where, $f, :$force);
   }
