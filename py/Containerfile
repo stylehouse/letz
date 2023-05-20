@@ -2,3 +2,9 @@ FROM python:3
 WORKDIR /app
 COPY requirements.txt .
 RUN pip install -r requirements.txt
+RUN apt-get update && apt-get install graphicsmagick -y
+# install some ffmpeg deps first, then the rest
+# if "Processing triggers for libc-bin" gets too big it crashes (disk space)
+RUN apt-get install libc6 libsdl2-2.0-0 libpostproc55 -y
+RUN apt-get install ffmpeg -y
+RUN apt-get install python3-magic -y
