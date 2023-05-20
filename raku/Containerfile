@@ -6,4 +6,6 @@ RUN apt-get update && apt-get install graphicsmagick ffmpeg -y
 RUN zef install --/test Image::Libexif
 # < this should all be included in rakudo-star
 RUN apt-get install libssl-dev -y
+# < find out what 'Build-Essential: yes' in `apt show build-essential` means
+RUN apt-get install less build-essential man -y
 RUN zef install --/test cro

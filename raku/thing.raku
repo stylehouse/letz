@@ -1,5 +1,6 @@
 #!/usr/bin/env raku
 
+# this is lifted from https://raku-advent.blog/2021/12/01/batteries-included-generating-thumbnails/
 my $thumbdir;
 sub mk-thumb(IO::Path $dir, IO::Path $src, Bool :$force) {
     $thumbdir ||= mkdir("static/thumb");
@@ -12,7 +13,12 @@ sub mk-thumb(IO::Path $dir, IO::Path $src, Bool :$force) {
     my $dst = $thumb-path.child($relsrc.basename);
 
     return False if $dst.IO.e && !$force;
-    (shell "gm convert -auto-orient $src -thumbnail '400x400>' $dst") == 0;
+
+    say "converting $src to $dst";
+    my $proc = run <gm convert -auto-orient>, $src, "-thumbnail","400x400>", $dst, :out;
+    my $captured-output = $proc.out.slurp: :close;
+    $captured-output.chars and say "Output was $captured-output.raku()";
+
 }
 
 multi files(IO::Path $f where *.f) { $f }
