@@ -1,4 +1,11 @@
 #!/usr/bin/env raku
+use Cro::HTTP::Router;
+use Cro::HTTP::Server;
+my $application = route {
+    get -> 'greet', $name {
+        content 'text/plain', "Hello, $name!";
+    }
+}
 
 # this is lifted from https://raku-advent.blog/2021/12/01/batteries-included-generating-thumbnails/
 my $thumbdir;
@@ -18,7 +25,7 @@ sub mk-thumb(IO::Path $dir, IO::Path $src, Bool :$force) {
     my $proc = run <gm convert -auto-orient>, $src, "-thumbnail","400x400>", $dst, :out;
     my $captured-output = $proc.out.slurp: :close;
     $captured-output.chars and say "Output was $captured-output.raku()";
-
+    
 }
 
 multi files(IO::Path $f where *.f) { $f }
@@ -29,7 +36,7 @@ multi files(IO::Path $f where *.d) {
   @ls.map: { |files($_) }
 }
 
-multi MAIN($dir = "/v",
+multi thumbnaileverything($dir = "/v",
   Bool :$n,          #= dry run
   Bool :$v,          #= verbose
   Bool :$force,      #= force regenerate existing thumbnails
@@ -51,3 +58,9 @@ multi MAIN($dir = "/v",
 
   say "converted $converted out of $considered";
 }
+
+
+my Cro::Service $hello = Cro::HTTP::Server.new:
+    :host<localhost>, :port<1812>, :$application;
+$hello.start;
+react whenever signal(SIGINT) { $hello.stop; exit; }
