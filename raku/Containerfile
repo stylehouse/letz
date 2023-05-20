@@ -1,0 +1,8 @@
+FROM rakudo-star
+WORKDIR /app
+# +570MB fun stuff
+RUN apt-get update && apt-get install graphicsmagick ffmpeg -y
+RUN zef install Image::ExifTool
+
+RUN apt-get install libssl-dev -y
+RUN zef install cro
