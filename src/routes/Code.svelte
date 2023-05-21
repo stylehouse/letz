@@ -136,7 +136,7 @@
     {#await fetcho}
         <p>...waiting</p>
     {:then di}
-        {@const peek = di.slice(0,10) }
+        {@const peek = di.slice(0,15) }
         {#each peek as f, i}
             {#if f.d}<p on:click={() => adfetcho(f)} style="color: green; text-decoraction: underline">{f.f}</p>
             {:else}<p>{f.f}<img src="http://{location.hostname}:5000/thu/{upto}{f.f}.webp"/></p>{/if}

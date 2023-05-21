@@ -12,7 +12,7 @@ import re
 import time
 
 app = Flask(__name__)
-app.debug = True  # Enable verbose mode
+app.debug = True  # Enable verbose mode and auto reload on code changes
 CORS(app)
 
 artdir = '/v'
@@ -20,7 +20,7 @@ thumbdir = '/app/static/thumb'
 
 def delta(t):
     start_time = time.time()
-    return lambda: print(str((time.time() - start_time) * 1000) + "ms", t)
+    return lambda: print(str(round((time.time() - start_time) * 1000)) + "ms", t)
 
 @app.route('/dir/', defaults={'path': ''})
 @app.route('/dir/<path:path>')
@@ -61,11 +61,9 @@ def thu(filename):
     if (not os.path.isfile(whole)):
         # not cached
         original = os.path.join(artdir, directory, filename)
-        print("Lookding for "+artdir+" -> "+original)
         if (not os.path.isfile(original)):
             abort(404, "no such original: "+original)
         thumbnail(original,whole)
-        print (" Existo! "+whole)
     return send_from_directory(place, thuname)
 
 
@@ -97,7 +95,9 @@ def thumbnail_video(src, dst, timestamp='00:00:05'):
     # from video at timestamp
     # < figure out perfect resize from ffmpeg
     resizer = dst+'.jpg'
-    command = ['ffmpeg', '-i', src, '-ss', timestamp, '-vframes', '1', resizer]
+    if os.path.isfile(resizer):
+        os.remove(resizer)
+    command = ['ffmpeg', '-ss', timestamp, '-i', src, '-vframes', '1', resizer]
     result = subprocess.run(command, capture_output=True, text=True)
     ta()
 
@@ -106,6 +106,7 @@ def thumbnail_video(src, dst, timestamp='00:00:05'):
         abort(500,"Thumbnail generation failed:"+result.stderr)
     else:
         # resize
+        print('begin resizer '+dst)
         command = ['gm', 'convert', '-auto-orient', resizer, '-thumbnail', '400x400>', dst]
         result = subprocess.run(command, capture_output=True, text=True)
         os.remove(resizer)
@@ -115,6 +116,7 @@ def thumbnail_video(src, dst, timestamp='00:00:05'):
 
 # < sort this out
 def extract_unique_frames(video_path, num_frames=3):
+    ta = delta('extract_unique_frames '+dst)
     cap = cv2.VideoCapture(video_path)
     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     indices = np.linspace(0, total_frames - 1, num=num_frames, dtype=int)
@@ -127,6 +129,7 @@ def extract_unique_frames(video_path, num_frames=3):
             frames.append(frame)
 
     cap.release()
+    ta()
     return frames
 
 
