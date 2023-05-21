@@ -93,8 +93,19 @@
         bloop()
     })
 
-
-
+    let fetcho
+    let upto = '2112 PreXmas/'
+    async function fetchData() {
+        const response = await fetch(`http://${location.hostname}:5000/dir/${upto}`);
+        return await response.json();
+    }
+    function refetcho() {
+        fetcho = fetchData()
+    }
+    function adfetcho(f) {
+        upto += f.f+'/'
+        refetcho()
+    }
 
     // lezer
         let flub = "i thung/with/etc\n\no yeses/because\n"
@@ -103,7 +114,6 @@
     // EditorView
 	    import Codemirror from './Codemirror.svelte';
 	    import Lezing from './Lezing.svelte';
-    import { set_custom_element_data } from 'svelte/internal';
 
     let look:Le = undefined
     function dobla({detail:{view}}) {
@@ -114,10 +124,29 @@
 </script>
 
 
+
 <svelte:window on:keydown={handleKeydown}/>
+<button on:click={() => refetcho()} > fetcho() </button>
 <button on:click={() => bleep()} > bleep() </button>
 <button on:click={() => bloop()} > bloop() </button>
 <button on:click={() => reconver()} > reconver({conver}.{refresh}) </button>
+
+{#if fetcho}
+    <div style="display: flex; flex-direction: row; flex-wrap: wrap; width:90%">
+    {#await fetcho}
+        <p>...waiting</p>
+    {:then di}
+        {@const peek = di.slice(0,10) }
+        {#each peek as f, i}
+            {#if f.d}<p on:click={() => adfetcho(f)} style="color: green; text-decoraction: underline">{f.f}</p>
+            {:else}<p>{f.f}<img src="http://{location.hostname}:5000/thu/{upto}/{f.f}"/></p>{/if}
+
+        {/each}
+    {:catch error}
+        <p style="color: red">{error.message}</p>
+    {/await}
+    </div>
+{/if}
 
 {#if con}
 {#key conver}
