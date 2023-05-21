@@ -8,6 +8,8 @@ import cv2
 import numpy as np
 from flask import Flask, jsonify, send_from_directory, abort
 from flask_cors import CORS
+import re
+import time
 
 app = Flask(__name__)
 app.debug = True  # Enable verbose mode
@@ -16,6 +18,9 @@ CORS(app)
 artdir = '/v'
 thumbdir = '/app/static/thumb'
 
+def delta(t):
+    start_time = time.time()
+    return lambda: print(((time.time() - start_time)*1000)+"ms", t)
 
 @app.route('/dir/', defaults={'path': ''})
 @app.route('/dir/<path:path>')
@@ -49,8 +54,9 @@ def dir(path):
 @app.route('/thu/<path:filename>')
 def thu(filename):
     directory, filename = os.path.split(filename)
-    place = os.path.join(thumbdir,directory)
+    filename = re.sub(r'\.webp$', '', filename)
     thuname = filename+".webp"
+    place = os.path.join(thumbdir,directory)
     whole = os.path.join(place, thuname)
     if (not os.path.isfile(whole)):
         # not cached
@@ -61,6 +67,7 @@ def thu(filename):
         thumbnail(original,whole)
         print (" Existo! "+whole)
     return send_from_directory(place, thuname)
+
 
 def thumbnail (src,dst):
     dist_dir = os.path.dirname(dst)
@@ -84,17 +91,27 @@ def thumbnail_image (src,dst):
         # An error occurred while generating the thumbnail
         abort(500,"Thumbnail generation failed:"+result.stderr)
 
-# this python flask server makes json describing a set of thumbnails of video. the thumbnails should occur in triplets 2s apart in ideally three places across the video, selecting unique bits of footage- sort of k-means clustering what is going on in a bunch of footage.
+# < this python flask server makes json describing a set of thumbnails of video. the thumbnails should occur in triplets 2s apart in ideally three places across the video, selecting unique bits of footage- sort of k-means clustering what is going on in a bunch of footage.
 def thumbnail_video(src, dst, timestamp='00:00:05'):
-    command = ['ffmpeg', '-i', src, '-ss', timestamp, '-vframes', '1', dst]
+    ta = delta('ffmpeg '+dst)
+    # from video at timestamp
+    # < figure out perfect resize from ffmpeg
+    resizer = dst+'.jpg'
+    command = ['ffmpeg', '-i', src, '-ss', timestamp, '-vframes', '1', resizer]
     result = subprocess.run(command, capture_output=True, text=True)
-
+    ta()
 
     if result.returncode != 0:
         # An error occurred while generating the thumbnail
-        print("Thumbnail generation failed:", result.stderr)
+        abort(500,"Thumbnail generation failed:"+result.stderr)
     else:
-        print("Thumbnail generated successfully")
+        # resize
+        command = ['gm', 'convert', '-auto-orient', resizer, '-thumbnail', '400x400>', dst]
+        result = subprocess.run(command, capture_output=True, text=True)
+        os.remove(resizer)
+        if result.returncode != 0:
+            # An error occurred while generating the thumbnail
+            abort(500,"Thumbnail resizer failed:"+result.stderr)
 
 # < sort this out
 def extract_unique_frames(video_path, num_frames=3):
