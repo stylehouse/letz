@@ -1,6 +1,7 @@
 import os
 import subprocess
 import sys
+from threading import Semaphore
 # for magic, which deb python3-magic puts here:
 sys.path.append('/usr/lib/python3/dist-packages')
 import magic
@@ -14,7 +15,9 @@ import time
 app = Flask(__name__)
 app.debug = True  # Enable verbose mode and auto reload on code changes
 CORS(app)
+semaphore = Semaphore(2)  # Limit to two parallel media conversions
 
+# region: dir
 artdir = '/v'
 thumbdir = '/app/static/thumb'
 
@@ -48,9 +51,9 @@ def dir(path):
     
     return jsonify(file_list)
 
+# endregion
 
-
-
+# region: thu
 @app.route('/thu/<path:filename>')
 def thu(filename):
     directory, filename = os.path.split(filename)
@@ -63,7 +66,8 @@ def thu(filename):
         original = os.path.join(artdir, directory, filename)
         if (not os.path.isfile(original)):
             abort(404, "no such original: "+original)
-        thumbnail(original,whole)
+        with semaphore:
+            thumbnail(original,whole)
     return send_from_directory(place, thuname)
 
 
@@ -92,27 +96,40 @@ def thumbnail_image (src,dst):
 # < this python flask server makes json describing a set of thumbnails of video. the thumbnails should occur in triplets 2s apart in ideally three places across the video, selecting unique bits of footage- sort of k-means clustering what is going on in a bunch of footage.
 def thumbnail_video(src, dst, timestamp='00:00:05'):
     ta = delta('ffmpeg '+dst)
+    bail = lambda t,res: abort(500,"Thumbnail "+t+" failed:\n"+res.stderr)
     # from video at timestamp
     # < figure out perfect resize from ffmpeg
     resizer = dst+'.jpg'
     if os.path.isfile(resizer):
         os.remove(resizer)
     command = ['ffmpeg', '-ss', timestamp, '-i', src, '-vframes', '1', resizer]
-    result = subprocess.run(command, capture_output=True, text=True)
+    res = subprocess.run(command, capture_output=True, text=True)
     ta()
+    if (res.returncode != 0 or not os.path.isfile(resizer)):
+        # small file?
+        if 'Output file is empty, nothing was encoded (check -ss' in res.stderr:
+            short = '00:00:01'
+            if timestamp == short:
+                bail("resizer<---video - is it <1s?)",res)
+            print("Thumbnail resizer retry at 1s")
+            return thumbnail_video(src,dst,short)
+        
+        bail("<---video",res)
 
-    if result.returncode != 0:
+    if res.returncode != 0:
         # An error occurred while generating the thumbnail
-        abort(500,"Thumbnail generation failed:"+result.stderr)
+        bail("resizer<-video",res)
     else:
         # resize
         print('begin resizer '+dst)
         command = ['gm', 'convert', '-auto-orient', resizer, '-thumbnail', '400x400>', dst]
-        result = subprocess.run(command, capture_output=True, text=True)
+        res = subprocess.run(command, capture_output=True, text=True)
+        if (not os.path.isfile(dst)):
+            bail("dst<---video",res)
         os.remove(resizer)
-        if result.returncode != 0:
+        if res.returncode != 0:
             # An error occurred while generating the thumbnail
-            abort(500,"Thumbnail resizer failed:"+result.stderr)
+            bail("resizer",res)
 
 # < sort this out
 def extract_unique_frames(video_path, num_frames=3):
@@ -131,7 +148,7 @@ def extract_unique_frames(video_path, num_frames=3):
     cap.release()
     ta()
     return frames
-
+# endregion
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
