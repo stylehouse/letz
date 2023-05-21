@@ -20,7 +20,7 @@ thumbdir = '/app/static/thumb'
 
 def delta(t):
     start_time = time.time()
-    return lambda: print(((time.time() - start_time)*1000)+"ms", t)
+    return lambda: print(str((time.time() - start_time) * 1000) + "ms", t)
 
 @app.route('/dir/', defaults={'path': ''})
 @app.route('/dir/<path:path>')
