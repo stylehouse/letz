@@ -110,6 +110,7 @@ function DCdiffer (C) {
                 return 1
             }
             if (!D) {
+                // never happens
                 console.log("!D|el: "+printaC(C))
                 return
             }
