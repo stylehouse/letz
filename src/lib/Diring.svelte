@@ -4,10 +4,14 @@
 
     let fetcho
     let dir = '2112 PreXmas/'
+    // f is a file object from /dir/
+    let formlink = (t,dir,file) => `http://${location.hostname}:5000/${t}/${dir}`+(file||'')
+    // N[f+] come without src, since it is long
+    let fsrc = (N) => N.map(f => f.src = formlink('thu',dir,f.f)+'.webp')
     async function fetchData() {
-        const response = await fetch(`http://${location.hostname}:5000/dir/${dir}`);
-        let N = await response.json();
-        N.map(f => f.src = `http://${location.hostname}:5000/thu/${dir}${f.f}.webp`)
+        const response = await fetch(formlink('dir',dir))
+        let N = await response.json()
+        fsrc(N)
         return N
     }
     // ls
@@ -20,12 +24,21 @@
         refetcho()
     }
 
-    async function blab(N) {
-        await N
-        console.log(N)
-        //N.map(f => //f.src = `http://${location.hostname}:5000/thu/${dir}${f.t}.webp`)
+    // open toolbox
+    function animg(e,f) {
+        console.log(f)
+        // cat and gist a movie?
+        f.interest = 1
     }
-    $: fetcho && blab(fetcho)
+    
+    let gists
+    async function gist_thumb(e,f) {
+        const response = await fetch(`http://${location.hostname}:5000/dir/${dir}`);
+        let N = await response.json();
+        fsrc(N)
+        return N
+    }
+
   
     onMount(async () => {
       // Fetch?
@@ -39,15 +52,29 @@
     justify-content: space-between;
 }
 
-.image-container p {
-    flex-basis: calc(20% - 10px);
-    margin: 5px;
+.image-container descriptor {
+    flex-basis: calc(33%);
+}
+@media screen and (min-width: 721px) {
+    .image-container descriptor {
+        flex-basis: calc(20%);
+    }
+}
+@media screen and (min-width: 1200px) {
+    .image-container descriptor {
+        flex-basis: calc(15%);
+    }
+}
+.large {
+    font-size: 2em;
 }
 
 .image-container img {
     width: 100%;
     height: auto;
     object-fit: cover;
+    max-width: 400px;
+    max-height: 400px;
 }
 </style>
 
@@ -59,11 +86,17 @@
     {#await fetcho}
         <p>...waiting</p>
     {:then di}
-        {@const peek = di.slice(0,15) }
+        {@const peek = di.slice(0,5) }
         {#each peek as f, i}
             <descriptor>
-            {#if f.d}<p on:click={() => adfetcho(f)} style="color: green; text-decoraction: underline">{f.f}</p>
-            {:else}<p>{f.f}<img src={f.src} alt="pretty"/></p>{/if}
+            {#if f.d}<a on:click={() => adfetcho(f)} class='large'>{f.f}</a>
+            {:else}
+                <p>{f.f}<img on:click={(e)=>animg(e,f)} src={f.src} alt="pretty"/>
+                    <img src={formlink('thv',dir,f.f)+'.gif'} alt="pretty"/> </p>
+                {#if f.interest}
+                    <a on:click={() => gist_thumb(f)} class='large'>unique frames</a>
+                {/if}
+            {/if}
             </descriptor>
         {/each}
     {:catch error}

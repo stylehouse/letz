@@ -5,6 +5,7 @@ from threading import Semaphore
 # for magic, which deb python3-magic puts here:
 sys.path.append('/usr/lib/python3/dist-packages')
 import magic
+from moviepy.editor import VideoFileClip
 import cv2
 import numpy as np
 from flask import Flask, jsonify, send_from_directory, abort
@@ -20,6 +21,16 @@ semaphore = Semaphore(2)  # Limit to two parallel media conversions
 # region: dir
 artdir = '/v'
 thumbdir = '/app/static/thumb'
+# thumbnail filenames, of dir+f.f, may have .webp or .gif extensions
+def chop_filename(file):
+    directory, file = os.path.split(file)
+    file = re.sub(r'\.(webp|gif)$', '', file)
+    return [directory, file]
+
+def ensure_foldered(file):
+    dir = os.path.dirname(file)
+    if not os.path.exists(dir):
+        os.makedirs(dir)
 
 def delta(t):
     start_time = time.time()
@@ -54,27 +65,25 @@ def dir(path):
 # endregion
 
 # region: thu
-@app.route('/thu/<path:filename>')
-def thu(filename):
-    directory, filename = os.path.split(filename)
-    filename = re.sub(r'\.webp$', '', filename)
-    thuname = filename+".webp"
+
+@app.route('/thu/<path:file>')
+def thu(file):
+    directory, file = chop_filename(file)
+    thuname = file+".webp"
     place = os.path.join(thumbdir,directory)
     whole = os.path.join(place, thuname)
     if (not os.path.isfile(whole)):
         # not cached
-        original = os.path.join(artdir, directory, filename)
+        original = os.path.join(artdir, directory, file)
         if (not os.path.isfile(original)):
             abort(404, "no such original: "+original)
         with semaphore:
             thumbnail(original,whole)
     return send_from_directory(place, thuname)
 
-
 def thumbnail (src,dst):
-    dist_dir = os.path.dirname(dst)
-    if not os.path.exists(dist_dir):
-        os.makedirs(dist_dir)
+    ensure_foldered(dst)
+    
     mime_type = magic.from_file(src, mime=True)
     if mime_type.startswith('image/'):
         thumbnail_image(src,dst)
@@ -93,7 +102,7 @@ def thumbnail_image (src,dst):
         # An error occurred while generating the thumbnail
         abort(500,"Thumbnail generation failed:"+result.stderr)
 
-# < this python flask server makes json describing a set of thumbnails of video. the thumbnails should occur in triplets 2s apart in ideally three places across the video, selecting unique bits of footage- sort of k-means clustering what is going on in a bunch of footage.
+# make one thumbnail, for a video, at 5s
 def thumbnail_video(src, dst, timestamp='00:00:05'):
     ta = delta('ffmpeg '+dst)
     bail = lambda t,res: abort(500,"Thumbnail "+t+" failed:\n"+res.stderr)
@@ -120,8 +129,7 @@ def thumbnail_video(src, dst, timestamp='00:00:05'):
         # An error occurred while generating the thumbnail
         bail("resizer<-video",res)
     else:
-        # resize
-        print('begin resizer '+dst)
+        # resizes
         command = ['gm', 'convert', '-auto-orient', resizer, '-thumbnail', '400x400>', dst]
         res = subprocess.run(command, capture_output=True, text=True)
         if (not os.path.isfile(dst)):
@@ -131,23 +139,142 @@ def thumbnail_video(src, dst, timestamp='00:00:05'):
             # An error occurred while generating the thumbnail
             bail("resizer",res)
 
-# < sort this out
-def extract_unique_frames(video_path, num_frames=3):
-    ta = delta('extract_unique_frames '+dst)
-    cap = cv2.VideoCapture(video_path)
+# endregion
+
+
+
+
+# region: vid
+# read video metadata
+@app.route('/vid/<path:file>')
+def vid(file):
+    src = os.path.join(artdir,file)
+    directory, file = chop_filename(file)
+    
+    f = {'f':file}
+    with semaphore:
+        f.update( get_video_info(src) )
+    return jsonify(f)
+def get_video_info(file_path):
+    video = VideoFileClip(file_path)
+    duration = video.duration
+    width, height = video.size
+    fps = video.fps
+    # You can access more properties like video codec, creation date, etc.
+    # For example: video.video_codec, video.metadata['creation_date']
+    print(video)
+    # Close the video file
+    video.reader.close()
+    video.audio.reader.close_proc()
+    
+    return {
+        'duration': duration,
+        'width': width,
+        'height': height,
+        'fps': fps
+    }
+# endregion
+
+
+
+# region: thv
+# a dreamy function: makes a gif of unique frames from a video
+#  the thumbnails occur in triplets 1s apart in ideally three places across the video
+# < selecting representative footage?
+#   ~~ k-means clustering what is going on in a bunch of footage.
+# 
+# < where these are in the video, if everything is like this
+# < ideal num_frames? search for it based on similarity between frames?
+# < /vid/ describing a set of thumbnails of video.
+@app.route('/thv/<path:file>')
+def thv(file):
+    directory, file = chop_filename(file)
+
+    place = os.path.join(thumbdir,directory)
+    thuname = file+".gif"
+    whole = os.path.join(place, thuname)
+    if (not os.path.isfile(whole)):
+        # not cached
+        original = os.path.join(artdir, directory, file)
+        if (not os.path.isfile(original)):
+            abort(404, "no such original: "+original)
+        
+        with semaphore:
+            dst = os.path.join(place,file)
+            make_gif_unique_frames(original,dst)
+    
+    return send_from_directory(place, thuname)
+def make_gif_unique_frames(original,dst):
+    ensure_foldered(dst)
+    # make .1-9.jpg
+    extract_unique_frames(original,dst)
+    # -> .gif
+    make_gif_at_dst(dst)
+def make_gif_at_dst(dst):
+    ta = delta('stitch thv '+dst)
+    def bail (t,res=0):
+        abort(500,"make_gif "+t+" failed:\n"+(res and res.stderr or ''))
+
+    frames = []
+    # we might not have 9 frames if cap.read() feels like it
+    for i in range(3):
+        frame = dst+".%d.jpg" % (i+1)
+        if (not os.path.isfile(frame)):
+            bail("very few "+frame)
+        frames.append(frame)
+    
+    srcglob = dst+".*.jpg"
+    dst += '.gif'
+    # resizes and converts to gif
+    command = ['gm', 'convert', '-auto-orient', '-delay','15', '-loop','0',
+               srcglob, '-thumbnail', '400x400>', dst]
+    res = subprocess.run(command, capture_output=True, text=True)
+    if (not os.path.isfile(dst)):
+        bail("!gif<---video",res)
+    if not len(frames):
+        bail("!len frames")
+
+    for frame in frames:
+        print("rm "+frame)
+        os.remove(frame)
+    if res.returncode != 0:
+        # An error occurred while generating the thumbnail
+        bail("non-zero",res)
+    ta()
+
+
+def extract_unique_frames(src, dst, num_frames=3):
+    ta = delta('extract_unique_frames '+src)
+    cap = cv2.VideoCapture(src)
+    if not cap.isOpened():
+        abort(500,"!isOpened")
+
     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     indices = np.linspace(0, total_frames - 1, num=num_frames, dtype=int)
     frames = []
-
     for index in indices:
-        cap.set(cv2.CAP_PROP_POS_FRAMES, index)
-        ret, frame = cap.read()
-        if ret:
-            frames.append(frame)
+        for i in [index-24,index,index+24]:
+            for wander in range(10):
+                cap.set(cv2.CAP_PROP_POS_FRAMES, i)
+                ret, frame = cap.read()
+                if ret:
+                    print("in "+str(i)+" out "+str(ret)+"  "+(wander and "wander "+str(wander) or ""))
+                    frames.append(frame)
+                    break
+    
+    if not frames:
+        abort(500,"No frames")
+    
+    for i, frame in enumerate(frames):
+        file = dst+'.%d.jpg' % (i+1)
+        cv2.imwrite(file, frame)
+        if (not os.path.isfile(file)):
+            ta()
+            abort(500,"!uniques<---video "+file)
+        print("Wrote "+file+" the "+frame.shape.__str__())
 
     cap.release()
     ta()
-    return frames
 # endregion
 
 if __name__ == '__main__':
