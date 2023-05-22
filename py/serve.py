@@ -10,6 +10,7 @@ import cv2
 import numpy as np
 from flask import Flask, jsonify, send_from_directory, abort
 from flask_cors import CORS
+import json
 import re
 import time
 
@@ -146,6 +147,8 @@ def thumbnail_video(src, dst, timestamp='00:00:05'):
 
 # region: vid
 # read video metadata
+def to_k(v):
+    return round(int(v)/1000)
 @app.route('/vid/<path:file>')
 def vid(file):
     src = os.path.join(artdir,file)
@@ -155,31 +158,84 @@ def vid(file):
     with semaphore:
         f.update( get_video_info(src) )
     return jsonify(f)
-def get_video_info(file_path):
-    video = VideoFileClip(file_path)
-    duration = video.duration
-    width, height = video.size
-    fps = video.fps
-    # You can access more properties like video codec, creation date, etc.
-    # For example: video.video_codec, video.metadata['creation_date']
-    print(video)
-    # Close the video file
-    video.reader.close()
-    video.audio.reader.close_proc()
-    
-    return {
-        'duration': duration,
-        'width': width,
-        'height': height,
-        'fps': fps
-    }
-# endregion
+def get_video_info(src):
+    command = ['ffprobe', '-v', 'quiet', '-print_format', 'json', '-show_format', '-show_streams', src]
+    res = subprocess.run(command, capture_output=True, text=True)
+    meta = json.loads(res.stdout)
 
+    if 'format' not in meta:
+        return meta
+
+    info = {
+        'duration': meta['format']['duration'],
+        'kbps': to_k(meta['format']['bit_rate']),
+        'kb': to_k(meta['format']['size']),
+    }
+
+    def infotags(info, item):
+        tags = info.get('tags', {})
+        for k, v in item['tags'].items():
+            if tags.get(k) and tags[k] != v:
+                tags["another " + k] = v
+                continue
+            tags[k] = v
+        if len(tags) > 0:
+            info['tags'] = tags
+
+    infotags(info, meta['format'])
+
+    knowcodectype = ['video', 'audio', 'subtitle']
+    for stream in meta['streams']:
+        ct = stream['codec_type']
+        k = ct[0] if ct in knowcodectype else ct or '?'
+        if k + 'b' in info and info[k + 'b']:
+            info[k + 'many'] = info.get(k + 'many', 0) + 1
+        info[k + 'b'] = to_k(stream.get('bit_rate'))
+        info[k + 'c'] = stream.get('codec_name')
+
+        if 'tags' in stream:
+            infotags(info, stream)
+
+        # < needs a refactor already. is now int|str rigid.
+        if stream.get('bits_per_raw_sample') and stream.get('bits_per_raw_sample') != '8':
+            info[k + 'bits'] = stream.get('bits_per_raw_sample')
+        if stream.get('color_space') and stream.get('color_space') != 'bt709':
+            info[k + 'cs'] = stream.get('color_space')
+        if stream.get('pix_fmt') and stream.get('pix_fmt') != 'yuvj420p':
+            info[k + 'pf'] = stream.get('pix_fmt')
+        igframerates = ['0/0', '24000/1001', '24/1', '25/1']
+        if stream.get('avg_frame_rate') and stream.get('avg_frame_rate') not in igframerates:
+            info[k + 'fps'] = stream.get('avg_frame_rate')
+
+        if stream.get('channels') and stream.get('channels') != 2:
+            info[k + 'ch'] = stream.get('channels')
+        if stream.get('channel_layout') and stream.get('channel_layout') != 'stereo':
+            info[k + 'chla'] = stream.get('channel_layout')
+        if stream.get('bits_per_sample') and stream.get('bits_per_sample') != 16:
+            info[k + 'bits'] = stream.get('bits_per_sample')
+        igaudiohz = ['1/48000']
+        if stream.get('codec_time_base') and stream.get('codec_time_base') not in igaudiohz:
+            info[k + 'hz'] = stream.get('codec_time_base')
+
+        if stream.get('duration') and stream.get('duration') != info['duration']:
+            info[k + 'duration'] = stream.get('duration')
+
+        for key in ['width', 'height']:
+            if not stream.get(key):
+                continue
+            elif key in info and info[key] != stream[key]:
+                info["another " + key] = stream[key]
+            else:
+                info[key] = stream[key]
+
+    #info['z meta'] = meta
+    return info
+# endregion
 
 
 # region: thv
 # a dreamy function: makes a gif of unique frames from a video
-#  the thumbnails occur in triplets 1s apart in ideally three places across the video
+#  < the thumbnails occur in triplets 1s apart in ideally three places across the video
 # < selecting representative footage?
 #   ~~ k-means clustering what is going on in a bunch of footage.
 # 
@@ -242,8 +298,7 @@ def make_gif_at_dst(dst):
         bail("non-zero",res)
     ta()
 
-
-def extract_unique_frames(src, dst, num_frames=3):
+def extract_unique_frames(src, dst, num_frames=9):
     ta = delta('extract_unique_frames '+src)
     cap = cv2.VideoCapture(src)
     if not cap.isOpened():
@@ -253,14 +308,10 @@ def extract_unique_frames(src, dst, num_frames=3):
     indices = np.linspace(0, total_frames - 1, num=num_frames, dtype=int)
     frames = []
     for index in indices:
-        for i in [index-24,index,index+24]:
-            for wander in range(10):
-                cap.set(cv2.CAP_PROP_POS_FRAMES, i)
-                ret, frame = cap.read()
-                if ret:
-                    print("in "+str(i)+" out "+str(ret)+"  "+(wander and "wander "+str(wander) or ""))
-                    frames.append(frame)
-                    break
+        cap.set(cv2.CAP_PROP_POS_FRAMES, index)
+        ret, frame = cap.read()
+        if ret:
+            frames.append(frame)
     
     if not frames:
         abort(500,"No frames")
