@@ -76,6 +76,9 @@ function toCon_polish (d) {
 // < producing versioned C** to interpret for minimal newsup
 export function inity_toCon(d) {
     inlacing(ex(d,{
+        
+        // tailcalls: 1, // most javascripts dont optimise them
+
         all: function (s,d) {
             toCon_newCon(d)
             let C = d.C
@@ -110,6 +113,10 @@ export function inity_toCon(d) {
 // < wind turbine grant
 function inlacing(d) {
     d.cv ||= 0
+    if (!d.tailcalls) {
+        return inity_inlace1(d)
+            && inity_inlace2(d)
+    }
     if (d.cv == 0)
         return inity_inlace1(d)
     if (d.spawning?.length)
@@ -137,8 +144,9 @@ function i_spawning(d,dd) {
     N.push(dd)
 }
 // spawning
+let inity_verbose = 0
 function inity_inlace1(d) {
-    console.log(new Array(d.d||0).fill('  ').join('')+d.t+"@"+d.cv)
+    inity_verbose && console.log(new Array(d.d||0).fill('  ').join('')+d.t+"@"+d.cv)
     if (d.t == null) d.t = 'toCon'
     d.z = []
     // non-toplevel are already d.d++ by i_spawning()
@@ -158,16 +166,15 @@ function inity_inlace1(d) {
         let N = d.up.resolving ||= []
         N.push(d)
         // return to d.up after spawn + all
-        return inlacing(d.up)
+        return d.tailcalls ? inlacing(d.up) : 0
     }
     // take this to step 2
     // < could go wide on spawning: d.up||d
-    //    not safe 
-    return inlacing(d)
+    return d.tailcalls ? inlacing(d) : 1
 }
 // manying -> more spawning
 function inity_inlace2(d) {
-    console.log(new Array(d.d||0).fill('  ').join('')+d.t+"@"+d.cv)
+    inity_verbose && console.log(new Array(d.d||0).fill('  ').join('')+d.t+"@"+d.cv)
     while (1) {
         if (d.not) break
 
@@ -188,16 +195,32 @@ function inity_inlace2(d) {
     }
     d.cv = 2
     // we may be distracted by d.spawning
-    return inlacing(d)
+    if (!d.tailcalls) {
+        while (d.spawning?.length)
+            inlacing(d.spawning.shift())
+        return inity_inlace3(d)
+    }
+    else {
+        return inlacing(d)
+    }
 }
 function inity_inlace3(d) {
-    console.log(new Array(d.d||0).fill('  ').join('')+d.t+"@"+d.cv)
-    // glance d/d*@1
+    inity_verbose && console.log(new Array(d.d||0).fill('  ').join('')+d.t+"@"+d.cv)
+    if (d.t+"@"+d.cv == 'ierorag@2') {
+        // debugger
+    }
+    // glance d@3/d*@1
     d.resolve && d.resolve(d.s,d,d.resolving||[])
 
     d.cv = 3
-    // now we have d.resolving[d+]
-    return inlacing(d)
+    // we catch up the d.resolving
+    if (!d.tailcalls) {
+        while (d.resolving?.length)
+            inity_inlace2(d.resolving.shift())
+    }
+    else {
+        return inlacing(d)
+    }
 }
 
 

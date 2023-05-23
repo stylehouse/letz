@@ -75,8 +75,8 @@
         tocon(dat)
         refresh = dat.i
         console.log('bloop! '+refresh)
-        a.set('ierorag',dat.i)
-        goto(`?${a.toString()}`)
+        //a.set('ierorag',dat.i)
+        //goto(`?${a.toString()}`)
     }
     $: moment, sipd.sync()
     $: refresh && sipd.refreshN(con.c.wake)
