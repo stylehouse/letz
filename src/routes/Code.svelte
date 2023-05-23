@@ -5,7 +5,7 @@
 	import { sto } from './stores.js';
     import { Le } from "$lib/Le"
     import { St_main, St_loop } from "$lib/St"
-    import { toCon, sip_dispatch } from "$lib/Co"
+    import { inity_toCon, toCon, sip_dispatch } from "$lib/Co"
     import Diring from "$lib/Diring.svelte"
     import Con from '$lib/pi/Con.svelte'
     
@@ -42,7 +42,8 @@
     }
     // scan into (-Con/(-Cont|-Conz))**
     function tocon(dat) {
-        con = toCon({s:dat,D:laCon})
+        //con = toCon({s:dat,D:laCon})
+        con = inity_toCon({t:'Writers',s:dat,D:laCon})
         laCon = con
         // set up stores to update them all (con.c.visit[Con+])
         sipd.setN(con.c.visit)

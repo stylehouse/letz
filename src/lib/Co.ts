@@ -29,7 +29,6 @@ export function toCon (d) {
     toCon_newCon(d)
     let C = d.C
     
-    // < producing versioned C** to interpret for minimal newsup
 
     // try to know s
     toCon_newCont(d)
@@ -45,27 +44,163 @@ export function toCon (d) {
         delete d.pretendtoplevel
         // start resolving the first Con//Con
         toCon_resolve(d)
-        // now all C may have .y.D previous self
-        // difference everything, including notifying parents of gone children
-        let diff = DCdiffer(C)
 
-
-        // a list of all C**
-        C.c.visit = diff.visit
-        C.c.wake = diff.wake
-        
-        // give them all an incrementing version
-        // < individuated by changes
-        let D = d.D
-        let version = (D && D.c.version || 0) + 1
-        for (let Co of C.c.visit) {
-            Co.c.version = version
-        }
+        toCon_polish(d)
 
     }
 
     return C
 }
+function toCon_polish (d) {
+    let C = d.C
+    // now all C may have .y.D previous self
+    // difference everything, including notifying parents of gone children
+    let diff = DCdiffer(C)
+
+
+    // a list of all C**
+    C.c.visit = diff.visit
+    C.c.wake = diff.wake
+
+    // give them all an incrementing version
+    // < individuated by changes
+    let D = d.D
+    let version = (D && D.c.version || 0) + 1
+    for (let Co of C.c.visit) {
+        Co.c.version = version
+    }
+}
+
+// d={t?,s,D?}
+// producing C** for recursive dumper instructions: (-Con/(-Cont|-Conz))**
+// < producing versioned C** to interpret for minimal newsup
+export function inity_toCon(d) {
+    inlacing(ex(d,{
+        all: function (s,d) {
+            toCon_newCon(d)
+            let C = d.C
+            // try to know s
+            toCon_newCont(d)
+            // we have uncovered some id for parent's race for meaning (d.up.resolve())
+            // < to "resolve $n" sets of Con//Con here, as an elegant A-ism
+            // < how async+await might help this flow control schism?
+            // allow the upper Con//Con to assign ressurrecta with C&Cont
+        },
+        dlim: function (s,d) {
+            // spawn children
+            return toCon_newConz(d)
+        },
+        resolve: function (s,d,N) {
+            // let names = N.map(d => d.t + (d.C.c.Cont && d.C.c.Cont.sc.Ct ? ':'+d.C.c.Cont.sc.Ct : ''))
+            // console.log("seen "+d.t+": "+names.join("\t"))
+            let C = d.C
+            let D = d.D
+    
+            DCresolve({D,C,til:C => C.c.pi == 'Con'})
+            // export to d.D what they (Con//Con) resolved to
+            N.map(d => {
+                d.D = d.C.y.D
+            })
+        }
+    }))
+    toCon_polish(d)
+    return d.C
+}
+// route d to act
+// < wind turbine grant
+function inlacing(d) {
+    d.cv ||= 0
+    console.log(new Array(d.d||0).fill('  ').join('')+d.t+"@"+d.cv)
+    if (d.cv == 0)
+        return inity_inlace1(d)
+    if (d.spawning?.length)
+        return inlacing(d.spawning.shift())
+    if (d.cv == 1)
+        return inity_inlace2(d)
+    if (d.cv == 2)
+        return inity_inlace3(d)
+    if (d.resolving?.length)
+        return inlacing(d.resolving.shift())
+    if (d.cv == 3)
+        return d.up ? inlacing(d.up) : d
+}
+function i_spawning(d,dd) {
+    // idbit dd={t,s}, inherit d.*
+    dd = ex(ex({},d),dd)
+    dd.up = d
+    // non-inheritables
+    delete dd.spawning
+    delete dd.resolving
+    delete dd.cv
+    d.z.push(dd)
+    dd.d++
+    let N = d.spawning ||= []
+    N.push(dd)
+}
+// spawning
+function inity_inlace1(d) {
+    if (d.t == null) d.t = 'toCon'
+    d.z = []
+    // non-toplevel are already d.d++ by i_spawning()
+    d.d ||= 0
+
+    // ...
+    d.all && d.all(d.s,d)
+
+    d.cv = 1
+    // put d/d one behind: d%steptwo/d%stepone
+    //  ie, after children are stepone, steptwo the parent
+    //   creating a time when children slightly known
+    //    for the parent to give them all advice
+    //     eg to assign a past life, see resolve $n
+    if (d.resolve && d.up && !d.pretendtoplevel) {
+        // all children must have already sprung from d.up or they will inherit .resolving
+        let N = d.up.resolving ||= []
+        N.push(d)
+        // return to d.up after spawn + all
+        return inlacing(d.up)
+    }
+    // take this to step 2
+    // < could go wide on spawning: d.up||d
+    //    not safe 
+    return inlacing(d)
+}
+// manying -> more spawning
+function inity_inlace2(d) {
+    while (1) {
+        if (d.not) break
+
+        // d.grab...
+
+        // onwards
+
+        // d.climb... .map(s => inlace(s,d))
+        // d.dlim emits d+ (rowing)
+        if (d.dlim) {
+            let M = d.dlim(d.s,d) || []
+            for (let dd of M) {
+                i_spawning(d,dd)
+            }
+        }
+
+        break
+    }
+    d.cv = 2
+    // we may be distracted by d.spawning
+    return inlacing(d)
+}
+function inity_inlace3(d) {
+    // glance d/d*@1
+    d.resolve && d.resolve(d.s,d,d.resolving||[])
+
+    d.cv = 3
+    // now we have d.resolving[d+]
+    return inlacing(d)
+}
+
+
+
+// glances at patches of the field (d/d)
 function toCon_resolve (d) {
     // and s/* beyond, each recursing -> toCon
     toCon_newConz(d)
@@ -179,6 +314,7 @@ function DCresolve (c) {
                 C.y.D = c.D
             }
             else if (c.til) {
+                // C.c.pi == 'Con'
                 if (c.til(C,q)) q.not = 1
             }
         },
@@ -395,10 +531,16 @@ function toCon_newConz (d) {
         : typ.Cish ? o_(s)
         : []
     for (let [t,s] of Object.entries(N)) {
-        let dd = ex(ex({},d),{up:d,upC:Conz,t,s})
+        let dd = {up:d,upC:Conz,t,s}
         // they put -Conz/-Con*
-        toCon(dd)
+        if (d.resolve) {
+            nodules.push(dd)
+        }
+        else {
+            toCon(ex(ex({},d),dd))
+        }
     }
+    return nodules
 }
 //#endregion
 
