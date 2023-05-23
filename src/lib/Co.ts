@@ -110,21 +110,22 @@ export function inity_toCon(d) {
     return d.C
 }
 // route d to act
+// staggering inlace()
 // < wind turbine grant
 function inlacing(d) {
     d.cv ||= 0
     if (!d.tailcalls) {
-        return inity_inlace1(d)
-            && inity_inlace2(d)
+        return inlacing_step1(d)
+            && inlacing_step2(d)
     }
     if (d.cv == 0)
-        return inity_inlace1(d)
+        return inlacing_step1(d)
     if (d.spawning?.length)
         return inlacing(d.spawning.shift())
     if (d.cv == 1)
-        return inity_inlace2(d)
+        return inlacing_step2(d)
     if (d.cv == 2)
-        return inity_inlace3(d)
+        return inlacing_step3(d)
     if (d.resolving?.length)
         return inlacing(d.resolving.shift())
     if (d.cv == 3)
@@ -145,7 +146,7 @@ function i_spawning(d,dd) {
 }
 // spawning
 let inity_verbose = 0
-function inity_inlace1(d) {
+function inlacing_step1(d) {
     inity_verbose && console.log(new Array(d.d||0).fill('  ').join('')+d.t+"@"+d.cv)
     if (d.t == null) d.t = 'toCon'
     d.z = []
@@ -173,7 +174,7 @@ function inity_inlace1(d) {
     return d.tailcalls ? inlacing(d) : 1
 }
 // manying -> more spawning
-function inity_inlace2(d) {
+function inlacing_step2(d) {
     inity_verbose && console.log(new Array(d.d||0).fill('  ').join('')+d.t+"@"+d.cv)
     while (1) {
         if (d.not) break
@@ -198,13 +199,13 @@ function inity_inlace2(d) {
     if (!d.tailcalls) {
         while (d.spawning?.length)
             inlacing(d.spawning.shift())
-        return inity_inlace3(d)
+        return inlacing_step3(d)
     }
     else {
         return inlacing(d)
     }
 }
-function inity_inlace3(d) {
+function inlacing_step3(d) {
     inity_verbose && console.log(new Array(d.d||0).fill('  ').join('')+d.t+"@"+d.cv)
     if (d.t+"@"+d.cv == 'ierorag@2') {
         // debugger
@@ -216,7 +217,7 @@ function inity_inlace3(d) {
     // we catch up the d.resolving
     if (!d.tailcalls) {
         while (d.resolving?.length)
-            inity_inlace2(d.resolving.shift())
+            inlacing_step2(d.resolving.shift())
     }
     else {
         return inlacing(d)
