@@ -3,7 +3,7 @@ import {ex,C_,i_,o_,VA_ip,detect_type,inlace,TheC,TheA,o_up} from '$lib/St'
 //#region toCon a dumper for the A** tree
 // isolate some Con** update
 // < sip_dispatch compat. C.c.visit is not everything
-export function toCon_reentry (C:TheC) {
+export function inity_toCon_reentry (C:TheC) {
     let d = {t:C.t, s:C.c.s, D:C, pretendtoplevel:1}
     let Cup = C.y.up
     if (Cup) {
@@ -18,7 +18,7 @@ export function toCon_reentry (C:TheC) {
         Cup.sc.z = Cup.sc.z.filter(n => n != C)
     }
     let D = C
-    C = toCon(d)
+    C = inity_toCon(d)
     return C
 }
 export function toCon (d) {
@@ -76,7 +76,7 @@ function inlacing_Con_commit (d) {
 // < producing versioned C** to interpret for minimal newsup
 export function inity_toCon(d) {
     return inlacing_Con({...d,
-        all: function (s,d) {
+        each: function (s,d) {
             // try to know s
             toCon_newCont(d)
             // we have uncovered some id for parent's race for meaning (d.up.resolve())
@@ -86,9 +86,10 @@ export function inity_toCon(d) {
         },
     })
 }
+// endregion
+// region inlacing_Con
 function inlacing_Con(c) {
-    let d = ex({},c)
-    ex(d,{
+    let d = ex({
         
         // tailcalls: 1, // most javascripts dont optimise them
 
@@ -96,7 +97,7 @@ function inlacing_Con(c) {
             toCon_newCon(d)
             let C = d.C
 
-            c.all && c.all(s,d)
+            d.each && d.each(s,d)
         },
         
         dlim: function (s,d) {
@@ -116,7 +117,7 @@ function inlacing_Con(c) {
                 d.D = d.C.y.D
             })
         }
-    })
+    }, c)
     inlacing(d)
     
     inlacing_Con_commit(d)
@@ -154,6 +155,8 @@ function i_spawning(d,dd) {
     delete dd.spawning
     delete dd.resolving
     delete dd.cv
+    delete dd.pretendtoplevel
+    delete dd.D
     d.z.push(dd)
     dd.d++
     let N = d.spawning ||= []
