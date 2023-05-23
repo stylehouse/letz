@@ -5,7 +5,7 @@
 	import { sto } from './stores.js';
     import { Le } from "$lib/Le"
     import { St_main, St_loop } from "$lib/St"
-    import { inity_toCon, toCon, sip_dispatch } from "$lib/Co"
+    import { inity_toCon, sip_dispatch } from "$lib/Co"
     import Diring from "$lib/Diring.svelte"
     import Con from '$lib/pi/Con.svelte'
     
@@ -110,6 +110,7 @@
         dat.look = look
         tocon(dat)
     }
+    let junk = [1,3,5,[6,[6,[6,[[6,[2]]]]]]]
 </script>
 
 
@@ -124,7 +125,7 @@
 
 {#if con}
 {#key conver}
-    <p> <Con C={con}/> </p>
+//   <p> <Con C={con}/> </p>
 {/key}
 {/if}
 

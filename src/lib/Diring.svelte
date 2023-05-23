@@ -1,7 +1,16 @@
 <script>
     import { onMount } from 'svelte';
-  
-
+    import { C_ } from "$lib/St"
+    import Con from "$lib/pi/Con.svelte"
+    import { inity_toDiring } from "$lib/Co"
+    import Coning from '$lib/Coning.svelte'
+    
+    export let C = C_('2112 PreXmas',1,{pi:'Dir'})
+    let D
+    async function ring() {
+        D = await inity_toDiring({s:C,D})
+    }
+//#region
     let fetcho
     let dir = '2112 PreXmas/'
     // f is a file object from /dir/
@@ -16,6 +25,7 @@
     }
     // ls
     function refetcho() {
+        
         fetcho = fetchData()
     }
     // cd
@@ -40,9 +50,11 @@
     }
 
   
-    onMount(async () => {
+    onMount(() => {
       // Fetch?
+      //ring()
     });
+//endregion
 </script>
 
 <style>
@@ -78,8 +90,13 @@
 }
 </style>
 
+<Coning t="theD" C={D} />
+<button on:click={() => ring()} > ring() </button>
+{#if D}
+    <Con C={D} />
+{/if}
 
-<button on:click={() => refetcho()} > fetcho() </button>
+<!-- <button on:click={() => refetcho()} > fetcho() </button> -->
 
 {#if fetcho}
 <div class="image-container">
