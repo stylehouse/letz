@@ -45,13 +45,13 @@ export function toCon (d) {
         // start resolving the first Con//Con
         toCon_resolve(d)
 
-        toCon_polish(d)
+        inlacing_Con_commit(d)
 
     }
 
     return C
 }
-function toCon_polish (d) {
+function inlacing_Con_commit (d) {
     let C = d.C
     // now all C may have .y.D previous self
     // difference everything, including notifying parents of gone children
@@ -75,13 +75,8 @@ function toCon_polish (d) {
 // producing C** for recursive dumper instructions: (-Con/(-Cont|-Conz))**
 // < producing versioned C** to interpret for minimal newsup
 export function inity_toCon(d) {
-    inlacing(ex(d,{
-        
-        // tailcalls: 1, // most javascripts dont optimise them
-
+    return inlacing_Con({...d,
         all: function (s,d) {
-            toCon_newCon(d)
-            let C = d.C
             // try to know s
             toCon_newCont(d)
             // we have uncovered some id for parent's race for meaning (d.up.resolve())
@@ -89,8 +84,24 @@ export function inity_toCon(d) {
             // < how async+await might help this flow control schism?
             // allow the upper Con//Con to assign ressurrecta with C&Cont
         },
+    })
+}
+function inlacing_Con(c) {
+    let d = ex({},c)
+    ex(d,{
+        
+        // tailcalls: 1, // most javascripts dont optimise them
+
+        all: function (s,d) {
+            toCon_newCon(d)
+            let C = d.C
+
+            c.all && c.all(s,d)
+        },
+        
         dlim: function (s,d) {
             // spawn children
+            // < if no d.typ, assume typ.Cish in toCon_newConz()
             return toCon_newConz(d)
         },
         resolve: function (s,d,N) {
@@ -105,10 +116,14 @@ export function inity_toCon(d) {
                 d.D = d.C.y.D
             })
         }
-    }))
-    toCon_polish(d)
+    })
+    inlacing(d)
+    
+    inlacing_Con_commit(d)
+
     return d.C
 }
+
 // route d to act
 // staggering inlace()
 // < wind turbine grant
@@ -354,6 +369,8 @@ function DCresolve (c) {
             for (let t in Ctz) {
                 Dtz[t] ||= []
             }
+            // < these matches for C.t (hash key leading in) must pile up,
+            //    then we consider how Ct (s.t if s is a C) matches along with them
             for (let t in Dtz) {
                 let Dz = Dtz[t] || []
                 let Cz = Ctz[t] || []
