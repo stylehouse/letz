@@ -1,6 +1,36 @@
 // < comments that start with '<' are TODOs, except this one
 import {ex,C_,i_,o_,VA_ip,detect_type,inlace,TheC,TheA,o_up} from '$lib/St'
+
 //#region toCon a dumper for the A** tree
+export async function inity_toDiring(d) {
+    return inlacing_Con({...d,
+        each: function (s,d) {
+            // try to know s
+            toCon_newCont(d)
+            // we have uncovered some id for parent's race for meaning (d.up.resolve())
+            // < to "resolve $n" sets of Con//Con here, as an elegant A-ism
+            // < how async+await might help this flow control schism?
+            // allow the upper Con//Con to assign ressurrecta with C&Cont
+        },
+    })
+}
+
+// d={t?,s,D?}
+// d/d (Con//Con) emerge, then are
+// producing C** for recursive dumper instructions: (-Con/(-Cont|-Conz))**
+// < producing versioned C** to interpret for minimal newsup
+export function inity_toCon(d) {
+    return inlacing_Con({...d,
+        each: function (s,d) {
+            // try to know s
+            toCon_newCont(d)
+            // we have uncovered some id for parent's race for meaning (d.up.resolve())
+            // < to "resolve $n" sets of Con//Con here, as an elegant A-ism
+            // < how async+await might help this flow control schism?
+            // allow the upper Con//Con to assign ressurrecta with C&Cont
+        },
+    })
+}
 // isolate some Con** update
 // < sip_dispatch compat. C.c.visit is not everything
 export function inity_toCon_reentry (C:TheC) {
@@ -21,73 +51,8 @@ export function inity_toCon_reentry (C:TheC) {
     C = inity_toCon(d)
     return C
 }
-export function toCon (d) {
-    if (d.t == null) d.t = 'toCon'
-    // d/d (Con//Con) emerge, then are
-    d.resolving = []
-    // producing C** for recursive dumper instructions: (-Con/(-Cont|-Conz))**
-    toCon_newCon(d)
-    let C = d.C
-    
-
-    // try to know s
-    toCon_newCont(d)
-
-    // < to "resolve $n" sets of Con//Con here, as an elegant A-ism
-    // < how async+await might help this flow control schism?
-    // allow the upper Con//Con to assign ressurrecta with C&Cont
-    if (d.up && !d.pretendtoplevel) {
-        d.up.resolving.push(d)
-        return
-    }
-    else {
-        delete d.pretendtoplevel
-        // start resolving the first Con//Con
-        toCon_resolve(d)
-
-        inlacing_Con_commit(d)
-
-    }
-
-    return C
-}
-function inlacing_Con_commit (d) {
-    let C = d.C
-    // now all C may have .y.D previous self
-    // difference everything, including notifying parents of gone children
-    let diff = DCdiffer(C)
-
-
-    // a list of all C**
-    C.c.visit = diff.visit
-    C.c.wake = diff.wake
-
-    // give them all an incrementing version
-    // < individuated by changes
-    let D = d.D
-    let version = (D && D.c.version || 0) + 1
-    for (let Co of C.c.visit) {
-        Co.c.version = version
-    }
-}
-
-// d={t?,s,D?}
-// producing C** for recursive dumper instructions: (-Con/(-Cont|-Conz))**
-// < producing versioned C** to interpret for minimal newsup
-export function inity_toCon(d) {
-    return inlacing_Con({...d,
-        each: function (s,d) {
-            // try to know s
-            toCon_newCont(d)
-            // we have uncovered some id for parent's race for meaning (d.up.resolve())
-            // < to "resolve $n" sets of Con//Con here, as an elegant A-ism
-            // < how async+await might help this flow control schism?
-            // allow the upper Con//Con to assign ressurrecta with C&Cont
-        },
-    })
-}
-// endregion
-// region inlacing_Con
+//endregion
+//#region inlacing_Con
 function inlacing_Con(c) {
     let d = ex({
         
@@ -124,7 +89,25 @@ function inlacing_Con(c) {
 
     return d.C
 }
+function inlacing_Con_commit (d) {
+    let C = d.C
+    // now all C may have .y.D previous self
+    // difference everything, including notifying parents of gone children
+    let diff = DCdiffer(C)
 
+
+    // a list of all C**
+    C.c.visit = diff.visit
+    C.c.wake = diff.wake
+
+    // give them all an incrementing version
+    // < individuated by changes
+    let D = d.D
+    let version = (D && D.c.version || 0) + 1
+    for (let Co of C.c.visit) {
+        Co.c.version = version
+    }
+}
 // route d to act
 // staggering inlace()
 // < wind turbine grant
@@ -241,38 +224,26 @@ function inlacing_step3(d) {
         return inlacing(d)
     }
 }
-
-
-
-// glances at patches of the field (d/d)
-function toCon_resolve (d) {
-    // and s/* beyond, each recursing -> toCon
-    toCon_newConz(d)
-    // then they, just before doing that themselves, are here:
-
-    if (1 || d.resolving.length) {
-        let names = d.resolving.map(
-            d => d.t + (d.C.c.Cont && d.C.c.Cont.sc.Ct ? ':'+d.C.c.Cont.sc.Ct : '')
-        )
-        //console.log("seen "+d.t+": "+names.join("\t"))
-        
-        let C = d.C
-        let D = d.D
-
-        DCresolve({D,C,til:C => C.c.pi == 'Con'})
-        // export to d.D what they (Con//Con) resolved to
-        d.resolving.map(d => {
-            d.D = d.C.y.D
-        })
-    }
-
-    // now we have d.resolving[d+]
-    for (let dd of d.resolving) {
-        toCon_resolve(dd)
-    }
-}
+//endregion
 
 //#region DC
+function heq(s,c) {
+    return Object.keys(s).length == Object.keys(c).length
+        && !Object.keys(s).some(k => s[k] != c[k])
+}
+// ex() only the things we comepare (not C)
+function capture_sc(s:Object) {
+    let h = {}
+    for (let k in s) {
+        if (k == 'z') continue
+        let v = s[k]
+        if (v && typeof v == 'object') {
+            if (v instanceof TheC) continue
+        }
+        h[k] = v
+    }
+    return h
+}
 function DCdiffer (C) {
     // list of everything, to update sip_dispatch
     let visit = []
@@ -329,22 +300,6 @@ function DCdiffer (C) {
 
     // console.log("Wake:\n"+pile.map(C => new Array(C.c.ip.length).fill('  ').join('')+printaC(C)).join("\n"))
     return {visit,wake}
-}
-function heq(s,c) {
-    return Object.keys(s).length == Object.keys(c).length
-        && !Object.keys(s).some(k => s[k] != c[k])
-}
-function capture_sc(s:Object) {
-    let h = {}
-    for (let k in s) {
-        if (k == 'z') continue
-        let v = s[k]
-        if (v && typeof v == 'object') {
-            if (v instanceof TheC) continue
-        }
-        h[k] = v
-    }
-    return h
 }
 
 // the q pile visits all C**, wrt D**
