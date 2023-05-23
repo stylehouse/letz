@@ -1,12 +1,14 @@
 <script>
     import { onMount } from 'svelte'
+    // we are in a -Con(s)/-Dir:C
     export let C
-    
+    let Con = C.y.up
+    let s = Con.c.s
     let dir
-    if (C)
-        dir = C.t
+    if (s)
+        dir = s.t
     // f is a file object from /dir/
-    let formlink = (t,dir,file) => `http://${location.hostname}:5000/${t}/${dir}`+(file||'')
+    let formlink = (t,dir,file) => `http://${location.hostname}:5000/${t}/${dir}/`+(file||'')
     // N[f+] come without src, since it is long
     let fsrc = (N) => N.map(f => f.src = formlink('thu',dir,f.f)+'.webp')
     async function fetchData() {
@@ -29,7 +31,6 @@
     onMount(() => alive = 1)
 </script>
 
-<p>Dir_</p>
 {#if alive}
 <div class="image-container">
     {#await fetchData()}

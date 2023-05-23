@@ -121,7 +121,7 @@
 <button on:click={() => reconver()} > reconver({conver}.{refresh}) </button>
 
 
-<Diring />
+<Diring t="Direr"/>
 
 {#if con}
 {#key conver}

@@ -4,7 +4,8 @@
     import {sip_wiree, inity_toCon_reentry}  from '$lib/Co'
     import Cont from '$lib/pi/Cont.svelte';
     import Conz from '$lib/pi/Conz.svelte';
-    let pis = {Cont, Conz}
+    import Dir from '$lib/pi/Dir.svelte';
+    let pis = {Cont, Conz, Dir}
     // our instructions: (-Con/(-Cont|-Conz))**
     export let C
     let boost = C.c.boost || 0

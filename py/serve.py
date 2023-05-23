@@ -47,6 +47,8 @@ def dir(path):
         # originals
         directory, filename = os.path.split(directory_path)
         return send_from_directory(directory, filename)
+    if not os.path.isdir(directory_path):
+        abort(404,"none shell path")
     
     file_list = []
     for filename in os.listdir(directory_path):

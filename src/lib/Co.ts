@@ -6,7 +6,7 @@ export async function inity_toDiring(d) {
     return inlacing_Con({...d,
         each: function (s,d) {
             // try to know s
-            toCon_newCont(d)
+            toCon_suchly(d)
             // we have uncovered some id for parent's race for meaning (d.up.resolve())
             // < to "resolve $n" sets of Con//Con here, as an elegant A-ism
             // < how async+await might help this flow control schism?
@@ -225,171 +225,7 @@ function inlacing_step3(d) {
     }
 }
 //endregion
-
 //#region DC
-function heq(s,c) {
-    return Object.keys(s).length == Object.keys(c).length
-        && !Object.keys(s).some(k => s[k] != c[k])
-}
-// ex() only the things we comepare (not C)
-function capture_sc(s:Object) {
-    let h = {}
-    for (let k in s) {
-        if (k == 'z') continue
-        let v = s[k]
-        if (v && typeof v == 'object') {
-            if (v instanceof TheC) continue
-        }
-        h[k] = v
-    }
-    return h
-}
-function DCdiffer (C) {
-    // list of everything, to update sip_dispatch
-    let visit = []
-    let wake = []
-    inlace(C,{
-        all:(C,q) => {
-            let uC = C.y.up
-            let D = C.y.D
-            if (C.c.el) {
-                // can only have el=2 already, meaning new
-                // wake new things parent (usu -Conz)
-                wake.push(uC || C)
-                // look no further
-                return 1
-            }
-            if (!D) {
-                // never happens
-                console.log("!D|el: "+printaC(C))
-                return
-            }
-            let wakey = (el:number,Co) => {
-                C.c.el = el
-                wake.push(Co||C)
-            }
-            if (C.c.removals) {
-                // C/* need to vanish
-                wakey(8)
-            }
-            // compare data
-            //if (C.sc.Ct == 'oyce') debugger
-            if (!heq(capture_sc(D.sc),capture_sc(C.sc))) {
-                wakey(3)
-            }
-            if (0 && !heq(D.c.ip,C.c.ip)) {
-                // when it moves around
-                // < isolate change to Con:branch moving up in the list (to 1.2.2)
-                //    not affecting all children... if they only say ip bit?
-                //   mapping D ip space to C ip space...
-                //console.log(printaC(D)+"\n"+printaC(C))
-                wakey(4)
-            }
-        }
-    })
-    inlace(C,{
-        all:(C,q) => {
-            visit.push(C)
-            //if (C.t == 'A') console.log("Given:\n"+threelevelprint(C))
-        }
-    })
-
-    let byip = {}
-    wake.map(C => byip[C.c.ip.join('.')] = C)
-    let pile = Object.keys(byip).sort().map(k => byip[k])
-
-    // console.log("Wake:\n"+pile.map(C => new Array(C.c.ip.length).fill('  ').join('')+printaC(C)).join("\n"))
-    return {visit,wake}
-}
-
-// the q pile visits all C**, wrt D**
-//  including C between those in the d pile (which are only the -Con)
-function DCresolve (c) {
-    inlace(c.C,{
-        all:(C,q) => {
-            if (q.d == 0) {
-                // d.D -> C.y.D, a given fact
-                //  given from resolving or simply an other branch (eg last time of toCon)
-                C.y.D = c.D
-            }
-            else if (c.til) {
-                // C.c.pi == 'Con'
-                if (c.til(C,q)) q.not = 1
-            }
-        },
-        climbs:(C,q,N) => {
-            let D = C.y.D
-            if (!D) return C.c.el = 2
-            // D options (past), C given
-            let Dtz = i_tz(o_(D))
-            let Ctz = i_tz(N)
-            // have all t in Dtz
-            for (let t in Ctz) {
-                Dtz[t] ||= []
-            }
-            // < these matches for C.t (hash key leading in) must pile up,
-            //    then we consider how Ct (s.t if s is a C) matches along with them
-            for (let t in Dtz) {
-                let Dz = Dtz[t] || []
-                let Cz = Ctz[t] || []
-                let Do = Dz.shift()
-                let Co = Cz.shift()
-                if (Do && Co) {
-                    // continuation
-                    Co.y.D = Do
-                }
-                else if (Co) {
-                    // coming - it will have no .y.D
-                    //  so the rest of q will just C.c.el = 2 everything
-                }
-                else if (Do) {
-                    // going - tell most recent still-present thing
-                    C.c.removals ||= []
-                    C.c.removals.push(Do)
-                }
-                !Dz.length && delete Dtz[t]
-                !Cz.length && delete Ctz[t]
-            }
-            Object.keys(Dtz).length && console.log("Dtz left: "+Object.keys(Dtz).join(','))
-            Object.keys(Ctz).length && console.log("Ctz left: "+Object.keys(Ctz).join(','))
-        }
-    })
-}
-// indexes a list of C by their .t
-function i_tz (N) {
-    let tz = {}
-    for (let C of N) {
-        let t = C.t
-        tz[t] ||= []
-        tz[t].push(C)
-    }
-    return tz
-}
-function threelevelprint (C) {
-    if (!C) return "null"
-    let N = []
-    inlace(C,{all:(C,d) => {
-        let uC = d.up?.s
-        let indent = new Array(d.d).fill('  ').join('')
-        N.push(indent + printaC(C,uC))
-        if (d.d > 2) return 1
-    }})
-    return N.join("\n")
-}
-function printaC (C,uC) {
-    let sip = C => C.c.ip ? C.c.ip.join('.') : ''
-    let sipdom = uC && sip(uC)
-    let sipsay = sip(C)
-    if (sipsay && sipdom && sipsay.startsWith(sipdom)) sipsay = sipsay.slice(sipdom.length)
-    if (C.c.el) sipsay += " el="+C.c.el
-    if (C.c.removals) {
-        sipsay += " --"+C.c.removals.map(C => C.t).join(',')
-    }
-    let scsay = C.sc.Ct ? "%Ct="+C.sc.Ct : ''
-    if (C.y.D) scsay += '%D'
-
-    return C.t+"\t-"+C.c.pi+"\t"+sipsay+"\t"+scsay
-}
 
 // defines an adder of d.C or its C.c.$pi=C/*
 // < translate this into io, would be a lot easier
@@ -469,8 +305,176 @@ function DCpartor (nodepi) {
         return C
     }
 }
-//#endregion
 
+// indexes a list of C by their .t
+function i_tz (N) {
+    let tz = {}
+    for (let C of N) {
+        let t = C.t
+        tz[t] ||= []
+        tz[t].push(C)
+    }
+    return tz
+}
+function threelevelprint (C) {
+    if (!C) return "null"
+    let N = []
+    inlace(C,{all:(C,d) => {
+        let uC = d.up?.s
+        let indent = new Array(d.d).fill('  ').join('')
+        N.push(indent + printaC(C,uC))
+        if (d.d > 2) return 1
+    }})
+    return N.join("\n")
+}
+function printaC (C,uC) {
+    let sip = C => C.c.ip ? C.c.ip.join('.') : ''
+    let sipdom = uC && sip(uC)
+    let sipsay = sip(C)
+    if (sipsay && sipdom && sipsay.startsWith(sipdom)) sipsay = sipsay.slice(sipdom.length)
+    if (C.c.el) sipsay += " el="+C.c.el
+    if (C.c.removals) {
+        sipsay += " --"+C.c.removals.map(C => C.t).join(',')
+    }
+    let scsay = C.sc.Ct ? "%Ct="+C.sc.Ct : ''
+    if (C.y.D) scsay += '%D'
+
+    return C.t+"\t-"+C.c.pi+"\t"+sipsay+"\t"+scsay
+}
+// the q pile visits all C**, wrt D**
+//  including C between those in the d pile (which are only the -Con)
+function DCresolve (c) {
+    inlace(c.C,{
+        all:(C,q) => {
+            if (q.d == 0) {
+                // d.D -> C.y.D, a given fact
+                //  given from resolving or simply an other branch (eg last time of toCon)
+                C.y.D = c.D
+            }
+            else if (c.til) {
+                // C.c.pi == 'Con'
+                if (c.til(C,q)) q.not = 1
+            }
+        },
+        climbs:(C,q,N) => {
+            let D = C.y.D
+            if (!D) return C.c.el = 2
+            // D options (past), C given
+            let Dtz = i_tz(o_(D))
+            let Ctz = i_tz(N)
+            // have all t in Dtz
+            for (let t in Ctz) {
+                Dtz[t] ||= []
+            }
+            // < these matches for C.t (hash key leading in) must pile up,
+            //    then we consider how Ct (s.t if s is a C) matches along with them
+            for (let t in Dtz) {
+                let Dz = Dtz[t] || []
+                let Cz = Ctz[t] || []
+                let Do = Dz.shift()
+                let Co = Cz.shift()
+                if (Do && Co) {
+                    // continuation
+                    Co.y.D = Do
+                }
+                else if (Co) {
+                    // coming - it will have no .y.D
+                    //  so the rest of q will just C.c.el = 2 everything
+                }
+                else if (Do) {
+                    // going - tell most recent still-present thing
+                    C.c.removals ||= []
+                    C.c.removals.push(Do)
+                }
+                !Dz.length && delete Dtz[t]
+                !Cz.length && delete Ctz[t]
+            }
+            Object.keys(Dtz).length && console.log("Dtz left: "+Object.keys(Dtz).join(','))
+            Object.keys(Ctz).length && console.log("Ctz left: "+Object.keys(Ctz).join(','))
+        }
+    })
+}
+
+
+
+function heq(s,c) {
+    return Object.keys(s).length == Object.keys(c).length
+        && !Object.keys(s).some(k => s[k] != c[k])
+}
+// ex() only the things we comepare (not C)
+function capture_sc(s:Object) {
+    let h = {}
+    for (let k in s) {
+        if (k == 'z') continue
+        let v = s[k]
+        if (v && typeof v == 'object') {
+            if (v instanceof TheC) continue
+        }
+        h[k] = v
+    }
+    return h
+}
+function DCdiffer (C) {
+    // list of everything, to update sip_dispatch
+    let visit = []
+    let wake = []
+    inlace(C,{
+        all:(C,q) => {
+            let uC = C.y.up
+            let D = C.y.D
+            if (C.c.el) {
+                // can only have el=2 already, meaning new
+                // wake new things parent (usu -Conz)
+                wake.push(uC || C)
+                // look no further
+                return 1
+            }
+            if (!D) {
+                // never happens
+                console.log("!D|el: "+printaC(C))
+                return
+            }
+            let wakey = (el:number,Co) => {
+                C.c.el = el
+                wake.push(Co||C)
+            }
+            if (C.c.removals) {
+                // C/* need to vanish
+                wakey(8)
+            }
+            // compare data
+            //if (C.sc.Ct == 'oyce') debugger
+            if (!heq(capture_sc(D.sc),capture_sc(C.sc))) {
+                wakey(3)
+            }
+            if (0 && !heq(D.c.ip,C.c.ip)) {
+                // when it moves around
+                // < isolate change to Con:branch moving up in the list (to 1.2.2)
+                //    not affecting all children... if they only say ip bit?
+                //   mapping D ip space to C ip space...
+                //console.log(printaC(D)+"\n"+printaC(C))
+                wakey(4)
+            }
+        }
+    })
+    inlace(C,{
+        all:(C,q) => {
+            visit.push(C)
+            //if (C.t == 'A') console.log("Given:\n"+threelevelprint(C))
+        }
+    })
+
+    let byip = {}
+    wake.map(C => byip[C.c.ip.join('.')] = C)
+    let pile = Object.keys(byip).sort().map(k => byip[k])
+
+    // console.log("Wake:\n"+pile.map(C => new Array(C.c.ip.length).fill('  ').join('')+printaC(C)).join("\n"))
+    return {visit,wake}
+}
+
+//endregion
+//#region pi toCon
+// these are like the main function scripts that ghostway outwardly resemble
 
 // producing new C** -Con
 function toCon_newCon (d) {
@@ -479,6 +483,20 @@ function toCon_newCon (d) {
     d.partor ||= DCpartor('Con')
     let C = d.partor(d.t,'Con',{s})
     
+}
+// new -Con/-$pi detailing s=C the instruction insphere
+function toCon_suchly (d) {
+    // couldnt hurt?
+    toCon_newCont(d)
+
+    let s = d.s
+    let Con = d.C
+    // the Con.c.s = s** instructions!
+    Con.c.Cishsz = 1
+    let pi = s.c.pi
+    let Such = d.partor(pi)
+
+    // eg pi=Dir will <Dir C={Such} />
 }
 // new -Con/-Cont detailing s
 function toCon_newCont (d) {
@@ -516,11 +534,16 @@ function toCon_newConz (d) {
     let Con = d.C
     let D = Con.y.D
     if (D && D.c.boost) Con.c.boost = D.c.boost
+
+    // trusted s may not have any typ
     let typ = d.typ
+    let Cish = typ ? typ.Cish : Con.c.Cishsz
+    typ ||= {}
+
     // mix up an esteem for more
     let depth = Con.c.d || 0
     let boost = Con.c.boost || 0
-    let early = typ.Cish && depth < 2 || typ.iter && depth<3
+    let early = Cish && depth < 2 || typ.iter && depth<3
     let boots = (early ? 1 : 0) + boost
     if (!boots) return
 
@@ -529,7 +552,7 @@ function toCon_newConz (d) {
 
     let nodules = []
     let N = typ.iter ? s
-        : typ.Cish ? o_(s)
+        : Cish ? o_(s)
         : []
     for (let [t,s] of Object.entries(N)) {
         let dd = {up:d,upC:Conz,t,s}
