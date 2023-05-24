@@ -39,6 +39,12 @@ export function C_(t: string|Array<any>|C, y?:number|gc, c?:gc, sc?:gc):C {
         // t must be C, from C_(C)
         throw "TODO clone = C_(C)"
     }
+    let pi
+    if (isst(y)) {
+        if (y[0] == '-') y = y.slice(1)
+        pi = y
+        y = {}
+    }
     if (isnum(y)) {
         if (y <= 0)
             throw "y <= 0"
@@ -52,6 +58,7 @@ export function C_(t: string|Array<any>|C, y?:number|gc, c?:gc, sc?:gc):C {
     sc ||= {}
     let C = new TheC();
     ex(C,{t,y,c,sc})
+    if (pi) C.c.pi = pi
     return C
 }
 // A spawns A
@@ -84,6 +91,13 @@ export function i_(C1: C, C2: C, qua: string = 'z') {
 export function o_(C1: C, qua: string = 'z') {
     let N = C1.sc[qua] || []
     return N
+}
+// C/+C for Nine. shall have %z down and .y.up
+export function pit (D,t,y,c,sc) {
+    let C = C_(t,y,c,sc)
+    i_(D,C)
+    C.y.up = D
+    return C
 }
 //#endregion
 

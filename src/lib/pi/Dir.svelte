@@ -1,25 +1,32 @@
 <script>
     import { onMount } from 'svelte'
+    import { pit,o_up } from "$lib/St"
+    import { inity_toCon_reentry } from "$lib/Co"
+
     // we are in a -Con(s)/-Dir:C
     export let C
     let Con = C.y.up
     let s = Con.c.s
-    let dir
-    if (s)
-        dir = s.t
+    if (!s.c.pi == 'Dir') throw "!Dir"
+    // climb the s**? find all -Dir above us we are relative to
+    //   to formlink to the whole thing
+    let path = o_up(s).filter(s => s.c.pi == 'Dir').reverse()
+    let dir = path.map(s => s.t).join("/")
+    
     // f is a file object from /dir/
-    let formlink = (t,dir,file) => `http://${location.hostname}:5000/${t}/${dir}/`+(file||'')
+    let formlink = (t,dir,file) => `http://${location.hostname}:5000/${t}/${dir}`+(file?'/'+file:'')
     // N[f+] come without src, since it is long
     let fsrc = (N) => N.map(f => f.src = formlink('thu',dir,f.f)+'.webp')
     async function fetchData() {
         if (!dir) throw "!dir"
+        console.log("Path from: ",dir)
         const response = await fetch(formlink('dir',dir))
         let N = await response.json()
         fsrc(N)
         return N
     }
-    function adfetcho(f) {
-
+    function nestDir(f) {
+        pit(s,f.f,'-Dir')
     }
     function animg(d) {
         
@@ -39,7 +46,7 @@
         {@const peek = di.slice(0,5) }
         {#each peek as f, i}
             <descriptor>
-            {#if f.d}<a on:click={() => adfetcho(f)} class='large'>{f.f}</a>
+            {#if f.d}<a on:click={() => nestDir(f)} class='large'>{f.f}</a>
             {:else}
                 <p>{f.f}<img on:click={(e)=>animg(e,f)} src={f.src} alt="pretty"/>
                     <!-- <img src={formlink('thv',dir,f.f)+'.gif'} alt="pretty"/> </p> -->
