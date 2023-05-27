@@ -1,7 +1,8 @@
 <script>
-    import { onMount } from 'svelte'
+    import { createEventDispatcher, onMount } from 'svelte'
     import { pit,o_up } from "$lib/St"
     import { reConstruct } from "$lib/Co"
+	const dispatch = createEventDispatcher();
 
     // we are in a -Con(s)/-Dir:C
     export let C
@@ -18,7 +19,6 @@
     // N[f+] come without src, since it is long
     let fsrc = (N) => N.map(f => f.src = formlink('thu',dir,f.f)+'.webp')
     async function fetchData() {
-        console.log("Path from: ",dir)
         const response = await fetch(formlink('dir',dir))
         let N = await response.json()
         fsrc(N)
@@ -26,12 +26,12 @@
     }
     let req
     function upto() {
-        req = fetchData()
+        req ||= fetchData()
     }
     $: upto(C)
     function nestDir(f) {
         pit(s,f.f,'-Dir')
-        C = reConstruct(Con)
+        dispatch('reCon')
     }
     function animg(d) {
         
@@ -64,6 +64,7 @@
             {/if}
             </descriptor>
         {/each}
+        <p style="float:left;"><a>More</a></p>
     {:catch error}
         <p style="color: red">{error.message}</p>
     {/await}

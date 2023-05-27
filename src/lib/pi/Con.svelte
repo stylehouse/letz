@@ -40,6 +40,9 @@
     function boosting (e, negate=false) {
         boost += e.ctrlKey || negate ? -1 : 1
         C.c.boost = boost
+    }
+    // refreshing the process, when children want to adjust things
+    function reCon (e, negate=false) {
         C = reConstruct(C)
     }
     
@@ -53,6 +56,6 @@
 <!-- <revision style="color:darkcyan; text-decoration:underline">{quee}</revision> -->
 {#each o_(C) as n}
     <span style="display:inline-block; vertical-align: middle; border:2px solid gainsboro; border-right:none; padding: 0 3px; margin: 0 3px; border-radius: 3px;">
-        <svelte:component this={pis[n.c.pi]} C={n}/>
+        <svelte:component on:reCon="{reCon}" this={pis[n.c.pi]} C={n}/>
     </span>
 {/each}
