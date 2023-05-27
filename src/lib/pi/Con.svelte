@@ -1,7 +1,7 @@
 <script lang="ts">
     import {onMount, onDestroy, getContext} from 'svelte'
     import {o_}  from '$lib/St'
-    import {sip_wiree, inity_toCon_reentry}  from '$lib/Co'
+    import {sip_wiree, reConstruct}  from '$lib/Co'
     import Cont from '$lib/pi/Cont.svelte';
     import Conz from '$lib/pi/Conz.svelte';
     import Dir from '$lib/pi/Dir.svelte';
@@ -40,7 +40,7 @@
     function boosting (e, negate=false) {
         boost += e.ctrlKey || negate ? -1 : 1
         C.c.boost = boost
-        C = inity_toCon_reentry(C)
+        C = reConstruct(C)
     }
     
 </script>

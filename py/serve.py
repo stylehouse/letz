@@ -5,7 +5,6 @@ from threading import Semaphore
 # for magic, which deb python3-magic puts here:
 sys.path.append('/usr/lib/python3/dist-packages')
 import magic
-from moviepy.editor import VideoFileClip
 import cv2
 import numpy as np
 from flask import Flask, jsonify, send_from_directory, abort

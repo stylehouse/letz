@@ -1,7 +1,7 @@
 <script>
     import { onMount } from 'svelte'
     import { pit,o_up } from "$lib/St"
-    import { inity_toCon_reentry } from "$lib/Co"
+    import { reConstruct } from "$lib/Co"
 
     // we are in a -Con(s)/-Dir:C
     export let C
@@ -10,7 +10,7 @@
     if (!s.c.pi == 'Dir') throw "!Dir"
     // climb the s**? find all -Dir above us we are relative to
     //   to formlink to the whole thing
-    let path = o_up(s).filter(s => s.c.pi == 'Dir').reverse()
+    let path = o_up(s).filter(s => !s.c.rootdir && s.c.pi == 'Dir').reverse()
     let dir = path.map(s => s.t).join("/")
     
     // f is a file object from /dir/
@@ -18,15 +18,20 @@
     // N[f+] come without src, since it is long
     let fsrc = (N) => N.map(f => f.src = formlink('thu',dir,f.f)+'.webp')
     async function fetchData() {
-        if (!dir) throw "!dir"
         console.log("Path from: ",dir)
         const response = await fetch(formlink('dir',dir))
         let N = await response.json()
         fsrc(N)
         return N
     }
+    let req
+    function upto() {
+        req = fetchData()
+    }
+    $: upto(C)
     function nestDir(f) {
         pit(s,f.f,'-Dir')
+        C = reConstruct(Con)
     }
     function animg(d) {
         
@@ -38,13 +43,16 @@
     onMount(() => alive = 1)
 </script>
 
-{#if alive}
+{#if !alive}
+<h1>Not Alive</h1>
+{/if}
+
 <div class="image-container">
-    {#await fetchData()}
+    {#await req}
         <p>...waiting</p>
     {:then di}
         {@const peek = di.slice(0,5) }
-        {#each peek as f, i}
+        {#each peek as f, i (f.f)}
             <descriptor>
             {#if f.d}<a on:click={() => nestDir(f)} class='large'>{f.f}</a>
             {:else}
@@ -60,7 +68,6 @@
         <p style="color: red">{error.message}</p>
     {/await}
 </div>
-{/if}
 
 <style>
     .image-container {

@@ -2,39 +2,53 @@
 import {ex,C_,i_,o_,VA_ip,detect_type,inlace,TheC,TheA,o_up} from '$lib/St'
 
 //#region toCon a dumper for the A** tree
-export async function inity_toDiring(d) {
-    return inlacing_Con({...d,
-        each: function (s,d) {
-            // try to know s
-            toCon_suchly(d)
-            // we have uncovered some id for parent's race for meaning (d.up.resolve())
-            // < to "resolve $n" sets of Con//Con here, as an elegant A-ism
-            // < how async+await might help this flow control schism?
-            // allow the upper Con//Con to assign ressurrecta with C&Cont
-        },
-    })
+
+// cast data into modes
+export function Construct(d) {
+    // default to data dumping
+    d.I ||= 'Con'
+    d.t ||= 'to'+d.I
+    // methods_of_inlacing_Con
+    let I = I_mind[d.I]
+    return I(d)
+}
+// the modes of inquiry, compute
+const I_mind = {
+    In: function (d) {
+        return inlacing_Con({...d,
+            each: function (s,d) {
+                // try to know s
+                toCon_In(d)
+                // we have uncovered some id for parent's race for meaning (d.up.resolve())
+                // < to "resolve $n" sets of Con//Con here, as an elegant A-ism
+                // < how async+await might help this flow control schism?
+                // allow the upper Con//Con to assign ressurrecta with C&Cont
+            },
+        })
+    },
+    Con: function (d) {
+        return inlacing_Con({...d,
+            each: function (s,d) {
+                // try to know s
+                toCon_newCont(d)
+                // then Conz simply opens that
+                // 
+                // we have uncovered some id for parent's race for meaning (d.up.resolve())
+                // < to "resolve $n" sets of Con//Con here, as an elegant A-ism
+                // < how async+await might help this flow control schism?
+                // allow the upper Con//Con to assign ressurrecta with C&Cont
+            },
+        })
+    }
 }
 
-// d={t?,s,D?}
-// d/d (Con//Con) emerge, then are
-// producing C** for recursive dumper instructions: (-Con/(-Cont|-Conz))**
-// < producing versioned C** to interpret for minimal newsup
-export function inity_toCon(d) {
-    return inlacing_Con({...d,
-        each: function (s,d) {
-            // try to know s
-            toCon_newCont(d)
-            // we have uncovered some id for parent's race for meaning (d.up.resolve())
-            // < to "resolve $n" sets of Con//Con here, as an elegant A-ism
-            // < how async+await might help this flow control schism?
-            // allow the upper Con//Con to assign ressurrecta with C&Cont
-        },
-    })
-}
 // isolate some Con** update
 // < sip_dispatch compat. C.c.visit is not everything
-export function inity_toCon_reentry (C:TheC) {
-    let d = {t:C.t, s:C.c.s, D:C, pretendtoplevel:1}
+export function reConstruct (C:TheC) {
+    if (C.c.pi != 'Con') throw "!Con"
+    let top = o_up(C,{inc:1,sing:1})
+    let td = top.y.d
+    let d = {t:C.t, s:C.c.s, D:C, pretendtoplevel:1, I:td.I}
     let Cup = C.y.up
     if (Cup) {
         // Conz/Con
@@ -48,11 +62,16 @@ export function inity_toCon_reentry (C:TheC) {
         Cup.sc.z = Cup.sc.z.filter(n => n != C)
     }
     let D = C
-    C = inity_toCon(d)
+    C = Construct(d)
     return C
 }
-//endregion
+//#endregion
 //#region inlacing_Con
+// -Con bundle various aspects of a thing:
+//  -Cont its label (usually, if your )
+//  ...others here, eg -Dir for a directory listing
+//  -Conz wrap descendant -Con
+// the d is a proto A, having one -Con and all its aspects
 function inlacing_Con(c) {
     let d = ex({
         
@@ -107,6 +126,7 @@ function inlacing_Con_commit (d) {
     for (let Co of C.c.visit) {
         Co.c.version = version
     }
+    C.y.d = d
 }
 // route d to act
 // staggering inlace()
@@ -224,7 +244,7 @@ function inlacing_step3(d) {
         return inlacing(d)
     }
 }
-//endregion
+//#endregion
 //#region DC
 
 // defines an adder of d.C or its C.c.$pi=C/*
@@ -472,9 +492,12 @@ function DCdiffer (C) {
     return {visit,wake}
 }
 
-//endregion
-//#region pi toCon
+//#endregion
+//#region toCon new$pi
 // these are like the main function scripts that ghostway outwardly resemble
+// they are reusable, usually expect d.C=Con to exist etc
+// a layering of inhabitating Con(/**/Con)+
+// < perhaps Dir.svelte etc could define these?
 
 // producing new C** -Con
 function toCon_newCon (d) {
@@ -485,8 +508,8 @@ function toCon_newCon (d) {
     
 }
 // new -Con/-$pi detailing s=C the instruction insphere
-function toCon_suchly (d) {
-    // couldnt hurt?
+function toCon_In (d) {
+    // label
     toCon_newCont(d)
 
     let s = d.s
@@ -498,7 +521,7 @@ function toCon_suchly (d) {
 
     // eg pi=Dir will <Dir C={Such} />
 }
-// new -Con/-Cont detailing s
+// -Con/-Cont detailing s as data, no context
 function toCon_newCont (d) {
     let s = d.s
     let Con = d.C
