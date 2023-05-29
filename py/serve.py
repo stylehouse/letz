@@ -1,7 +1,7 @@
 import os
 import subprocess
 import sys
-from threading import Semaphore
+import threading
 # for magic, which deb python3-magic puts here:
 sys.path.append('/usr/lib/python3/dist-packages')
 import magic
@@ -16,7 +16,8 @@ import time
 app = Flask(__name__)
 app.debug = True  # Enable verbose mode and auto reload on code changes
 CORS(app)
-semaphore = Semaphore(2)  # Limit to two parallel media conversions
+semaphore = threading.Semaphore(2)  # Limit to two parallel media conversions
+dirlock = threading.Lock()
 
 # region: dir
 artdir = '/v'
@@ -26,11 +27,13 @@ def chop_filename(file):
     directory, file = os.path.split(file)
     file = re.sub(r'\.(webp|gif)$', '', file)
     return [directory, file]
-
 def ensure_foldered(file):
     dir = os.path.dirname(file)
     if not os.path.exists(dir):
-        os.makedirs(dir)
+        # a flock of requests in this dir may race here
+        with dirlock:
+            if not os.path.exists(dir):  # Double-check within the lock
+                os.makedirs(dir)
 
 def delta(t):
     start_time = time.time()

@@ -17,7 +17,10 @@
     // f is a file object from /dir/
     let formlink = (t,dir,file) => `http://${location.hostname}:5000/${t}/${dir}`+(file?'/'+file:'')
     // N[f+] come without src, since it is long
-    let fsrc = (N) => N.map(f => f.src = formlink('thu',dir,f.f)+'.webp')
+    let fsrc = (N) => {
+        N.map(f => f.src = formlink('thu',dir,f.f)+'.webp')
+        N.map(f => f.full_src = formlink('dir',dir,f.f))
+    }
     async function fetchData() {
         const response = await fetch(formlink('dir',dir))
         let N = await response.json()
@@ -33,12 +36,21 @@
         pit(s,f.f,'-Dir')
         dispatch('reCon')
     }
-    function animg(d) {
-        
+    function animg(e,f) {
+        let diff = e.ctrlKey ? -1 : 1
+        let el = e.target
+        let fl = el.getAttribute('flourish') || 4
+        fl = (fl*1)+diff
+        el.setAttribute('flourish',fl)
+        // < apply a curve
+        let al = -3 + fl
+        al = al<0 ? al*-1*0.25 : al * 1.4 + 1
+        e.target.style.transform = 'scale('+al+')'
     }
     function gist_thumb() {
         
     }
+    let population_limit = 15
     let alive
     onMount(() => alive = 1)
 </script>
@@ -51,12 +63,16 @@
     {#await req}
         <p>...waiting</p>
     {:then di}
-        {@const peek = di.slice(0,5) }
+        {@const peek = di.slice(0,population_limit) }
         {#each peek as f, i (f.f)}
-            <descriptor>
+            <descriptor style="{f.f.includes('7680') ? 'flex-basis: calc(75%);' : ''}">
             {#if f.d}<a on:click={() => nestDir(f)} class='large'>{f.f}</a>
             {:else}
-                <p>{f.f}<img on:click={(e)=>animg(e,f)} src={f.src} alt="pretty"/>
+                <p>{f.f}
+                    <img on:click={(e)=>animg(e,f)}
+                        srcset={`${new URL(f.src)} 400w, ${new URL(f.full_src)}`}
+                        sizes="(max-width: 400px) 400px, 20vw"
+                         alt="pretty"/>
                     <!-- <img src={formlink('thv',dir,f.f)+'.gif'} alt="pretty"/> </p> -->
                 {#if f.interest}
                     <a on:click={() => gist_thumb(f)} class='large'>unique frames</a>
@@ -64,7 +80,7 @@
             {/if}
             </descriptor>
         {/each}
-        <p style="float:left;"><a>More</a></p>
+        <p style="transform:rotate(90deg);"><a on:click={() => population_limit+=5} >More</a></p>
     {:catch error}
         <p style="color: red">{error.message}</p>
     {/await}
@@ -74,7 +90,8 @@
     .image-container {
         display: flex;
         flex-wrap: wrap;
-        justify-content: space-between;
+        justify-content: space-around;
+        align-content: stretch;
     }
     
     .image-container descriptor {
