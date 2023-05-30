@@ -67,6 +67,7 @@ pre {
 	padding: 0.5em;
 	overflow-x: auto;
 	color: var(--color-text);
+    max-width: 100%;
 }
 
 .text-column {

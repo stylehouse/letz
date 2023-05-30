@@ -8,6 +8,7 @@
     import { Construct, sip_dispatch } from "$lib/Co"
     import Diring from "$lib/Diring.svelte"
     import Con from '$lib/pi/Con.svelte'
+    import { stylehouse_lite } from "$lib/Compile"
     
     import grammar from '../lang/style.grammar?raw'
     import { buildParser } from '@lezer/generator'
@@ -94,7 +95,8 @@
     onMount(() => {
         bloop()
     })
-
+    
+    let compiled = stylehouse_lite("and...\n# < noticably\n    $art = 5\n    things and stuff\n")
 
     // lezer
         let flub = "i thung/with/etc\n\no yeses/because\n"
@@ -120,6 +122,14 @@
 <button on:click={() => bloop()} > bloop() </button>
 <button on:click={() => reconver()} > reconver({conver}.{refresh}) </button>
 
+<pre><table>
+    {#each Object.entries(compiled) as [k,v]}
+    <tr>
+        <td><h1>{k}</h1></td>
+        <td>{v}</td>
+    </tr>
+    {/each}
+</table></pre>
 
 <Diring t="Direr"/>
 
@@ -128,6 +138,8 @@
 //   <p> <Con C={con}/> </p>
 {/key}
 {/if}
+
+
 
 
 <p> {b} </p>

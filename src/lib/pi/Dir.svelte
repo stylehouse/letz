@@ -69,9 +69,9 @@
             {#if f.d}<a on:click={() => nestDir(f)} class='large'>{f.f}</a>
             {:else}
                 <p>{f.f}
+                        <!-- sizes="(max-width: 800px) 400px, 100vw" -->
                     <img on:click={(e)=>animg(e,f)}
-                        srcset={`${new URL(f.src)} 400w, ${new URL(f.full_src)}`}
-                        sizes="(max-width: 400px) 400px, 20vw"
+                        srcset={`${new URL(f.src)} 800w, ${new URL(f.full_src)} 2100w`}
                          alt="pretty"/>
                     <!-- <img src={formlink('thv',dir,f.f)+'.gif'} alt="pretty"/> </p> -->
                 {#if f.interest}
@@ -115,8 +115,8 @@
         width: 100%;
         height: auto;
         object-fit: cover;
-        max-width: 400px;
-        max-height: 400px;
+        /* max-width: 400px;
+        max-height: 400px; */
     }
     </style>
     
