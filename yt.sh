@@ -1,2 +1,2 @@
 #!/bin/bash
-python py/serve.pl
+python py/serve.py

@@ -4,7 +4,7 @@
     import { goto } from '$app/navigation'
 	import { sto } from './stores.js';
     import { Le } from "$lib/Le"
-    import { St_main, St_loop } from "$lib/St"
+    import { St_main, St_loop, ex } from "$lib/St"
     import { Construct, sip_dispatch } from "$lib/Co"
     import Diring from "$lib/Diring.svelte"
     import Con from '$lib/pi/Con.svelte'
@@ -95,11 +95,14 @@
     onMount(() => {
         bloop()
     })
-    
-    let compiled = stylehouse_lite("and...\n# < noticably\n    $art = 5\n    things and stuff\n")
 
+    //# yes
+    // blatant
+    let compiler = source => ex({source}, stylehouse_lite(source))
+    let compiled = compiler("and...\n# < notwicably\n    $art = 5\n'blatant figs'\n    things and logs and stuff\nelse near\n")
+    
     // lezer
-        let flub = "i thung/with/etc\n\no yeses/because\n"
+        let flub = "i thung/with/etc\n\no yeses/because/blatant\n"
         sto.set(flub)
 
     // EditorView
