@@ -110,7 +110,7 @@
 	    import Lezing from './Lezing.svelte';
 
     # this was a '# comment'
-    let look:Le = undefined
+    let look = undefined
     function dobla({detail:{view}}) {
         look = new Le(view.state)
         dat.look = look
