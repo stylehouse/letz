@@ -1,27 +1,6 @@
 import MagicString from 'magic-string'
 
 
-export function compilePlugin() {
-    console.log("Loaded  stylehouse_lite")
-    return {
-        name: 'stylehouse_lite-compile-plugin',
-        enforce: 'pre',
-        transform(code:string, id:string) {
-            console.log("Have a "+id)
-            if (id.endsWith('.ts') || id.endsWith('.svelte')) {
-                console.log("Found a "+id)
-
-                let compiled = stylehouse_lite(code);
-                if (code != compiled.code) console.log("We won!!!",compiled.code)
-                return code != compiled.code ? compiled.code : null
-                let not = {
-                    code: compiled.code,
-                    map: compiled.map
-                };
-            }
-        }
-    }
-}
 export function stylehouse_lite (source) {
     if (typeof source != 'string') throw "!string"
     let s = new MagicString(source)
