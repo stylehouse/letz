@@ -8,7 +8,7 @@ const config = {
 	// for more information about preprocessors
 	preprocess: sveltePreprocess({
 		aliases: [
-		  ['stlli', 'stylehouse_lite'],
+		  ['typescript', 'stylehouse_lite'],
 		],
 		stylehouse_lite({ content, filename, attributes }) {
 		  const { code, map } = stylehouse_lite(content);

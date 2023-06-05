@@ -303,7 +303,7 @@ export function pit (D,t,y,c,sc) {
         let A11 = A_(A1,'Earth')
     
         // create some Cs for authors
-        let Joyce = C_('Joyce',{},{}, {style: 'modernist', theatrics: ['experimental', 'stream of consciousness']})
+        let Joyce = C_('blatantJoyce',{},{}, {style: 'modernist', theatrics: ['experimental', 'stream of consciousness']})
         let Faulkner = C_('Faulkner',{},{}, {style: 'southern gothic', theatrics: ['tragic', 'haunting']})
         let Woolf = C_('Woolf',{},{}, {style: 'feminist', theatrics: ['intimate', 'psychological']})
         let Ginsberg = C_('Ginsberg',{},{}, {style: 'beat', theatrics: ['rebellious', 'spontaneous']})

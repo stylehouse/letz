@@ -1,4 +1,4 @@
-<script lang="stlli">
+<script lang="typescript">
 	import { onMount } from 'svelte';
     import { page } from '$app/stores'
     import { goto } from '$app/navigation'
@@ -14,7 +14,7 @@
     import { buildParser } from '@lezer/generator'
     let parser = buildParser(grammar)
 
-    let b = ':3'
+    let b = ':3blatant'
 
 
     console.log("Code")
