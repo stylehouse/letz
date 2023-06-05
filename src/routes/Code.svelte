@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang="stlli">
 	import { onMount } from 'svelte';
     import { page } from '$app/stores'
     import { goto } from '$app/navigation'
@@ -8,7 +8,7 @@
     import { Construct, sip_dispatch } from "$lib/Co"
     import Diring from "$lib/Diring.svelte"
     import Con from '$lib/pi/Con.svelte'
-    import { stylehouse_lite } from "$lib/Compile"
+    import { stylehouse_lite } from "$lib/Compile.js"
     
     import grammar from '../lang/style.grammar?raw'
     import { buildParser } from '@lezer/generator'
@@ -96,7 +96,7 @@
         bloop()
     })
 
-    //# yes
+    # yes
     // blatant
     let compiler = source => ex({source}, stylehouse_lite(source))
     let compiled = compiler("and...\n# < notwicably\n    $art = 5\n'blatant figs'\n    things and logs and stuff\nelse near\n")
@@ -109,6 +109,7 @@
 	    import Codemirror from './Codemirror.svelte';
 	    import Lezing from './Lezing.svelte';
 
+    # this was a '# comment'
     let look:Le = undefined
     function dobla({detail:{view}}) {
         look = new Le(view.state)
