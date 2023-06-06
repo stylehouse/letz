@@ -24,14 +24,22 @@ export function stylehouse_lite (source) {
         s.overwrite(start, end, indent+'//');
     }
 
-    let blatant = /blatant/gm
+    let blatant = /blatant/g
     while (match = blatant.exec(source)) {
         let whole = match[0]
         let start = match.index;
         let end = start + whole.length;
-        s.overwrite(start, end, 'blonitn');
+        s.overwrite(start, end, "blon_itn");
     }
 
+
+    let onething = /'one thing'/g
+    while (match = onething.exec(source)) {
+        let whole = match[0]
+        let start = match.index;
+        let end = start + whole.length;
+        s.overwrite(start, end, "'un thing'\n'two thing'");
+    }
     
 
     // left-hand if

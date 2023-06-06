@@ -99,7 +99,7 @@
     # yes
     // blatant
     let compiler = source => ex({source}, stylehouse_lite(source))
-    let compiled = compiler("and...\n# < notwicably\n    $art = 5\n'blatant figs'\n    things and logs and stuff\nelse near\n")
+    let compiled = compiler("and...\n# < notwicably\n    $art = 5\n'bla"+"tant figs'\n    things and logs and stuff\nelse near\n")
     
     // lezer
         let flub = "i thung/with/etc\n\no yeses/because/blatant\n"
@@ -111,6 +111,9 @@
 
     # this was a '# comment'
     let look = undefined
+    'one thing'
+    'thince blatant'
+    debugger
     function dobla({detail:{view}}) {
         look = new Le(view.state)
         dat.look = look
