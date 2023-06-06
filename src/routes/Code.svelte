@@ -15,6 +15,7 @@
     let parser = buildParser(grammar)
 
     let b = ':3blatant'
+    let vlat = random_name.thing.tola
 
 
     console.log("Code")
