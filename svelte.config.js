@@ -21,6 +21,13 @@ const config = {
 
 			({ code, map } = esbuild.transformSync(typescript, {
 				loader: 'ts',
+				tsconfigRaw: {
+					compilerOptions: {
+						// svelte typescript needs this flag to work with type imports
+						importsNotUsedAsValues: 'preserve',
+						preserveValueImports: true
+					}
+				},
 				sourcemap: true,
 				sourcefile: filename
 			}))
