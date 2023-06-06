@@ -113,6 +113,7 @@
     let look:Le = undefined
     'one thing'
     'thince blatant'
+    debugger
     function dobla({detail:{view}}) {
         look = new Le(view.state)
         dat.look = look
