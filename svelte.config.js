@@ -6,18 +6,18 @@ import {SourceMapConsumer,SourceMapGenerator} from 'source-map-js';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
-	// Consult https://github.com/sveltejs/svelte-preprocess
-	// for more information about preprocessors
 	preprocess: sveltePreprocess({
 		aliases: [
 		  ['typescript', 'stylehouse_lite'],
+		  ['ts', 'stylehouse_lite'],
 		],
 		stylehouse_lite({ content, filename, attributes }) {
+			console.log("stylehouse_lite: "+filename)
 
 			// compile stylehouse lite
 			let { code, map } = stylehouse_lite(content)
 			map.file = filename
-			console.log("Step un: "+filename,{ code })
+			// console.log("Step un: "+filename,{ code })
 			let typescript = code
 			let map1 = map;
 
@@ -35,15 +35,13 @@ const config = {
 				sourcemap: true,
 				sourcefile: filename
 			}))
-			console.log("Step two: "+filename,{ code })
+			// console.log("Step two: "+filename,{ code })
 			let map2 = map
 
 			// combine sourcemaps
-			console.log("fromSourceMap: ",{map1,map2})
 			var aggregatedMap = SourceMapGenerator.fromSourceMap(new SourceMapConsumer(map2));
-			console.log("applySourceMap: ")
 			aggregatedMap.applySourceMap(new SourceMapConsumer(map1));
-			console.log("toString: ")
+			// toJSON makes data ready to become JSON
 			map = aggregatedMap.toJSON()
 			// for some reason this has: sources: [ 'null', '/app/src/routes/Code.svelte' ],
 			if (map.sources[0] == 'null') {
@@ -56,8 +54,7 @@ const config = {
 					throw "not always null sources*"
 				}
 			}
-			console.log("map: "+filename,{ aggregatedMap,map })
-
+			// console.log("map: "+filename,{map })
 
 		  	return { code, map };
 		},
