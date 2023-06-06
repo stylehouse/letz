@@ -20,6 +20,7 @@ const config = {
 			let typescript = code;
 
 			({ code, map } = esbuild.transformSync(typescript, {
+				loader: 'ts',
 				sourcemap: true,
 				sourcefile: filename
 			}))
