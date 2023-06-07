@@ -1,4 +1,4 @@
-<script lang="typescript">
+<script lang="ts">
 	import { onMount } from 'svelte';
     import { page } from '$app/stores'
     import { goto } from '$app/navigation'
@@ -14,10 +14,10 @@
     import { buildParser } from '@lezer/generator'
     let parser = buildParser(grammar)
 
-    let b = ':3blatant'
+    let b = ':3blatanto'
+    # otherlang
 
-
-    console.log("Code")
+    console.log("3blatanto Code")
 
     let a = $page.url.searchParams
     function para () {

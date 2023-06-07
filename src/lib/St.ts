@@ -304,8 +304,6 @@ export function pit (D,t,y,c,sc) {
     
         'one thing'
         'thince blatant'
-        debugger
-        1+1
         // create some Cs for authors
         let Joyce = C_('blatantJoyce',{},{}, {style: 'modernist', theatrics: ['experimental', 'stream of consciousness']})
         let Faulkner = C_('Faulkner',{},{}, {style: 'southern gothic', theatrics: ['tragic', 'haunting']})
