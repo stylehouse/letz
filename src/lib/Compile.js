@@ -1,6 +1,5 @@
 import MagicString from 'magic-string'
 
-
 export function stylehouse_lite (source) {
     if (typeof source != 'string') throw "!string"
     let s = new MagicString(source)
