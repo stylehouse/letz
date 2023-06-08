@@ -101,7 +101,11 @@
     function comp () {
         // blatant
         let compiler = source => ex({source}, stylehouse_lite(source))
-        compiled = compiler("and...\n# < notwicably\n    $"+"art = 5\n'bla"+"tant figs'\n    things "+"and logs "+"and stuff\nelse near\n")
+        compiled = compiler("and...\n# < notwicably\n    $"+"art = 5\n'bla"+"tant figs'\n    things "+"and logs "+"and stuff\nelse near\n"
+            +"let oh = &"+"fi,gu,res"+"{ 33+3 }\n"
+            +"    each etc art {\n"
+            +"        33 + t + c\n"
+            +"    }}\n")
     }
     comp()
 

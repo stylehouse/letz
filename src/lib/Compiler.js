@@ -1,5 +1,8 @@
+// mainly presents this compiler (or bunch of macros)
 import { stylehouse_lite, merge_sourcemaps } from './Compile.js';
+// along with this compiler, to svelte
 import esbuild from 'esbuild';
+
 // for .ts
 // can do .svelte but the code given then has already some compiling and panics if it see our lang
 export function stlli_vite() {
@@ -11,7 +14,7 @@ export function stlli_vite() {
             // < should we check they are within /app/src/ to avoid node_modules etc?
             if (id.endsWith('.ts')) {
                 // console.log("Found a "+id)
-                let ts = stylehouse_lite(code);
+                let ts = stylehouse_lite(code,id,'vite');
                 // if (code != compiled.code) console.log("We won!!!",compiled.code.slice(0,200))
                 // < seeing compiled code in DevTools... this doesnt help:
                 //ts.map.sourcesContent = [code]
@@ -36,7 +39,7 @@ export function stlli_svelte() {
 			//console.log("stylehouse_lite: "+filename)
 
 			// compile stylehouse lite
-			let ts = stylehouse_lite(content)
+			let ts = stylehouse_lite(content,filename,'svelte')
 			ts.map.file = filename
 			// console.log("Step un: "+filename,{ code:ts.code })
 
