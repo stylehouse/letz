@@ -12,7 +12,8 @@ export function merge_sourcemaps(first,second) {
 
 export function stylehouse_lite (source) {
     if (typeof source != 'string') throw "!string"
-    console.log("en stylehouse_lite ########iii#########")
+    console.log("en stylehouse_lite ########iii555#########")
+    33 + 33
     let s = new MagicString(source)
     let last_sourcemap
     function commit_s () {
