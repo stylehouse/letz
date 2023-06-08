@@ -1,7 +1,5 @@
-import { stylehouse_lite } from './Compile.js';
+import { stylehouse_lite, merge_sourcemaps } from './Compile.js';
 import esbuild from 'esbuild';
-import {SourceMapConsumer,SourceMapGenerator} from 'source-map-js';
-
 // for .ts
 // can do .svelte but the code given then has already some compiling and panics if it see our lang
 export function stlli_vite() {
@@ -46,12 +44,7 @@ export function stlli_svelte() {
 			let js = compile_typescript_like_svelte(ts.code,filename)
 			// console.log("Step two: "+filename,{ code:js.code })
 
-			// combine sourcemaps (last first?)
-			let map = SourceMapGenerator.fromSourceMap(new SourceMapConsumer(js.map));
-			map.applySourceMap(new SourceMapConsumer(ts.map));
-			// toJSON makes data ready to become JSON
-			map = map.toJSON()
-            
+            let map = merge_sourcemaps(ts.map,js.map)
             polish_sourcemap(map)
 			// console.log("map: "+filename,{map })
 
@@ -59,6 +52,7 @@ export function stlli_svelte() {
 		},
 	}
 }
+
 
 export function compile_typescript_like_svelte(code,filename) {
     return esbuild.transformSync(code, {

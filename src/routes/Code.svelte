@@ -97,10 +97,14 @@
     })
 
     # yes
-    // blatant
-    let compiler = source => ex({source}, stylehouse_lite(source))
-    let compiled = compiler("and...\n# < notwicably\n    $art = 5\n'bla"+"tant figs'\n    things and logs and stuff\nelse near\n")
-    
+    let compiled
+    function comp () {
+        // blatant
+        let compiler = source => ex({source}, stylehouse_lite(source))
+        compiled = compiler("and...\n# < notwicably\n    $"+"art = 5\n'bla"+"tant figs'\n    things "+"and logs "+"and stuff\nelse near\n")
+    }
+    comp()
+
     // lezer
         let flub = "i thung/with/etc\n\no yeses/because/blatant\n"
         sto.set(flub)
@@ -124,6 +128,7 @@
 
 
 <svelte:window on:keydown={handleKeydown}/>
+<button on:click={() => comp()} > comp() </button>
 <button on:click={() => bleep()} > bleep() </button>
 <button on:click={() => bloop()} > bloop() </button>
 <button on:click={() => reconver()} > reconver({conver}.{refresh}) </button>
