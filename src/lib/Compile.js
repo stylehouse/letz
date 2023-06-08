@@ -115,37 +115,68 @@ export function stylehouse_lite (source,filename,agent) {
     // each etc data {    -> for (var e in data) { etc
     // < not DIY closing brackets (indent?)
     // < more of an o, if more spec
-    
-    rep(/^(\s*)each (\w+(?:,\w+)*) (\S+) \{(\s*)$/, (ind, input, from) => {
-        const inArray = input.split(',');
-        // if there is no ',', split by letter
-        const inValues = inArray.length === 1 ? inArray[0].split('') : inArray;
-    
-        const openBrackets = [];
-        while (inValues.length) {
-            const key = inValues.shift();
-            const value = inValues.shift();
-            let more = inValues.length
-            if (more) {
-                inValues.unshift(value);
+    rep(
+        /^(\s*)each (\w+(?:,\w+)*) (\S+) \{(\s*)$/,
+        (ind, input, from) => {
+            const inArray = input.split(',');
+            // if there is no ',', split by letter
+            const inValues = inArray.length === 1 ? inArray[0].split('') : inArray;
+        
+            const openBrackets = [];
+            while (inValues.length) {
+                const key = inValues.shift();
+                const value = inValues.shift();
+                let more = inValues.length
+                if (more) {
+                    inValues.unshift(value);
+                }
+        
+                const s = `for (var ${key} in ${from}) {`;
+                const v = more ? value + 'v' : value;
+                const assignment = `var ${v} = ${from}[${key}];`;
+                const checkObject = `if (typeof ${v} !== 'object') { continue; }`;
+        
+                const code = [s, ind + '    ' + assignment];
+                if (more) {
+                    code.push(ind + '    ' + checkObject);
+                }
+        
+                from = v;
+                openBrackets.push(code.join('\n'));
             }
-    
-            const s = `for (var ${key} in ${from}) {`;
-            const v = more ? value + 'v' : value;
-            const assignment = `var ${v} = ${from}[${key}];`;
-            const checkObject = `if (typeof ${v} !== 'object') { continue; }`;
-    
-            const code = [s, ind + '    ' + assignment];
-            if (more) {
-                code.push(ind + '    ' + checkObject);
-            }
-    
-            from = v;
-            openBrackets.push(code.join('\n'));
+            return openBrackets.map((bracket) => ind + bracket).join('\n');
         }
-        return openBrackets.map((bracket) => ind + bracket).join('\n');
-    })
+    )
 
+    // perlish elsif
+    rep(
+        /^(\s*)elsif ?\(/,
+        (ind) => ind+"else if ("
+    )
+
+    // &etc{...} -> function(e,t,c){...}
+    // < (arfgunc) a way to write its args on it without having to read via toString parse
+    rep(
+        /(\W|^)&(acgt)?(\w+)?((?:,\w+)+?)?(,)?\{/,
+        (not,    acgt,  wordy, comma_wordy,     comma_end) => {
+            wordy ||= ''
+            comma_wordy ||= ''
+            comma_end ||= ''
+            var args = [];
+            if (!acgt && wordy && (comma_wordy || comma_end)) {
+                // &many,things,explicitly{ or &justone,{
+                args = (wordy + comma_wordy).split(',');
+            } else {
+                // acgt then split wordy
+                args = [
+                    ...((acgt ? 'ACGT' : '')+wordy).split(''),
+                    // until commas (may) start
+                    ...comma_wordy.split(',')
+                ]
+            }
+            return not + 'function(' + args.filter(Boolean).join(',') + '){';
+        }
+    )
 
 
 

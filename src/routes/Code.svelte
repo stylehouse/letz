@@ -105,7 +105,12 @@
             +"let oh = &"+"fi,gu,res"+"{ 33+3 }\n"
             +"    each etc art {\n"
             +"        33 + t + c\n"
-            +"    }}\n")
+            +"    }}\n"
+            +"    \n"
+            +"    &acgtscq{\n"
+            +"        33 + t + c\n"
+            +"    }\n"
+            )
     }
     comp()
 
@@ -143,6 +148,7 @@
         <td><h1>{k}</h1></td>
         <td>{v}</td>
     </tr>
+    <hr colspan="2"/>
     {/each}
 </table></pre>
 
