@@ -103,9 +103,6 @@
         let compiler = source => ex({source}, stylehouse_lite(source))
         compiled = compiler("and...\n# < notwicably\n    $"+"art = 5\n'bla"+"tant figs'\n    things "+"and logs "+"and stuff\nelsif (1) near\n"
             +"let oh = &"+"fi,gu,res"+"{ 33+3 }\n"
-            +"    \n"
-            +"    \n"
-            +"    \n"
             +"    each etc art {\n"
             +"        A.1.2.3\n"
             +"    }}\n"

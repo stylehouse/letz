@@ -162,7 +162,7 @@ export function stylehouse_lite (source,filename,agent) {
                 from = v;
                 openBrackets.push(code.join('\n'));
             }
-            return openBrackets.map((bracket) => ':-'+ind +'::'+ bracket).join('\n');
+            return openBrackets.map((bracket) => ind + bracket).join('\n');
         }
     )
 
