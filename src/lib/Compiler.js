@@ -11,7 +11,6 @@ export function stlli_vite() {
             // < should we check they are within /app/src/ to avoid node_modules etc?
             if (id.endsWith('.ts')) {
                 // console.log("Found a "+id)
-                console.log("vite stylehouse_lite")
                 let ts = stylehouse_lite(code);
                 // if (code != compiled.code) console.log("We won!!!",compiled.code.slice(0,200))
                 // < seeing compiled code in DevTools... this doesnt help:
@@ -37,7 +36,6 @@ export function stlli_svelte() {
 			//console.log("stylehouse_lite: "+filename)
 
 			// compile stylehouse lite
-            console.log("svelte stylehouse_lite")
 			let ts = stylehouse_lite(content)
 			ts.map.file = filename
 			// console.log("Step un: "+filename,{ code:ts.code })
