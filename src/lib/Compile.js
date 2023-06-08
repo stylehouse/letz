@@ -178,6 +178,11 @@ export function stylehouse_lite (source,filename,agent) {
         }
     )
 
+    // purchase instead of declare variables
+    rep(
+        /^(\s*)\$(\w+)(;|\s*=|\s*\/\/|$)/,
+        (ind,name,etc) => ind+"var "+name+(etc||';')
+    )
 
 
     // < anything that might have moved in above transforms (eg s&vars)
