@@ -2,15 +2,16 @@
     import {onMount, onDestroy, getContext} from 'svelte'
     import {o_}  from '$lib/St'
     import {sip_wiree, reConstruct}  from '$lib/Co'
+    # < look into https://github.com/kaisermann/svelte-loadable to name these at runtime
     import Cont from '$lib/pi/Cont.svelte';
     import Conz from '$lib/pi/Conz.svelte';
     import Dir from '$lib/pi/Dir.svelte';
     let pis = {Cont, Conz, Dir}
-    // our instructions: (-Con/(-Cont|-Conz))**
+    # our instructions: (-Con/(-Cont|-Conz))**
     export let C
     let boost = C.c.boost || 0
     
-    // only changes when we are sent an update specifically
+    # only changes when we are sent an update specifically
     let update:number
     sip_wiree(C, v => {
         C = v
@@ -18,7 +19,7 @@
     })
     
 
-    // label from above (key into here - Cont%Ct is the s.t on the inside)
+    # label from above (key into here - Cont%Ct is the s.t on the inside)
     let t
     let sip
     let quee
