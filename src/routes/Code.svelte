@@ -104,11 +104,11 @@
         compiled = compiler("and...\n# < notwicably\n    $"+"art = 5\n'bla"+"tant figs'\n    things "+"and logs "+"and stuff\nelsif (1) near\n"
             +"let oh = &"+"fi,gu,res"+"{ 33+3 }\n"
             +"    each etc art {\n"
-            +"        33 + t + c\n"
+            +"        A.1.2.3\n"
             +"    }}\n"
             +"    \n"
             +"    &acgtscq{\n"
-            +"        33 + t + c\n"
+            +"        1s&todo + A.3 + s&dosage + cs&busy\n"
             +"    }\n"
             )
     }

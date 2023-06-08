@@ -49,6 +49,7 @@ export function stylehouse_lite (source,filename,agent) {
         s = new MagicString(source)
         return it
     }
+
     // concat array of regexp bits
     let regbits = bits => bits.map(s => (typeof s == 'object' ? s.source : s)).join('')
     // g flag allows many matches throughout string
@@ -56,6 +57,8 @@ export function stylehouse_lite (source,filename,agent) {
     //  eg"1\n2\n3".match(new RegExp('^2$','gm'))
     let reg = (...bits) => new RegExp(regbits(bits),'gm')
     let recursive = []
+    // < rep() adaptive indent when /\n/
+    //   also globally avoid comments
     let rep = (bits,cb,c) => {
         let pattern = reg(...bits instanceof Array ? bits : [bits])
         let match
@@ -76,10 +79,27 @@ export function stylehouse_lite (source,filename,agent) {
         }
     }
 
+
     // anything on a line
     let nnl = '[^\n]+'
     // whitespace leading up to things not comments
     let nls = '[ \t]*(?! *\/\/)'
+
+    // shorthands to access A* and C*
+
+    // A.1.2 -> A[1][2]
+    rep(/\b([a-zA-Z]+)((?:\.\d)+)\b/,    (s,N) => s+N.split('.').slice(1).map(t => '['+t+']').join(''))
+    rep(/\b(\d)s&(\w+)\b/,    (i,t) => 'A['+i+'].sc.'+t)
+    // capital A is the more empiricle (A.c)
+    rep(/\bA&(\w+)\b/,    (t) => 'A.c.'+t)
+    rep(/\ba&(\w+)\b/,    (t) => 'A.sc.'+t)
+    // etcs&thing and 3s&thing -> A.3.sc.thing
+    rep(
+        /\b(\w+)(s|c|y)&(\w+)\b/,
+        (s,nk,t) => (s*1==s ? 'A['+s+']' : s)+'.'+(nk == 's' ? 'sc' : nk)+'.'+t
+    )
+    rep(/\bc&(\w+)\b/,    (t) => 'C.c.'+t)
+    rep(/\bs&(\w+)\b/,    (t) => 'C.sc.'+t)
 
 
     // # comment to // comment
@@ -90,7 +110,6 @@ export function stylehouse_lite (source,filename,agent) {
 
 
     rep(/blatant/,    () => 'blon_itn')
-    // < wants an adaptive indent
     rep(/'one thing'/,    () => "'un thing'\n'two thing'")
 
 
@@ -109,7 +128,6 @@ export function stylehouse_lite (source,filename,agent) {
 
         {recursive:1}
     )
-
 
 
     // each etc data {    -> for (var e in data) { etc
@@ -148,17 +166,19 @@ export function stylehouse_lite (source,filename,agent) {
         }
     )
 
+
     // perlish elsif
     rep(
         /^(\s*)elsif ?\(/,
         (ind) => ind+"else if ("
     )
 
+
     // &etc{...} -> function(e,t,c){...}
     // < (arfgunc) a way to write its args on it without having to read via toString parse
     rep(
         /(\W|^)&(acgt)?(\w+)?((?:,\w+)+?)?(,)?\{/,
-        (not,    acgt,  wordy, comma_wordy,     comma_end) => {
+        (not, acgt, wordy, comma_wordy, comma_end) => {
             wordy ||= ''
             comma_wordy ||= ''
             comma_end ||= ''
@@ -177,6 +197,7 @@ export function stylehouse_lite (source,filename,agent) {
             return not + 'function(' + args.filter(Boolean).join(',') + '){';
         }
     )
+
 
     // purchase instead of declare variables
     rep(
