@@ -12,7 +12,7 @@ export function merge_sourcemaps(first,second) {
 
 export function stylehouse_lite (source) {
     if (typeof source != 'string') throw "!string"
-    console.log("en stylehouse_lite #####################")
+    console.log("en stylehouse_lite ########iii#########")
     let s = new MagicString(source)
     let last_sourcemap
     function commit_s () {
@@ -25,8 +25,10 @@ export function stylehouse_lite (source) {
         });
         let it = {code: s.toString(), map: s.generateMap({ hires: true })}
         // if that map goes on the end of another map
-        if (last_sourcemap) it.map = merge_sourcemaps(last_sourcemap,it.map)
-        console.log("Merged some sources")
+        if (last_sourcemap) {
+            it.map = merge_sourcemaps(last_sourcemap,it.map)
+            console.log("Merged some sources")
+        }
 
         // begin again
         source = it.code
@@ -42,9 +44,6 @@ export function stylehouse_lite (source) {
     let reg = (...bits) => new RegExp(regbits(bits),'gm')
     let recursive = []
     let rep = (bits,cb,c) => {
-        if (c && c.recursive) {
-            recursive.push([bits,cb])
-        }
         let pattern = reg(...bits)
         while (match = pattern.exec(source)) {
             let whole = match[0]
@@ -56,6 +55,11 @@ export function stylehouse_lite (source) {
                 throw "Error replacing /"+pattern.source+"/: "+whole+"\nWith: "+it
             }
             s.overwrite(start, end, it)
+            if (c && c.recursive) {
+                // it may happen again
+                delete c.recursive
+                recursive.push([bits,cb,c])
+            }
         }
     }
 
