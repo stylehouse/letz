@@ -2,21 +2,21 @@
   import { onMount, createEventDispatcher } from "svelte"
   import {EditorState} from "@codemirror/state"
   import {EditorView, keymap, ViewUpdate} from "@codemirror/view"
-  import {
-    LanguageSupport,
-    LRLanguage
-  } from "@codemirror/language"
+  import {LanguageSupport,LRLanguage} from "@codemirror/language"
   import {defaultKeymap} from "@codemirror/commands"
   import {basicSetup} from "codemirror"
 	import { sto,ge } from './stores.js';
+  import grammar from '../lang/style.grammar?raw'
+  import { buildParser } from '@lezer/generator'
+  let parser = buildParser(grammar)
+  const dispatch = createEventDispatcher()
+
   let updge = () => ge.update(ge => ge+'e')
 
-  const dispatch = createEventDispatcher()
 
   export let ele = undefined
   export let view: EditorView = undefined
   export let value = ""
-  export let parser
   let language = LRLanguage.define({ parser: parser });
   let langsup = new LanguageSupport(language);
 

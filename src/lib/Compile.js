@@ -54,7 +54,7 @@ export function stylehouse_lite (source,filename,agent) {
     let regbits = bits => bits.map(s => (typeof s == 'object' ? s.source : s)).join('')
     // g flag allows many matches throughout string
     // m multiline string: ^ and $ match the ends of lines
-    //  eg"1\n2\n3".match(new RegExp('^2$','gm'))
+    //  eg "1\n2\n3".match(new RegExp('^2$','gm'))
     let reg = (...bits) => new RegExp(regbits(bits),'gm')
     let recursive = []
     // < rep() adaptive indent when /\n/
