@@ -43,6 +43,8 @@
 
 
 
+<biggroup>
 <p> {b} </p>
 <Codemirror value={$sto} on:kommit={dobla}></Codemirror>
 {#if look}<Lezing {look}></Lezing>{/if}
+</biggroup>

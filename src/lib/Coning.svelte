@@ -5,9 +5,11 @@
     export let t = 'Coning'
     // doesn't have to be C:
     export let C
+    // C can look like data:
+    export let noC = 0
     let D
     function upto() {
-        D = Construct({t:t,s:C,D})
+        D = Construct({t:t,s:C,D,noC})
     }
     function ring() {
         
@@ -15,7 +17,9 @@
     $: upto(C)
 </script>
 
+<biggroup>
 <!-- <button on:click={() => ring()} > ring() </button> -->
 {#if D}
     <Con C={D} />
 {/if}
+</biggroup>

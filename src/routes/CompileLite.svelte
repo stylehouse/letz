@@ -20,6 +20,7 @@
     comp()
 </script>
 
+<biggroup>
 <button on:click={() => comp()} > comp() </button>
 
 <pre><table>
@@ -31,3 +32,4 @@
     <hr colspan="2"/>
     {/each}
 </table></pre>
+</biggroup>

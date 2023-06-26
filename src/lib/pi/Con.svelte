@@ -2,6 +2,7 @@
     import {onMount, onDestroy, getContext} from 'svelte'
     import {o_}  from '$lib/St'
     import {sip_wiree, reConstruct}  from '$lib/Co'
+    import Coning from '$lib/Coning.svelte';
     # < look into https://github.com/kaisermann/svelte-loadable to name these at runtime
     import Cont from '$lib/pi/Cont.svelte';
     import Conz from '$lib/pi/Conz.svelte';
@@ -43,18 +44,28 @@
         C.c.boost = boost
     }
     // refreshing the process, when children want to adjust things
-    function reCon (e, negate=false) {
+    function reCon (e) {
         C = reConstruct(C)
     }
-    
+    function something (e) {
+        C = reConstruct(C)
+    }
+    # < this wants overlaying|geo via a parent
+    $datadump
 </script>
 
 <span style="color:deepskyblue" on:pointerdown={(e) => boosting(e)}>{t}</span>
 {#if boost} <span style="color:blueviolet" on:pointerdown={(e) => boosting(e,'negate')}>+{boost}</span>{/if}
 {#if C.c.unwired} <span style="color:red">!wired</span>{/if}
 
-<c_sip style="font-size:70%"> {sip} </c_sip>
+<c_sip style="font-size:70%" on:pointerdown={(e) => datadump = 1}> {sip} </c_sip>
+{#if datadump}
+    <!-- data dump (leaving the mind our Con** is from) -->
+    <Coning C={C.c.s} noC />
+{/if}
 <!-- <revision style="color:darkcyan; text-decoration:underline">{quee}</revision> -->
+
+
 {#each o_(C) as n}
     <span style="display:inline-block; vertical-align: middle; border:2px solid gainsboro; border-right:none; padding: 0 3px; margin: 0 3px; border-radius: 3px;">
         <svelte:component on:reCon="{reCon}" this={pis[n.c.pi]} C={n}/>

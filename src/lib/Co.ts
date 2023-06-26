@@ -574,7 +574,7 @@ function toCon_newConz (d) {
     let Conz = d.partor('Conz')
 
     let nodules = []
-    let N = typ.iter ? s
+    let N = typ.iter || d.noC ? s
         : Cish ? o_(s)
         : []
     for (let [t,s] of Object.entries(N)) {

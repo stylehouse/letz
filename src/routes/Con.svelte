@@ -81,9 +81,9 @@
         bloop()
     })
 </script>
-
-
 <svelte:window on:keydown={handleKeydown}/>
+
+<biggroup>
 <button on:click={() => bleep()} > bleep() </button>
 <button on:click={() => bloop()} > bloop() </button>
 <button on:click={() => reconver()} > reconver({conver}.{refresh}) </button>
@@ -94,3 +94,4 @@
 //   <p> <Con C={con}/> </p>
 {/key}
 {/if}
+</biggroup>
