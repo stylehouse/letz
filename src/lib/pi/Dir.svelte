@@ -65,8 +65,8 @@
     {:then di}
         {@const peek = di.slice(0,population_limit) }
         {#each peek as f, i (f.f)}
-            <descriptor style="{f.f.includes('7680') ? 'flex-basis: calc(75%);' : ''}">
-            {#if f.d}<a on:click={() => nestDir(f)} class='large'>{f.f}</a>
+            <descriptor style="{f.f.includes('4999') ? 'flex-basis: calc(75%);' : ''}">
+            {#if f.d}<button on:click={() => nestDir(f)} class='large'>{f.f}</button>
             {:else}
                 <p>{f.f}
                         <!-- sizes="(max-width: 800px) 400px, 100vw" -->
@@ -75,12 +75,12 @@
                          alt="pretty"/>
                     <!-- <img src={formlink('thv',dir,f.f)+'.gif'} alt="pretty"/> </p> -->
                 {#if f.interest}
-                    <a on:click={() => gist_thumb(f)} class='large'>unique frames</a>
+                    <button on:click={() => gist_thumb(f)} class='large'>unique frames</button>
                 {/if}
             {/if}
             </descriptor>
         {/each}
-        <p style="transform:rotate(90deg);"><a on:click={() => population_limit+=5} >More</a></p>
+        <p style="transform:rotate(90deg);"><button on:click={() => population_limit+=5} >More</button></p>
     {:catch error}
         <p style="color: red">{error.message}</p>
     {/await}
@@ -94,9 +94,6 @@
         align-content: stretch;
     }
     
-    .image-container descriptor {
-        flex-basis: calc(33%);
-    }
     @media screen and (min-width: 721px) {
         .image-container descriptor {
             flex-basis: calc(20%);
