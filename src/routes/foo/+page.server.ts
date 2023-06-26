@@ -1,5 +1,5 @@
 import { execSync } from 'child_process';
-import { fail } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 
 let page = 99
 function pdfToPng(pdfPath, pageNum) {
@@ -20,7 +20,7 @@ export const actions = {
 		const data = await request.formData();
         let p = data.get('page')
         if (1*p != p && p) {
-            return fail(422,{error:"BADPAGE"})
+            return error(422,{error:"BADPAGE"})
         }
         page = p
 	}
