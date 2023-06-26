@@ -1,4 +1,4 @@
-import { fail } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 import { words, allowed } from './words.server';
 import type { PageServerLoad, Actions } from './$types';
 
@@ -57,7 +57,7 @@ export const actions: Actions = {
 		const guess = data.getAll('guess')  as string[];
 
 		if (!game.enter(guess)) {
-			return fail(400, { badGuess: true });
+			return error(400, { badGuess: true });
 		}
 
 		cookies.set('sverdle', game.toString());
