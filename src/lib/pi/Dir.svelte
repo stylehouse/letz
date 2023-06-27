@@ -66,7 +66,8 @@
         {@const peek = di.slice(0,population_limit) }
         {#each peek as f, i (f.f)}
             <descriptor style="{f.f.includes('4999') ? 'flex-basis: calc(75%);' : ''}">
-            {#if f.d}<button on:click={() => nestDir(f)} class='large'>{f.f}</button>
+            {#if f.d}
+                <button on:click={() => nestDir(f)} class='large'>{f.f}</button>
             {:else}
                 <p>{f.f}
                         <!-- sizes="(max-width: 800px) 400px, 100vw" -->

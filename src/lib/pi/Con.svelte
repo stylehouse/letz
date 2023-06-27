@@ -42,12 +42,15 @@
     function boosting (e, negate=false) {
         boost += e.ctrlKey || negate ? -1 : 1
         C.c.boost = boost
+        // # try again here
+        // #  saves having to click ring() at the top
+        // #   however: we dont reiterate the source data from the top,
+        // #    so often opening Dir** and looking at the D** generated
+        // #     require ring() to get the most unfolded D**
+        reCon(e)
     }
     // refreshing the process, when children want to adjust things
     function reCon (e) {
-        C = reConstruct(C)
-    }
-    function something (e) {
         C = reConstruct(C)
     }
     # < this wants overlaying|geo via a parent
