@@ -62,7 +62,9 @@ export function stylehouse_lite (source,filename,agent) {
     let rep = (bits,cb,c) => {
         let pattern = reg(...bits instanceof Array ? bits : [bits])
         let match
+        let any = 0
         while (match = pattern.exec(source)) {
+            any = 1
             let whole = match[0]
             let start = match.index
             let end = start + whole.length
@@ -77,6 +79,7 @@ export function stylehouse_lite (source,filename,agent) {
                 recursive.push([bits,cb,c])
             }
         }
+        return any
     }
 
 
@@ -85,6 +88,10 @@ export function stylehouse_lite (source,filename,agent) {
     // whitespace leading up to things not comments
     let nls = '[ \t]*(?! *\/\/)'
 
+
+
+
+    
     // shorthands to access A* and C*
 
     // A.1.2 -> A[1][2]
@@ -105,13 +112,15 @@ export function stylehouse_lite (source,filename,agent) {
     // # comment to // comment
     // $C->{c}->{s} =~ s/^(\s*)#/$1\/\//gsm;
     // $C->{c}->{s} =~ s/( \{|}|;) #/$1 \/\//gsm;
-    rep(/^(\s*)#/,        (indent) => indent+'//')
-    rep(/( \{|}|;) #/,    (indent) => indent+' //')
-
+    let commenty = [
+        rep(/^(\s*)#/,        (indent) => indent+'//'),
+        rep(/( \{|}|;) #/,    (indent) => indent+' //')
+    ]
+    // the following patterns may use $nls to not work on comments
+    commenty.some(r=>r) && commit_s()
 
     rep(/blatant/,    () => 'blon_itn')
     rep(/'one thing'/,    () => "'un thing'\n'two thing'")
-
 
     // left-hand if
     // $C->{c}->{s} =~ s/^($nls)([^\n]+?) and ($nnl)(;)?$/$1if ($2) {
