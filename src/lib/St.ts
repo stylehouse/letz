@@ -1,5 +1,5 @@
 // Stylehouse, a dreamy coding paradigm in ts/js
-
+# yeah
 //#region basics
 // the baskets of properties that are C.y|c|sc
 type gc = {

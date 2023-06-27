@@ -1,14 +1,19 @@
 <script lang=ts>
     import { ex } from "$lib/St"
     import { stylehouse_lite } from "$lib/Compile.js"
-    # yes
-    let compiled
+    // # yes
+    $compiled
     function comp () {
         // blatant
         let compiler = source => ex({source}, stylehouse_lite(source))
-        compiled = compiler("and...\n# < notwicably\n    $"+"art = 5\n'bla"+"tant figs'\n    things "+"and logs "+"and stuff\nelsif (1) near\n"
+        let more = "and...\n"+"# < notwicably\n    "+"# "+"and more\n"
+        compiled = compiler(
+            more
+            +"$"+"art = 5\n'bla"+"tant figs'\n"
+            +"    things "+"and logs "+"and stuff\n"
+            +"els"+"if (1) near\n"
             +"let oh = &"+"fi,gu,res"+"{ 33+3 }\n"
-            +"    each etc art {\n"
+            +"    each"+" etc art {\n"
             +"        A.1.2.3\n"
             +"    }}\n"
             +"    \n"
@@ -23,7 +28,7 @@
 <biggroup>
 <button on:click={() => comp()} > comp() </button>
 
-<pre><table>
+<pre><table style="word-wrap:break-word; max-width:80%; display:block">
     {#each Object.entries(compiled) as [k,v]}
     <tr>
         <td><h1>{k}</h1></td>
