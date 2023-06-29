@@ -4,6 +4,7 @@ import paramiko
 import subprocess
 import concurrent.futures
 import re
+import json
 import pprint
 def dd(data,depth=5):
     pp = pprint.PrettyPrinter(depth=depth)
@@ -63,6 +64,14 @@ cmd_source = r'''
          # it sometimes drops files where it cd?
         nicotine
          # a python window
+    # test
+       ssh n
+        echo "non"
+        sleep 3
+        echo "Completo!"
+       ssh n
+        sleep 1
+        echo "Very nearly!"
 '''
 
 # python obviously doesn't like chewing on text
@@ -193,122 +202,108 @@ for system in systems:
         job['t'] = create_job_title(cmds)
 
 
-dd(systems)
 
 '''
-that is:
-    [{'jobs': [{'cmds': ['cd stylehouse', './serve.pl'], 't': 'serve.pl'}],
-    't': 'style_dev'},
-    {'jobs': [{'cmds': ['ssh -A gox', 'sshfs s:/media/s/Elvis/Photo v'],
-                't': 'gox: sshfs s:...Photo v'},
-            {'cmds': ['ssh gox',
-                        'cd src/letz',
-                        'podman run -v ~/v:/v:ro -v .:/app:exec -p 5000:5000 --rm '
-                        "-it --name pyt py bash -c './yt.sh'"],
-                't': 'gox: py->pyt bash'},
-            {'cmds': ['ssh gox',
-                        'cd src/letz',
-                        'podman run -v .:/app:exec -p 8000:8000 --rm -it --name '
-                        'cos1 cos npm run dev -- --port 8000 --host 0.0.0.0'],
-                't': 'gox: cos->cos1 npm run dev'},
-            {'cmds': ['cd src/letz', 'code .'], 't': 'code .'}],
-    't': 'letz_dev'},
-    {'jobs': [{'cmds': ['chromeium http://editong.localhost:1812/ '
-                        'http://192.168.122.92:5000/dir/ '
-                        'http://192.168.122.92:8000/'],
-                't': 'chromeium'}],
-    't': 'dev_fe'},
-    {'jobs': [{'cmds': ['ssh n',
-                        'sudo mount -t 9p -o trans=virtio allmusic allmusic/'],
-                't': 'n: mount allmusic/'},
-            {'cmds': ['sshfs n:Downloads/ Mail'],
-                't': 'sshfs n:Downloads/ Mail'},
-            {'cmds': ['ssh -X n', 'cd Downloads/', 'nicotine'],
-                't': 'n: nicotine'}],
-    't': 'nico'}]
-
-
+    dd(systems)
+    is:
+        [{'jobs': [{'cmds': ['cd stylehouse', './serve.pl'], 't': 'serve.pl'}],
+        't': 'style_dev'},
+        {'jobs': [{'cmds': ['ssh -A gox', 'sshfs s:/media/s/Elvis/Photo v'],
+                    't': 'gox: sshfs s:...Photo v'},
+                {'cmds': ['ssh gox',
+                            'cd src/letz',
+                            'podman run -v ~/v:/v:ro -v .:/app:exec -p 5000:5000 --rm '
+                            "-it --name pyt py bash -c './yt.sh'"],
+                    't': 'gox: py->pyt bash'},
+                {'cmds': ['ssh gox',
+                            'cd src/letz',
+                            'podman run -v .:/app:exec -p 8000:8000 --rm -it --name '
+                            'cos1 cos npm run dev -- --port 8000 --host 0.0.0.0'],
+                    't': 'gox: cos->cos1 npm run dev'},
+                {'cmds': ['cd src/letz', 'code .'], 't': 'code .'}],
+        't': 'letz_dev'},
+        {'jobs': [{'cmds': ['chromeium http://editong.localhost:1812/ '
+                            'http://192.168.122.92:5000/dir/ '
+                            'http://192.168.122.92:8000/'],
+                    't': 'chromeium'}],
+        't': 'dev_fe'},
+        {'jobs': [{'cmds': ['ssh n',
+                            'sudo mount -t 9p -o trans=virtio allmusic allmusic/'],
+                    't': 'n: mount allmusic/'},
+                {'cmds': ['sshfs n:Downloads/ Mail'],
+                    't': 'sshfs n:Downloads/ Mail'},
+                {'cmds': ['ssh -X n', 'cd Downloads/', 'nicotine'],
+                    't': 'n: nicotine'}],
+        't': 'nico'}]
 '''
 
 
 
 # try one only
-systems = [system for system in systems if system['t'] == 'nico']
+systems = [system for system in systems if system['t'] == 'test']
 
+commands = []
+for system in systems:
+    jobs = system['jobs']
+    for job in jobs:
+        cmds = job['cmds']
+        match = re.search(r'^ssh ',cmds[0])
+        ssh_around = ''
+        if match:
+            ssh_around = cmds.pop(0)
+        
+        cmds = '; '.join(cmds)
+        if ssh_around:
+            cmds = ssh_around+' '+json.dumps(cmds)
+        
+        job["command"] = cmds
+        commands.append(cmds)
+
+            
+        
 # < convert to one ssh call? eg ssh -X n 'cd Downloads; nicotine'
-
-
-exit();
-
-def run_ssh_command(hostname, username, password, command):
-    # Create SSH client
-    client = paramiko.SSHClient()
-    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-
-    try:
-        # Connect to the SSH server
-        client.connect(hostname)
-
-        # Execute the command
-        session = client.get_transport().open_session()
-        session.exec_command(command)
-
-        # Return the output
-        return session.makefile().read()
-
-    finally:
-        # Close the SSH connection
-        client.close()
+dd(systems)
 
 def run_local_command(command):
     # Execute the command and capture the output
-    result = subprocess.run(command, shell=True, capture_output=True, text=True)
+    print("starts: " + command)
+    process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
-    # Return the output
-    return result.stdout.strip()
+    # Stream the output while the command is running
+    while True:
+        # Read stdout and stderr in a non-blocking manner
+        stdout = process.stdout.readline().strip()
+        stderr = process.stderr.readline().strip()
 
-# Define your commands
-commands = [
-    {
-        "type": "ssh",
-        "hostname": "gox",
-        "username": "your_username",
-        "password": "your_password",
-        "command": "sshfs s:/media/s/Elvis/Photo v",
-    },
-    {
-        "type": "ssh",
-        "hostname": "gox",
-        "username": "your_username",
-        "password": "your_password",
-        "command": "cd src/letz; podman run -v ~/v:/v:ro -v .:/app:exec -p 5000:5000 --rm -it --name pyt py bash -c './yt.sh'",
-    },
-    {
-        "type": "ssh",
-        "hostname": "gox",
-        "username": "your_username",
-        "password": "your_password",
-        "command": "cd src/letz; podman run -v .:/app:exec -p 8000:8000 --rm -it --name cos1 cos npm run dev -- --port 3000 --host 0.0.0.0",
-    },
-    {
-        "type": "local",
-        "command": "cd stylehouse; ./serve.pl",
-    },
-    # Add more commands as needed
-]
-exit
+        # If both stdout and stderr are empty and the process has terminated, break the loop
+        if not stdout and not stderr and process.poll() is not None:
+            break
+
+        # Display or process the output as needed
+        if stdout:
+            print("stdout: " + stdout)
+        if stderr:
+            print("stderr: " + stderr)
+
+    # Wait for the process to complete and retrieve the exit code
+    exit_code = process.wait()
+    if exit_code:
+        print(" trouble! code:"+str(exit_code))
+
+    # Return the exit code
+    return exit_code
+
 # Create a ThreadPoolExecutor with the maximum number of workers
 with concurrent.futures.ThreadPoolExecutor(max_workers=len(commands)) as executor:
     # Submit each command to the executor
     future_results = []
     for cmd in commands:
-        if cmd["type"] == "ssh":
-            future_results.append(executor.submit(run_ssh_command, cmd["hostname"], cmd["username"], cmd["password"], cmd["command"]))
-        elif cmd["type"] == "local":
-            future_results.append(executor.submit(run_local_command, cmd["command"]))
+        future_results.append(executor.submit(run_local_command, cmd))
 
     # Process the results as they become available
     for future in concurrent.futures.as_completed(future_results):
         result = future.result()
         # Process the result (e.g., display or save the output as needed)
-        print(result)
+        print("finito: ")
+        dd(future)
+
