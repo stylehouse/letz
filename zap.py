@@ -78,8 +78,7 @@ def parse_cmd_source(L):
 
     same_cmd_next = 0
     def job_cmd_stuff(stuff):
-        global same_cmd_next
-        
+        nonlocal same_cmd_next
         same_cmd_now = same_cmd_next
         
         # in bash you can escape the \n at the end
@@ -91,7 +90,7 @@ def parse_cmd_source(L):
             same_cmd_next = 0
         
         if same_cmd_now:
-            job["cmds"][-1] += ' also:' + stuff
+            job["cmds"][-1] += stuff
         else:
             job["cmds"].append(stuff)
 
@@ -129,7 +128,7 @@ def parse_cmd_source(L):
                 job_cmd_stuff(stuff)
 
     return systems
-            
+
 
 systems = parse_cmd_source(cmd_source)
 '''
@@ -164,6 +163,10 @@ systems = parse_cmd_source(cmd_source)
 
 
 # < name jobs, eg "serve", "gox: sshfs Photo v", "gox: @pyt", "n: nicotine"
+def wordynoiseblob(s):
+    enough = 0.76
+    got = len(re.findall(r'\w', s)) / len(s)
+    return False if got < enough else True
 def create_job_title(cmds):
     titles = []
     for cmd in cmds:
@@ -187,10 +190,14 @@ def create_job_title(cmds):
                 titles.append(match.group(3).strip())
             continue
 
-        match = re.search(r'^(sshfs \w+:)\S*([^\S/]+)\/? (\S+)$', cmd)
+        match = re.search(r'^(sshfs \w+:)(\S*?)([^\s/]+)/? (\S+)$', cmd)
         if match:
-            titles.append(match.group(1)+'...'+match.group(2)+' '+match.group(3))
-            # and the vague end:
+            vague = '...' if len(match.group(3)) else ''
+            if len(match.group(2)+match.group(3)) < 11:
+                titles.append(cmd)
+            else:
+                titles.append(match.group(1)+vague+match.group(3)+' '+match.group(4))
+            continue
 
         match = re.search(r'(\w\S{2,}( \S{,3})?)$', cmd)
         if match:
@@ -199,11 +206,14 @@ def create_job_title(cmds):
             if match:
                 command = match.group(1)
                 if not command in guess:
-                    titles.append('+++'+command+'+++')
-            titles.append('gg'+guess+'gg')
-            continue
+                    titles.append(command)
+            if wordynoiseblob(guess):
+                titles.append(guess)
+            if len(titles):
+                # either command or guess is better than whole cmd
+                continue
         
-        titles.append('---'+cmd+'---')
+        titles.append(cmd)
     return ' '.join(titles)
 # Iterate over systems and create titles for jobs
 for system in systems:
