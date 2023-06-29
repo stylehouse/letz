@@ -129,40 +129,7 @@ def parse_cmd_source(L):
 
     return systems
 
-
-systems = parse_cmd_source(cmd_source)
-'''
-    that is:
-    [{'jobs': [{'cmds': ['cd stylehouse', './serve.pl']}], 't': 'style_dev'},
-    {'jobs': [{'cmds': ['ssh -A gox', 'sshfs s:/media/s/Elvis/Photo v']},
-            {'cmds': ['ssh gox',
-                        'cd src/letz',
-                        'podman run -v ~/v:/v:ro -v .:/app:exec -p 5000:5000 --rm '
-                        "-it --name pyt py bash -c './yt.sh'"]},
-            {'cmds': ['ssh gox',
-                        'cd src/letz',
-                        'podman run -v .:/app:exec -p 8000:8000 --rm -it --name '
-                        'cos1 cos npm run dev -- --port 8000 --host 0.0.0.0']},
-            {'cmds': ['cd src/letz', 'code .']}],
-    't': 'letz_dev'},
-    {'jobs': [{'cmds': ['chromeium \\',
-                        'http://editong.localhost:1812/ \\',
-                        'http://192.168.122.92:5000/dir/ \\',
-                        'http://192.168.122.92:8000/']}],
-    't': 'dev_fe'},
-    {'jobs': [{'cmds': ['ssh n',
-                        'sudo mount -t 9p -o trans=virtio allmusic allmusic/']},
-            {'cmds': ['sshfs n:Downloads/ Mail']},
-            {'cmds': ['ssh -X n', 'cd Downloads/', 'nicotine']}],
-    't': 'nico'}]
-
-'''
-
-
-
-
-
-# < name jobs, eg "serve", "gox: sshfs Photo v", "gox: @pyt", "n: nicotine"
+# name jobs, eg "serve.pl", "gox: sshfs s:...Photo v", "gox: py->pyt bash", "n: nicotine"
 def wordynoiseblob(s):
     enough = 0.76
     got = len(re.findall(r'\w', s)) / len(s)
@@ -215,6 +182,9 @@ def create_job_title(cmds):
         
         titles.append(cmd)
     return ' '.join(titles)
+
+
+systems = parse_cmd_source(cmd_source)
 # Iterate over systems and create titles for jobs
 for system in systems:
     jobs = system['jobs']
@@ -224,6 +194,43 @@ for system in systems:
 
 
 dd(systems)
+
+'''
+that is:
+    [{'jobs': [{'cmds': ['cd stylehouse', './serve.pl'], 't': 'serve.pl'}],
+    't': 'style_dev'},
+    {'jobs': [{'cmds': ['ssh -A gox', 'sshfs s:/media/s/Elvis/Photo v'],
+                't': 'gox: sshfs s:...Photo v'},
+            {'cmds': ['ssh gox',
+                        'cd src/letz',
+                        'podman run -v ~/v:/v:ro -v .:/app:exec -p 5000:5000 --rm '
+                        "-it --name pyt py bash -c './yt.sh'"],
+                't': 'gox: py->pyt bash'},
+            {'cmds': ['ssh gox',
+                        'cd src/letz',
+                        'podman run -v .:/app:exec -p 8000:8000 --rm -it --name '
+                        'cos1 cos npm run dev -- --port 8000 --host 0.0.0.0'],
+                't': 'gox: cos->cos1 npm run dev'},
+            {'cmds': ['cd src/letz', 'code .'], 't': 'code .'}],
+    't': 'letz_dev'},
+    {'jobs': [{'cmds': ['chromeium http://editong.localhost:1812/ '
+                        'http://192.168.122.92:5000/dir/ '
+                        'http://192.168.122.92:8000/'],
+                't': 'chromeium'}],
+    't': 'dev_fe'},
+    {'jobs': [{'cmds': ['ssh n',
+                        'sudo mount -t 9p -o trans=virtio allmusic allmusic/'],
+                't': 'n: mount allmusic/'},
+            {'cmds': ['sshfs n:Downloads/ Mail'],
+                't': 'sshfs n:Downloads/ Mail'},
+            {'cmds': ['ssh -X n', 'cd Downloads/', 'nicotine'],
+                't': 'n: nicotine'}],
+    't': 'nico'}]
+
+
+'''
+
+
 
 # try one only
 systems = [system for system in systems if system['t'] == 'nico']
