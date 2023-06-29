@@ -65,13 +65,14 @@ cmd_source = r'''
         nicotine
          # a python window
     # test
-       ssh n
+       echo "yup"
         echo "non"
         sleep 3
         echo "Completo!"
-       ssh n
+       echo "yup"
         sleep 1
         echo "Very nearly!"
+        exit 4
 '''
 
 # python obviously doesn't like chewing on text
@@ -263,47 +264,38 @@ for system in systems:
         
 # < convert to one ssh call? eg ssh -X n 'cd Downloads; nicotine'
 dd(systems)
+import subprocess
 
-def run_local_command(command):
-    # Execute the command and capture the output
-    print("starts: " + command)
+def run_local_command(i,command):
+    print(f"[{i}] starts: {command}")
     process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
-    # Stream the output while the command is running
-    while True:
-        # Read stdout and stderr in a non-blocking manner
-        stdout = process.stdout.readline().strip()
-        stderr = process.stderr.readline().strip()
+    for line in iter(process.stdout.readline, ""):
+        print(f"[{i}] stdout: {line.strip()}")
+    for line in iter(process.stderr.readline, ""):
+        print(f"[{i}] stderr: {line.strip()}")
 
-        # If both stdout and stderr are empty and the process has terminated, break the loop
-        if not stdout and not stderr and process.poll() is not None:
-            break
-
-        # Display or process the output as needed
-        if stdout:
-            print("stdout: " + stdout)
-        if stderr:
-            print("stderr: " + stderr)
-
-    # Wait for the process to complete and retrieve the exit code
     exit_code = process.wait()
+
     if exit_code:
         print(" trouble! code:"+str(exit_code))
+    print(f"[{i}] finito")
 
-    # Return the exit code
     return exit_code
 
 # Create a ThreadPoolExecutor with the maximum number of workers
+command_i = 0
 with concurrent.futures.ThreadPoolExecutor(max_workers=len(commands)) as executor:
     # Submit each command to the executor
     future_results = []
     for cmd in commands:
-        future_results.append(executor.submit(run_local_command, cmd))
+        future_results.append(executor.submit(run_local_command, command_i, cmd))
+        command_i = command_i + 1
 
+    print("Herest")
     # Process the results as they become available
     for future in concurrent.futures.as_completed(future_results):
         result = future.result()
-        # Process the result (e.g., display or save the output as needed)
-        print("finito: ")
-        dd(future)
+    print("Herer")
 
+print("Here")
