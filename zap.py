@@ -72,6 +72,7 @@ cmd_source = r'''
        echo "yup"
         sleep 1
         ll nonexists
+         # 'll' is not found, exit code 127
         echo "Very nearly!"
         exit 4
 '''
@@ -258,7 +259,7 @@ for system in systems:
         # we lose their individuality:
         #  each exit code
         #  each slice of stdout
-        cmds = '; '.join(cmds)
+        cmds = ' && '.join(cmds)
         # it all happens over there if cmds starts with ssh
         #  eg ssh -X n 'cd Downloads; nicotine'
         if ssh_around:
