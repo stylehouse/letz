@@ -6,7 +6,7 @@ import concurrent.futures
 import re
 import json
 import pprint
-def dd(data,depth=5):
+def dd(data,depth=7):
     pp = pprint.PrettyPrinter(depth=depth)
     pp.pprint(data)
 
@@ -71,6 +71,7 @@ cmd_source = r'''
         echo "Completo!"
        echo "yup"
         sleep 1
+        ll nonexists
         echo "Very nearly!"
         exit 4
 '''
@@ -243,7 +244,8 @@ for system in systems:
 # try one only
 systems = [system for system in systems if system['t'] == 'test']
 
-commands = []
+# Create a ThreadPoolExecutor with the maximum number of workers
+command_i = 0
 for system in systems:
     jobs = system['jobs']
     for job in jobs:
@@ -253,44 +255,65 @@ for system in systems:
         if match:
             ssh_around = cmds.pop(0)
         
+        # we lose their individuality:
+        #  each exit code
+        #  each slice of stdout
         cmds = '; '.join(cmds)
+        # it all happens over there if cmds starts with ssh
+        #  eg ssh -X n 'cd Downloads; nicotine'
         if ssh_around:
             cmds = ssh_around+' '+json.dumps(cmds)
         
         job["command"] = cmds
-        commands.append(cmds)
+        job["i"] = command_i
+        command_i = command_i + 1
 
-            
-        
-# < convert to one ssh call? eg ssh -X n 'cd Downloads; nicotine'
-dd(systems)
+
+
 import subprocess
+import time
 
-def run_local_command(i,command):
-    print(f"[{i}] starts: {command}")
+def delta():
+    start_time = time.time()
+    return lambda: round((time.time() - start_time) * 1000)
+
+def run_job(job):
+    i = job["i"]
+    command = job["command"]
+    print(f"[{i}] starts: "+ job["t"])
+    # [{std:'out',s:'hello\n',ms:123}+]
+    job["output"] = []
+
     process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-
-    for line in iter(process.stdout.readline, ""):
-        print(f"[{i}] stdout: {line.strip()}")
-    for line in iter(process.stderr.readline, ""):
-        print(f"[{i}] stderr: {line.strip()}")
-
+    def readaline(ch,std):
+        for line in iter(std.readline, ""):
+            # < do we want the ^ + and \n$
+            out = {"std":ch,"s":line.strip(),"time":time.time()}
+            print(f"[{i}] std{ch}: "+out["s"])
+            job["output"].append(out)
+    readaline('out',process.stdout)
+    readaline('err',process.stderr)
+    # < stdin
     exit_code = process.wait()
 
     if exit_code:
-        print(" trouble! code:"+str(exit_code))
+        print(f"[{i}] trouble! code:"+str(exit_code))
+        job["exit_code"] = exit_code
     print(f"[{i}] finito")
 
     return exit_code
 
-# Create a ThreadPoolExecutor with the maximum number of workers
-command_i = 0
-with concurrent.futures.ThreadPoolExecutor(max_workers=len(commands)) as executor:
+# < figure out if any of this can be less terrifying
+# max_workers so that all jobs can stay happening
+with concurrent.futures.ThreadPoolExecutor(max_workers=command_i) as executor:
     # Submit each command to the executor
     future_results = []
-    for cmd in commands:
-        future_results.append(executor.submit(run_local_command, command_i, cmd))
-        command_i = command_i + 1
+
+    for system in systems:
+        jobs = system['jobs']
+        for job in jobs:
+            future_results.append(executor.submit(run_job, job))
+
 
     print("Herest")
     # Process the results as they become available
@@ -299,3 +322,5 @@ with concurrent.futures.ThreadPoolExecutor(max_workers=len(commands)) as executo
     print("Herer")
 
 print("Here")
+
+dd(systems)
