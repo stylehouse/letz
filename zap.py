@@ -402,6 +402,7 @@ def main(stdscr):
     # Initialize curses settings
     curses.curs_set(0)
     curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)
+    stdscr.nodelay(1)
 
     # Initially selected row
     selected_row = 0
@@ -444,6 +445,7 @@ def main(stdscr):
 
         # Refresh the screen
         stdscr.refresh()
+        time.sleep(0.1)
 
 # run commands without blocking the UI
 def all_systems_go_thread():
@@ -453,10 +455,5 @@ all_systems_go_thread.start()
 
 # Run the application
 curses.wrapper(main)
-
-
-
-
-print("Here")
 
 dd(systems)
