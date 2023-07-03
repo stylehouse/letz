@@ -1,7 +1,8 @@
 
 
-import paramiko
+import curses
 import subprocess
+import time
 import concurrent.futures
 import re
 import json
@@ -67,10 +68,10 @@ cmd_source = r'''
     # test
        echo "yup"
         echo "non"
-        sleep 3
+        sleep 1
         echo "Completo!"
        echo "yup"
-        sleep 1
+        sleep 3
         ll nonexists
          # 'll' is not found, exit code 127
         echo "Very nearly!"
@@ -242,11 +243,44 @@ for system in systems:
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # try one only
 systems = [system for system in systems if system['t'] == 'test']
 
 # Create a ThreadPoolExecutor with the maximum number of workers
-command_i = 0
+job_i = 0
+i_job = {}
 for system in systems:
     jobs = system['jobs']
     for job in jobs:
@@ -266,13 +300,12 @@ for system in systems:
             cmds = ssh_around+' '+json.dumps(cmds)
         
         job["command"] = cmds
-        job["i"] = command_i
-        command_i = command_i + 1
+        job["i"] = job_i
+        i_job[job_i] = job
+        job_i = job_i + 1
 
 
 
-import subprocess
-import time
 
 def delta():
     start_time = time.time()
@@ -281,7 +314,10 @@ def delta():
 def run_job(job):
     i = job["i"]
     command = job["command"]
-    print(f"[{i}] starts: "+ job["t"])
+    def diag(s):
+        #print(s)
+        1
+    diag(f"[{i}] starts: "+ job["t"])
     # [{std:'out',s:'hello\n',ms:123}+]
     job["output"] = []
 
@@ -290,7 +326,7 @@ def run_job(job):
         for line in iter(std.readline, ""):
             # < do we want the ^ + and \n$
             out = {"std":ch,"s":line.strip(),"time":time.time()}
-            print(f"[{i}] std{ch}: "+out["s"])
+            diag(f"[{i}] std{ch}: "+out["s"])
             job["output"].append(out)
     readaline('out',process.stdout)
     readaline('err',process.stderr)
@@ -298,29 +334,114 @@ def run_job(job):
     exit_code = process.wait()
 
     if exit_code:
-        print(f"[{i}] trouble! code:"+str(exit_code))
+        diag(f"[{i}] trouble! code:"+str(exit_code))
         job["exit_code"] = exit_code
-    print(f"[{i}] finito")
+    diag(f"[{i}] finito")
 
     return exit_code
 
-# < figure out if any of this can be less terrifying
-# max_workers so that all jobs can stay happening
-with concurrent.futures.ThreadPoolExecutor(max_workers=command_i) as executor:
-    # Submit each command to the executor
-    future_results = []
+def all_systems_go():
+    # < figure out if any of this can be less terrifying
+    # max_workers so that all jobs can stay happening
+    with concurrent.futures.ThreadPoolExecutor(max_workers=job_i) as executor:
+        # Submit each command to the executor
+        future_results = []
 
+        for system in systems:
+            jobs = system['jobs']
+            for job in jobs:
+                future_results.append(executor.submit(run_job, job))
+
+        if not True:
+            # Process the results as they become available
+            for future in concurrent.futures.as_completed(future_results):
+                result = future.result()
+
+
+
+
+def draw_interface(stdscr, selected_row):
+    # Clear the screen
+    stdscr.clear()
+
+    # Define the dimensions of the interface
+    rows, cols = stdscr.getmaxyx()
+
+    # Draw the list of jobs
     for system in systems:
         jobs = system['jobs']
         for job in jobs:
-            future_results.append(executor.submit(run_job, job))
+            i = job["i"]
+            # Determine the formatting of the command based on selection
+            if i == selected_row:
+                stdscr.attron(curses.color_pair(1))
+            stdscr.addstr(i, 0, "["+str(job["i"])+"] "+job["t"])
+            if i == selected_row:
+                stdscr.attroff(curses.color_pair(1))
+    
+    # Refresh the screen
+    stdscr.refresh()
+
+def main(stdscr):
+    # Initialize curses settings
+    curses.curs_set(0)
+    curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)
+
+    # Initially selected row
+    selected_row = 0
+
+    # Draw the interface
+    draw_interface(stdscr, selected_row)
+
+    # Event loop
+    never = 1
+    while True:
+        if never:
+            never = 0
+            print("In The Go")
+            all_systems_go()
+            print("Out The Go")
+        key = stdscr.getch()
+
+        # Handle key events
+        if key == curses.KEY_UP and selected_row > 0:
+            selected_row -= 1
+        elif key == curses.KEY_DOWN and selected_row < job_i - 1:
+            selected_row += 1
+        elif key == curses.KEY_ENTER or key == ord('\n'):
+            # Run the selected command
+            job = i_job[selected_row]
+            dd(job)
+            if 1:
+                outs = job["output"] or []
+
+                # Clear the screen
+                stdscr.clear()
+                stdscr.addstr(0, 0, "job ["+str(job["i"])+"] "+job["t"])
+                for out in outs:
+                    # < background colour stderrs?
+                    ind = '   ' if out["std"] == 'err' else '!! '
+                    stdscr.addstr(2, 0, ind+out["s"])
+                
+            # Refresh the screen
+            stdscr.refresh()
+
+            # Wait for key press to continue
+            stdscr.getch()
+
+        # Redraw the interface
+        draw_interface(stdscr, selected_row)
+
+        # Refresh the screen
+        stdscr.refresh()
 
 
-    print("Herest")
-    # Process the results as they become available
-    for future in concurrent.futures.as_completed(future_results):
-        result = future.result()
-    print("Herer")
+#all_systems_go()
+# Run the application
+curses.wrapper(main)
+
+
+
 
 print("Here")
 
