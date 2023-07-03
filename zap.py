@@ -1,9 +1,10 @@
 
 
 import curses
-import subprocess
 import time
 import concurrent.futures
+import threading
+import subprocess
 import re
 import json
 import pprint
@@ -315,7 +316,7 @@ def run_job(job):
     i = job["i"]
     command = job["command"]
     def diag(s):
-        print(s)
+        #print(s)
         1
     diag(f"[{i}] starts: "+ job["t"])
     # [{std:'out',s:'hello\n',ms:123}+]
@@ -344,7 +345,7 @@ def run_job(job):
 def all_systems_go():
     # < figure out if any of this can be less terrifying
     # max_workers so that all jobs can stay happening
-    with concurrent.futures.ThreadPoolExecutor(max_workers=job_i) as executor:
+    with concurrent.futures.ThreadPoolExecutor() as executor:
         # Submit each command to the executor
         future_results = []
 
@@ -353,7 +354,6 @@ def all_systems_go():
             for job in jobs:
                 future_results.append(executor.submit(run_job, job))
 
-        if 0:
             # Process the results as they become available
             for future in concurrent.futures.as_completed(future_results):
                 result = future.result()
@@ -410,16 +410,8 @@ def main(stdscr):
     draw_interface(stdscr, selected_row)
 
     # Event loop
-    never = 1
     while True:
-        if never:
-            never = 0
-            print("In The Go")
-            all_systems_go()
-            print("Out The Go")
-            key = None
-        else:
-            key = stdscr.getch()
+        key = stdscr.getch()
 
         # Handle key events
         if key == curses.KEY_UP and selected_row > 0:
@@ -453,8 +445,12 @@ def main(stdscr):
         # Refresh the screen
         stdscr.refresh()
 
+# run commands without blocking the UI
+def all_systems_go_thread():
+    all_systems_go()
+all_systems_go_thread = threading.Thread(target=all_systems_go_thread)
+all_systems_go_thread.start()
 
-#all_systems_go()
 # Run the application
 curses.wrapper(main)
 
