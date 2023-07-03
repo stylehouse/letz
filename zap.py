@@ -315,7 +315,7 @@ def run_job(job):
     i = job["i"]
     command = job["command"]
     def diag(s):
-        #print(s)
+        print(s)
         1
     diag(f"[{i}] starts: "+ job["t"])
     # [{std:'out',s:'hello\n',ms:123}+]
@@ -331,14 +331,15 @@ def run_job(job):
     readaline('out',process.stdout)
     readaline('err',process.stderr)
     # < stdin
-    exit_code = process.wait()
-
-    if exit_code:
-        diag(f"[{i}] trouble! code:"+str(exit_code))
-        job["exit_code"] = exit_code
-    diag(f"[{i}] finito")
-
-    return exit_code
+    job["exit_code"] = None
+    def check1s():
+        exit_code = process.poll()
+        if exit_code is not None:
+            diag(f"[{i}] trouble! code:"+str(exit_code))
+            job["exit_code"] = exit_code
+            diag(f"[{i}] finito")
+            job["check1s"] = lambda: 1
+    job["check1s"] = check1s
 
 def all_systems_go():
     # < figure out if any of this can be less terrifying
@@ -352,7 +353,7 @@ def all_systems_go():
             for job in jobs:
                 future_results.append(executor.submit(run_job, job))
 
-        if not True:
+        if 0:
             # Process the results as they become available
             for future in concurrent.futures.as_completed(future_results):
                 result = future.result()
@@ -375,7 +376,22 @@ def draw_interface(stdscr, selected_row):
             # Determine the formatting of the command based on selection
             if i == selected_row:
                 stdscr.attron(curses.color_pair(1))
+            
+            # title
             stdscr.addstr(i, 0, "["+str(job["i"])+"] "+job["t"])
+
+            # status
+            if "check1s" in job:
+                check = job["check1s"]
+                check()
+                if job["exit_code"] is not None:
+                    if not job["exit_code"]:
+                        # 0 - good
+                        stdscr.addstr(i, 44, "done")
+                    else:
+                        # 127 etc - bad
+                        stdscr.addstr(i, 44, "exit("+str(job["exit_code"])+")")
+
             if i == selected_row:
                 stdscr.attroff(curses.color_pair(1))
     
@@ -401,7 +417,9 @@ def main(stdscr):
             print("In The Go")
             all_systems_go()
             print("Out The Go")
-        key = stdscr.getch()
+            key = None
+        else:
+            key = stdscr.getch()
 
         # Handle key events
         if key == curses.KEY_UP and selected_row > 0:
