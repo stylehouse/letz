@@ -410,6 +410,8 @@ def main(stdscr):
 
     # Draw the interface
     draw_interface(stdscr, selected_row)
+    def isenter(key):
+        return key == curses.KEY_ENTER or key == ord('\n')
 
     # Event loop
     while True:
@@ -420,7 +422,7 @@ def main(stdscr):
             selected_row -= 1
         elif key == curses.KEY_DOWN and selected_row < job_i - 1:
             selected_row += 1
-        elif key == curses.KEY_ENTER or key == ord('\n'):
+        elif isenter(key):
             # look into selected command
             job = i_job[selected_row]
 
@@ -436,8 +438,12 @@ def main(stdscr):
             # Refresh the screen
             stdscr.refresh()
 
-            # Wait for key press to continue
-            stdscr.getch()
+            # Wait for key press to continue, with a non-blocking getch()
+            while True:
+                key = stdscr.getch()
+                if isenter(key):
+                    break
+                time.sleep(0.03)
 
         # Redraw the interface
         draw_interface(stdscr, selected_row)
