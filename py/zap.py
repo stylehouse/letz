@@ -1,5 +1,4 @@
-
-
+#!/usr/bin/env python3
 import curses
 import time
 import concurrent.futures
@@ -37,6 +36,8 @@ cmd_source = r'''
        cd stylehouse
         ./serve.pl
     # letz_dev
+       cd src
+        lsyncd -nodaemon -delay 0 -rsyncssh letz gox src/letz
        ssh -A gox
         sshfs s:/media/s/Elvis/Photo v
          # s is 192.168.122.1, virbr0 on sa
@@ -420,19 +421,17 @@ def main(stdscr):
         elif key == curses.KEY_DOWN and selected_row < job_i - 1:
             selected_row += 1
         elif key == curses.KEY_ENTER or key == ord('\n'):
-            # Run the selected command
+            # look into selected command
             job = i_job[selected_row]
-            dd(job)
-            if 1:
-                outs = job["output"] or []
 
-                # Clear the screen
-                stdscr.clear()
-                stdscr.addstr(0, 0, "job ["+str(job["i"])+"] "+job["t"])
-                for out in outs:
-                    # < background colour stderrs?
-                    ind = '   ' if out["std"] == 'err' else '!! '
-                    stdscr.addstr(2, 0, ind+out["s"])
+            outs = job["output"]
+
+            stdscr.clear()
+            stdscr.addstr(0, 0, "job ["+str(job["i"])+"] "+job["t"])
+            for out in outs:
+                # < background colour stderrs?
+                ind = '   ' if out["std"] == 'err' else '!! '
+                stdscr.addstr(2, 0, ind+out["s"])
                 
             # Refresh the screen
             stdscr.refresh()
@@ -453,7 +452,7 @@ def all_systems_go_thread():
 all_systems_go_thread = threading.Thread(target=all_systems_go_thread)
 all_systems_go_thread.start()
 
-# Run the application
+# Run the UI
 curses.wrapper(main)
 
 dd(systems)

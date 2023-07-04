@@ -1,3 +1,4 @@
+# for pyt container, in which runs serve.py
 flask
 flask-cors
 opencv-python
