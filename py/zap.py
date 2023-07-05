@@ -68,8 +68,13 @@ cmd_source = r'''
         nicotine
          # a python window
     # test
-       echo "yup"
-        echo "non"
+       ssh gox
+         # < redoif /no route/
+         #       virsh start gox
+         #       redoif /bridge helper: stderr=failed to create tun device: Operation not permitted/
+         #           # freshly installed something needs:
+         #           sudo chmod u+s /usr/lib/qemu/qemu-bridge-helper
+        sudo echo "non"
         sleep 1
         echo "Completo!"
        echo "yup"
