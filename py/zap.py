@@ -360,9 +360,9 @@ def all_systems_go():
             for job in jobs:
                 future_results.append(executor.submit(run_job, job))
 
-            # Process the results as they become available
-            for future in concurrent.futures.as_completed(future_results):
-                result = future.result()
+        # Process the results as they become available
+        for future in concurrent.futures.as_completed(future_results):
+            result = future.result()
 
 
 
