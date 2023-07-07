@@ -7,6 +7,7 @@ import subprocess
 import re
 import json
 import pprint
+from pathlib import Path
 def dd(data,depth=7):
     pp = pprint.PrettyPrinter(depth=depth)
     pp.pprint(data)
@@ -25,6 +26,29 @@ def dd(data,depth=7):
      that unifies all the potential messaging these commands could emit
       certainly STDERR would be top priority
       perhaps with machine learning their expected output and scanning for novelty.
+
+    caveats:
+     STDIN
+       writes (via job["give_stdin"]) are not getting there
+        if interrupted, the thread was apparently in: process.stdin.flush()
+       we want something similar to:
+        echo input | ssh gox -v 'perl test.pl'
+        which in this case fails to echo our input
+         while trying to convert the above to a one liner
+         this weird behaviour came up:
+            s@g:~$ echo that
+            that
+            s@g:~$ echo lep | perl -E "say qq{this:$_} while <>"
+            this:that
+         this is because $_ is being interpolated by the shell
+          it is the last word of the last command
+           ie what Esc-. will insert for you
+     sudo
+       password prompting must be avoided, see ^STDIN
+        by editing /etc/sudoers, and adding something like:
+         someuser   ALL=(ALL:ALL) NOPASSWD: /bin/echo "non"
+        at the end
+        
     
 '''
 
@@ -74,11 +98,14 @@ cmd_source = r'''
          #       redoif /bridge helper: stderr=failed to create tun device: Operation not permitted/
          #           # freshly installed something needs:
          #           sudo chmod u+s /usr/lib/qemu/qemu-bridge-helper
-        sudo echo "non"
-        sleep 1
+        echo rop
+        #perl test.pl
+        sudo /bin/echo "non"
+        sleep 0.11
+        echo "Several!"
         echo "Completo!"
        echo "yup"
-        sleep 3
+        sleep 2
         ll nonexists
          # 'll' is not found, exit code 127
         echo "Very nearly!"
@@ -167,6 +194,7 @@ def create_job_title(cmds):
 
         match = re.search(r'^ssh .*?(\w+)$', cmd)
         if match:
+            job["on_host"] = match.group(1)
             titles.append(match.group(1)+':')
             continue
 
@@ -296,7 +324,14 @@ for system in systems:
         ssh_around = ''
         if match:
             ssh_around = cmds.pop(0)
-        
+
+        if 0 and 'sudostdin':
+            # sudo to accept password on stdin
+            # < we should note which cmd had it,
+            #    check that cmd is currently executing via a supervisory ssh 'ps faux'
+            cmds = [cmd.replace("sudo ", "sudo -S ") for cmd in cmds]
+        job['cmds'] = cmds
+
         # we lose their individuality:
         #  each exit code
         #  each slice of stdout
@@ -328,17 +363,54 @@ def run_job(job):
     # [{std:'out',s:'hello\n',ms:123}+]
     job["output"] = []
 
-    process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    if 0:
+        if 'sudo ' in command:
+            command = "echo yarnia | "+command
+    process = subprocess.Popen(command, shell=True,
+                                stdin=subprocess.PIPE,
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE,
+                                text=True,
+                                bufsize=0)
     def readaline(ch,std):
-        for line in iter(std.readline, ""):
+        linesing = iter(std.readline, "")
+        for line in linesing:
             # < do we want the ^ + and \n$
             out = {"std":ch,"s":line.strip(),"time":time.time()}
             diag(f"[{i}] std{ch}: "+out["s"])
             job["output"].append(out)
+    
     readaline('out',process.stdout)
     readaline('err',process.stderr)
-    # < stdin
+
+    # stdin
+    def inN(N):
+        if not "wrote_stdin" in job:
+            job["wrote_stdin"] = 0
+        
+        for l in N:
+            job["wrote_stdin"] = job["wrote_stdin"] + 1
+            process.stdin.write(l + "\n")
+            print("Wrote to "+job["t"]+":     '"+l+"'")
+        # flush reduces latency and the need to \n$, but the receiver might be waiting for one?
+        process.stdin.flush()
+    job["give_stdin"] = inN
+    # < multiple sudos in a command should work
+    #   password fed only the first time
+    if 0 and "sudostdin" and 'sudo ' in command:
+        host = job["on_host"]
+        if not host:
+            raise ValueError("only know vms")
+        file_path = Path("secrets/sudo-on-"+host)
+        password = file_path.read_text()
+        if not password:
+            raise ValueError("dont know "+file_path)
+        # 
+        time.sleep(0.4)
+        inN([password])
+
     job["exit_code"] = None
+    
     def check1s():
         exit_code = process.poll()
         if exit_code is not None:
@@ -347,6 +419,8 @@ def run_job(job):
             diag(f"[{i}] finito")
             job["check1s"] = lambda: 1
     job["check1s"] = check1s
+
+
 
 def all_systems_go():
     # < figure out if any of this can be less terrifying
@@ -397,6 +471,9 @@ def draw_interface(stdscr, selected_row):
                     else:
                         # 127 etc - bad
                         stdscr.addstr(i, 44, "exit("+str(job["exit_code"])+")")
+            if "wrote_stdin" in job:
+                much = job["wrote_stdin"]
+                stdscr.addstr(i, 48, "in:"+str(much))
 
             if i == selected_row:
                 stdscr.attroff(curses.color_pair(1))
@@ -409,14 +486,14 @@ def main(stdscr):
     curses.curs_set(0)
     curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)
     stdscr.nodelay(1)
+    def isenter(key):
+        return key == curses.KEY_ENTER or key == ord('\n')
 
     # Initially selected row
     selected_row = 0
 
     # Draw the interface
     draw_interface(stdscr, selected_row)
-    def isenter(key):
-        return key == curses.KEY_ENTER or key == ord('\n')
 
     # Event loop
     while True:
