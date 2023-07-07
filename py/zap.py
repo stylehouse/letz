@@ -57,10 +57,10 @@ def dd(data,depth=7):
 #  and backslashes within the string are not treated as escape characters.
 cmd_source = r'''
     # style_dev
-       cd stylehouse
+       cd ~/stylehouse
         ./serve.pl
     # letz_dev
-       cd src
+       cd ~/src
         lsyncd -nodaemon -delay 0 -rsyncssh letz gox src/letz
        ssh -A gox
         sshfs s:/media/s/Elvis/Photo v
@@ -72,7 +72,7 @@ cmd_source = r'''
        ssh gox
         cd src/letz
         podman run -v .:/app:exec -p 8000:8000 --rm -it --name cos1 cos npm run dev -- --port 8000 --host 0.0.0.0
-       cd src/letz
+       cd ~/src/letz
         code .
     # dev_fe
        chromeium \
@@ -83,14 +83,20 @@ cmd_source = r'''
     # nico
        ssh n
         sudo mount -t 9p -o trans=virtio allmusic allmusic/
-         # input: share, is a qemu filesystem%type="mount"/source,target,readonly
-       sshfs n:Downloads/ Mail
+         # input: share, is a qemu filesystem%%type="mount"/source,target,readonly
+         #  note the readonly
+       cd ~
+        sshfs n:Downloads/ Mail
          # output: to sort
        ssh -X n
         cd Downloads/
          # it sometimes drops files where it cd?
         nicotine
          # a python window
+       upnpc -r 2234 TCP
+        ssh -L 0.0.0.0:2234:n:2234 n
+         # let peer in
+
     # test
        ssh gox
          # < redoif /no route/
@@ -311,7 +317,8 @@ for system in systems:
 
 
 # try one only
-systems = [system for system in systems if system['t'] == 'test']
+systems = [system for system in systems if not system['t'] == 'nico']
+systems = [system for system in systems if not system['t'] == 'test']
 
 # Create a ThreadPoolExecutor with the maximum number of workers
 job_i = 0
