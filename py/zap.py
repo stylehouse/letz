@@ -512,10 +512,12 @@ def main(stdscr):
 
             stdscr.clear()
             stdscr.addstr(0, 0, "job ["+str(job["i"])+"] "+job["t"])
+            outi = 0
             for out in outs:
                 # < background colour stderrs?
-                ind = '   ' if out["std"] == 'err' else '!! '
-                stdscr.addstr(2, 0, ind+out["s"])
+                ind = '   ' if out["std"] == 'out' else '!! '
+                stdscr.addstr(2+outi, 0, ind+out["s"])
+                outi += 1
                 
             # Refresh the screen
             stdscr.refresh()
