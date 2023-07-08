@@ -85,6 +85,20 @@ def view_systems(stdscr, systems, selected_row):
 
 # viewing output of a job
 def view_job(stdscr,job):
+
+    # Wait for key press to continue, with a non-blocking getch()
+    oft = freq(2.3)
+    while True:
+        # draw new output  every 0.5s
+        if oft():
+            draw_job(stdscr,job)
+        # respond to enter to leave this loop
+        key = stdscr.getch()
+        if isenter(key):
+            break
+        time.sleep(0.03)
+
+def draw_job(stdscr,job):
     outs = job["output"]
 
     stdscr.clear()
@@ -101,13 +115,18 @@ def view_job(stdscr,job):
         
     # Refresh the screen
     stdscr.refresh()
-
-    # Wait for key press to continue, with a non-blocking getch()
-    while True:
-        key = stdscr.getch()
-        if isenter(key):
-            break
-        time.sleep(0.03)
+    
 
 def isenter(key):
     return key == curses.KEY_ENTER or key == ord('\n')
+
+# for a loop full of if branches going off at different intervals
+def freq(hz):
+    hence = 0
+    period = 1/hz
+    def when():
+        nonlocal hence
+        if time.time() - hence > period:
+            hence = time.time()
+            return 1
+    return when

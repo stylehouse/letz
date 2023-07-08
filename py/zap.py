@@ -52,9 +52,25 @@ def dd(data,depth=7):
         by editing /etc/sudoers, and adding something like:
          someuser   ALL=(ALL:ALL) NOPASSWD: /bin/echo "non"
         at the end
+       it might work for you!
+        scars left in, see sudostdin
         
     
 '''
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # By using the r prefix before the opening quotes ('''),
 #  the string is treated as a raw string
@@ -111,8 +127,23 @@ cmd_source = r'''
         echo rop
         #perl test.pl
         sudo /bin/echo "non"
-        sleep 0.11
+        sleep 1
         echo "Several!"
+        sleep 1
+        echo "Several!"
+        sleep 1
+        echo "Several!"
+        sleep 1
+        echo "Several!"
+        sleep 1
+        echo "Several!"
+        sleep 1
+        echo "Several!"
+        sleep 1
+        echo "Several!"
+        sleep 1
+        echo "Several!"
+        sleep 1
         echo "Completo!"
        echo "yup"
         sleep 2
@@ -121,6 +152,24 @@ cmd_source = r'''
         echo "Very nearly!"
         exit 4
 '''
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 systems = zap_parser.parse_cmd_source(cmd_source)
@@ -132,75 +181,6 @@ for system in systems:
         job['t'] = zap_parser.create_job_title(job,cmds)
 
 
-
-'''
-    dd(systems)
-    is:
-        [{'jobs': [{'cmds': ['cd stylehouse', './serve.pl'], 't': 'serve.pl'}],
-        't': 'style_dev'},
-        {'jobs': [{'cmds': ['ssh -A gox', 'sshfs s:/media/s/Elvis/Photo v'],
-                    't': 'gox: sshfs s:...Photo v'},
-                {'cmds': ['ssh gox',
-                            'cd src/letz',
-                            'podman run -v ~/v:/v:ro -v .:/app:exec -p 5000:5000 --rm '
-                            "-it --name pyt py bash -c './yt.sh'"],
-                    't': 'gox: py->pyt bash'},
-                {'cmds': ['ssh gox',
-                            'cd src/letz',
-                            'podman run -v .:/app:exec -p 8000:8000 --rm -it --name '
-                            'cos1 cos npm run dev -- --port 8000 --host 0.0.0.0'],
-                    't': 'gox: cos->cos1 npm run dev'},
-                {'cmds': ['cd src/letz', 'code .'], 't': 'code .'}],
-        't': 'letz_dev'},
-        {'jobs': [{'cmds': ['chromeium http://editong.localhost:1812/ '
-                            'http://192.168.122.92:5000/dir/ '
-                            'http://192.168.122.92:8000/'],
-                    't': 'chromeium'}],
-        't': 'dev_fe'},
-        {'jobs': [{'cmds': ['ssh n',
-                            'sudo mount -t 9p -o trans=virtio allmusic allmusic/'],
-                    't': 'n: mount allmusic/'},
-                {'cmds': ['sshfs n:Downloads/ Mail'],
-                    't': 'sshfs n:Downloads/ Mail'},
-                {'cmds': ['ssh -X n', 'cd Downloads/', 'nicotine'],
-                    't': 'n: nicotine'}],
-        't': 'nico'}]
-'''
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # try one only
 only = sys.argv[1]
 if only:
@@ -209,7 +189,6 @@ else:
     systems = [system for system in systems if not system['t'] == 'nico']
     systems = [system for system in systems if not system['t'] == 'test']
 
-# Create a ThreadPoolExecutor with the maximum number of workers
 job_i = 0
 i_job = {}
 for system in systems:
@@ -242,6 +221,53 @@ for system in systems:
         i_job[job_i] = job
         job_i = job_i + 1
 
+
+# run commands without blocking the UI
+def all_systems_go_thread():
+    all_systems_go()
+all_systems_go_thread = threading.Thread(target=all_systems_go_thread)
+all_systems_go_thread.start()
+
+# Run the UI
+zap_ui.begin(i_job,job_i,systems)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def all_systems_go():
+    # < figure out if any of this can be less terrifying
+    # max_workers so that all jobs can stay happening
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        # Submit each command to the executor
+        future_results = []
+
+        for system in systems:
+            jobs = system['jobs']
+            for job in jobs:
+                future_results.append(executor.submit(run_job, job))
+
+        # Process the results as they become available
+        for future in concurrent.futures.as_completed(future_results):
+            result = future.result()
+
 def run_job(job):
     i = job["i"]
     command = job["command"]
@@ -252,9 +278,6 @@ def run_job(job):
     # [{std:'out',s:'hello\n',ms:123}+]
     job["output"] = []
 
-    if 0:
-        if 'sudo ' in command:
-            command = "echo yarnia | "+command
     process = subprocess.Popen(command, shell=True,
                                 stdin=subprocess.PIPE,
                                 stdout=subprocess.PIPE,
@@ -311,32 +334,8 @@ def run_job(job):
 
 
 
-def all_systems_go():
-    # < figure out if any of this can be less terrifying
-    # max_workers so that all jobs can stay happening
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        # Submit each command to the executor
-        future_results = []
-
-        for system in systems:
-            jobs = system['jobs']
-            for job in jobs:
-                future_results.append(executor.submit(run_job, job))
-
-        # Process the results as they become available
-        for future in concurrent.futures.as_completed(future_results):
-            result = future.result()
 
 
 
-
-# run commands without blocking the UI
-def all_systems_go_thread():
-    all_systems_go()
-all_systems_go_thread = threading.Thread(target=all_systems_go_thread)
-all_systems_go_thread.start()
-
-# Run the UI
-zap_ui.begin(i_job,job_i,systems)
 
 dd(systems)
