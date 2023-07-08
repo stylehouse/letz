@@ -36,16 +36,7 @@ def main(stdscr,i_job,job_i,systems):
         elif isenter(key):
             # look into selected command
             job = i_job[selected_row]
-            if not 'output' in job:
-                stdscr.clear()
-                stdscr.addstr(0, 0, "job!output")
-                stdscr.refresh()
-                time.sleep(0.5)
-                curses.endwin()
-                dd([job])
-                exit(0)
-            else:
-                view_job(stdscr,job)
+            view_job(stdscr,job)
 
         # Redraw the interface
         view_systems(stdscr, systems, selected_row)
@@ -63,6 +54,11 @@ def dotdotdotat(s,n):
         wrapped_text[0] += '...'
     return wrapped_text[0]
     
+
+
+
+
+
 def view_systems(stdscr, systems, selected_row):
     # Clear the screen
     stdscr.clear()
@@ -79,43 +75,53 @@ def view_systems(stdscr, systems, selected_row):
             if i == selected_row:
                 stdscr.attron(curses.color_pair(1))
             
-            # title
-            stdscr.addstr(i, 0, "["+str(job["i"])+"] "+dotdotdotat(job["t"], cols - 20))
-
-            col_status = cols - 15
-            col_in = cols - 10
-            # status
-            if "check1s" in job:
-                check = job["check1s"]
-                check()
-                if job["exit_code"] is not None:
-                    if not job["exit_code"]:
-                        # 0 - good
-                        stdscr.addstr(i, col_status, "done")
-                    else:
-                        # 127 etc - bad
-                        stdscr.addstr(i, col_status, "exit("+str(job["exit_code"])+")")
-            if "wrote_stdin" in job:
-                much = job["wrote_stdin"]
-                stdscr.addstr(i, col_in, "in:"+str(much))
-            if not 'output' in job:
-                # won't have stdin before starting command
-                stdscr.addstr(i, col_in, "!yet?")
+            draw_job_label(stdscr,job,i)
             if i == selected_row:
                 stdscr.attroff(curses.color_pair(1))
     
     # Refresh the screen
     stdscr.refresh()
 
+def draw_job_label(stdscr,job,i):
+    rows, cols = stdscr.getmaxyx()
+
+    # title
+    stdscr.addstr(i, 0, "["+str(job["i"])+"] "+dotdotdotat(job["t"], cols - 23))
+
+    col_status = cols - 15
+    col_in = cols - 10
+    # status
+    if "check1s" in job:
+        check = job["check1s"]
+        check()
+        if job["exit_code"] is not None:
+            if not job["exit_code"]:
+                # 0 - good
+                stdscr.addstr(i, col_status, "done")
+            else:
+                # 127 etc - bad
+                stdscr.addstr(i, col_status, "exit("+str(job["exit_code"])+")")
+    if "wrote_stdin" in job:
+        much = job["wrote_stdin"]
+        stdscr.addstr(i, col_in, "in:"+str(much))
+    if not 'output' in job:
+        # won't have stdin before starting command
+        stdscr.addstr(i, col_in, "!yet?")
+
+
+
+
+
 # viewing output of a job
 def view_job(stdscr,job):
-
     # Wait for key press to continue, with a non-blocking getch()
     oft = freq(2.3)
     while True:
         # draw new output  every 0.5s
         if oft():
+            stdscr.clear()
             draw_job(stdscr,job)
+            stdscr.refresh()
         # respond to enter to leave this loop
         key = stdscr.getch()
         if isenter(key):
@@ -126,13 +132,11 @@ def draw_job(stdscr,job):
     rows, cols = stdscr.getmaxyx()
     outs = job["output"]
 
-    stdscr.clear()
-    stdscr.addstr(0, 0, "job ["+str(job["i"])+"] "+dotdotdotat(job["t"],cols-20))
+    outi = 0
+    draw_job_label(stdscr,job,outi)
     # then a blank line:
     outi = 2
     draw_output(stdscr,outs,outi)
-    # Refresh the screen
-    stdscr.refresh()
 
 def draw_output(stdscr,outs,outi):
     rows, cols = stdscr.getmaxyx()
@@ -158,6 +162,16 @@ def draw_output(stdscr,outs,outi):
     
     for line_num, line in enumerate(lines):
         stdscr.addstr(outi + line_num, 0, ind + line)
+
+
+
+
+
+
+
+
+
+
 
 
 def isenter(key):
