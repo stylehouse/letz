@@ -128,7 +128,16 @@ def draw_job(stdscr,job):
 
     stdscr.clear()
     stdscr.addstr(0, 0, "job ["+str(job["i"])+"] "+dotdotdotat(job["t"],cols-20))
+    # then a blank line:
     outi = 2
+    draw_output(stdscr,outs,outi)
+    # Refresh the screen
+    stdscr.refresh()
+
+def draw_output(stdscr,outs,outi):
+    rows, cols = stdscr.getmaxyx()
+
+    lines = []
     for out in outs:
         # < background colour stderrs?
         ind = '   ' if out["std"] == 'out' else '!! '
@@ -137,14 +146,19 @@ def draw_job(stdscr,job):
             wrapped_text = textwrap.wrap(out["s"], cols - len(ind))
             # Add the indented and wrapped text to the screen
             for line_num, line in enumerate(wrapped_text):
-                stdscr.addstr(outi + line_num, 0, ind + line)
+                lines.append(ind+line)
         except curses.error:
             pass
-        outi += len(wrapped_text)
-        
-    # Refresh the screen
-    stdscr.refresh()
     
+    space = rows - outi
+    if len(lines) > space:
+        size = space-1
+        hiding = len(lines) - size
+        lines = ["... x"+str(hiding)] + lines[-size:]
+    
+    for line_num, line in enumerate(lines):
+        stdscr.addstr(outi + line_num, 0, ind + line)
+
 
 def isenter(key):
     return key == curses.KEY_ENTER or key == ord('\n')
