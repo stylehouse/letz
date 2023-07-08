@@ -69,7 +69,7 @@ def wordynoiseblob(s):
     enough = 0.76
     got = len(re.findall(r'\w', s)) / len(s)
     return False if got < enough else True
-def create_job_title(cmds):
+def create_job_title(job,cmds):
     titles = []
     for cmd in cmds:
         match = re.search(r'^sudo (.+)$', cmd)

@@ -128,7 +128,7 @@ for system in systems:
     jobs = system['jobs']
     for job in jobs:
         cmds = job['cmds']
-        job['t'] = zap_parser.create_job_title(cmds)
+        job['t'] = zap_parser.create_job_title(job,cmds)
 
 
 
