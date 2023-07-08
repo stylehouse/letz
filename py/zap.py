@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import curses
 import time
 import concurrent.futures
 import threading
@@ -11,6 +10,8 @@ import pprint
 from pathlib import Path
 
 import zap_parser
+import zap_ui
+
 def dd(data,depth=7):
     pp = pprint.PrettyPrinter(depth=depth)
     pp.pprint(data)
@@ -47,7 +48,7 @@ def dd(data,depth=7):
           it is the last word of the last command
            ie what Esc-. will insert for you
      sudo
-       password prompting must be avoided, see ^STDIN
+       password prompting must be avoided, see STDIN
         by editing /etc/sudoers, and adding something like:
          someuser   ALL=(ALL:ALL) NOPASSWD: /bin/echo "non"
         at the end
@@ -241,13 +242,6 @@ for system in systems:
         i_job[job_i] = job
         job_i = job_i + 1
 
-
-
-
-def delta():
-    start_time = time.time()
-    return lambda: round((time.time() - start_time) * 1000)
-
 def run_job(job):
     i = job["i"]
     command = job["command"]
@@ -336,104 +330,6 @@ def all_systems_go():
 
 
 
-def draw_interface(stdscr, selected_row):
-    # Clear the screen
-    stdscr.clear()
-
-    # Define the dimensions of the interface
-    rows, cols = stdscr.getmaxyx()
-
-    # Draw the list of jobs
-    for system in systems:
-        jobs = system['jobs']
-        for job in jobs:
-            i = job["i"]
-            # Determine the formatting of the command based on selection
-            if i == selected_row:
-                stdscr.attron(curses.color_pair(1))
-            
-            # title
-            stdscr.addstr(i, 0, "["+str(job["i"])+"] "+job["t"])
-
-            # status
-            if "check1s" in job:
-                check = job["check1s"]
-                check()
-                if job["exit_code"] is not None:
-                    if not job["exit_code"]:
-                        # 0 - good
-                        stdscr.addstr(i, 44, "done")
-                    else:
-                        # 127 etc - bad
-                        stdscr.addstr(i, 44, "exit("+str(job["exit_code"])+")")
-            if "wrote_stdin" in job:
-                much = job["wrote_stdin"]
-                stdscr.addstr(i, 48, "in:"+str(much))
-
-            if i == selected_row:
-                stdscr.attroff(curses.color_pair(1))
-    
-    # Refresh the screen
-    stdscr.refresh()
-
-def main(stdscr):
-    # Initialize curses settings
-    curses.curs_set(0)
-    curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)
-    stdscr.nodelay(1)
-    def isenter(key):
-        return key == curses.KEY_ENTER or key == ord('\n')
-
-    # Initially selected row
-    selected_row = 0
-
-    # Draw the interface
-    draw_interface(stdscr, selected_row)
-
-    # Event loop
-    while True:
-        key = stdscr.getch()
-
-        # Handle key events
-        if key == curses.KEY_UP and selected_row > 0:
-            selected_row -= 1
-        elif key == curses.KEY_DOWN and selected_row < job_i - 1:
-            selected_row += 1
-        elif isenter(key):
-            # look into selected command
-            job = i_job[selected_row]
-
-            outs = job["output"]
-
-            stdscr.clear()
-            stdscr.addstr(0, 0, "job ["+str(job["i"])+"] "+job["t"])
-            outi = 0
-            for out in outs:
-                # < background colour stderrs?
-                ind = '   ' if out["std"] == 'out' else '!! '
-                try:
-                    stdscr.addstr(2+outi, 0, ind+out["s"])
-                except curses.error:
-                    pass
-                outi += 1
-                
-            # Refresh the screen
-            stdscr.refresh()
-
-            # Wait for key press to continue, with a non-blocking getch()
-            while True:
-                key = stdscr.getch()
-                if isenter(key):
-                    break
-                time.sleep(0.03)
-
-        # Redraw the interface
-        draw_interface(stdscr, selected_row)
-
-        # Refresh the screen
-        stdscr.refresh()
-        time.sleep(0.1)
-
 # run commands without blocking the UI
 def all_systems_go_thread():
     all_systems_go()
@@ -441,6 +337,6 @@ all_systems_go_thread = threading.Thread(target=all_systems_go_thread)
 all_systems_go_thread.start()
 
 # Run the UI
-curses.wrapper(main)
+zap_ui.begin(i_job,job_i,systems)
 
 dd(systems)
