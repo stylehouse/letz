@@ -3,6 +3,7 @@ import curses
 import time
 import pprint
 import textwrap
+import re
 def dd(data,depth=7):
     pp = pprint.PrettyPrinter(depth=depth)
     pp.pprint(data)
@@ -15,6 +16,7 @@ def main(stdscr,i_job,job_i,systems):
     # Initialize curses settings
     curses.curs_set(0)
     curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)
+    curses.start_color()
     # for non-blocking stdscr.getch() (loop must sleep)
     stdscr.nodelay(1)
 
@@ -148,7 +150,6 @@ def draw_output(stdscr,outs,outi):
         try:
             # Wrap the output text based on the available columns
             wrapped_text = textwrap.wrap(out["s"], cols - len(ind))
-            # Add the indented and wrapped text to the screen
             for line_num, line in enumerate(wrapped_text):
                 lines.append(ind+line)
         except curses.error:
@@ -160,9 +161,21 @@ def draw_output(stdscr,outs,outi):
         hiding = len(lines) - size
         lines = ["... x"+str(hiding)] + lines[-size:]
     
-    for line_num, line in enumerate(lines):
-        stdscr.addstr(outi + line_num, 0, ind + line)
+    
 
+    for line_num, line in enumerate(lines):
+        color_split = line.split('\033')
+        if len(color_split) > 1:
+            line = "color! "+line
+        stdscr.addstr(outi + line_num, 0, unescape_ansiicolour(line))
+
+# < lift from https://github.com/spellr/culour/blob/master/culour/culour.py
+#   chatgpt wouldnt
+def unescape_ansiicolour(s):
+    def replace_match(match):
+        color_code = match.group(1)
+        return "lets \\x1b[{}m".format(color_code)
+    return re.sub(r'\[\[(\w+?)m', replace_match, s)
 
 
 

@@ -118,6 +118,8 @@ cmd_source = r'''
          # let peer in
 
     # test
+       cd ~/stylehouse
+        ./serve.pl
        ssh gox
          # < redoif /no route/
          #       virsh start gox
@@ -182,7 +184,7 @@ for system in systems:
 
 
 # try one only
-only = sys.argv[1]
+only = sys.argv[1] if len(sys.argv)>1 else None
 if only:
     systems = [system for system in systems if system['t'] == only]
 else:
