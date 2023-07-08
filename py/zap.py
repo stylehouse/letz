@@ -222,15 +222,6 @@ for system in systems:
         job_i = job_i + 1
 
 
-# run commands without blocking the UI
-def all_systems_go_thread():
-    all_systems_go()
-all_systems_go_thread = threading.Thread(target=all_systems_go_thread)
-all_systems_go_thread.start()
-
-# Run the UI
-zap_ui.begin(i_job,job_i,systems)
-
 
 
 
@@ -335,6 +326,15 @@ def run_job(job):
 
 
 
+
+# run commands without blocking the UI
+def all_systems_go_thread():
+    all_systems_go()
+all_systems_go_thread = threading.Thread(target=all_systems_go_thread)
+all_systems_go_thread.start()
+
+# Run the UI
+zap_ui.begin(i_job,job_i,systems)
 
 
 
