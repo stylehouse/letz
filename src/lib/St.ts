@@ -30,6 +30,7 @@ export class TheC {
 }
 export class TheA extends TheC {}
 
+
 // make new C, specifying innards
 export function C_(t: string|Array<any>|C, y?:number|gc, c?:gc, sc?:gc):C {
     if (isar(t)) {
@@ -302,10 +303,8 @@ export function pit (D,t,y,c,sc) {
     export function St_writers (A1) {
         let A11 = A_(A1,'Earth')
     
-        'one thing'
-        'thince blatant'
         // create some Cs for authors
-        let Joyce = C_('blatantJoyce',{},{}, {style: 'modernist', theatrics: ['experimental', 'stream of consciousness']})
+        let Joyce = C_('Joyce',{},{}, {style: 'modernist', theatrics: ['experimental', 'stream of consciousness']})
         let Faulkner = C_('Faulkner',{},{}, {style: 'southern gothic', theatrics: ['tragic', 'haunting']})
         let Woolf = C_('Woolf',{},{}, {style: 'feminist', theatrics: ['intimate', 'psychological']})
         let Ginsberg = C_('Ginsberg',{},{}, {style: 'beat', theatrics: ['rebellious', 'spontaneous']})

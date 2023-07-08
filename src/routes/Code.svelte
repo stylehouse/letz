@@ -7,14 +7,9 @@
     import Lezing from './Lezing.svelte'
     import CompileLite from './CompileLite.svelte'
     
-    let b = ':3blatanto'
+    let b = ':3'
     # otherlang
-
-    console.log("3blatanto Code")
-
-
-
-    
+    console.log("<Code/>")
 
 
 

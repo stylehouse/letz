@@ -75,7 +75,7 @@ cmd_source = r'''
        cd ~/src/letz
         code .
     # dev_fe
-       chromeium \
+       chromium \
         http://editong.localhost:1812/ \
         http://192.168.122.92:5000/dir/ \
         http://192.168.122.92:8000/
@@ -523,7 +523,10 @@ def main(stdscr):
             for out in outs:
                 # < background colour stderrs?
                 ind = '   ' if out["std"] == 'out' else '!! '
-                stdscr.addstr(2+outi, 0, ind+out["s"])
+                try:
+                    stdscr.addstr(2+outi, 0, ind+out["s"])
+                except curses.error:
+                    pass
                 outi += 1
                 
             # Refresh the screen
