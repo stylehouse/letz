@@ -130,7 +130,7 @@ cmd_source = r'''
         sleep 1
         echo "Several!"
         sleep 1
-        echo "Several!"
+        echo "Several loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooongnesses!"
         sleep 1
         echo "Several!"
         sleep 1
