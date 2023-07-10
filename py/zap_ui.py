@@ -3,7 +3,6 @@ import curses
 import time
 import pprint
 import textwrap
-import culour
 import re
 import subprocess
 import threading
@@ -172,63 +171,6 @@ def less_job(stdscr,job):
     stdscr = curses.initscr()
     # Return stdscr back to the main loop (will view_systems())
     return stdscr
-
-if 'ansicolours' in 'curses':
-    # viewing output of a job
-    def view_job(stdscr,job):
-        # Wait for key press to continue, with a non-blocking getch()
-        oft = freq(2.3)
-        while True:
-            # draw new output  every 0.5s
-            if oft():
-                stdscr.clear()
-                draw_job(stdscr,job)
-                stdscr.refresh()
-            # respond to enter to leave this loop
-            key = stdscr.getch()
-            if isenter(key):
-                break
-            time.sleep(0.03)
-
-    def draw_job(stdscr,job):
-        rows, cols = stdscr.getmaxyx()
-        outs = job["output"]
-
-        outi = 0
-        draw_job_label(stdscr,job,outi)
-        # then a blank line:
-        outi = 2
-        draw_output(stdscr,outs,outi)
-
-    def draw_output(stdscr,outs,outi):
-        rows, cols = stdscr.getmaxyx()
-
-        lines = []
-        for out in outs:
-            # < background colour stderrs?
-            ind = '   ' if out["std"] == 'out' else '!! '
-            try:
-                # Wrap the output text based on the available columns
-                wrapped_text = textwrap.wrap(out["s"], cols - len(ind))
-                for line_num, line in enumerate(wrapped_text):
-                    lines.append(ind+line)
-            except curses.error:
-                pass
-        
-        space = rows - outi
-        if len(lines) > space:
-            size = space-1
-            hiding = len(lines) - size
-            lines = ["... x"+str(hiding)] + lines[-size:]
-        
-        
-
-        for line_num, line in enumerate(lines):
-            #culour.addstr(stdscr, outi + line_num, 0, line)
-            #line = subprocess.check_output("xxd -", input=line, text=True, shell=True)
-            
-            stdscr.addstr(outi + line_num, 0, line)
-
 
 
 
