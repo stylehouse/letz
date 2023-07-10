@@ -274,7 +274,7 @@ def run_job(job):
     # [{std:'out',s:'hello\n',ms:123}+]
     job["output"] = []
 
-    process = subprocess.Popen(command, shell=True,
+    process = subprocess.Popen(['py/zap_run.pl',command], shell=False,
                                 stdin=subprocess.PIPE,
                                 stdout=subprocess.PIPE,
                                 stderr=subprocess.PIPE,

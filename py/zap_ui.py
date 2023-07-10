@@ -163,12 +163,11 @@ def less_job(stdscr,job):
     less_process.communicate()  # Wait for the less process to complete
     terminatables.remove(terminator)
 
+    signal.signal(signal.SIGINT, signal.SIG_DFL)
 
     # Signal the thread to finish.
     event.set()
     
-    time.sleep(0.3)
-
     # Initialize curses again.
     stdscr = curses.initscr()
     # Return stdscr back to the main loop (will view_systems())
