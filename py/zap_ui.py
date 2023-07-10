@@ -5,6 +5,10 @@ import pprint
 import textwrap
 import culour
 import re
+import subprocess
+import threading
+import os
+import tempfile
 def dd(data,depth=7):
     pp = pprint.PrettyPrinter(depth=depth)
     pp.pprint(data)
@@ -17,7 +21,6 @@ def main(stdscr,i_job,job_i,systems):
     # Initialize curses settings
     curses.curs_set(0)
     curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)
-    curses.start_color()
     # for non-blocking stdscr.getch() (loop must sleep)
     stdscr.nodelay(1)
 
@@ -39,7 +42,9 @@ def main(stdscr,i_job,job_i,systems):
         elif isenter(key):
             # look into selected command
             job = i_job[selected_row]
-            view_job(stdscr,job)
+            stdscr = less_job(stdscr, job)
+            # < see ansiicolours
+            #view_job(stdscr,job)
 
         # Redraw the interface
         view_systems(stdscr, systems, selected_row)
@@ -74,14 +79,16 @@ def view_systems(stdscr, systems, selected_row):
         jobs = system['jobs']
         for job in jobs:
             i = job["i"]
-            # Determine the formatting of the command based on selection
+            # hilight selection
             if i == selected_row:
                 stdscr.attron(curses.color_pair(1))
             
             draw_job_label(stdscr,job,i)
             if i == selected_row:
+                # turn off again
                 stdscr.attroff(curses.color_pair(1))
     
+    stdscr.addstr(rows-1, 0, "sel:"+str(selected_row))
     # Refresh the screen
     stdscr.refresh()
 
@@ -114,61 +121,91 @@ def draw_job_label(stdscr,job,i):
 
 
 
-
-# viewing output of a job
-def view_job(stdscr,job):
-    # Wait for key press to continue, with a non-blocking getch()
-    oft = freq(2.3)
-    while True:
-        # draw new output  every 0.5s
-        if oft():
-            stdscr.clear()
-            draw_job(stdscr,job)
-            stdscr.refresh()
-        # respond to enter to leave this loop
-        key = stdscr.getch()
-        if isenter(key):
-            break
-        time.sleep(0.03)
-
-def draw_job(stdscr,job):
-    rows, cols = stdscr.getmaxyx()
-    outs = job["output"]
-
-    outi = 0
-    draw_job_label(stdscr,job,outi)
-    # then a blank line:
-    outi = 2
-    draw_output(stdscr,outs,outi)
-
-def draw_output(stdscr,outs,outi):
-    rows, cols = stdscr.getmaxyx()
-
-    lines = []
-    for out in outs:
-        # < background colour stderrs?
-        ind = '   ' if out["std"] == 'out' else '!! '
-        try:
-            # Wrap the output text based on the available columns
-            wrapped_text = textwrap.wrap(out["s"], cols - len(ind))
-            for line_num, line in enumerate(wrapped_text):
-                lines.append(ind+line)
-        except curses.error:
-            pass
-    
-    space = rows - outi
-    if len(lines) > space:
-        size = space-1
-        hiding = len(lines) - size
-        lines = ["... x"+str(hiding)] + lines[-size:]
-    
-    
-
-    for line_num, line in enumerate(lines):
-        #culour.addstr(stdscr, outi + line_num, 0, line)
-        #line = subprocess.check_output("xxd -", input=line, text=True, shell=True)
+def less_job(stdscr,job):
+    with tempfile.NamedTemporaryFile() as tmp:
+        # fork to write job.output stream for less to read
+        def write_thread(event):
+            for out in job["output"]:
+                # < background colour stderrs?
+                ind = '   ' if out["std"] == 'out' else '!! '
+                line = ind+out["s"]+"\n"
+                tmp.write(line.encode("utf-8"))
+            event.set()
+        event = threading.Event()
+        write_thread = threading.Thread(target=write_thread, args=[event])
+        write_thread.start()
         
-        stdscr.addstr(outi + line_num, 0, line)
+        # End curses.
+        curses.endwin()
+
+        # Run `less` with the job output.
+        os.system("less -R +F {}".format(tmp.name))
+
+        # Signal the thread to finish.
+        event.set()
+        # Wait for the thread to finish.
+        write_thread.join()
+        
+        # Initialize curses again.
+        stdscr = curses.initscr()
+        # Return stdscr back to the main loop (will view_systems())
+        return stdscr
+
+if 'ansicolours' in 'curses':
+    # viewing output of a job
+    def view_job(stdscr,job):
+        # Wait for key press to continue, with a non-blocking getch()
+        oft = freq(2.3)
+        while True:
+            # draw new output  every 0.5s
+            if oft():
+                stdscr.clear()
+                draw_job(stdscr,job)
+                stdscr.refresh()
+            # respond to enter to leave this loop
+            key = stdscr.getch()
+            if isenter(key):
+                break
+            time.sleep(0.03)
+
+    def draw_job(stdscr,job):
+        rows, cols = stdscr.getmaxyx()
+        outs = job["output"]
+
+        outi = 0
+        draw_job_label(stdscr,job,outi)
+        # then a blank line:
+        outi = 2
+        draw_output(stdscr,outs,outi)
+
+    def draw_output(stdscr,outs,outi):
+        rows, cols = stdscr.getmaxyx()
+
+        lines = []
+        for out in outs:
+            # < background colour stderrs?
+            ind = '   ' if out["std"] == 'out' else '!! '
+            try:
+                # Wrap the output text based on the available columns
+                wrapped_text = textwrap.wrap(out["s"], cols - len(ind))
+                for line_num, line in enumerate(wrapped_text):
+                    lines.append(ind+line)
+            except curses.error:
+                pass
+        
+        space = rows - outi
+        if len(lines) > space:
+            size = space-1
+            hiding = len(lines) - size
+            lines = ["... x"+str(hiding)] + lines[-size:]
+        
+        
+
+        for line_num, line in enumerate(lines):
+            #culour.addstr(stdscr, outi + line_num, 0, line)
+            #line = subprocess.check_output("xxd -", input=line, text=True, shell=True)
+            
+            stdscr.addstr(outi + line_num, 0, line)
 
 
 

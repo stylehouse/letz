@@ -32,6 +32,9 @@ def dd(data,depth=7):
       perhaps with machine learning their expected output and scanning for novelty.
 
     caveats:
+     ansiicolours
+       are via `less -R`
+       curses strings dont let them happen
      STDIN
        writes (via job["give_stdin"]) are not getting there
         if interrupted, the thread was apparently in: process.stdin.flush()
@@ -190,6 +193,7 @@ if only:
 else:
     systems = [system for system in systems if not system['t'] == 'nico']
     systems = [system for system in systems if not system['t'] == 'test']
+    systems = [system for system in systems if not system['t'] == 'dev_fe']
 
 job_i = 0
 i_job = {}
@@ -312,7 +316,7 @@ def run_job(job):
         password = file_path.read_text()
         if not password:
             raise ValueError("dont know "+file_path)
-        # 
+        #
         time.sleep(0.4)
         inN([password])
 
