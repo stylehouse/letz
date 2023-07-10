@@ -3,6 +3,7 @@ import curses
 import time
 import pprint
 import textwrap
+import culour
 import re
 def dd(data,depth=7):
     pp = pprint.PrettyPrinter(depth=depth)
@@ -164,24 +165,10 @@ def draw_output(stdscr,outs,outi):
     
 
     for line_num, line in enumerate(lines):
-        color_split = line.split('\033')
-        if len(color_split) > 1:
-            line = "color! "+line
-        stdscr.addstr(outi + line_num, 0, unescape_ansiicolour(line))
-
-# < lift from https://github.com/spellr/culour/blob/master/culour/culour.py
-#   chatgpt wouldnt
-def unescape_ansiicolour(s):
-    def replace_match(match):
-        color_code = match.group(1)
-        return "lets \\x1b[{}m".format(color_code)
-    return re.sub(r'\[\[(\w+?)m', replace_match, s)
-
-
-
-
-
-
+        #culour.addstr(stdscr, outi + line_num, 0, line)
+        #line = subprocess.check_output("xxd -", input=line, text=True, shell=True)
+        
+        stdscr.addstr(outi + line_num, 0, line)
 
 
 

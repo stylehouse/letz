@@ -281,6 +281,8 @@ def run_job(job):
         linesing = iter(std.readline, "")
         for line in linesing:
             # < do we want the ^ + and \n$
+            # seem to do \n before turning off TerminalColors, just remove it
+            line = re.sub("\n","",line)
             out = {"std":ch,"s":line.strip(),"time":time.time()}
             diag(f"[{i}] std{ch}: "+out["s"])
             job["output"].append(out)
