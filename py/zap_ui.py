@@ -9,6 +9,7 @@ import subprocess
 import threading
 import os
 import tempfile
+import signal
 def dd(data,depth=7):
     pp = pprint.PrettyPrinter(depth=depth)
     pp.pprint(data)
@@ -118,38 +119,60 @@ def draw_job_label(stdscr,job,i):
         # won't have stdin before starting command
         stdscr.addstr(i, col_in, "!yet?")
 
-
-
+terminatables = []
+# ignore Ctrl+C intended for the `less` we use for job output
+#  seems to cause all our jobs to exit(-2)
+# kill it with Ctrl+| (pipe)
+def sigint_handler(signal, frame):
+    # Ignore the Ctrl+C signal here to prevent it from terminating the program
+    for ism in terminatables:
+        ism()
+    pass
 
 def less_job(stdscr,job):
-    with tempfile.NamedTemporaryFile() as tmp:
-        # fork to write job.output stream for less to read
-        def write_thread(event):
-            for out in job["output"]:
-                # < background colour stderrs?
-                ind = '   ' if out["std"] == 'out' else '!! '
-                line = ind+out["s"]+"\n"
-                tmp.write(line.encode("utf-8"))
-            event.set()
-        event = threading.Event()
-        write_thread = threading.Thread(target=write_thread, args=[event])
-        write_thread.start()
-        
-        # End curses.
-        curses.endwin()
+    # End curses.
+    curses.endwin()
+    tmp = tempfile.NamedTemporaryFile()
+    event = threading.Event()
+    # fork to write job.output stream for less to read
+    index = 0  # Keep track of the last processed index in job.output
+    def write_thread(tmp,event):
+        index = 0  # Keep track of the last processed index in job.output
+        while not event.is_set():
+            if len(job["output"]) > index:
+                for out in job["output"][index:]:
+                    ind = '   ' if out["std"] == 'out' else '!! '
+                    line = ind + out["s"] + "\n"
+                    tmp.write(line.encode("utf-8"))
+                tmp.flush()  # Flush the buffer to ensure data is written to the file
+                index = len(job["output"])
+            time.sleep(0.1)  # Sleep for a short duration before checking for new items
+    write_thread = threading.Thread(target=write_thread, args=[tmp,event])
+    write_thread.start()
 
-        # Run `less` with the job output.
-        os.system("less -R +F {}".format(tmp.name))
 
-        # Signal the thread to finish.
-        event.set()
-        # Wait for the thread to finish.
-        write_thread.join()
-        
-        # Initialize curses again.
-        stdscr = curses.initscr()
-        # Return stdscr back to the main loop (will view_systems())
-        return stdscr
+
+    # Set the custom signal handler for SIGINT (Ctrl+C)
+    signal.signal(signal.SIGINT, sigint_handler)
+    
+    # Run `less` with the job output.
+    #os.system("less -R +F {}".format(tmp.name))
+    less_process = subprocess.Popen(["less", "-R", "+F", tmp.name])
+    terminator = lambda: less_process.terminate()
+    terminatables.append(terminator)
+    less_process.communicate()  # Wait for the less process to complete
+    terminatables.remove(terminator)
+
+
+    # Signal the thread to finish.
+    event.set()
+    
+    time.sleep(0.3)
+
+    # Initialize curses again.
+    stdscr = curses.initscr()
+    # Return stdscr back to the main loop (will view_systems())
+    return stdscr
 
 if 'ansicolours' in 'curses':
     # viewing output of a job
