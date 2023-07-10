@@ -221,6 +221,7 @@ for system in systems:
         #  eg ssh -X n 'cd Downloads; nicotine'
         if ssh_around:
             cmds = ssh_around+' '+json.dumps(cmds)
+            job['ssh_around'] = ssh_around
         
         job["command"] = cmds
         job["i"] = job_i
@@ -234,47 +235,71 @@ for system in systems:
 
 
 
+def give_job_fixup(job,command):
+    if 'podman run' in command:
+        job["listen_out"].append(fixup_for_podmanrun_job)
+def fixup_for_podmanrun_job(job,out):
+    line = out['s']
+    if out["std"] == "err":
+        if m := re.search(r'the container name "(\S+)" is already in use', line):
+            run_fixup(job,line,'podman rm -f {}'.format(m.group(1)))
+            # < subsequent steps?
 
 
 
+def run_fixup(job,line,cmd):
+    # stop what we were doing
+    job['process'].terminate()
+    # make a heading and say line in job.output, with out.std=head
+    iout(job,'fix'," oughtta fixup that with: {}".format(cmd))
 
+    # should happen over there too
+    if 'ssh_around' in job:
+        cmd = job['ssh_around']+' '+json.dumps(cmd)
+    
+    # adding this other command to job.output
+    run_job(job,cmd)
+    if job["exit_code"]:
+        iout(job,'fix',"🔥fixup failed!🔥stopping🔥🔥")
+        return
 
+    # < report errors (exit code or any stderr) into job.fixup, so the ui say failure
+    # retry job
+    iout(job,'fix'," fixup applied! retrying")
+    run_job(job)
 
+    
+# < if job was not argumented this would still work
+#    but all output would end up in the last job
+#   how to make such borrowing fatal? if I remove the for job in ... above?
+def iout(job,ch,s):
+    out = {"std":ch,"s":s,"time":time.time()}
+    job["output"].append(out)
+    return out
 
-
-
-
-
-
-
-
-def all_systems_go():
-    # < figure out if any of this can be less terrifying
-    # max_workers so that all jobs can stay happening
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        # Submit each command to the executor
-        future_results = []
-
-        for system in systems:
-            jobs = system['jobs']
-            for job in jobs:
-                future_results.append(executor.submit(run_job, job))
-
-        # Process the results as they become available
-        for future in concurrent.futures.as_completed(future_results):
-            result = future.result()
-
-def run_job(job):
+def run_job(job,actual_cmd=None):
     i = job["i"]
-    command = job["command"]
+    command = actual_cmd or job["command"]
     def diag(s):
         #print(s)
         1
-    diag(f"[{i}] starts: "+ job["t"])
-    # [{std:'out',s:'hello\n',ms:123}+]
-    job["output"] = []
+    if actual_cmd:
+        diag(f"[{i}] other: "+ command)
 
-    process = subprocess.Popen(['py/zap_run.pl',command], shell=False,
+    else:
+        diag(f"[{i}] starts: "+ job["t"])
+
+    # the ui shall tail this
+    # [{std:'out',s:'hello\n',time:...}+]
+    if not 'output' in job:
+        job["output"] = []
+    # downstreams to have in this thread eg fixup
+    job["listen_out"] = []
+    # attach GOFAI fixup actuators
+    #  you can fixup fixups too so we pass command
+    give_job_fixup(job,command)
+
+    process = job["process"] = subprocess.Popen(['py/zap_run.pl',command], shell=False,
                                 stdin=subprocess.PIPE,
                                 stdout=subprocess.PIPE,
                                 stderr=subprocess.PIPE,
@@ -286,9 +311,11 @@ def run_job(job):
             # < do we want the ^ + and \n$
             # seem to do \n before turning off TerminalColors, just remove it
             line = re.sub("\n","",line)
-            out = {"std":ch,"s":line.strip(),"time":time.time()}
+            out = iout(job,ch,line.strip())
             diag(f"[{i}] std{ch}: "+out["s"])
-            job["output"].append(out)
+            # downstreams to have in this thread eg fixup
+            for cb in job["listen_out"]:
+                cb(job,out)
     
     readaline('out',process.stdout)
     readaline('err',process.stderr)
@@ -332,6 +359,22 @@ def run_job(job):
 
 
 
+
+def all_systems_go():
+    # < figure out if any of this can be less terrifying
+    # max_workers so that all jobs can stay happening
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        # Submit each command to the executor
+        future_results = []
+
+        for system in systems:
+            jobs = system['jobs']
+            for job in jobs:
+                future_results.append(executor.submit(run_job, job))
+
+        # Process the results as they become available
+        for future in concurrent.futures.as_completed(future_results):
+            result = future.result()
 
 
 # run commands without blocking the UI

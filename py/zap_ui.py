@@ -118,6 +118,19 @@ def draw_job_label(stdscr,job,i):
         # won't have stdin before starting command
         stdscr.addstr(i, col_in, "!yet?")
 
+def out_to_line(out):
+    ind = '   '
+    if out["std"] == 'err':
+        ind = '!! '
+    
+    if out["std"] == 'fix':
+        ind = '🔧  '
+    
+    line = ind + out["s"] + "\n"
+    
+    return line
+
+
 terminatables = []
 # ignore Ctrl+C intended for the `less` we use for job output
 #  seems to cause all our jobs to exit(-2)
@@ -140,9 +153,7 @@ def less_job(stdscr,job):
         while not event.is_set():
             if len(job["output"]) > index:
                 for out in job["output"][index:]:
-                    ind = '   ' if out["std"] == 'out' else '!! '
-                    line = ind + out["s"] + "\n"
-                    tmp.write(line.encode("utf-8"))
+                    tmp.write(out_to_line(out).encode("utf-8"))
                 tmp.flush()  # Flush the buffer to ensure data is written to the file
                 index = len(job["output"])
             time.sleep(0.1)  # Sleep for a short duration before checking for new items
@@ -167,6 +178,11 @@ def less_job(stdscr,job):
     # Signal the thread to finish.
     event.set()
     
+    # if developing around here
+    #  possible error message sitting in the terminal after less before curses
+    #  Ctrl-Z somewhere might show it too
+    #time.sleep(0.23)
+
     # Initialize curses again.
     stdscr = curses.initscr()
     # Return stdscr back to the main loop (will view_systems())
