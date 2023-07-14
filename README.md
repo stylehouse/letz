@@ -1,38 +1,25 @@
-# create-svelte
+# letz
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+[stylehouse](https://github.com/stylehouse/letz) via modern javascript tooling (SvelteKit)
 
-## Creating a project
+## install
 
-If you're seeing this, you've probably already done this step. Congrats!
-
-```bash
-# create a new project in the current directory
-npm create svelte@latest
-
-# create a new project in my-app
-npm create svelte@latest my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+Clone this, then:
 
 ```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+git submodule init
+git submodule update
+py/zap.py init
 ```
+Reconfigure `zap.py` if you didn't have a [vm host named gox](https://github.com/stylehouse/stylehouse/blob/151fe09b32e4562e20a67ac2766a3259a794b4d6/G/Lafr/Inside#L1168). Anything could be needed here, not sure. `init` is untested.
 
-## Building
-
-To create a production version of your app:
-
+## run
+run:
 ```bash
-npm run build
+py/zap.py
 ```
 
-You can preview the production build with `npm run preview`.
+# description
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+domes in, domes out
+
