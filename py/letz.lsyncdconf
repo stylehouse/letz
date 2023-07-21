@@ -1,0 +1,16 @@
+settings {
+   nodaemon   = true,
+}
+sync{
+    default.rsyncssh,
+    source=".",
+    host="gox",
+    targetdir="src/letz",
+
+    -- will not delete files on the target when it starts up but will delete those that are removed during normal operation
+    --  files generated on the target (by vite) should remain
+    --  ie deletes happening in the source may delete same on target, but extra stuff on target shall remain
+    delete="running",
+    -- with the above we probably dont need to exclude anything?
+    exclude={ ".*", "*.tmp" },
+}
