@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, createEventDispatcher } from "svelte"
+  import { onMount, onDestroy, createEventDispatcher } from "svelte"
   import {EditorState} from "@codemirror/state"
   import {EditorView, keymap, ViewUpdate} from "@codemirror/view"
   import {LanguageSupport,LRLanguage} from "@codemirror/language"
@@ -45,18 +45,31 @@
   })
   
 
-  onMount(async () => {
+  onMount(async &{
     // now that ele has a value
     view = new EditorView({
         state: startState,
         parent: ele
     })
+    every(1)
   })
+  $focus
+  $every = &i{
+    focus = view.hasFocus
+    setTimeout(&{ every(i+1) }, 700)
+  }
+  onDestroy(async &{ every = &{} })
+
+
 </script>
 
 <style type="css">
   .Codemirror {
-      border: 1px solid black
+      border: 3px solid black;
+      min-height: 4em;
+      min-width: 16em;
+      max-height: 84em;
+      max-width: 49em;
   }
 </style>
 <div class="Codemirror" bind:this={ele}></div>
