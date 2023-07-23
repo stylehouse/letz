@@ -3,9 +3,10 @@ import { stylehouse_lite, merge_sourcemaps } from './Compile.js';
 // along with this compiler, to svelte
 import esbuild from 'esbuild';
 
+// used in vite.config.ts
 // for .ts
 // can do .svelte but the code given then has already some compiling and panics if it see our lang
-export function stlli_vite() {
+export function stho_vite() {
     console.log("Loaded  stylehouse_lite")
     return {
         name: 'stylehouse_lite-compile-plugin',
@@ -27,10 +28,11 @@ export function stlli_vite() {
     }
 }
 
+// used in svelte.config.js
 // for .svelte
-// gets to <script type="ts"> earlier than stlli_vite() can
-// in svelte.config.js: preprocess: sveltePreprocess(stlli_svelte()),
-export function stlli_svelte() {
+// gets to <script type="ts"> earlier than stho_vite() can
+// in svelte.config.js: preprocess: sveltePreprocess(stho_svelte()),
+export function stho_svelte() {
     return {
 		aliases: [
 		  ['ts', 'stylehouse_lite'],
