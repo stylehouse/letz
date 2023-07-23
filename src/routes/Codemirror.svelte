@@ -1,18 +1,18 @@
 <script context="module">
-	let current;
+  import stho from '../lang/stho.ts'
+  export let lang = stho()
 </script>
 <script lang="ts">
   import {recur} from "$lib/Sv"
   import { onMount, onDestroy, createEventDispatcher } from "svelte"
   import {EditorState} from "@codemirror/state"
   import {EditorView, keymap, ViewUpdate} from "@codemirror/view"
-  import {LanguageSupport,LRLanguage} from "@codemirror/language"
   import {defaultKeymap} from "@codemirror/commands"
   import {basicSetup} from "codemirror"
 	import { sto,ge } from './stores.js';
-  import grammar from '../lang/stho.grammar?raw'
-  import { buildParser } from '@lezer/generator'
-  let parser = buildParser(grammar)
+
+
+
   const dispatch = createEventDispatcher()
 
   let updge = () => ge.update(ge => ge+'e')
@@ -21,8 +21,6 @@
   export let ele = undefined
   export let view: EditorView = undefined
   export let value = ""
-  let language = LRLanguage.define({ parser: parser });
-  let langsup = new LanguageSupport(language);
 
   // < "Esc" should escalate committal of the editor contents
   let firmup = (e,v) => {
@@ -32,7 +30,7 @@
   let startState = EditorState.create({
       doc: value,
       extensions: [
-        langsup,
+        lang,
         keymap.of([{key:"Escape", run: () => {
             dispatch('kommit', {view})
             return 1
