@@ -1,4 +1,8 @@
+<script context="module">
+	let current;
+</script>
 <script lang="ts">
+  import {recur} from "$lib/Sv"
   import { onMount, onDestroy, createEventDispatcher } from "svelte"
   import {EditorState} from "@codemirror/state"
   import {EditorView, keymap, ViewUpdate} from "@codemirror/view"
@@ -44,23 +48,17 @@
       ]
   })
   
-
-  onMount(async &{
+  onMount(async () => {
     // now that ele has a value
     view = new EditorView({
         state: startState,
         parent: ele
     })
-    every(1)
   })
   $focus
-  $every = &i{
+  recur(() => {
     focus = view.hasFocus
-    setTimeout(&{ every(i+1) }, 700)
-  }
-  onDestroy(async &{ every = &{} })
-
-
+  })
 </script>
 
 <style type="css">
@@ -74,3 +72,4 @@
 </style>
 <div class="Codemirror" bind:this={ele}></div>
 <button on:click={() => updge()} > updge() </button>
+{#if focus}FOCUS{/if}
