@@ -10,7 +10,7 @@
   import {defaultKeymap} from "@codemirror/commands"
   import {basicSetup} from "codemirror"
 	import { sto,ge } from './stores.js';
-  import grammar from '../lang/style.grammar?raw'
+  import grammar from '../lang/stho.grammar?raw'
   import { buildParser } from '@lezer/generator'
   let parser = buildParser(grammar)
   const dispatch = createEventDispatcher()
