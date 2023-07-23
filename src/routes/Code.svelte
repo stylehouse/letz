@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { sto } from './stores.js'
-    import Con from "./PlayDramatics.svelte"
+    import PlayDramatics from "./PlayDramatics.svelte"
     import { Le } from "$lib/Le"
     import Diring from "$lib/Diring.svelte"
     import Codemirror from './Codemirror.svelte'
@@ -34,7 +34,7 @@
 
 <Diring t="Direr"/>
 
-<Con/>
+<PlayDramatics/>
 
 
 
