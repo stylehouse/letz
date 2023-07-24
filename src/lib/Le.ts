@@ -44,7 +44,46 @@ random cm notes:
  
 cm howtobe:
   show all headings all the time, without whatever between when folded
-  
+
+so:
+  Code will <-> -Con/-Things to interact with
+   eg a -Colour picker, might use nearby stylesense
+    the code target presents options
+     qua to be inferred|enumerated at presentation time: unique bold cool, enervating...
+     green good red bad? fizzle? sizzle? film grain?
+   for rigging the io machinery for features
+    such as panning around reviewing a bunch of patches
+  is the plan
+   we have now instruction-following:
+    PlayDramatics gives N to Con
+    Diring gives N to Con
+    Coning gives N to Con
+     Coning is 
+
+   it seems:
+    Code is fast becoming -Con/-Code
+    
+    routes/PlayDramatics.svelte
+     is ~~Travel: it restarts|continues a situation
+     feeds ~~This (dat) to:
+     D = Construct(C)
+      -> -Con**
+    
+    lib/Diring is for filesystems
+     posits a '/'-Dir to start with
+      -> -Con** /-Dir do <img> pile
+      async unfurl can dispatch('reCon') to ^^-Con
+       
+      lib/Coning is data graphing
+       noC for not iterating C/* but the .t,.y, etc substructure
+        kind of like -hat|Fez|Bow
+       
+       < to be drag-scale|aroundable
+      
+      we want only a few things on the screen
+       constantly pulling everything away, ~~ WebGL-Fluid-Simulation
+    
+
 */
 
 

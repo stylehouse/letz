@@ -16,6 +16,11 @@
 	color: var(--color-text);
 }
 
+@font-face {
+    font-family: 'Spirax';
+    font-style: normal;
+    src: url('/font/Spirax-Regular.ttf');
+}
 body {
 	min-height: 100vh;
 	margin: 0;
