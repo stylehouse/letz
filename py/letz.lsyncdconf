@@ -6,6 +6,8 @@ sync{
     source=".",
     host="gox",
     targetdir="src/letz",
+    delay=0,
+
 
     -- will not delete files on the target when it starts up but will delete those that are removed during normal operation
     --  files generated on the target (by vite) should remain
