@@ -28,6 +28,12 @@
         # tocon(dat)
     }
     let junk = [1,3,5,[6,[6,[6,[[6,[2]]]]]]]
+
+    async function overdub() {
+        $res = await fetch('http://s:8000/7f6e164950d918f69148a849f59a89b5fc1483d5c15ffbe8018ae8a5c532c45e')
+        
+        sto.set(res.text())
+    }
 </script>
 
 <CompileLite/>
@@ -36,6 +42,7 @@
 
 <PlayDramatics/>
 
+<button on:click={() => overdub()} > ✴req </button>
 
 
 <biggroup>

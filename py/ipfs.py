@@ -3,49 +3,83 @@ import http.server
 import hashlib
 import os
 
+# not really ipfs
+# not really git
+#  just the hash->blob part
+#  our client decodes blob to find more hash, etc
+# < periodically gc somehow
+#    periodically repeated writes encouraged, they update mtime
+storage_dir = '/ipfs/'
+# scheme for translating any GET|PUT into  /ipfs/../... path
+def dige_to_file(self,dige):
+    return os.path.join(
+        self.translate_path(storage_dir),
+        part_hash_to_path(dige),
+    )
+# dige on filesystem gets /^(..)/ partitioned
 def part_hash_to_path(dige):
-    os.path.join(dige[:2],dige[2:])
+    return os.path.join(dige[:2],dige[2:])
 
-# given this scheme for translating any PUT into that /ipfs/../... path
+#  also 
 class SputHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
     def do_PUT(self):
         print(self.headers)
         length = int(self.headers["Content-Length"])
-        content = self.rfile.read(length)
-        dige = hashlib.sha256(content).hexdigest()
+        rawcontent = self.rfile.read(length)
+        if not len(rawcontent):
+            self.send_response(400,"no content given")
+            return
+        
+        dige = hashlib.sha256(rawcontent).hexdigest()
+        content = rawcontent.decode('utf-8')
+        print("PUT: "+dige+"    "+content)
         # for HTTP file hosting:
         # path = self.translate_path(self.path)
         # for ipfs-like content-addressing:
-        path = os.path.join(
-            self.translate_path('/ipfs/'),
-            part_hash_to_path(dige),
-        )
-
-        # exists - update its modification time and return
+        path = dige_to_file(self,dige)
+        
         if os.path.exists(path):
             os.utime(path, None)
-            self.send_response(200)
-            return
-        
-        dir = os.path.dirname(path)
-        os.makedirs(dir, exist_ok=True)
+            self.send_response(204)
+        else:
+            dir = os.path.dirname(path)
+            os.makedirs(dir, exist_ok=True)
 
+            with open(path, "w", encoding='utf-8') as dst:
+                dst.write(content)
+            self.send_response(204)  # Created
 
-        with open(path, "wb") as dst:
-            dst.write(content)
-        self.send_response(200)
+        # Include the dige in the Location header of the response
+        self.send_header("Location", "/"+dige)
+        self.end_headers()
     
     def do_GET(self):
         dige = self.path.strip('/')
-        path = os.path.join(
-            self.translate_path('/ipfs/'),
-            part_hash_to_path(dige),
-        )
-        # exists - update its modification time and return
+        
+        path = '.'+storage_dir+dige
         if os.path.exists(path):
-            os.utime(path, None)
+            # ipns, arbitrary string 
+            # not dige, not /^(..)/ partitioned
+            # probably a symlink to a dige
+            1
+        else:
+            path = dige_to_file(self,dige)
+        if os.path.exists(path):
             self.send_response(200)
-            return
+            self.send_header("Content-Type", "text/plain")
+            self.end_headers()
+
+            # Read and send the file content to the client
+            with open(path, "r", encoding='utf-8') as src:
+                content = src.read()
+                rawcontent = content.encode('utf-8')
+
+                if 0:
+                    got_dige = hashlib.sha256(rawcontent).hexdigest()
+                    if not got_dige == dige:
+                        print("Wrong dige in storage: "+got_dige)
+                
+                self.wfile.write(rawcontent)
         else:
             self.send_response(404, 'Not Found')
 
