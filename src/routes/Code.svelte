@@ -42,7 +42,7 @@
 
 <PlayDramatics/>
 
-<button on:click={() => overdub()} > ✴req </button>
+<button on:click={() => overdub()} > ✴req! </button>
 
 
 <biggroup>
