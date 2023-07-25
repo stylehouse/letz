@@ -30,7 +30,7 @@
     let junk = [1,3,5,[6,[6,[6,[[6,[2]]]]]]]
 
     async function overdub() {
-        $res = await fetch('http://s:8000/7f6e164950d918f69148a849f59a89b5fc1483d5c15ffbe8018ae8a5c532c45e')
+        $res = await fetch('http://s:8000/5835ea2230e6b4ee2b6c3645038ccaa54c110c01f0a2bfa4cefabf32ffe008bd')
         
         sto.set(res.text())
     }

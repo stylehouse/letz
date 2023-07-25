@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import http.server
 import hashlib
+import json
 import os
 
 # not really ipfs
@@ -19,11 +20,16 @@ def dige_to_file(self,dige):
 # dige on filesystem gets /^(..)/ partitioned
 def part_hash_to_path(dige):
     return os.path.join(dige[:2],dige[2:])
+def CORS(self):
+    self.send_header("Access-Control-Allow-Origin", "*")
+def sanstring(s):
+    s = s[:50]+"..." if len(s) > 50 else s
+    return json.dumps(s)[1:-1]
 
 #  also 
 class SputHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
     def do_PUT(self):
-        print(self.headers)
+        CORS(self)
         length = int(self.headers["Content-Length"])
         rawcontent = self.rfile.read(length)
         if not len(rawcontent):
@@ -32,7 +38,7 @@ class SputHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
         
         dige = hashlib.sha256(rawcontent).hexdigest()
         content = rawcontent.decode('utf-8')
-        print("PUT: "+dige+"    "+content)
+        print("PUT: "+dige+"    "+sanstring(content))
         # for HTTP file hosting:
         # path = self.translate_path(self.path)
         # for ipfs-like content-addressing:
@@ -51,9 +57,11 @@ class SputHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
 
         # Include the dige in the Location header of the response
         self.send_header("Location", "/"+dige)
+        self.send_header("Content-Length", 0)
         self.end_headers()
     
     def do_GET(self):
+        CORS(self)
         dige = self.path.strip('/')
         
         path = '.'+storage_dir+dige
@@ -65,15 +73,19 @@ class SputHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
         else:
             path = dige_to_file(self,dige)
         if os.path.exists(path):
-            self.send_response(200)
-            self.send_header("Content-Type", "text/plain")
-            self.end_headers()
-
             # Read and send the file content to the client
             with open(path, "r", encoding='utf-8') as src:
                 content = src.read()
                 rawcontent = content.encode('utf-8')
 
+                # Calculate the content length
+                content_length = len(rawcontent)
+
+                # Set the response headers
+                self.send_response(200)
+                self.send_header("Content-Type", "text/plain")
+                self.send_header("Content-Length", str(content_length))
+                self.end_headers()
                 if 0:
                     got_dige = hashlib.sha256(rawcontent).hexdigest()
                     if not got_dige == dige:
@@ -87,4 +99,3 @@ class SputHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
 
 if __name__ == '__main__':
     http.server.test(HandlerClass=SputHTTPRequestHandler)
-content = self.rfile.read(length)
