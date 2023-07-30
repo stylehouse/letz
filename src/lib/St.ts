@@ -121,8 +121,10 @@ export function pit (D,t,y,c,sc) {
         iter?:1
     }
     export function detect_type(s:any):typ {
-        let typ = {}
-        if (s instanceof Object) {
+        let typ:typ = {}
+        # < this is more inclusive than: s instanceof Object
+        #    possibly for looking at Int\d+Array
+        if (s && typeof s == 'object') {
             typ.ob = 1
             if (s instanceof Array) {
                 typ.array = 1
