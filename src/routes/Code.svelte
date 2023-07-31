@@ -5,7 +5,6 @@
     import Diring from "$lib/Diring.svelte"
     import Codemirror from './Codemirror.svelte'
     import Coning from '$lib/Coning.svelte'
-    import Lezing from './Lezing.svelte'
     import CompileLite from './CompileLite.svelte'
     import { writable } from 'svelte/store'
     import {EditorView} from "@codemirror/view"

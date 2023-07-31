@@ -86,6 +86,7 @@ so:
 
 */
 
+import { pit,C_,i_ } from "$lib/St"
 
 // return an object about whatever is going on
 export function Le_Attention(state) {
@@ -95,14 +96,15 @@ export function Le_Attention(state) {
         about.to
     )
     let tree = syntaxTree(state)
+    let s = C_('lezing',1,{pi:'lezing'})
+    
     let cursor = tree.cursorAt(about.from, 1)
-    let lems = []
-    while (!lems.length || cursor.next()) {
-        if (cursor.from > about.to)
-            break
-        lems.push(`Node ${cursor.name} from ${cursor.from} to ${cursor.to}`)
+    while (!s.sc.z || cursor.next()) {
+        cursor.from > about.to and break
+        i_(s,C_(cursor.name,1,{pi:'nodule'},{range:{from:cursor.from,to:cursor.to}}))
+        !cursor.next() > about.to and break
     }
-    return lems
+    return s
 }
 // < state-updatable pull-apart-task object? an Inc-Pro-Run, with The-This etc
 //   with a .brack for %node,name,from,to?
