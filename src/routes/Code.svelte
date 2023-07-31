@@ -1,12 +1,14 @@
 <script lang="ts">
 	import { sto } from './stores.js'
     import PlayDramatics from "./PlayDramatics.svelte"
-    import { Le } from "$lib/Le"
+    import { Le_Attention } from "$lib/Le"
     import Diring from "$lib/Diring.svelte"
     import Codemirror from './Codemirror.svelte'
+    import Coning from '$lib/Coning.svelte'
     import Lezing from './Lezing.svelte'
     import CompileLite from './CompileLite.svelte'
     import { writable } from 'svelte/store'
+    import {EditorView} from "@codemirror/view"
     
     let b = ':3'
     # otherlang
@@ -17,11 +19,8 @@
 
     # this was a '# comment'
     let look:Le = undefined
-    function dobla({detail:{view}}) {
-        look = new Le(view.state)
-        # < elvis it over there!
-        # dat.look = look
-        # tocon(dat)
+    function kommit({detail:{view}}) {
+        look = Le_Attention(view.state)
     }
     let junk = [1,3,5,[6,[6,[6,[[6,[2]]]]]]]
 
@@ -34,17 +33,19 @@
     }
 </script>
 
+{#if 0}
 <CompileLite />
 
 <Diring t="Direr" />
 
 <PlayDramatics />
+{/if}
 
 <button on:click={() => overdub()}> req! </button>
 <button on:click={() => bang()}> ✴ </button>
 
 <biggroup>
     <p>{b}</p>
-    <Codemirror {code} on:kommit={dobla} />
-    {#if look}<Lezing {look} />{/if}
+    <Codemirror {code} on:kommit={kommit} />
+    {#if look}<Coning t="Le-look" C={look} style=display:block />{/if}
 </biggroup>

@@ -9,8 +9,12 @@ from flask_cors import CORS
 app = Flask(__name__)
 app.debug = True  # Enable verbose mode and auto reload on code changes
 CORS(app)
+# @stylehouse/zap was having buffering woes
+#  see github issue #1, which still kind of happens if we dont:
+os.environ["PYTHONUNBUFFERED"] = "1"
 
-# crazy long for a k:v server
+# serve k:v where k = usu sha256sum(v)
+
 # not really ipfs
 # not really git
 #  just the hash->blob part
@@ -19,6 +23,7 @@ CORS(app)
 #    periodically repeated writes encouraged, they update mtime
 
 storage_dir = 'ipfs'
+
 
 # scheme for translating any GET|PUT into  /ipfs/xx/xxxxx... path
 def dige_to_file(dige):
@@ -69,7 +74,7 @@ def do_PUT():
 @app.route('/<path:path>', methods=['GET'])
 def do_GET(path):
     dige = path.strip('/')
-    response_headers = {}
+    headers = {}
 
     if not is_valid_path(dige):
         return Response("Invalid path", status=400)
@@ -92,17 +97,17 @@ def do_GET(path):
 
             content_length = len(rawcontent)
 
-            response_headers["Content-Type"] = "text/plain"
-            response_headers["Content-Length"] = str(content_length)
+            headers["Content-Type"] = "text/plain"
+            headers["Content-Length"] = str(content_length)
 
             if 0:
                 got_dige = hashlib.sha256(rawcontent).hexdigest()
                 if not got_dige == dige:
                     print("Wrong dige in storage: "+got_dige)
             
-            return Response(rawcontent, status=200, headers=response_headers)
+            return Response(rawcontent, status=200, headers=headers)
     else:
-        return Response("Not Found", status=404, headers=response_headers)
+        return Response("Not Found", status=404, headers=headers)
 
 
 
