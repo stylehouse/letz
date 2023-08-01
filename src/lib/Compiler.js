@@ -1,6 +1,8 @@
-// mainly presents this compiler (or bunch of macros)
+// connect the following compilers to svelte
+
+// mainly this
 import { stylehouse_lite, merge_sourcemaps } from './Compile.js';
-// along with this compiler, to svelte
+// and then typescript
 import esbuild from 'esbuild';
 
 // used in vite.config.ts
@@ -12,7 +14,6 @@ export function stho_vite() {
         name: 'stylehouse_lite-compile-plugin',
         enforce: 'pre',
         transform(code, id) {
-            // < should we check they are within /app/src/ to avoid node_modules etc?
             if (id.endsWith('.ts')) {
                 // console.log("Found a "+id)
                 let ts = stylehouse_lite(code,id,'vite');
