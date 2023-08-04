@@ -1,18 +1,24 @@
-<script context="module">
-    import stho from "../lang/stho.ts";
-    export let lang = stho();
-</script>
 
 <script lang="ts">
     import {recur} from "$lib/Sv"
     import { onMount, onDestroy, createEventDispatcher } from "svelte"
-    import {EditorState} from "@codemirror/state"
+    import {EditorState, Compartment} from "@codemirror/state"
     import {EditorView, keymap, ViewUpdate} from "@codemirror/view"
     import {defaultKeymap} from "@codemirror/commands"
     import {basicSetup} from "codemirror"
-	import { sto,ge } from './stores.js';
+    import {stho} from "../lang/stho.ts";
+    import {javascript} from "@codemirror/lang-javascript"
     # < https://github.com/replit/codemirror-minimap
 
+    # < GOING:
+	import { sto,ge } from './stores.js';
+    const dispatch = createEventDispatcher()
+    export let ele = undefined
+    let updge = () => ge.update(ge => ge+'e')
+    // < "Esc" should escalate committal of the editor contents
+
+
+    # value
     $garbage = []
     onDestroy(() => garbage.map(y => y()))
     // to sync these two
@@ -32,32 +38,42 @@
             console.log("value sub!!!")
         }
     }) )
-    function overdub() {
+    $overdub = &{
         cha({from:0, insert: "warp\n"})
     }
 
-    const dispatch = createEventDispatcher()
-    export let ele = undefined
-    let updge = () => ge.update(ge => ge+'e')
-    // < "Esc" should escalate committal of the editor contents
-  
 
+    # lang
+    # the language is changeable
+    # < nest grammars and everything instead?
+    #    they would like some tractorgramming where to merge their definitions
+    #     eg an expression on a line
+    $langs = [stho,javascript]
+    // selected lang
+    export let lang = langs[0]
+    $language = new Compartment
+    $setlang = &lang,{
+        view.dispatch({effects: language.reconfigure(lang())})
+    }
+
+    
     let startState = EditorState.create({
         doc: value,
         extensions: [
-            lang,
+            language.of(lang()),
+            
             EditorView.lineWrapping,
             keymap.of([{key:"Escape", run: () => {
                 dispatch('kommit', {view})
                 return 1
             }}]),
-            keymap.of(defaultKeymap),
             EditorView.updateListener.of((v:ViewUpdate) => {
                 if (v.docChanged) {
                 // Document changed
                 sto.set(view.state.doc.toString())
                 }
             }),
+            keymap.of(defaultKeymap),
             basicSetup
         ]
     })
@@ -79,6 +95,13 @@
 <button on:click={() => updge()}> updge() </button>
 <button on:click={() => overdub()}> overdub </button>
 {#if focus}FOCUS{/if}
+
+<p>lang:
+<select bind:value={lang} on:change={() => (setlang(lang))}>
+    {#each langs as lang}
+        <option value={lang}> {lang.name} </option>
+    {/each}
+</select></p>
 
 <style type="css">
     .Codemirror {

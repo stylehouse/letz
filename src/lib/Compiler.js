@@ -58,7 +58,7 @@ export function stho_svelte() {
 
             let map = merge_sourcemaps(ts.map,js.map)
             polish_sourcemap(map)
-			console.log("map: "+filename,{map })
+			//console.log("map: "+filename,{map })
 
 		  	return { code:js.code, map };
 		},
