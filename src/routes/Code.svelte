@@ -13,7 +13,7 @@
     # otherlang
     console.log("<Code/>")
 
-    $code = writable("# etc etc\ni thung/with/etc\n\no yeses/because/blatant\n")
+    $code = writable("# yeti etc\ni thung/with/etc\n\no yeses/because/blatant\n")
     
 
     # this was a '# comment'

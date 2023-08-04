@@ -29,7 +29,7 @@
             // view and "load into codemirror"
             $was = view.state.doc.toString()
             cha({from:0, to:was.length, insert: value})
-            console.log("value sub!")
+            console.log("value sub!!!")
         }
     }) )
     function overdub() {
@@ -61,7 +61,6 @@
             basicSetup
         ]
     })
-
   
     onMount(async () => {
         // now that ele has a value
@@ -88,5 +87,16 @@
         min-width: 16em;
         max-height: 84em;
         max-width: 49em;
+    }
+
+    /* from a bot on fedi:
+        Inch Worm #B2FF6C
+        Persian Blue #382FB4
+    */
+    .moodyblue {
+        color: #7d84ee;
+    }
+    .woodrush {
+        color: #262906;
     }
 </style>

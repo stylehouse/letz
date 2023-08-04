@@ -20,6 +20,12 @@ export function stho_vite() {
                 // if (code != compiled.code) console.log("We won!!!",compiled.code.slice(0,200))
                 // < seeing compiled code in DevTools... this doesnt help:
                 //ts.map.sourcesContent = [code]
+                if (ts.map && ts.map.sources) {
+                    // < could we use id? might it have ?v=... at the end?
+                    if (!id.startsWith('/app/'))
+                        throw "where art thou"
+                    ts.map.sources = ['']
+                }
                 return {
                     code: ts.code,
                     map: ts.map
@@ -52,7 +58,7 @@ export function stho_svelte() {
 
             let map = merge_sourcemaps(ts.map,js.map)
             polish_sourcemap(map)
-			// console.log("map: "+filename,{map })
+			console.log("map: "+filename,{map })
 
 		  	return { code:js.code, map };
 		},
