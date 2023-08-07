@@ -2,9 +2,10 @@
 <script lang="ts">
     import {recur} from "$lib/Sv"
     import { onMount, onDestroy, createEventDispatcher } from "svelte"
-    import {EditorState, Compartment} from "@codemirror/state"
+    import {EditorState, Compartment,StateField} from "@codemirror/state"
     import {EditorView, keymap, ViewUpdate} from "@codemirror/view"
-    import {defaultKeymap} from "@codemirror/commands"
+    import {indentString} from "@codemirror/language"
+    import {defaultKeymap,indentWithTab} from "@codemirror/commands"
     import {basicSetup} from "codemirror"
     import {stho} from "../lang/stho.ts";
     import {javascript} from "@codemirror/lang-javascript"
@@ -63,10 +64,16 @@
             language.of(lang()),
             
             EditorView.lineWrapping,
-            keymap.of([{key:"Escape", run: () => {
-                dispatch('kommit', {view})
-                return 1
-            }}]),
+            keymap.of([
+                // makes this element inescapable by Tab to keyboard navigators
+                //  the Esc,Tab is supposed to work around that, but
+                indentWithTab,
+                //   we bind Escape preventing the above from working
+                {key:"Escape", run: () => {
+                    dispatch('kommit', {view})
+                    return true
+                }}
+            ]),
             EditorView.updateListener.of((v:ViewUpdate) => {
                 if (v.docChanged) {
                 // Document changed
