@@ -1,3 +1,6 @@
+// a prototype compiler
+//  we "commit" sourcemap many whenever we reiterate on the same source
+//  transforms with lezer should be much better
 import MagicString from 'magic-string'
 import {SourceMapConsumer,SourceMapGenerator} from 'source-map-js';
 // combine sourcemaps (last first?)

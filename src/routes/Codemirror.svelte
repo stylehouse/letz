@@ -7,7 +7,7 @@
     import {indentString} from "@codemirror/language"
     import {defaultKeymap,indentWithTab} from "@codemirror/commands"
     import {basicSetup} from "codemirror"
-    import {stho} from "../lang/stho.ts";
+    import {stho} from "../lib/lang/stho.js";
     import {javascript} from "@codemirror/lang-javascript"
     # < https://github.com/replit/codemirror-minimap
 

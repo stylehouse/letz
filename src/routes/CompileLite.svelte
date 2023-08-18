@@ -1,6 +1,6 @@
 <script lang=ts>
     import { ex } from "$lib/St"
-    import { stylehouse_lite } from "$lib/Compile.js"
+    import { stylehouse_lite } from "$lib/lang/stho_lite_compiler.js"
     // # yes
     $compiled
     function comp () {
