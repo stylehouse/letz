@@ -1,16 +1,36 @@
-@top Program { expression* }
 
-expression { Name | Number | IOing | "\n" }
+@tokens {
+    IOness { "i" | "o" }
+    Sunpitness { "S" }
+    Title { nonnl+ }
+    Name { (@asciiLetter | "_")+ (@asciiLetter | "_" | @digit)* }
+    Number { @digit+ }
+    nonnl { ![\n] }
+    nl { "\n" }
+    Sigil { "@" | "#" }
+    space  { @whitespace }
+    @precedence {Number, Title, Sunpitness, IOness, Name}
+    @precedence {nl, space}
+}
+
+@top Program { Line* }
+Line { Inline nl }
+
+Inline { Comment | expression | space+ }
+
+Comment { "#" nonnl+ }
+
+expression { Name | Number | IOing | Sunpit }
+
+
+
 
 IOing { IOness ' ' IOpath }
 
 IOpath { Leg ("/" Leg)* }
 Leg { Sigil? Name }
-Sigil { "@" | "#" }
 
-@tokens {
-    IOness { "i" | "o" }
-    Name { @asciiLetter+ }
-    Number { @digit+ }
-    @precedence {IOness, Name}
-}
+
+
+Sunpit { Sunpitness " " (SunpitHead | IOing) }
+SunpitHead { Number | Number Title | Title }

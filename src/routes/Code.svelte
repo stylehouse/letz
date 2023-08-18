@@ -12,13 +12,17 @@
     let b = ':3'
     # otherlang
     console.log("<Code/>")
+    $start = "# yeti etc\ni thung/with/etc\n\n\nS o yeses/because/blon_itn\n  yapto\n  o figura/datch/#chang\n"
 
-    $code = writable("# yeti etc\ni thung/with/etc\n\no yeses/because/blatant\n")
+    $code = writable(start)
     
 
     # this was a '# comment'
     let look:Le = undefined
     function kommit({detail:{view}}) {
+        $text = view.state.doc.toString()
+        $json = JSON.stringify(text)
+        console.log(json)
         look = Le_Attention(view.state)
     }
     let junk = [1,3,5,[6,[6,[6,[[6,[2]]]]]]]
