@@ -9,7 +9,7 @@ export const sthoLanguage = LRLanguage.define({
     parser: parser.configure({
         props: [
             indentNodeProp.add({
-                Sunpit: delimitedIndent({ align: true })
+                Sunpit: delimitedIndent({ closing: 'ok', align: true,  })
             }),
             foldNodeProp.add({
                 Sunpit: foldInside

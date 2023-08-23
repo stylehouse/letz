@@ -16,11 +16,7 @@
 <section>
 	<Code />
 
-	<h2>
-		trying to tediting <strong>src/routes/+page.svelte</strong>
-	</h2>
-
-	<Counter />
+	<!-- <Counter /> -->
 </section>
 
 <style>

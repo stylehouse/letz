@@ -9,6 +9,9 @@
     import { writable } from 'svelte/store'
     import {EditorView} from "@codemirror/view"
     
+    import cytoscape from 'cytoscape';
+
+    
     let b = ':3'
     # otherlang
     console.log("<Code/>")
@@ -34,6 +37,7 @@
     function bang() {
         throw "cake"
     }
+
 </script>
 
 {#if 0}

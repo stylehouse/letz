@@ -7,7 +7,7 @@
 Clone this, then:
 
 ```bash
-sudo apt install lsyncd virt-manager sshfs openssh-server
+sudo apt install lsyncd virt-manager sshfs openssh-server python3-flask
 git submodule init
 git submodule update
 # < the "gox" qemu vm creation (a debian)
