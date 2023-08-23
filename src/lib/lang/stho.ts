@@ -1,6 +1,8 @@
 import grammar from './stho.grammar?raw'
 import { buildParser } from '@lezer/generator'
-import { LanguageSupport, LRLanguage, indentNodeProp, foldNodeProp, foldInside, delimitedIndent } from "@codemirror/language"
+import { LanguageSupport, LRLanguage, indentNodeProp, foldNodeProp, foldInside,
+    delimitedIndent, continuedIndent
+} from "@codemirror/language"
 import {styleTags, tags as t} from "@lezer/highlight"
 
 const parser = buildParser(grammar)
@@ -9,7 +11,7 @@ export const sthoLanguage = LRLanguage.define({
     parser: parser.configure({
         props: [
             indentNodeProp.add({
-                Sunpit: delimitedIndent({ closing: 'ok', align: true,  })
+                Sunpit: continuedIndent({except:/^\s*S /})
             }),
             foldNodeProp.add({
                 Sunpit: foldInside
@@ -21,7 +23,6 @@ export const sthoLanguage = LRLanguage.define({
                 LineComment: t.lineComment,
                 "( )": t.paren
             })
-
         ]
     }),
     languageData: {
