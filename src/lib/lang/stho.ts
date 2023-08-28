@@ -11,7 +11,8 @@ export const sthoLanguage = LRLanguage.define({
     parser: parser.configure({
         props: [
             indentNodeProp.add({
-                Sunpit: continuedIndent({except:/^\s*S /})
+                Sunpit: continuedIndent({except:/^\s*S $/}),
+                Sunpitness: continuedIndent({except:/^\s*S $/}),
             }),
             foldNodeProp.add({
                 Sunpit: foldInside
@@ -26,7 +27,9 @@ export const sthoLanguage = LRLanguage.define({
         ]
     }),
     languageData: {
-        commentTokens: { line: "#" }
+        commentTokens: { line: "#", block: {open: "/*", close: "*/"} },
+        closeBrackets: {brackets: ["(", "[", "{", "'", '"', "`"]},
+        indentOnInput: /^\s*(?:case |default:|\{|\}|<\/)$/,
     },
 })
 
