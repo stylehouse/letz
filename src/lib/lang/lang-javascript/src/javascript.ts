@@ -1,4 +1,7 @@
-import {parser} from "@lezer/javascript"
+import grammar from './lezer-javascript/src/javascript.grammar?raw'
+import { buildParser } from '@lezer/generator'
+const parser = buildParser(grammar)
+
 import {SyntaxNode} from "@lezer/common"
 import {LRLanguage, LanguageSupport,
         delimitedIndent, flatIndent, continuedIndent, indentNodeProp,

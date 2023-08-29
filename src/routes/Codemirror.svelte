@@ -9,6 +9,7 @@
     let usualSetup = [EditorView.lineWrapping, indentUnit.of("    ")];
     import { basicSetup } from "codemirror";
     import { stho } from "../lib/lang/stho.js";
+    import { javascript as sthovascript } from "../lib/lang/lang-javascript";
     import { javascript } from "@codemirror/lang-javascript";
     // < https://github.com/replit/codemirror-minimap
 
@@ -50,7 +51,7 @@
     // < nest grammars and everything instead?
     //    they would like some tractorgramming where to merge their definitions
     //     eg an expression on a line
-    let langs = [stho, javascript];
+    let langs = [stho, javascript, sthovascript];
     // selected lang
     export let lang = langs[0];
     let language = new Compartment();
