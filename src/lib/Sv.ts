@@ -2,8 +2,7 @@
 import { onMount, onDestroy, createEventDispatcher } from "svelte"
 
 # component does callback every ms
-export function recur(y,ms) {
-    ms ||= 700
+export function recur(y,ms=700) {
     $every = &i{
         y(i)
         setTimeout(&{ every(i+1) }, 700)
