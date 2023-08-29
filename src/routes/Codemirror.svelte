@@ -8,9 +8,13 @@
 
     let usualSetup = [EditorView.lineWrapping, indentUnit.of("    ")];
     import { basicSetup } from "codemirror";
-    import { stho } from "../lib/lang/stho.js";
-    import { javascript as sthovascript } from "../lib/lang/lang-javascript";
-    import { javascript } from "@codemirror/lang-javascript";
+    import { stho } from "$lib/lang/stho";
+    import { javascriptLanguage, istho } from "$lib/lang/istho"
+    // < change this properly, requires cm-buildhelper
+    let sthova = istho
+    //({jsx:true,typescript:true})
+    //import { javascript } from "@codemirror/lang-javascript";
+
     // < https://github.com/replit/codemirror-minimap
 
     // < GOING:
@@ -51,7 +55,7 @@
     // < nest grammars and everything instead?
     //    they would like some tractorgramming where to merge their definitions
     //     eg an expression on a line
-    let langs = [stho, javascript, sthovascript];
+    let langs = [stho, sthova];
     // selected lang
     export let lang = langs[0];
     let language = new Compartment();
@@ -62,7 +66,7 @@
     let startState = EditorState.create({
         doc: value,
         extensions: [
-            language.of(lang()),
+            language.of(typeof lang == 'function' ? lang() : lang),
 
             ...usualSetup,
             keymap.of([

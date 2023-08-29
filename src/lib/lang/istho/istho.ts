@@ -1,8 +1,6 @@
-import grammar from './lezer-javascript/src/javascript.grammar?raw'
-import { buildParser } from '@lezer/generator'
-const parser = buildParser(grammar)
+import {parser} from './parser'
 
-import {SyntaxNode} from "@lezer/common"
+import type {SyntaxNode} from "@lezer/common"
 import {LRLanguage, LanguageSupport,
         delimitedIndent, flatIndent, continuedIndent, indentNodeProp,
         foldNodeProp, foldInside, syntaxTree} from "@codemirror/language"
@@ -69,7 +67,7 @@ const keywords = "break case const continue default delete export extends false 
 
 /// JavaScript support. Includes [snippet](#lang-javascript.snippets)
 /// completion.
-export function javascript(config: {jsx?: boolean, typescript?: boolean} = {}) {
+export function istho(config: {jsx?: boolean, typescript?: boolean} = {}) {
   let lang = config.jsx ? (config.typescript ? tsxLanguage : jsxLanguage)
     : config.typescript ? typescriptLanguage : javascriptLanguage
   return new LanguageSupport(lang, [
