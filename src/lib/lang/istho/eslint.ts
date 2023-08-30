@@ -1,6 +1,6 @@
-import {Diagnostic} from "@codemirror/lint"
-import {Text} from "@codemirror/state"
-import {EditorView} from "@codemirror/view"
+import type {Diagnostic} from "@codemirror/lint"
+import type {Text} from "@codemirror/state"
+import type {EditorView} from "@codemirror/view"
 import {javascriptLanguage} from "./istho"
 
 /// Connects an [ESLint](https://eslint.org/) linter to CodeMirror's

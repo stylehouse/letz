@@ -1,4 +1,5 @@
 import {snippetCompletion as snip} from "@codemirror/autocomplete"
+import type {Completion} from "@codemirror/autocomplete"
 
 /// A collection of JavaScript-related
 /// [snippets](#autocomplete.snippet).

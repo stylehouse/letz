@@ -1,7 +1,8 @@
-import {NodeWeakMap, SyntaxNodeRef, SyntaxNode, IterMode} from "@lezer/common"
-import {Completion, CompletionContext, CompletionResult} from "@codemirror/autocomplete"
+import {NodeWeakMap, IterMode} from "@lezer/common"
+import type {SyntaxNodeRef, SyntaxNode} from "@lezer/common"
+import type {Completion, CompletionContext, CompletionResult} from "@codemirror/autocomplete"
 import {syntaxTree} from "@codemirror/language"
-import {Text} from "@codemirror/state"
+import type {Text} from "@codemirror/state"
 
 const cache = new NodeWeakMap<readonly Completion[]>()
 
