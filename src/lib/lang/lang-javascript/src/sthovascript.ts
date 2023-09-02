@@ -1,4 +1,5 @@
-import grammar from './lezer-javascript/src/sthovascript.grammar?raw'
+
+import grammar from '../lezer-javascript/src/sthovascript.grammar?raw'
 import { buildParser } from '@lezer/generator'
 const parser = buildParser(grammar)
 
