@@ -1,0 +1,26 @@
+
+@tokens {
+    IOness { "i" | "o" }
+    Name { (@asciiLetter "_")+ }
+    Number { @digit+ }
+    nonnl { ![\n] }
+    nl { "\n" }
+    Sigil { "@" | "#" }
+    Space  { @whitespace }
+    @precedence {IOness, Name}
+    @precedence {nl, Space}
+}
+
+@top Program { Line* }
+Line { Inline nl }
+
+Inline { Comment | expression | Space+ }
+
+Comment { "#" nonnl+ }
+
+expression { Name | Number | IOing }
+
+IOing { IOness ' ' IOpath }
+
+IOpath { Leg ("/" Leg)* }
+Leg { Sigil? Name }
