@@ -16,7 +16,7 @@
 @top Program { Line* }
 Line { Inline nl }
 
-Inline { Comment | expression | space+ }
+Inline { Comment | expression | space* }
 
 Comment { "#" nonnl+ }
 
