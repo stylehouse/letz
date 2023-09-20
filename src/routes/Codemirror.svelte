@@ -7,9 +7,11 @@
     import { defaultKeymap, indentWithTab } from "@codemirror/commands";
 
     let usualSetup = [EditorView.lineWrapping, indentUnit.of("    ")];
+    const dispatch = createEventDispatcher();
+    
     import { basicSetup } from "codemirror";
-    import { stho } from "$lib/lang/stho";
     import { javascriptLanguage, istho } from "$lib/lang/istho"
+    import { stho } from "$lib/lang/stho"
     //import { sthovascript } from "$lib/lang/lang-javascript/src/index"
     // < change this properly, requires cm-buildhelper
     //({jsx:true,typescript:true}
@@ -18,35 +20,30 @@
 
     // < https://github.com/replit/codemirror-minimap
 
-    // < GOING:
-    import { sto, ge } from "./stores.js";
-    const dispatch = createEventDispatcher();
-    export let ele = undefined;
-    let updge = () => ge.update((ge) => ge + "e");
     // < "Esc" should escalate committal of the editor contents
 
-    // value
-    let garbage = [];
-    onDestroy(() => garbage.map((y) => y()));
-    // to sync these two
-    export let code;
+    
+    export let code:string|store
     let view: EditorView = undefined;
+    export let ele = undefined
+
     let cha = function (etc) {
         view.dispatch({ changes: [...arguments] });
     };
     // subscribe for init and more
+    let garb = []
     let value;
-    garbage.push(
-        code.subscribe((v) => {
-            value = v;
-            if (view) {
-                // view and "load into codemirror"
-                let was = view.state.doc.toString();
-                cha({ from: 0, to: was.length, insert: value });
-                console.log("value sub!!!");
-            }
-        })
-    );
+    garb.push(code.subscribe((v) => {
+        value = v;
+        if (view) {
+            // view and "load into codemirror"
+            let was = view.state.doc.toString();
+            cha({ from: 0, to: was.length, insert: value });
+            console.log("value sub!!!");
+        }
+    }))
+    onDestroy(() => garb.map(y => y()))
+
     let overdub = () => {
         cha({ from: 0, insert: "warp\n" });
     };
@@ -60,11 +57,9 @@
         stho,
         //sthovascript,
         //javascript,
-        istho
+        istho,
     ]
-    console.log({langs})
-    // selected lang
-    export let lang = langs[1];
+    export let lang = langs[0];
     let language = new Compartment();
     let setlang = (lang) => {
         view.dispatch({ effects: language.reconfigure(lang()) });
@@ -73,10 +68,10 @@
     let startState = EditorState.create({
         doc: value,
         extensions: [
-            language.of(typeof lang == "function" ? lang() : lang),
-            //istho(),
+            language.of(lang()),
 
             ...usualSetup,
+            
             keymap.of([
                 // makes this element inescapable by Tab to keyboard navigators
                 //  the Esc,Tab is supposed to work around that, but
@@ -115,7 +110,6 @@
 </script>
 
 <div class="Codemirror" bind:this={ele} />
-<button on:click={() => updge()}> updge() </button>
 <button on:click={() => overdub()}> overdub </button>
 {#if focus}FOCUS{/if}
 
