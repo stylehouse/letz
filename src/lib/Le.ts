@@ -99,7 +99,8 @@ export function Le_Attention(state) {
     let s = C_('lezing',1,{pi:'lezing'})
     
     let cursor = tree.cursorAt(about.from, 1)
-    while (!s.sc.z || cursor.next()) {
+    let energy = 130
+    while (energy-- > 0 && (!s.sc.z || cursor.next())) {
         cursor.from > about.to and break
         i_(s,C_(cursor.name,1,{pi:'nodule'},{range:{from:cursor.from,to:cursor.to}}))
         !cursor.next() > about.to and break

@@ -1,7 +1,7 @@
 // connect the following compilers to svelte
 
 // mainly stho lite
-import { stylehouse_lite, merge_sourcemaps } from './stho_lite_compiler.js';
+import { stylehouse_lite, merge_sourcemaps } from './stholite_compiler.js';
 // and then typescript
 import esbuild from 'esbuild';
 

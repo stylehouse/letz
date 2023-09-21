@@ -13,25 +13,24 @@
 
     
     let b = ':3'
-    # otherlang
     console.log("<Code/>")
-    $start = "# yeti etc\ni thung/with/etc\n\n\nS o yeses/because/blon_itn\n  yapto\n  o figura/datch/#chang\n"
+    let start = "# yeti etc\ni thung/with/etc\n\n\nS o yeses/because/blon_itn\n  yapto\n  o figura/datch/#chang\n"
 
-    $code = writable(start)
+    let code = writable(start)
     
 
-    # this was a '# comment'
+    // this was not a '# comment'
     let look:Le = undefined
     function kommit({detail:{view}}) {
-        $text = view.state.doc.toString()
-        $json = JSON.stringify(text)
+        let text = view.state.doc.toString()
+        let json = JSON.stringify(text)
         console.log(json)
         look = Le_Attention(view.state)
     }
     let junk = [1,3,5,[6,[6,[6,[[6,[2]]]]]]]
 
     async function overdub() {
-        $res = await fetch('http://s:8000/5835ea2230e6b4ee2b6c3645038ccaa54c110c01f0a2bfa4cefabf32ffe008bd')
+        let res = await fetch('http://s:8000/5835ea2230e6b4ee2b6c3645038ccaa54c110c01f0a2bfa4cefabf32ffe008bd')
         code.set(await res.text())
     }
     function bang() {
