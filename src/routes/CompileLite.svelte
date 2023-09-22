@@ -2,7 +2,7 @@
     import { ex } from "$lib/St"
     import { stylehouse_lite } from "$lib/lang/stholite_compiler"
     // # yes
-    $compiled
+    let compiled
     function comp () {
         // blatant
         let compiler = source => ex({source}, stylehouse_lite(source))
@@ -13,8 +13,8 @@
             +"    things "+"and logs "+"and stuff\n"
             +"els"+"if (1) near\n"
             +"let oh = &"+"fi,gu,res"+"{ 33+3 }\n"
-            +"    each"+" etc art {\n"
-            +"        A.1.2.3\n"
+            +"    each"+" etc Dc&art {\n"
+            +"        A.1.2.3 + ds&z\n"
             +"    }}\n"
             +"    \n"
             +"    &acgtscq{\n"

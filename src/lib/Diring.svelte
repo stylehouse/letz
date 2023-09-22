@@ -11,9 +11,9 @@
     async function ring() {
         D = Construct({I:'In',s:C,D})
     }
-    $Consimg
+    let Consimg
     async function range() {
-        $Cons = inlace(D,{inc:1}).filter(D => D.c.pi == 'Con')
+        let Cons = inlace(D,{inc:1}).filter(D => D.c.pi == 'Con')
         
         Consimg = Cons
     }
