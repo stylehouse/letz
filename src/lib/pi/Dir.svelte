@@ -71,7 +71,7 @@
                 <p>{f.f}
                         <!-- sizes="(max-width: 800px) 400px, 100vw" -->
                     <img on:click={(e)=>animg(e,f)}
-                        srcset={`${new URL(f.src)} 800w, ${new URL(f.full_src)} 2100w`}
+                        srcset={`${new URL(f.src)} 1200w, ${new URL(f.full_src)} 2100w`}
                          alt="pretty"/>
                     <!-- <img src={formlink('thv',dir,f.f)+'.gif'} alt="pretty"/> </p> -->
                 {#if f.interest}

@@ -16,6 +16,7 @@
             +"    each"+" etc Dc&art {\n"
             +"        A.1.2.3 + ds&z\n"
             +"    }}\n"
+            +"    d.toFixed() != d and ~fractionalind: d, C, T.readinglv\n"
             +"    \n"
             +"    &acgtscq{\n"
             +"        1s&todo + A.3 + s&dosage + cs&busy\n"

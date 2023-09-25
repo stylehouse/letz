@@ -87,6 +87,9 @@ so:
 */
 
 import { pit,C_,i_ } from "$lib/St"
+import { me } from "$lib/Y/Text"
+# Babz works here but not in Text.ts!?
+
 
 // return an object about whatever is going on
 export function Le_Attention(state) {

@@ -17,6 +17,8 @@
     let start = "# yeti etc\ni thung/with/etc\n\n\nS o yeses/because/blon_itn\n  yapto\n  o figura/datch/#chang\n"
 
     let code = writable(start)
+
+    
     
 
     // this was not a '# comment'
@@ -39,8 +41,8 @@
 
 </script>
 
-{#if 0}
 <CompileLite />
+{#if 0}
 
 <Diring t="Direr" />
 

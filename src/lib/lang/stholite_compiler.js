@@ -32,7 +32,13 @@ export function stylehouse_lite (source,filename,agent) {
     let timer = delta('stylehouse_lite '+(agent?agent+": ":"")+filename)
     let bit_slow_ms = 9
     let last_sourcemap
+    let staged_changes = 0
     function commit_s () {
+        // < caching|laziness right, breaks everything now
+        if (0 && staged_changes == 0 && last_sourcemap) {
+            return last_sourcemap
+        }
+        staged_changes = 0
         // < why|what should these be? works okay
         const outputSourceMap = 'output.js.map';
         const map = s.generateMap({
@@ -77,10 +83,14 @@ export function stylehouse_lite (source,filename,agent) {
             }
             s.overwrite(start, end, it)
             if (c && c.recursive) {
-                // it may happen again
+                // it may happen again later
                 delete c.recursive
                 recursive.push([bits,cb,c])
             }
+        }
+        if (any) {
+            // commit_s() may then make a map, update source
+            staged_changes++
         }
         return any
     }
@@ -122,7 +132,7 @@ export function stylehouse_lite (source,filename,agent) {
     // the following patterns may use $nls to not work on comments
     commenty.some(r=>r) && commit_s()
 
-    rep(/blatant/,    () => 'blon_itn')
+    rep(/blatant/,        () => 'blon_itn')
     rep(/'one thing'/,    () => "'un thing'\n'two thing'")
 
     // left-hand if
@@ -140,6 +150,12 @@ export function stylehouse_lite (source,filename,agent) {
 
         {recursive:1}
     )
+    
+    // one might: ... and ~...
+    //  so we should commit now (if anything chaged)
+    commit_s()
+    // < ~... -> &c,"..." for random observations (debug statements)
+    rep(/^(\s*)~(.*?)$/,  (indent,com) => indent+'// some &c: '+com)
 
 
     // each etc data {    -> for (var e in data) { etc

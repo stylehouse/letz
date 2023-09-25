@@ -6,7 +6,7 @@ const config: UserConfig = {
 	plugins: [
 		stho_vite(),
 		sveltekit()
-	]
+	],
 };
 
 export default config;
