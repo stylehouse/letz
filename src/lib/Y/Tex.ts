@@ -1,7 +1,6 @@
 # bits from Planet|Ying|G/ive about text
-# oh yeah! things!
+# oh yeah! things! boot? bitsies!!
 
-export let me = {}
  // Lines string<->thing de?construction
   
   // &Compress, &oleak, &cmuted

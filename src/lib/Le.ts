@@ -87,8 +87,7 @@ so:
 */
 
 import { pit,C_,i_ } from "$lib/St"
-import { me } from "$lib/Y/Text"
-# Babz works here but not in Text.ts!?
+import { me } from "$lib/Y/Tex"
 
 
 // return an object about whatever is going on
