@@ -31,6 +31,7 @@
 		"@codemirror/view": "^6.5.1",
 		"@lezer/lr": "^1.2.3",
 		"codemirror": "^6.0.1",
-		"cytoscape": "^3.26.0"
+		"cytoscape": "^3.26.0",
+		"diff-match-patch": "^1.0.5"
 	}
 }
