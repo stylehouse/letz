@@ -88,6 +88,7 @@ so:
 
 import { pit,C_,i_ } from "$lib/St"
 import { me } from "$lib/Y/Tex"
+import { ex } from "$lib/Y/Pic"
 
 
 // return an object about whatever is going on
@@ -107,6 +108,11 @@ export function Le_Attention(state) {
         i_(s,C_(cursor.name,1,{pi:'nodule'},{range:{from:cursor.from,to:cursor.to}}))
         !cursor.next() > about.to and break
     }
+    let be = ex({a:2},{b:2})
+    console.log("Le_Attention!!!",be)
+    debugger
+    let Lines = me.enL({},{},{},{},s)
+    i_(s,C_(Lines,1))
     return s
 }
 // < state-updatable pull-apart-task object? an Inc-Pro-Run, with The-This etc

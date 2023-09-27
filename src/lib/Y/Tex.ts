@@ -1,5 +1,11 @@
-# bits from Planet|Ying|G/ive about text
+# text functions
+#  copied from from Planet|Ying|G/ive/Text
 # oh yeah! things! boot? bitsies!!
+import { ex } from "$lib/Y/Pic"
+
+# export default self, so users import {deL,oleak,me} from 'Tex'
+let self = {}
+let me = self.me = {}
 
  // Lines string<->thing de?construction
   
@@ -197,7 +203,7 @@
     }
   
   // &enL toLines - C to string
-    A.I.i.y.tw.toLines.c.code =
+    # A.I.i.y.tw.toLines.c.code =
     me.enL = &acgts{
         
         s and C = s;
@@ -415,7 +421,7 @@
         }).join("\n")
         return theone( me&deL,L,{attach:'fiu'} )
     }
-    A.I.i.y.tw.readLines.c.code =
+    #A.I.i.y.tw.readLines.c.code =
     me.deL = &acgts,opt{
         
         opt ||= {};
@@ -594,3 +600,4 @@
         return N
     }
  
+export {me}

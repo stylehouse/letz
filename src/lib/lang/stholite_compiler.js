@@ -25,6 +25,7 @@ function delta(t) {
 
 // transform to javascript something quite like it
 export function stylehouse_lite (source,filename,agent) {
+  // rep(), commit_s()
     if (typeof source != 'string') throw "!string"
     filename ||= "???"
     let s = new MagicString(source)
@@ -96,6 +97,9 @@ export function stylehouse_lite (source,filename,agent) {
     }
 
 
+  // rep(...) use
+    // see shed.git/ghosts/j/41
+
     // anything on a line
     let nnl = '[^\n]+'
     // whitespace leading up to things not comments
@@ -157,7 +161,6 @@ export function stylehouse_lite (source,filename,agent) {
     // < ~... -> &c,"..." for random observations (debug statements)
     rep(/^(\s*)~(.*?)$/,  (indent,com) => indent+'// some &c: '+com)
 
-
     // each etc data {    -> for (var e in data) { etc
     // < not DIY closing brackets (indent?)
     // < more of an o, if more spec
@@ -194,13 +197,30 @@ export function stylehouse_lite (source,filename,agent) {
         }
     )
 
-
     // perlish elsif
     rep(
         /^(\s*)elsif ?\(/,
         (ind) => ind+"else if ("
     )
+    commit_s()
 
+    // delete returns the deleted
+    rep(/ = delete (\w+[\[\.][^\s;)]+)/,
+        (expr) => ' = '+expr+'; delete '+expr
+    )
+
+    // me&func,args -> me.func(A,C,G,T,args)
+    // see also shorthands to access A* and C*
+    //  which has already replaced /\w[Aaycs]&\w+/
+    rep(/(G|me)\&(\$)?(\w+)(,[^\s;]+)?/,
+        (me,interp,name,args) => {
+            let t = interp ? name : "'"+name+"'"
+            let h = me == 'G' ? ".h(A,C,G,T,"+t : "["+t+"](A,C,G,T"
+            args ||= ''
+            return me+h+args+")"
+        }
+    )
+    commit_s()
 
     // &etc{...} -> function(e,t,c){...}
     // < (arfgunc) a way to write its args on it without having to read via toString parse
