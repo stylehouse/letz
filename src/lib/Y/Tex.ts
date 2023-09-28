@@ -9,6 +9,54 @@ import DiffMatchPatch from "diff-match-patch"
 let self = {}
 let me = self.me = {}
 
+ // diffing
+    $dmp = null
+    $diff = &sSc{
+        dmp ||= new DiffMatchPatch()
+        c ||= {}
+        typeof c != 'object' and c = {chunk:'line'}
+        dmp.Diff_Timeout = 1; # second
+        dmp.Diff_EditCost = c.edar || 4
+
+        $d = dmp.diff_main(s, S);
+        # idealise the size of the groups coming/going
+        c.chunk ||= 'word';
+        c.chunk == 'line' and dmp.diff_cleanupSemantic(d)
+        c.chunk == 'word' and dmp.diff_cleanupEfficiency(d)
+        # or letters at a time, nice and noisy
+        
+        # convert to C+
+        $N = []
+        $ways = ['gone','same','new']
+        each il diffs {
+            $op = l[0];
+            $s = l[1];
+            $way = ways[op*1+1]
+            !way and throw "what op", op
+            N.push(C_(way,{},{s}))
+        }
+            
+        return N
+    }
+    
+ // &enj etc
+    # copied from G/g-j/NutGravy
+    $enj = &sc{
+        $i = 1000
+        $replacer = &kv{
+            # sprawling verboten
+            --i < 0 and throw "enj large"
+            #this; # The object in which the key was found
+            # < use this<-v to stack where we are in s**
+            # < replace certain given v with a pointer string for cyclical refs
+            return v
+        }
+        return JSON.stringify(s,replacer)
+    }
+    $dej = &s{
+        return JSON.parse(s)
+    }
+
  // Lines string<->thing de?construction
   
   // &Compress, &oleak, &cmuted
@@ -602,52 +650,4 @@ let me = self.me = {}
         return N
     }
 
- // &enj etc
-    # copied from G/g-j/NutGravy
-    $enj = &s{
-        $i = 1000
-        $replacer = &kv{
-            # sprawling verboten
-            --i < 0 and throw "enj large"
-            #this; # The object in which the key was found
-            # < use this<-v to stack where we are in s**
-            # < replace certain given v with a pointer string for cyclical refs
-            return v
-        }
-        return JSON.stringify(s,replacer)
-    }
-    $dej = &s{
-        return JSON.parse(s)
-    }
-
- // diffing
-    $dmp = null
-    $diff = &sSc{
-        dmp ||= new DiffMatchPatch()
-        c ||= {}
-        typeof c != 'object' and c = {chunk:'line'}
-        dmp.Diff_Timeout = 1; # second
-        dmp.Diff_EditCost = c.edar || 4
-
-        $d = dmp.diff_main(s, S);
-        # idealise the size of the groups coming/going
-        c.chunk ||= 'word';
-        c.chunk == 'line' and dmp.diff_cleanupSemantic(d)
-        c.chunk == 'word' and dmp.diff_cleanupEfficiency(d)
-        # or letters at a time, nice and noisy
-        
-        # convert to C+
-        $N = []
-        $ways = ['gone','same','new']
-        each il diffs {
-            $op = l[0];
-            $s = l[1];
-            $way = ways[op*1+1]
-            !way and throw "what op", op
-            N.push(C_(way,{},{s}))
-        }
-            
-        return N
-    }
-    
 export {me, enj,dej}
