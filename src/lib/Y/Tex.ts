@@ -1,7 +1,7 @@
 # text functions
 #  copied from from Planet|Ying|G/ive/Text
 # oh yeah! things! boot? bitsies!!
-import { ex,haks } from "$lib/Y/Pic"
+import { numf,ex,hak,haks } from "$lib/Y/Pic"
 import { C_ } from "$lib/St"
 import DiffMatchPatch from "diff-match-patch"
 
