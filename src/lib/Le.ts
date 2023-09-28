@@ -111,6 +111,8 @@ export function Le_Attention(state) {
     sc&extrava = {gratis:'vav'}
     sc&da = 3
     ss&zem = "levitat"
+    $i = 0
+    while (i++ < 22) { s.c['z'+i] = 1 }
     let Lines = me.enL({},{},{},{},s)
     let z = me.deL({},{},{},{},Lines)
     console.log({s,Lines,z})

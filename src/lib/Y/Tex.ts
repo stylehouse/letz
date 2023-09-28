@@ -291,7 +291,9 @@ let me = self.me = {}
                 continue
             }
             if (typeof v != 'string' && typeof v != 'number') {
-                # is > 4*3 nodes or encodes to > 42 chars
+                # if v** is > 4 nodes or encodes to > 42 chars
+                # &oleak may be small but numerous,
+                #  eg the whole C.sc can be quite long, we are only looking at each v in C.sc.*
                 if (me&oleak,v,4,42 ) {
                     me&oleak,v,24 and throw "Leaky "+nk+"."+gk+": "+ki(v);
                     # big enough to quote, simplifies remainder
