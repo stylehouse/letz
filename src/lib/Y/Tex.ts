@@ -41,18 +41,24 @@ let me = self.me = {}
     
  // &enj etc
     # copied from G/g-j/NutGravy
-    # see &oleak
-    $enj = &s,nodelimit{
+    # see &oleak for nodelimit,soft
+    $enj = &s,nodelimit,soft{
         $i = nodelimit || 1000
+        $not = 0
         $replacer = &kv{
-            # sprawling verboten
-            --i < 0 and throw "enj nodelimit"
+            if (--i < 0) {
+                # sprawling verboten -> no return, no more recursion
+                soft and not = 1; return null
+                else { throw "enj nodelimit" }
+            }
             #this; # The object in which the key was found
             # < use this<-v to stack where we are in s**
             # < replace certain given v with a pointer string for cyclical refs
             return v
         }
-        return JSON.stringify(s,replacer)
+        $string = JSON.stringify(s,replacer)
+        not and return null
+        return string
     }
     $dej = &s{
         return JSON.parse(s)
@@ -66,13 +72,10 @@ let me = self.me = {}
     #  has to finish to measure length
     me.oleak = &acgts,nodelimit,charlimit{
         $fail = 0
-        $code
-        try { code = enj(s,nodelimit) }
-        catch (er) {
-            er.message != "Too much to yaml" and throw er
-            fail = 1
-        }
-        code && code.length > charlimit and fail = 2
+        $code = enj(s,nodelimit,'soft')
+        !code and fail = 1
+        else
+        code.length > charlimit and fail = 2
         return fail
     }
     
