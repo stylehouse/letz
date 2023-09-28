@@ -1,7 +1,7 @@
 # text functions
 #  copied from from Planet|Ying|G/ive/Text
 # oh yeah! things! boot? bitsies!!
-import { numf,ex,hak,haks } from "$lib/Y/Pic"
+import { isar,isst,isC,num,numf,ex,hak,haks,grepout,peel,depeel } from "$lib/Y/Pic"
 import { C_ } from "$lib/St"
 import DiffMatchPatch from "diff-match-patch"
 
@@ -41,11 +41,12 @@ let me = self.me = {}
     
  // &enj etc
     # copied from G/g-j/NutGravy
-    $enj = &sc{
-        $i = 1000
+    # see &oleak
+    $enj = &s,nodelimit{
+        $i = nodelimit || 1000
         $replacer = &kv{
             # sprawling verboten
-            --i < 0 and throw "enj large"
+            --i < 0 and throw "enj nodelimit"
             #this; # The object in which the key was found
             # < use this<-v to stack where we are in s**
             # < replace certain given v with a pointer string for cyclical refs
@@ -60,24 +61,18 @@ let me = self.me = {}
  // Lines string<->thing de?construction
   
   // &Compress, &oleak, &cmuted
-    # check data depth or (yaml encoded) length
-    #  bails encode as soon as depth > $d*3
-    #  has to finish to figure length
-    me.oleak = &acgtsdl{
-        $fail = 0;
-        $was = window.maxyamling;
-        window.maxyamling = d * 3;
-        $code;
-        try { code = jsyaml.safeDump(s) }
+    # check if data is too large
+    #  bails encode as soon as node count
+    #  has to finish to measure length
+    me.oleak = &acgts,nodelimit,charlimit{
+        $fail = 0
+        $code
+        try { code = enj(s,nodelimit) }
         catch (er) {
-            window.maxyamling = was;
             er.message != "Too much to yaml" and throw er
-            fail = 1;
+            fail = 1
         }
-        if (l && code && code.length > l) {
-            fail = 'large-ish'
-        }
-        window.maxyamling = was;
+        code && code.length > charlimit and fail = 2
         return fail
     }
     
@@ -209,7 +204,7 @@ let me = self.me = {}
     # for N|i of '  ', starting with i=1 -> ''!
     # < rename. GONE? used once.
     #   could call &indents,(d-1)*2,s,'notailn'
-    self.indent = &ds{
+    $indent = &ds{
         d == 0 and throw "d!>0"
         isar(d) and d = hak(d)
         s and throw "< splitindjoint"
@@ -217,7 +212,7 @@ let me = self.me = {}
         return new Array(1*d).join('  ')
     }
     # &ind (around &enL) uses '  ', BQ-ish things use:
-    self.indents = &l,v,notailn{
+    $indents = &l,v,notailn{
         num(l) and l = new Array(1+l*1).join(' ')
         !isst(l) and throw "indent ' '?"
         $vs = [];
@@ -230,14 +225,14 @@ let me = self.me = {}
         return vs.join("\n")
     }
     # $L = ["the","lines"] <- "the\nlines\n"
-    self.Lin_Lines = &v{
+    $Lin_Lines = &v{
         v = isar(v) ? v : v.split("\n")
         # chomp off the tail end
         v.slice(-1)[0] == '' and v.pop()
         return v
     }
     # we take the indent off to make it Cy&deLines!
-    self.unindents = &d,v,notailn{
+    $unindents = &d,v,notailn{
         !num(d) and throw "indent d"
         $vs = [];
         v = Lin_Lines(v)
@@ -257,6 +252,7 @@ let me = self.me = {}
     me.enL = &acgts{
         
         s and C = s;
+        !isC(s) and throw "enL: not C"
         $t = C.t;
         $y = C.y.cv;
         # hath
@@ -364,8 +360,7 @@ let me = self.me = {}
         }
       
       // encoded bits
-        # may pass a T.enj_catch, so functions can warn/show up as 'CODE'
-        $enj = &s{ return window.enj(s,T) };
+        # < enj() add a replacer callback so functions can warn/show up as 'CODE' etc
 
         # t can be messy, very long (as opposed to is.good_k)
         $l = is.safe_k(t) ? t : enj(t);
@@ -398,8 +393,8 @@ let me = self.me = {}
                 l += "\t"+enj(v)
             }
             else if (hak(v)) {
-                # G&peel bits: t y W:At et:3,se:te,ra
-                l += "\t"+G&depeel,v
+                # word (etc) bits: t y W:At et:3,se:te,ra
+                l += "\t"+depeel(v)
             }
         }
 
@@ -476,6 +471,7 @@ let me = self.me = {}
         
         opt ||= {};
         $is = me&Lines_types
+        !isst(s) and throw "deL: not a string"
         $L = Lin_Lines(s);
         $oL = [];
         $tot = L.length;
@@ -534,7 +530,7 @@ let me = self.me = {}
             c = dej(c)
         }
         else if (c) {
-            c = G&peel,c
+            c = peel(c)
         }
         else { c = {} }
         
@@ -545,7 +541,7 @@ let me = self.me = {}
             sc = dej(sc)
         }
         else if (sc) {
-            sc = G&peel,sc
+            sc = peel(sc)
         }
         else { sc = {} }
         
@@ -594,7 +590,7 @@ let me = self.me = {}
                 v = s.join("\n");
                 # console.log("Loaded "+nk+gk+": "+v+'  Next: '+L[0]);
                 if (!string) {
-                    v = jsyaml.safeLoad(v);
+                    v = dej(v);
                 }
                 else {
                     !v.match(/\n$/) and v = v+"\n"

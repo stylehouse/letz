@@ -108,9 +108,12 @@ export function Le_Attention(state) {
         i_(s,C_(cursor.name,1,{pi:'nodule'},{range:{from:cursor.from,to:cursor.to}}))
         !cursor.next() > about.to and break
     }
-    sc&extrava = {gance:3,le:1}
+    sc&extrava = {gratis:'vav'}
+    sc&da = 3
+    ss&zem = "levitat"
     let Lines = me.enL({},{},{},{},s)
-    console.log({Lines})
+    let z = me.deL({},{},{},{},Lines)
+    console.log({s,Lines,z})
     i_(s,C_(Lines,1))
     return s
 }

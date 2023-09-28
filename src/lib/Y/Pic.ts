@@ -14,7 +14,8 @@ let self = {}
 let window = self
 # < apparently you can't just do this and: import { me,ex } from "$lib/Y/Pic"
 #export default self;
-let me = self.me = {}
+# we export every /^    \$(\w+)/, see the end of this file
+    $me = self.me = {}
 
  // main
    // types
@@ -28,7 +29,7 @@ let me = self.me = {}
     # < G&C, babz: = C yadda @3
     #   and to parse args for eg opeolo
     #   has a lot to do with:
-    window.Cye = &s{
+    $Cye = &s{
         s = G&Cye,s
         s.y = {cv:s.y.cv}
         delete ss&z
@@ -41,27 +42,27 @@ let me = self.me = {}
     $iske = k => typeof k == 'string' || typeof k == 'number'
     # stringy nothing
     $spacechars = {" ":1,"\n":1,"\t":1}
-    self.isspace = s => hak(s) && !havs(s).some(s => !spacechars[s])
+    $isspace = s => hak(s) && !havs(s).some(s => !spacechars[s])
     # numbery, mostly as s*1 == s (not ' '*1 == ' ')
-    self.isnum =
-    self.num = s => (isnu(s) || s && s.length && !isspace(s)) && s*1 == s
-    window.isnu = s => typeof s == 'number'
-    window.isfu = s => typeof s == 'function'
-    window.isst = s => typeof s == 'string'
-    window.isar = s => s && s.constructor == Array
-    window.isha = s => s && typeof s == 'object' && !isC(s)
-    window.isob = s => s && typeof s == 'object'
-    window.isR = s => isC(s) && sy&R == s
-    window.hasR = s => isC(s) && sy&R
+    $num = s => (isnu(s) || s && s.length && !isspace(s)) && s*1 == s
+    $isnum = num
+    $isnu = s => typeof s == 'number'
+    $isfu = s => typeof s == 'function'
+    $isst = s => typeof s == 'string'
+    $isar = s => s && s.constructor == Array
+    $isha = s => s && typeof s == 'object' && !isC(s)
+    $isob = s => s && typeof s == 'object'
+    $isR = s => isC(s) && sy&R == s
+    $hasR = s => isC(s) && sy&R
     
     # housey, indexey {}|[], eg a random c (see %%sustain)
-    self.ish =
-    self.isho = v => isha(v) && !isC(v)
+    $isho = v => isha(v) && !isC(v)
+    $ish = isho
     # itemic
-    self.isitemic =
-    self.isit = v => !isha(v) || isC(v)
+    $isit = v => !isha(v) || isC(v)
+    $isitemic = isit
     # -suchpi
-    self.ispi = (v,pi) => isC(v) && (!pi ? vc&pi : vc&pi == pi)
+    $ispi = (v,pi) => isC(v) && (!pi ? vc&pi : vc&pi == pi)
     
     # make lots of fatal versions of isba(), etc
     $fatal = {}
@@ -82,7 +83,7 @@ let me = self.me = {}
     
     # fatal assignment, must stay same once set
     # < Babz: h =. v
-    self.fatas = &hkv{
+    $fatas = &hkv{
         v == null and throw "null-assign:"+k, h
         h[k] != null && h[k] != v and throw "reassign:"+k, h[k], v, h, k
         h[k] = v
@@ -92,7 +93,7 @@ let me = self.me = {}
     
     # C|R|E|D -> Ec&s
     #  ie looser sof(), still must isC()
-    self.csof = &j{
+    $csof = &j{
         # out of D?
         j = jy&E || j
         # to R
@@ -101,7 +102,7 @@ let me = self.me = {}
         return jc&s
     }
     # climb into a R//s, the usu sphere change
-    self.sof = &j{
+    $sof = &j{
         # < any Cish? have to not disappear inside
         !isR(j) and return j
         # things that have
@@ -115,7 +116,7 @@ let me = self.me = {}
         return s
     }
     # < slope y&up and...?
-    self.Aof = &sk{
+    $Aof = &sk{
         $r = sy&R
         fatal.isR(r)
         # for s//R//$k=C
@@ -125,7 +126,7 @@ let me = self.me = {}
     }
     # climb over a usu separation (&clonover, &copi, etc)
     #  where multiple C over dimensions, most grabable.
-    self.Cof = s => s && (sy&C || sy&Outs) || s
+    $Cof = s => s && (sy&C || sy&Outs) || s
     # o s//R//E
     me.REof = &acgts{
         $r = me&yfuture,s
@@ -309,7 +310,7 @@ let me = self.me = {}
     #   arrays of keys of hashes
     # note num()-able hash keys all come in order first,
     #  otherwise in order of appearance
-    self.ksaf = &sc{
+    $ksaf = &sc{
         $keys = haks(s)
         # < default to !inc the match?
         # < variations for
@@ -392,7 +393,7 @@ let me = self.me = {}
     }
     
     # [1,1,2] = flatten([1,[1,2]])
-    window.flatten = &M{
+    $flatten = &M{
         !isar(M) and throw "flatten!ar"
         $N = []
         each il M {
@@ -413,7 +414,7 @@ let me = self.me = {}
     #    as in perl $_ (not as bare expr, in c=BLOCK)
     # < for c='string' s=[C+], find C%string
     #  < and more... io Babz makes c={ifs,climb,select,etc}
-    self.grep = &cs{
+    $grep = &cs{
         # no function greps for true
         #  see also nex(), for not-null
         arguments.length == 1 and s = c; c = {y:v => v}
@@ -439,13 +440,13 @@ let me = self.me = {}
         return o
     }
     # false if empty, like &za
-    self.grap = &cs{
+    $grap = &cs{
         $N = grep(c,s)
         return hak(N) && N
     }
-    self.grop = (c,s) => grepout(s,c)
+    $grop = (c,s) => grepout(s,c)
     # removing .filter, y=[n+]|&n{1}|$n
-    window.grepout = &Ny{
+    $grepout = &Ny{
         $out = []
         # < expets is|includes
         isar(y)     and $Z = y;    y = n => Z.includes(n)
@@ -463,7 +464,7 @@ let me = self.me = {}
     # revisit &fabioty
     
     # map, [] or {}, waves of y(v,k)
-    self.map = &N{
+    $map = &N{
         $args = [...arguments]
         $N = args.pop()
         $array = isar(N)
@@ -485,16 +486,16 @@ let me = self.me = {}
     #  eg M = pam(N, e => ey&R && convert(e))
     # < working? returns unmapped e.
     # < non-first y() should not receive the gaps
-    self.pam = &{ return grep(map(reverse(...arguments))) }
+    $pam = &{ return grep(map(reverse(...arguments))) }
     # returning [v+]
-    self.armap = &{
+    $armap = &{
         $s = map(...arguments)
         return isar(s) ? s : havs(s)
     }
     # replacing map()
     #  N changes in place (and returns)
     # < undef == y() deletes it?
-    self.rap = &N{
+    $rap = &N{
         $args = [...arguments]
         $N = args.pop()
         $array = isar(N)
@@ -515,7 +516,7 @@ let me = self.me = {}
     # array from iterable: [s] = y.i=s|[s+]|&{}|[]
     #  for &sustrain y.i
     #   where you want one-or-list, possibly from callback
-    self.fuN = &s{
+    $fuN = &s{
         # < args?
         isfu(s) and s = s (...[...arguments].slice(1))
         !s and s = []
@@ -532,12 +533,12 @@ let me = self.me = {}
     #   for aroint() to take less code
     #  < multiplex a bunch to parse things out. eg sum(y?,N|...N)
     #   < arguments are silly though, modern life is params
-    self.flatorray = &N{
+    $flatorray = &N{
         return hak(N) == 1 && isar(N[0]) ? N[0] : N
     }
     # add numbers sum(f?,N)
     # < compile out the optional leading arg uglies
-    self.sum = &{
+    $sum = &{
         $args = [...arguments]
         $whatfor = isfu(args[0]) && args.shift()
         # sum(a,b,c...) or sum([a,b,c])
@@ -551,7 +552,7 @@ let me = self.me = {}
     }
     # perl split()
     #  except it's how many $times to match (from 1)
-    self.split = &s,by,times{
+    $split = &s,by,times{
         $N = s.split(defor(by,' '))
         if (times && hak(N) > times) {
             N = [
@@ -570,26 +571,26 @@ let me = self.me = {}
     # "$k:v(.t)" separated by " ", only C|string from c, eg a
     # < no numbers? not c.el? see &sustain etc
     # used for Eight.t by &complace
-    self.idint = &c{
+    $idint = &c{
         $idc = grep(v => iske(v) || isC(v), c)
         !hak(idc) and throw "no idint"
         return spant( armap((v,k) => cint([k,v]), idc) )
     }
     
    # simply joining by something, possibly with C.t
-    self.cint = &{ return aroint([...arguments],':') }
-    self.daint = &{ return aroint([...arguments],'-') }
+    $cint = &{ return aroint([...arguments],':') }
+    $daint = &{ return aroint([...arguments],'-') }
     # < dis() that goes peel:1 if big
     #    or value types could be separators, as in R%Cit
-    self.coint = &{ return aroint([...arguments],',') }
-    self.slant = &{ return aroint([...arguments],'/') }
-    self.spant = &{ return aroint([...arguments],' ') }
+    $coint = &{ return aroint([...arguments],',') }
+    $slant = &{ return aroint([...arguments],'/') }
+    $spant = &{ return aroint([...arguments],' ') }
     # allows the above to be eg cint(i,t) or cint([i,t])
-    self.aroint  = (N,k) => joint((hak(N) == 1 && isar(N[0]) ? N[0] : N),k)
+    $aroint  = (N,k) => joint((hak(N) == 1 && isar(N[0]) ? N[0] : N),k)
     # "$t1-$t2" for [C,C,C{.t==not}]
     # < not used once in a year in weird times (&pilegs)
     #   path making (from climbing) shall where itself by now
-    window.joint = &N,join,not{
+    $joint = &N,join,not{
         # ioty may N=C/*
         $M = (isC(N) ? me&ioty,N : N||[]) .map(n => isC(n) ? n.t : n)
             .filter(t => t != null && (not == null || t != not))
@@ -605,28 +606,28 @@ let me = self.me = {}
 
   // misc() access
     # defor wanting true, != 1
-    self.notoneor = &{
+    $notoneor = &{
         each is arguments {
             !(s == null || !s || s == 1) and return s
         }
         throw "nothing not-1"
     }
     # defined-or: s //= 1, s=0 stays 0
-    window.defor = &{
+    $defor = &{
         each is arguments {
             s != null and return s
         }
         throw "nothing definite"
     }
     # y(v,k) for s
-    window.hav = &sy{
+    $hav = &sy{
         return haks(s).map(k => y(s[k],k))
     }
     # see perl's values()
-    self.havs = &s{
+    $havs = &s{
         return haks(s).map(k => s [k])
     }
-    self.dis = &sc{
+    $dis = &sc{
         # light over slope
         c ||= 4.23
         isnu(c) and c = {dl:c}
@@ -642,7 +643,7 @@ let me = self.me = {}
   // misc() hash
     # hash stash, on t.sc[k] or so if C:t
     # < cant handle only k:v
-    self.ahk = &tk{
+    $ahk = &tk{
         !isob(t) and throw "!ob"
         # might accum into array at the end if k=[$k]
         $M = [... arguments].slice(2)
@@ -702,7 +703,7 @@ let me = self.me = {}
     # waves have a skin
     # skins relate posture
     # < for even ...arguments, like perl's {@kvs}
-    window.hashkv = &kv{
+    $hashkv = &kv{
         $args = [...arguments]
         if (args.length == 1) {
             $first = args[0]
@@ -738,19 +739,19 @@ let me = self.me = {}
     #  see unfatal: cvf(), opposite: scv() (or sca()==scaf())
     # convention of translating, from cv to s
     #  eg cv|s format is 0.1|1, as $C|Lines would say
-    $numf =
-    self.cvs = &s{
+    $cvs = &s{
         !(s >= 0 && s <= 1) and throw "numf!cv"
         return (s+'').substr(2)
     }
+    $numf = cvs
     # 0.33 = scv(33), with floating points (gets floaty at precision=17)
     # < collect cv type functions, eg is opposite of numf(0.33)
-    self.scv = &ov,{
+    $scv = &ov,{
         return dec(sca(ov),15)
     }
     # various cv compares
     #  c.* may contain more eg see &modselect
-    self.gteqcv = &vc{
+    $gteqcv = &vc{
         v ||= 0
         return (c.gte == null || v >= scv(c.gte))
              && (c.lte == null || v <= scv(c.lte))
@@ -759,7 +760,7 @@ let me = self.me = {}
              && (c.cv == null || v == scv(c.cv))
     }
     # good for: cvlt(R%boost,3) and return
-    self.cvlt = (s,c) => gteqcv(s,{lt:c})
+    $cvlt = (s,c) => gteqcv(s,{lt:c})
     
     # < vague. for sz(c.ov,2) and return
     #    turn into: sz(c,'ov') (2)+
@@ -768,24 +769,24 @@ let me = self.me = {}
     #    is a paradigm of osc access
     # (qua||0) < 2 and leave
     # sizes something, usu ope|interest for snoozing
-    self.lt = &lt{
+    $lt = &lt{
         t > 1 and t = '0.'+t
         return sz(l,t)
     }
-    self.sz = &ns{
+    $sz = &ns{
         isob(n) and throw "pass value||null"
         return (n || 0) < s
     }
     
     # 's' -> 'sc'
-    self.isnk = &k{
+    $isnk = &k{
         !(k == 'y' || k == 'c' || k == 's') and return
         k == 's' and k = 'sc'
         return k
     }
     # 'sthing' -> ['sc','thing']
     #  could go further into subframe if !string?
-    self.splitnkgk = &s{
+    $splitnkgk = &s{
         $k = isnk(s [0])
         return k ? [k,s.substr(1)] : [s]
     }
@@ -793,43 +794,52 @@ let me = self.me = {}
   // peel(), arq()
     # hash from 'k:v' or , v=1 if not given
     #  < nestings of the : and , separators
-    window.peel = &s,sep,kep{
+    $peel = &s,sep,kep{
         s == null || s == '' and return {}
-        # < peel token might include [keys], maybe json
+        # ["t"] -> {t:1}
         isar(s) and return hashkv(s.map(k => [k,1]))
         # clones supplied hash
-        #  this is not for eg &uptonode c arg
-        #   allows giving a c to read details from after
         isha(s) and return ex({},s)
         
         if (isst(s)) {
             # shortcut?
             sep ||= ','
             kep ||= ':'
-            if (!peelish(s,sep,kep)) {
-                return hashkv(s)
-            } 
+            $v = {}
+            $kvs = s.split(sep)
+            each i,kv kvs {
+                kv = split(kv,kep,2)
+                v[kv[0]] = kv.length > 1 ? kv[1] : 1
+            }
+            return v
             # < sep|kep?
             # < rebuild for k:that:go:deeply,
             #   or that@link to indentedchunk later
             #    or link object anywhere, if A:L..A:peel
-            #    < rebuild a subset of yaml mostly,
-            return G&peel,s
+            #   wants to be a codemirror language
+            #    referency concise prose
         }
         throw "not peely", s
     }
     # 'k:v' from hash
-    self.depeel = &s{
-        return G&depeel,s
+    # something has already checked it for objectiness (&enL)
+    $depeel = &s,sep,kep{
+        sep ||= ','
+        kep ||= ':'
+        $N = []
+        each kv s {
+            N.push([k,v].join(kep))
+        }
+        return N.join(sep)
     }
     # null-fatal peel
-    window.peli = &l{
+    $peli = &l{
         !(isst(l) || isar(l) || isha(l)) and throw "!peli", l
         return peel(l)
     }
     # looks like something to peel,
     #  supposing it will always be 
-    window.peelish = &s,sep,kep{
+    $peelish = &s,sep,kep{
         sep ||= ','
         kep ||= ':'
         return isst(s) && (s.includes(sep) || s.includes(kep))
@@ -845,7 +855,7 @@ let me = self.me = {}
     #  
     # smallest totality?
     #  people fall in a ditch that triangle will not fix
-    window.arq = &cq{
+    $arq = &cq{
         $origin = c
         # c fated to mix into s.$K, not s
         #  unless it knows any of these $k
@@ -956,7 +966,7 @@ let me = self.me = {}
 
     # ex with array merge
     #  eg s|c.via=[one|two] -> s.via=[one,two]
-    self.mex = &scq{
+    $mex = &scq{
         q ||= {}
         if (q.ek) {
             # fatal to want change
@@ -965,7 +975,7 @@ let me = self.me = {}
         return ex(s,c)
     }
     # selective extend
-    window.sex = &scqe{
+    $sex = &scqe{
         # < Babz for parsing arguments
         e == 1 and $y = k => c[k] && 1
         q = peli(q)
@@ -976,7 +986,7 @@ let me = self.me = {}
     }
     # selectively not extending
     #  nex(c,s,c) extends what isnt in c.* yet
-    self.nex = &scq{
+    $nex = &scq{
         q = peli(q)
         each kv c {
             hak(q,k) and continue
@@ -985,14 +995,14 @@ let me = self.me = {}
         return s
     }
     # text only
-    self.tex = &sc{
+    $tex = &sc{
         each kv c {
             iskeyish(v) and s [k] = c[k]
         }
         return s
     }
     # defined only
-    self.dex = &sc{
+    $dex = &sc{
         each kv c {
             v != null and s [k] = c[k]
         }
@@ -1000,7 +1010,7 @@ let me = self.me = {}
     }
     # selective ex, taking out (unless $k:0)
     #  as in consuming arguments from a c
-    window.tax = &s,c,take{
+    $tax = &s,c,take{
         !c and return s
         !isha(s) and throw "tax s?",s
         !isha(c) and throw "tax c?",c
@@ -1013,12 +1023,12 @@ let me = self.me = {}
         return s
     }
     # < generating type loosen|tighten from pex = p + ex
-    window.pex = &sc{
+    $pex = &sc{
         s = isha(s) ? s : peel(s)
         return ex(s,peel(c))
     }
     # merge s.* if hash|array
-    window.ex2 = &scq{
+    $ex2 = &scq{
         c = peel(c)
         q ||= {}
         isC(s)||isC(c) and throw "expe..C"
@@ -1055,7 +1065,7 @@ let me = self.me = {}
     # returns s or a coercion to replace it:
     #  s=null|1 -> {} coercion
     #  s.* and c.* array pre-mixing
-    window.exable = &s,c,fatal{
+    $exable = &s,c,fatal{
         # returns coercions or false
         !s and return {}
         s == 1 and return {}
@@ -1103,7 +1113,7 @@ let me = self.me = {}
     #$c = expets({Xo:{pic:2}},'t:sno','Xo:t')
     # < not .Vil.Vil='vee'
     #$c = expe({Xo:{pic:2}},'vee','Xo:Vil')
-    window.expets = &scqk{
+    $expets = &scqk{
         isst(c) && peelish(c) and c = peel(c)
         return exts(s,c,q,k)
     }
@@ -1116,7 +1126,7 @@ let me = self.me = {}
     #   which is where exts() would give it a key
     #   unless v=1,
     #    logically compatible with v={...}
-    window.expe = &scq{
+    $expe = &scq{
         # ensure c is a hash
         $origin = c
         if (q) {
@@ -1137,7 +1147,7 @@ let me = self.me = {}
     # c="st" or c=K/"st" may -> s=K/"s":"st"
     #  if q.es[K] (not peeled?)
     # eg la:{ya:2} + la:three -> la:{ya:2,s:three} (K="la")
-    window.exts = &scqk{
+    $exts = &scqk{
         if (k) {
             # specifying a pair: c.$label.$s = 'the label'
             !isst(q) and throw "q+k"
@@ -1156,7 +1166,7 @@ let me = self.me = {}
         return expe(s,c,q)
     }
     # hash copy up to a certain key
-    window.extil = &scq{
+    $extil = &scq{
         # < expe q, and q=CODE -> q.cb
         each kv c {
             k == q and break
@@ -1243,7 +1253,7 @@ let me = self.me = {}
     #  eg N = arou(N,'acty',actyN) 
     #    separates %acty to actyN from N
     # else, returns [matched]
-    window.arou = &NyM{
+    $arou = &NyM{
         $matched = M || [];
         if (isst(y)) {
             # scgk or not match
@@ -1272,7 +1282,7 @@ let me = self.me = {}
         return M ? not : matched
     };
     # match N into one of several groups
-    window.aroh = &Nc{
+    $aroh = &Nc{
         c ||= {};
         isst(c) and c = G&peel,c
         $h = {};
@@ -1292,7 +1302,7 @@ let me = self.me = {}
     
     #c fio|fiu
     # read spacey t, or insert C = y()
-    window.fio = &qty{
+    $fio = &qty{
         !isC(q) and throw "NotC"
         qs&z ||= [];
         qy&tw ||= {};
@@ -1362,14 +1372,14 @@ let me = self.me = {}
         return n
     };
     # C usu sort by cv,t
-    window.tvsortz = &z{
+    $tvsortz = &z{
         z.sort(&ab{
             return (ay&cv||0)*1-(by&cv||0)*1
                 || ('' + a.t).localeCompare(b.t)
         });
         return z
     }
-    window.vsortz = &zy{
+    $vsortz = &zy{
         !y and y = a => ay&cv
         $sy = a => (y(a)||0)*1
         z.sort(&ab{
@@ -1381,7 +1391,7 @@ let me = self.me = {}
     
     #c hash stash, on t.sc[k]
     ## see also ahk(), preferred
-    window.ah = &tk{
+    $ah = &tk{
         !isC(t) and throw "!C"
         # might accum into array at the end if k=[$k]
         $M = [... arguments].slice(2)
@@ -1420,7 +1430,7 @@ let me = self.me = {}
         }
     };
     # hash lookup, on hash (not C)
-    window.ahsk = &h{
+    $ahsk = &h{
         $M = [... arguments].slice(1);
         while (h && M.length) {
             h = h[M.shift()];
@@ -1429,11 +1439,11 @@ let me = self.me = {}
         return h
     };
     # hashes are identical
-    window.heq = &sd{
+    $heq = &sd{
         return !hakd(s,d).length
     };
     # keys of differing values
-    window.hakd = &sd{
+    $hakd = &sd{
         $dif = {};
         each kv s {
             !hak(d,k) || d[k] != v and dif[k] = 1
@@ -1448,17 +1458,17 @@ let me = self.me = {}
         return ks
     };
 
-    window.reverse = &s{ return s.slice().reverse() };
+    $reverse = &s{ return s.slice().reverse() };
 
     # < see cvs() and scv()
     # make fraction of 1
-    window.sca = &s{
+    $sca = &s{
         s *= 1
         while (s >= 1) { s = s / 10 }
         return s
     }
     # interpret cv='','o2','32'
-    window.scaf = &ov,{
+    $scaf = &ov,{
         !ov and return 0
         # ov=o2 -> 0.02
         if (isst(ov) && ov.substr(0,1) == 'o')
@@ -1469,10 +1479,13 @@ let me = self.me = {}
     }
 
     # round to decimal places
-    window.dec = &s,precision{
+    $dec = &s,precision{
         null == precision and precision = 4
         $mul = '1e'+precision
         return (s * mul).toFixed() / mul
     };
 
-export {me, isC, numf,ex, haks,hak,uniq,lineate,ac}
+# BUILT WITH $ perl -ne 'END { print"\n" }; print "$1 " if /^\s*\$(\w+) =/'  src/lib/Y/Pic.ts
+# after you search: ^    (?:self|window).(\w+)
+#      and replace:     $$$1
+export {me, isC, Cye, iske, spacechars, isspace, num, isnum, isnu, isfu, isst, isar, isha, isob, isR, hasR, isho, ish, isit, isitemic, ispi, fatal, fatas, csof, sof, Aof, Cof, ksaf, flatten, grep, grap, grop, grepout, map, pam, armap, rap, fuN, flatorray, sum, split, idint, cint, daint, coint, slant, spant, joint, notoneor, defor, hav, havs, dis, ahk, hashkv, numf, cvs, scv, gteqcv, cvlt, lt, sz, isnk, splitnkgk, peel, depeel, peli, peelish, arq, ex, mex, sex, nex, tex, dex, tax, pex, ex2, exable, expets, expe, exts, extil, haks, hak, uniq, lineate, ac, arou, aroh, fio, tvsortz, vsortz, ah, ahsk, heq, hakd, reverse, sca, scaf, dec,}
