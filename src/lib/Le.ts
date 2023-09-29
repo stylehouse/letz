@@ -112,8 +112,10 @@ export function Le_Attention(state) {
     sc&da = 3
     ss&zem = "levitat"
     $i = 0
-    while (i++ < 22) { s.c['z'+i] = 1 }
+    s.c["zeep"] = []
+    while (i++ < 14) { s.c["zeep"][i] = 1 }
     let Lines = me.enL({},{},{},{},s)
+    Lines += "\n  Thing\t-zip\t\"lots\""
     let z = me.deL({},{},{},{},Lines)
     console.log({s,Lines,z})
     i_(s,C_(Lines,1))

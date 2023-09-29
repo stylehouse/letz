@@ -411,17 +411,19 @@ let me = self.me = {}
             #   should be covered? see complex keys must be json
             !is.safe_k(gk) and debugger
             # specifically, see &deL $indenting
+            # < fatal if the key =~ /[^ \w]/, eg C.c["ze-ep"] = 1
             !is.wordyspace(gk) and debugger
             !nk.match(/^\w+$/) and debugger
-            $k = me.LinesBQ_indent
-                +nk+" "+gk+":"
+            # < LinesBQ_indent could be one space
+            #   to differentiate from t, which at the moment has to !~ /:/
+            #   we could then require \w+ nk, possibly json quote the gk?
+            $k = me.LinesBQ_indent +nk+" "+gk+":"
+            # < this could all be one thing now?
+            #    it used to do yaml here
             if (typeof v != 'string') {
-                # BQ yaml data
+                # BQ data
                 # < rename T.eny_trace, its error handler uses
-                T.eny_nkgk = [nk,gk]
-                $v = eny(v,T)
-                delete T.eny_nkgk
-                k += "\n"+indents(me.LinesBQ_indent+'  ',v,1)
+                k += " "+enj(v)
             }
             else if (is.safe_v(v)) {
                 # simple strings
@@ -430,13 +432,13 @@ let me = self.me = {}
             }
             else if (!v.match(/\n$/)) {
                 # BQ implies trailing \n
-                k += " "+enj(v);
+                k += " "+enj(v)
             }
             else {
                 # BQ string
-                k += " |\n"+indents(me.LinesBQ_indent+'  ',v,1)
+                k += " "+enj(v)
             }
-            k = k.replace(/\n\s*$/,'');
+            #k = k.replace(/\n\s*$/,'');
             L.push(k);
         }}
         
