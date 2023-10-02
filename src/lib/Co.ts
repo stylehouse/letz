@@ -3,15 +3,6 @@ import {ex,C_,i_,o_,VA_ip,detect_type,inlace,TheC,TheA,o_up} from '$lib/St'
 
 //#region toCon a dumper for the A** tree
 
-// cast data into modes
-export function Construct(d) {
-    // default to data dumping
-    d.I ||= 'Con'
-    d.t ||= 'to'+d.I
-    // methods_of_inlacing_Con
-    let I = I_mind[d.I]
-    return I(d)
-}
 // the modes of inquiry, compute
 const I_mind = {
     In: function (d) {
@@ -42,7 +33,16 @@ const I_mind = {
     }
 }
 
-// isolate some Con** update
+// cast data into modes
+export function Construct(d) {
+    // default to data dumping
+    d.I ||= 'Con'
+    d.t ||= 'to'+d.I
+    // methods_of_inlacing_Con
+    let I = I_mind[d.I]
+    return I(d)
+}
+// same but isolated - some Con** update
 // < sip_dispatch compat. C.c.visit is not everything
 export function reConstruct (C:TheC) {
     if (C.c.pi != 'Con') throw "!Con"

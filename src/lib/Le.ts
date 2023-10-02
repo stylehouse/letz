@@ -87,8 +87,8 @@ so:
 */
 
 import { pit,C_,i_ } from "$lib/St"
-import { me } from "$lib/Y/Tex"
-import { ex } from "$lib/Y/Pic"
+import { me } from "$lib/Y/Text"
+import { ex,sex } from "$lib/Y/Pic"
 
 
 // return an object about whatever is going on
@@ -99,7 +99,7 @@ export function Le_Attention(state) {
         about.to
     )
     let tree = syntaxTree(state)
-    let s = C_('lezing',1,{pi:'lezing'})
+    let s = C_('lezing',1,{pi:'lezing'},{length:str.length,...sex({},about,'from,to')})
     
     let cursor = tree.cursorAt(about.from, 1)
     let energy = 130
@@ -108,7 +108,8 @@ export function Le_Attention(state) {
         i_(s,C_(cursor.name,1,{pi:'nodule'},{range:{from:cursor.from,to:cursor.to}}))
         !cursor.next() > about.to and break
     }
-    sc&extrava = {gratis:'vav'}
+    
+    sc&extrava = {gratis:'vav',lob:&{ 1 },be:'eel'}
     sc&da = 3
     ss&zem = "levitat"
     $i = 0
@@ -119,6 +120,8 @@ export function Le_Attention(state) {
     let z = me.deL({},{},{},{},Lines)
     console.log({s,Lines,z})
     i_(s,C_(Lines,1))
+    i_(s,z)
+
     return s
 }
 // < state-updatable pull-apart-task object? an Inc-Pro-Run, with The-This etc

@@ -61,7 +61,7 @@
 {#if boost} <span style="color:blueviolet" on:pointerdown={(e) => boosting(e,'negate')}>+{boost}</span>{/if}
 {#if C.c.unwired} <span style="color:red">!wired</span>{/if}
 
-<c_sip style="font-size:70%" on:pointerdown={(e) => datadump = 1}> {sip} </c_sip>
+<!-- <c_sip style="font-size:70%" on:pointerdown={(e) => datadump = 1}> {sip} </c_sip> -->
 {#if datadump}
     <!-- data dump (leaving the mind our Con** is from) -->
     <Coning C={C.c.s} noC />

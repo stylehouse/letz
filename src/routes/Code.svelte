@@ -25,8 +25,6 @@
     let look:Le = undefined
     function kommit({detail:{view}}) {
         let text = view.state.doc.toString()
-        let json = JSON.stringify(text)
-        console.log(json)
         look = Le_Attention(view.state)
     }
     let junk = [1,3,5,[6,[6,[6,[[6,[2]]]]]]]
@@ -41,8 +39,8 @@
 
 </script>
 
-<CompileLite />
 {#if 0}
+<CompileLite />
 
 <Diring t="Direr" />
 
@@ -55,5 +53,5 @@
 <biggroup>
     <p>{b}</p>
     <Codemirror {code} on:kommit={kommit} />
-    {#if look}<Coning t="Le-look" C={look} style=display:block />{/if}
+    {#if look}<Coning t="Le-look" C={look} noC=1 style=display:block />{/if}
 </biggroup>

@@ -67,6 +67,7 @@ biggroup {
 	border: 1em solid salmon;
 	border-radius: 5em;
 	display: inline-block;
+	max-width: 40em
 }
 pre {
 	font-size: 16px;
