@@ -1,7 +1,7 @@
 import { syntaxTree } from "@codemirror/language"
 import type { EditorState } from "@codemirror/state"
 
-/*
+$le = "
 codemirror integration layer
 
 and system for letters getting around doing science
@@ -15,7 +15,7 @@ library of objects to support nested Components of:
    aka ghost+travel+wormhole
 
  such that one big git remote at the tree level
-  can along the editor's sprouts unfurl git remotes focused to that file/chunk
+  can along the editors sprouts unfurl git remotes focused to that file/chunk
 diff-match-patch
 
 peers:
@@ -82,9 +82,8 @@ so:
       
       we want only a few things on the screen
        constantly pulling everything away, ~~ WebGL-Fluid-Simulation
-    
+"
 
-*/
 
 import { pit,C_,i_ } from "$lib/St"
 import { me } from "$lib/Y/Text"
@@ -124,5 +123,5 @@ export function Le_Attention(state) {
 
     return s
 }
-// < state-updatable pull-apart-task object? an Inc-Pro-Run, with The-This etc
-//   with a .brack for %node,name,from,to?
+# < state-updatable pull-apart-task object? an Inc-Pro-Run, with The-This etc
+#   with a .brack for %node,name,from,to?
