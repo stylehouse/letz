@@ -36,10 +36,11 @@
     function bang() {
         throw "cake"
     }
-
+    let more = 0
 </script>
 
-{#if 0}
+<p on:click={() => more = !more}>{#if more}no {/if}more?</p>
+{#if more}
 <CompileLite />
 
 <Diring t="Direr" />
@@ -53,5 +54,5 @@
 <biggroup>
     <p>{b}</p>
     <Codemirror {code} on:kommit={kommit} />
-    {#if look}<Coning t="Le-look" C={look} noC=1 style=display:block />{/if}
+    {#if look}<Coning t="Le-look" C={look} style=display:block />{/if}
 </biggroup>

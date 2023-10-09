@@ -9,7 +9,7 @@ import {ex,C_,i_,o_,VA_ip,detect_type,inlace,TheC,TheA,o_up} from '$lib/St'
             return inlacing_Con({...d,
                 each: function (s,d) {
                     # try to know s
-                    toCon_In(d)
+                    toCon_newSomething(d)
                     # we have uncovered some id for parent's race for meaning (d.up.resolve())
                     # < to "resolve $n" sets of Con//Con here, as an elegant A-ism
                     # < how async+await might help this flow control schism?
@@ -84,7 +84,7 @@ import {ex,C_,i_,o_,VA_ip,detect_type,inlace,TheC,TheA,o_up} from '$lib/St'
                 d.each && d.each(s,d)
             },
             
-            dlim: function (s,d) {
+            denumerate: function (s,d) {
                 # spawn children
                 return toCon_newConz(d)
             },
@@ -184,7 +184,6 @@ import {ex,C_,i_,o_,VA_ip,detect_type,inlace,TheC,TheA,o_up} from '$lib/St'
         #    for the parent to give them all advice
         #     eg to assign a past life, see resolve $n
         if (d.resolve && d.up && !d.pretendtoplevel) {
-            # all children must have already sprung from d.up or they will inherit .resolving
             let N = d.up.resolving ||= []
             N.push(d)
             # return to d.up after spawn + all
@@ -205,9 +204,9 @@ import {ex,C_,i_,o_,VA_ip,detect_type,inlace,TheC,TheA,o_up} from '$lib/St'
             # onwards
 
             # d.climb... .map(s => inlace(s,d))
-            # d.dlim emits d+ (rowing)
-            if (d.dlim) {
-                let M = d.dlim(d.s,d) || []
+            # d.denumerate emits d+ (rowing)
+            if (d.denumerate) {
+                let M = d.denumerate(d.s,d) || []
                 for (let dd of M) {
                     i_spawning(d,dd)
                 }
@@ -454,8 +453,8 @@ import {ex,C_,i_,o_,VA_ip,detect_type,inlace,TheC,TheA,o_up} from '$lib/St'
         let C = d.partor(d.t,'Con',{s})
         
     }
-    # new -Con/-$pi detailing s=C the instruction insphere
-    function toCon_In (d) {
+    # new s-Con/s-$pi from s=C the instruction insphere
+    function toCon_newSomething (d) {
         # label
         toCon_newCont(d)
 
@@ -466,6 +465,11 @@ import {ex,C_,i_,o_,VA_ip,detect_type,inlace,TheC,TheA,o_up} from '$lib/St'
         let pi = s.c.pi
         let Such = d.partor(pi)
 
+        # < act as $pi before s** loads?
+        #    usually pi creates s** from $s
+        #    but we would call it C**, stuff for oscillation
+
+        # it's left up to the $pi.svelte that receives this s** situation
         # eg pi=Dir will <Dir C={Such} />
     }
     # -Con/-Cont detailing s as data, no context
@@ -507,6 +511,7 @@ import {ex,C_,i_,o_,VA_ip,detect_type,inlace,TheC,TheA,o_up} from '$lib/St'
 
         # trusted s may not have any typ
         let typ = d.typ
+        !typ and debugger
         let Cish = typ ? typ.Cish : Con.c.Cishsz
         typ ||= {}
 
@@ -592,7 +597,8 @@ import {ex,C_,i_,o_,VA_ip,detect_type,inlace,TheC,TheA,o_up} from '$lib/St'
         return h
     }
 
-
+// sip_wire GOING
+    # an ugly superlative notifying of changes
     import {writable} from 'svelte/store'
 
     # receive updated version of C inside cb(C) { ...assign somewhere to cause svelte update }
