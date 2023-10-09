@@ -1,11 +1,13 @@
 <script lang=ts>
-    import { ex } from "$lib/St"
+import {ex} from '$lib/Y/Pic.ts'
     import { stylehouse_lite } from "$lib/lang/stholite_compiler"
     // # yes
     let compiled
     function comp () {
-        // blatant
-        let compiler = source => ex({source}, stylehouse_lite(source))
+        let compiler = function (source:string) {
+            let c = stylehouse_lite(source)
+            return {source, ...c}
+        }
         let more = "and...\n"+"# < notwicably\n    "+"# "+"and more\n"
         compiled = compiler(
             more

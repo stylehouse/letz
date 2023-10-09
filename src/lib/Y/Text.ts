@@ -79,6 +79,8 @@ let me = self.me = {}
         return fail
     }
     
+    # GOING these next two?
+
     # string avoids various things
     # < an embryonic composited sub, like thro, 
     # < the opposite, collected from n and something else...
@@ -552,8 +554,7 @@ let me = self.me = {}
         }
         else { sc = {} }
         
-        
-        $C = {t,y,c,sc}
+        $C = C_(t,y,c,sc)
         
       // indented bits
         

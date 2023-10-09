@@ -8,7 +8,7 @@
 #   bits of ive/Index might fit too
 # < relegate R-ism?
 #    its ugly in the interspheres.
-
+import {TheC} from '$lib/St.ts'
 # these used to create global variables
 let self = {}
 let window = self
@@ -19,23 +19,27 @@ let window = self
 
  // main
    // types
-    # < check &Cye for whatever that does
-    # < scaf -> scv # be fatal on eg o23, require 023 everywhere it might be?
+    # is this a C
+    # see also St.ts / detect_type() / typ.Cish
     $isC = &s{
+        s instanceof TheC and return true
+        return oldisC()
+    }
+    # lots of self-assembly of C out there, ie R
+    $oldisC = &s{
         return s && typeof s == 'object'
             && s.t != null && s.y && s.c && s.sc && 1
     };
     
+    # create a C, see St.ts / C_()
+    #   which you should probably use, but lots of Planet|Ying doesn't
+    #  doesn't clone
+    #  aka &Cye or Cye(), from styleshed/g/j/21
+    #  doesn't enfore y&cv=0.1, but does t||=''
+    #  also can peel() c|sc
     # < G&C, babz: = C yadda @3
-    #   and to parse args for eg opeolo
-    #   has a lot to do with:
     $Cye = &s{
-        s = G&Cye,s
-        s.y = {cv:s.y.cv}
-        delete ss&z
-        s.t == null and debugger
-        typeof s.t != 'string' and s.t = ""+s.t
-        return s
+        return C_(s)
     };
 
     # string

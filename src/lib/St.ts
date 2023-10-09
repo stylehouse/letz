@@ -1,4 +1,5 @@
 // Stylehouse, a dreamy coding paradigm in ts/js
+import {isst,isnu,isnum,isar,isspace,hak,havs,haks,ex} from '$lib/Y/Pic.ts'
 # yeah
 // basics
     # the baskets of properties that are C.y|c|sc
@@ -41,22 +42,30 @@
             throw "TODO clone = C_(C)"
         }
         let pi
-        if (isst(y)) {
-            if (y[0] == '-') y = y.slice(1)
-            pi = y
-            y = {}
-        }
-        if (isnum(y)) {
+        if (y && isnum(y)) {
             if (y <= 0)
                 throw "y <= 0"
             while (y > 1)
                 y /= 10
-            y = {cv:y}
+            y = {cv:y*1}
         }
-        t ||= ''
+        if (y && isst(y)) {
+            if (y[0] == '-') pi = y.slice(1)
+            else throw "y isst !pi"
+            y = {}
+        }
+        if (t == null) t = ''
+        else
+        if (typeof t == 'number') t = ''+t
+        else
+        if (typeof t != 'string') t = ''
         y ||= {}
+        # < perhaps
+        #C.y.cv ||= 0.1
         c ||= {}
+        if (c && isst(c)) c = peel(c)
         sc ||= {}
+        if (sc && isst(sc)) sc = peel(sc)
         let C = new TheC();
         ex(C,{t,y,c,sc})
         if (pi) C.c.pi = pi
@@ -167,58 +176,6 @@
         # a space, not a thing
         if (typ.Ob || typ.array) typ.iter = 1
         return typ
-    }
-    # type checking, ported from Fividy
-    export function isst(s) {
-        return typeof s == 'string'
-    }
-    export function isnu(s) {
-        return typeof s == 'number'
-    }
-    export function isnum(s) {
-        return (isnu(s) || s && s.length && !isspace(s)) && s*1 == s
-    }
-    export function isar(s) {
-        return s && s.constructor == Array
-    }
-    let spacechars = {" ":1,"\n":1,"\t":1}
-    export function isspace(s) {
-        return hak(s) && !havs(s).some(s => !spacechars[s])
-    }
-    # and further back
-    export function hak(s,d) {
-        if (!s)
-            return 0
-        return d == null ? Object.keys(s).length : s.hasOwnProperty(d)
-    }
-    export function havs(s,d) {
-        return haks(s).map(k => s [k])
-    }
-    export function haks(s,d) {
-        let N = [];
-        if (!s) {
-            return N
-        }
-        for (let k in s) {
-            let v = s[k]
-            if (d == 'kv') { N.push(k,v) }
-            else
-            if (d == 's') { N.push(v) }
-            else {
-                N.push(k);
-            }
-        }
-        return N
-    }
-    export function ex(s,c) {
-        if (!s || typeof s != 'object') throw "ex!s"
-        if (!c || typeof c != 'object') throw "ex!c"
-        for (let k in c) {
-            let v = c[k]
-            s[k] = v
-        }
-        if (arguments[2]) throw "ex: too many arguments"
-        return s
     }
 
 
