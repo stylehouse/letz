@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { sto } from './stores.js'
     import PlayDramatics from "./PlayDramatics.svelte"
-    import { Le_Attention } from "$lib/Le"
+    import { whatsthis } from "$lib/Le"
     import Diring from "$lib/Diring.svelte"
     import Codemirror from './Codemirror.svelte'
     import Coning from '$lib/Coning.svelte'
@@ -25,7 +25,7 @@
     let look:Le = undefined
     function kommit({detail:{view}}) {
         let text = view.state.doc.toString()
-        look = Le_Attention(view.state)
+        look = whatsthis(view.state)
     }
     let junk = [1,3,5,[6,[6,[6,[[6,[2]]]]]]]
 

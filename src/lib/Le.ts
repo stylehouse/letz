@@ -86,33 +86,75 @@ import type { EditorState } from "@codemirror/state"
 
 import { pit,C_,i_ } from "$lib/St"
 import { me } from "$lib/Y/Text"
-import { ex,sex } from "$lib/Y/Pic"
+import { pex,ex,sex } from "$lib/Y/Pic"
 
 
 // return an object about whatever is going on
-export function Le_Attention(state) {
+$whatsthis = &state,{
     let about = state.selection.main
-    let str = state.sliceDoc(
-        about.from,
-        about.to
-    )
+    $getstr = cur => state.sliceDoc(cur.from,cur.to)
+    let str = getstr(about)
     let tree = syntaxTree(state)
     let s = C_('lezing',1,{pi:'lezing'},{length:str.length,...sex({},about,'from,to')})
     
-    let cursor = tree.cursorAt(about.from, 1)
-
-    
-    let energy = 130
-    while (energy-- > 0 && (!s.sc.z || cursor.next())) {
-        # cursor changes to what (in the lezer grammar?) we are looking at...
-        cursor.from > about.to and break
-        i_(s,C_(cursor.name,1,{pi:'nodule'},{range:{from:cursor.from,to:cursor.to}}))
-        # we were missing half the things!
-        #!cursor.next() > about.to and break
+    $cursor = tree.cursorAt(about.from, 1)
+    $nod = &m,cursor,c{
+        c = pex({pi:'nodule'},c)
+        $range = sex({},cursor,'from,to')
+        return i_(m,C_(cursor.name,1,c,{range}))
     }
+
+    $left = i_(s,C_('left'))
+    $inside = i_(s,C_('inside'))
+    $right = i_(s,C_('right'))
+    
+    $found_nl = 0
+    $where = inside
+    inlezz(cursor,{
+        next: cu => cu.next(),
+        # break: cu => cu.from > about.to,
+        each: &cu,d{
+            $str = getstr(cu)
+            str.includes("\n") and found_nl = 1
+            else
+            found_nl and return d.not = true
+
+            cu.from > about.to and where = right
+
+            nod(where,cu,{s:str})
+        }
+    })
+
+    cursor = tree.cursorAt(about.from, 1)
+    inlezz(cursor,{
+        next: cu => cu.prev(),
+        break: cu => getstr(cu).includes("\n"),
+        each: cu => {
+            cu.to < about.from and nod(left,cu)
+        }
+    })
+    lefts&z.reverse()
+    
     
 
     return s
+}
+
+$inlezz = &cu,d{
+    d.next ||= cu => cu.next()
+    d.energy ||= 30
+    
+    $first = 1
+    while (d.energy-- > 6) {
+        first and first = 0
+        else
+        !d.next(cu,d) and return
+        # cursor changes to what (in the lezer grammar?) we are looking at...
+
+        d.break && d.break(cu,d) and return
+        
+        d.each(cu,d)
+    }
 }
 
 $introplant = &s{
@@ -137,3 +179,5 @@ $Lines_test = &{
     i_(s,C_(Lines,1))
     i_(s,z)
 }
+
+export {whatsthis}

@@ -96,6 +96,7 @@ import {isst,isnu,isnum,isar,isspace,hak,havs,haks,ex} from '$lib/Y/Pic.ts'
     export function i_(C1: C, C2: C, qua: string = 'z') {
         let N = C1.sc[qua] ||= []
         N.push(C2)
+        return C2
     }
     # get C inside C (C/C)
     export function o_(C1: C, qua: string = 'z') {
