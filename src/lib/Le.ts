@@ -100,27 +100,40 @@ export function Le_Attention(state) {
     let s = C_('lezing',1,{pi:'lezing'},{length:str.length,...sex({},about,'from,to')})
     
     let cursor = tree.cursorAt(about.from, 1)
+
+    
     let energy = 130
     while (energy-- > 0 && (!s.sc.z || cursor.next())) {
+        # cursor changes to what (in the lezer grammar?) we are looking at...
         cursor.from > about.to and break
         i_(s,C_(cursor.name,1,{pi:'nodule'},{range:{from:cursor.from,to:cursor.to}}))
-        !cursor.next() > about.to and break
+        # we were missing half the things!
+        #!cursor.next() > about.to and break
     }
     
+
+    return s
+}
+
+$introplant = &s{
+
+}
+# < state-updatable pull-apart-task object? an Inc-Pro-Run, with The-This etc
+#   with a .brack for %node,name,from,to?
+
+# TODO
+$Lines_test = &{
+    $s = C_('lezing',1,{pi:'lezing'},{length:369,from:4,til:7})
     sc&extrava = {gratis:'vav',lob:&{ 1 },be:'eel'}
     sc&da = 3
     ss&zem = "levitat"
     $i = 0
     s.c["zeep"] = []
     while (i++ < 14) { s.c["zeep"][i] = 1 }
-    let Lines = me.enL({},{},{},{},s)
+    $Lines = me.enL({},{},{},{},s)
     Lines += "\n  Thing\t-zip\t\"lots\""
-    let z = me.deL({},{},{},{},Lines)
+    $z = me.deL({},{},{},{},Lines)
     console.log({s,Lines,z})
     i_(s,C_(Lines,1))
     i_(s,z)
-
-    return s
 }
-# < state-updatable pull-apart-task object? an Inc-Pro-Run, with The-This etc
-#   with a .brack for %node,name,from,to?
