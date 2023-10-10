@@ -88,7 +88,6 @@
             EditorView.updateListener.of((v: ViewUpdate) => {
                 if (v.docChanged) {
                     // Document changed
-                    sto.set(view.state.doc.toString());
                 }
             }),
             keymap.of(defaultKeymap),
