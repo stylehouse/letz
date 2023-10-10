@@ -88,6 +88,19 @@ import { pit,C_,i_ } from "$lib/St"
 import { me } from "$lib/Y/Text"
 import { pex,ex,sex } from "$lib/Y/Pic"
 
+$mkrange = &cu,{
+    return sex({},cu,'from,to')
+}
+# resumable state across app reloads
+$save_selection_state = &st,{
+    $C = C_('state','-cmglance')
+    # everything 
+    each in st.selection {
+        $range = mkrange(n)
+        i_(C,C_('sel','-cmsel',{range}))
+    }
+    return C
+}
 
 // return an object about whatever is going on
 $whatsthis = &state,{
@@ -99,15 +112,17 @@ $whatsthis = &state,{
     
     $cursor = tree.cursorAt(about.from, 1)
     $nod = &m,cursor,c{
-        c = pex({pi:'nodule'},c)
-        $range = sex({},cursor,'from,to')
-        return i_(m,C_(cursor.name,1,c,{range}))
+        $range = mkrange(cursor)
+        return i_(m,C_(cursor.name,'-nodule',c||{},{range}))
     }
 
+  // climb to the whole line
+    $parent = i_(s,C_('parent'))
     $left = i_(s,C_('left'))
     $inside = i_(s,C_('inside'))
     $right = i_(s,C_('right'))
     
+    # inside, right
     $found_nl = 0
     $where = inside
     inlezz(cursor,{
@@ -125,6 +140,7 @@ $whatsthis = &state,{
         }
     })
 
+    # before
     cursor = tree.cursorAt(about.from, 1)
     inlezz(cursor,{
         next: cu => cu.prev(),
@@ -135,10 +151,27 @@ $whatsthis = &state,{
     })
     lefts&z.reverse()
     
-    
+    # parent
+    cursor = tree.cursorAt(about.from, 1)
+    $line = {}
+    inlezz(cursor,{
+        next: cu => cu.parent(),
+        each: cu => {
+            if (cu.name == 'Line') {
+                sex(line,cu,'from,to')
+            }
+            nod(parent,cu)
+        }
+    })
+
+  // etc
+    i_(s,save_selection_state(state))
 
     return s
 }
+
+
+
 
 $inlezz = &cu,d{
     d.next ||= cu => cu.next()
