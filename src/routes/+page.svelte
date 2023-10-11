@@ -1,11 +1,9 @@
 <script>
-	import Counter from './Counter.svelte';
-	import Code from './Code.svelte';
-    import { onMount } from 'svelte';
+	import Counter from "./Counter.svelte";
+	import Code from "./Code.svelte";
+	import { onMount } from "svelte";
 
-	onMount(() => {
-
-	})
+	onMount(() => {});
 </script>
 
 <svelte:head>
@@ -26,5 +24,7 @@
 		justify-content: center;
 		align-items: center;
 		flex: 0.6;
+		flex-wrap: nowrap;
+		flex-direction: row;
 	}
 </style>
