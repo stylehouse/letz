@@ -26,6 +26,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@bismuthsoft/svelte-dj-knob": "^0.2.1",
 		"@codemirror/commands": "^6.1.2",
 		"@codemirror/state": "^6.1.4",
 		"@codemirror/view": "^6.5.1",
