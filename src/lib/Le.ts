@@ -1,6 +1,6 @@
 import { syntaxTree } from "@codemirror/language"
+import { EditorSelection } from "@codemirror/state"
 import type { EditorState } from "@codemirror/state"
-import { o_path } from "$lib/St"
 
 # codemirror integration layer
 
@@ -85,23 +85,48 @@ import { o_path } from "$lib/St"
 
 
 
-import { pit,C_,i_ } from "$lib/St"
+import { pit,C_,i_,o_,o_path } from "$lib/St"
 import { me } from "$lib/Y/Text"
-import { pex,ex,sex } from "$lib/Y/Pic"
+import { ispi,fatal,pex,ex,sex } from "$lib/Y/Pic"
 
 $mkrange = &cu,{
     return sex({},cu,'from,to')
 }
-# resumable state across app reloads
-$save_selection_state = &st,{
-    $C = C_('state','-cmglance')
-    # everything
-    each in st.selection.ranges {
-        $range = mkrange(n)
-        i_(C,C_('sel','-cmsel',{range}))
+
+  // savepoints
+    # get resumable state across app reloads
+    $save_selection_state = &st,{
+        $C = C_('state','-cmglance')
+
+        each in st.selection.ranges {
+            $range = mkrange(n)
+            i_(C,C_('sel','-cmsel',{range}))
+        }
+
+        return C
     }
-    return C
-}
+    # view <- resumable state
+    $resume_selection_state = &vi,C{
+        fatal.ispi(C,'cmglance')
+        $N = []
+        $far_end = 0
+        o_(C).map(&n{
+            !ispi(n,'cmsel') and return
+            $ra = nc&range
+            fatal.num(ra.from)
+            far_end = Math.min(far_end,ra.to)
+            N.push( EditorSelection.range(ra.from, ra.to) )
+        })
+        # < it needs a single point in there as well?
+        #   as per https://codemirror.net/examples/selection/ subtly
+        #   or later error of selection.main not having .head or so
+        N.push(EditorSelection.cursor(far_end))
+
+        vi.dispatch({
+            selection: EditorSelection.create(N, 1)
+        })
+        console.log("resume_selection_state!")
+    }
 
   // return an object about whatever is going on
     # codemirror -> $look
@@ -115,7 +140,7 @@ $save_selection_state = &st,{
         $cursor = tree.cursorAt(about.from, 1)
         $nod = &m,cursor,c{
             $range = mkrange(cursor)
-            return i_(m,C_(cursor.name,'-nodule',c||{},{range}))
+            return i_(m,C_(cursor.name,'-nodule',pex({range},c||{})))
         }
 
       // climb to the whole line
@@ -260,4 +285,4 @@ $save_selection_state = &st,{
         i_(s,z)
     }
 
-export {whatsthis,graphwhats}
+export {whatsthis,graphwhats, resume_selection_state,save_selection_state}

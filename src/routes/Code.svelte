@@ -3,13 +3,14 @@
     import BigGroup from "$lib/ui/BigGroup.svelte"
     import Savable from "$lib/ui/Savable.svelte"
     import PlayDramatics from "./PlayDramatics.svelte"
-    import { whatsthis,graphwhats } from "$lib/Le"
+    import { whatsthis,graphwhats,resume_selection_state } from "$lib/Le"
     import Diring from "$lib/Diring.svelte"
     import Codemirror from './Codemirror.svelte'
     import Coning from '$lib/Coning.svelte'
     import CompileLite from './CompileLite.svelte'
     import { writable } from 'svelte/store'
     import {EditorView} from "@codemirror/view"
+    import { tick } from "svelte";
     
 
     
@@ -27,6 +28,10 @@
     let graph
     let save
     function kommit({detail:{view}}) {
+        whatsup(view)
+        
+    }
+    function whatsup(view) {
         let text = view.state.doc.toString()
         look = whatsthis(view.state)
         
@@ -35,7 +40,6 @@
 
         graph = graphwhats(look)
         //look = graph
-        
     }
     let junk = [1,3,5,[6,[6,[6,[[6,[2]]]]]]]
 
@@ -47,8 +51,13 @@
         throw "cake"
     }
     let more = 0
+    // < explore bind:view={view} and Codemirror export let view?
+    let cm = null
 
-
+    async function resume(C) {
+        resume_selection_state(cm.view,C)
+        whatsup(cm.view)
+    }
 
     let floatation
 </script>
@@ -67,7 +76,7 @@
 
 <biggroup>
     <p>{b}</p>
-    <Codemirror {code} on:kommit={kommit} />
+    <Codemirror {code} bind:this={cm} on:kommit={kommit} />
     {#if look}<Coning t="Le-look" C={look} style=display:block />{/if}
 </biggroup>
 
@@ -76,10 +85,8 @@
         <Graph {graph} />
     </BigGroup>
 {/if}
-{#if save} 
-    <BigGroup>
-        <Savable C={save} />
-    </BigGroup>
-{/if}
 
+<p>
+    <Savable C={save} t='Codestate' {resume}/>
+</p>
 

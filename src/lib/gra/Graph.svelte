@@ -22,7 +22,8 @@ import { hak } from "$lib/Y/Pic"
                 .makeLayout({
                     name: "dagre",
                     rankDir: "TB",
-                    nodeSep: 150,
+                    nodeSep: 22,
+                    
                 })
                 .run();
         });

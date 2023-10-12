@@ -1,3 +1,4 @@
+<svelte:options accessors/>
 <script lang="ts">
     import { recur } from "$lib/Sv";
     import { onMount, onDestroy, createEventDispatcher } from "svelte";
@@ -24,7 +25,7 @@
 
     
     export let code:string|store
-    let view: EditorView = undefined;
+    export let view: EditorView = undefined;
     export let ele = undefined
 
     let cha = function (etc) {
