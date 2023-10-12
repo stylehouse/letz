@@ -309,7 +309,7 @@ import {isst,isnu,isnum,isar,isspace,hak,havs,haks,ex} from '$lib/Y/Pic.ts'
             d.N.push(zN)
         }
         else {
-            if (!isar(zN)) throw "!array"
+            !isar(zN) and zN = [zN]
             d.N.push(...zN)
         }
     }

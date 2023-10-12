@@ -1,6 +1,7 @@
 <script lang="ts">
     import Graph from "$lib/gra/Graph.svelte"
     import BigGroup from "$lib/ui/BigGroup.svelte"
+    import Savable from "$lib/ui/Savable.svelte"
     import PlayDramatics from "./PlayDramatics.svelte"
     import { whatsthis,graphwhats } from "$lib/Le"
     import Diring from "$lib/Diring.svelte"
@@ -24,9 +25,13 @@
     // this was not a '# comment'
     let look:Le
     let graph
+    let save
     function kommit({detail:{view}}) {
         let text = view.state.doc.toString()
         look = whatsthis(view.state)
+        
+        save = look.y.state
+        
 
         graph = graphwhats(look)
         //look = graph
@@ -68,7 +73,12 @@
 
 {#if graph} 
     <BigGroup>
-        <Graph {graph}></Graph> 
+        <Graph {graph} />
+    </BigGroup>
+{/if}
+{#if save} 
+    <BigGroup>
+        <Savable C={save} />
     </BigGroup>
 {/if}
 

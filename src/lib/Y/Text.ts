@@ -206,6 +206,7 @@ let me = self.me = {}
     # Lines C may have indented bits after
     # < at one space, inconfusible with C/C indent
     me.LinesBQ_indent = '  '
+
     # for N|i of '  ', starting with i=1 -> ''!
     # < rename. GONE? used once.
     #   could call &indents,(d-1)*2,s,'notailn'
@@ -653,5 +654,8 @@ let me = self.me = {}
         }
         return N
     }
+    # < A-conscious Linesing
+    $deL = s => me.deL({},{},{},{},s)
+    $enL = s => me.enL({},{},{},{},s)
 
-export {me, enj,dej}
+export {me, enj,dej, enL,deL, indents}

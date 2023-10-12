@@ -95,8 +95,8 @@ $mkrange = &cu,{
 # resumable state across app reloads
 $save_selection_state = &st,{
     $C = C_('state','-cmglance')
-    # everything 
-    each in st.selection {
+    # everything
+    each in st.selection.ranges {
         $range = mkrange(n)
         i_(C,C_('sel','-cmsel',{range}))
     }
@@ -151,7 +151,7 @@ $save_selection_state = &st,{
                 cu.to < about.from and nod(left,cu)
             }
         })
-        lefts&z.reverse()
+        lefts&z?.reverse()
         
         # parent
         cursor = tree.cursorAt(about.from, 1)
@@ -167,7 +167,7 @@ $save_selection_state = &st,{
         })
 
       // etc
-        i_(s,save_selection_state(state))
+        s.y.state = i_(s,save_selection_state(state))
 
         return s
     }
@@ -180,6 +180,9 @@ $save_selection_state = &st,{
             $node = graph.C_node.get(C)
             node and return
             node = {id:'N'+(node_i++)}
+            $da = node.data = {}
+            da.name = C.t
+
             graph.C_node.set(C,node)
             graph.nodes.push(node)
         }
@@ -194,51 +197,24 @@ $save_selection_state = &st,{
         }
         $mkedge = &source,target,etc{
             $edge = {id:'E'+(edge_i++)}
-            wm_array_add(graph.C_edges,source,edge)
-            wm_array_add(graph.C_edges,target,edge)
             edge.source = C_to_node(source).id
             edge.target = C_to_node(target).id
             ex(edge,etc||{})
+
+            wm_array_add(graph.C_edges,source,edge)
+            wm_array_add(graph.C_edges,target,edge)
             graph.edges.push(edge)
         }
 
         $la_dir
         o_path(look,['top','dir','qua']) .map(({dir,qua}) => {
             # < we want to project %id onto C:dir
-            debugger
             mknode(dir)
             mknode(qua)
             mkedge(dir,qua,{label:'in'})
         })
 
         return graph
-
-
-        graph = {
-            nodes: [
-                { id: 'N1', label: 'Start' },
-                { id: 'N2', label: '4' },
-                { id: 'N4', label: '8' },
-                { id: 'N5', label: '15' },
-                { id: 'N3', label: '16' },
-                { id: 'N6', label: '23' },
-                { id: 'N7', label: '42' },
-                { id: 'N8', label: 'End' }
-            ],
-
-            edges: [
-                { id: 'E1', source: 'N1', target: 'N2' },
-                { id: 'E2', source: 'N2', target: 'N3' },
-                { id: 'E3', source: 'N3', target: 'N6' },
-                { id: 'E4', source: 'N2', target: 'N4' },
-                { id: 'E5', source: 'N4', target: 'N5' },
-                { id: 'E6', source: 'N5', target: 'N4', label: '2' },
-                { id: 'E7', source: 'N5', target: 'N6' },
-                { id: 'E8', source: 'N6', target: 'N7' },
-                { id: 'E9', source: 'N7', target: 'N7', label: '3' },
-                { id: 'E10', source: 'N7', target: 'N8' }
-            ],
-        }
     }
 
 // fu
