@@ -71,19 +71,23 @@ let window = self
     # make lots of fatal versions of isba(), etc
     $fatal = {}
     fatal.refresh = &{
-        haks(self)
-            .filter(k => k.startsWith('is'))
-        # < i fatal/$k = &{ !self[k] && die }
-        #    Babz it into die(capturing etc)
-        #     has to be die for "try not to die", "it's trad to die"
-            .map(k => fatal[k] = &s{
-                $v = self[k](...arguments)
+        $types = {isC, iske, isspace, num, isnum, isnu, isfu, isst, isar, isha, isob,
+            isR, hasR, isho, ish, isit, isitemic, ispi}
+        $fatalise = &ky{
+            fatal[k] = &s{
+                $v = y(...arguments)
                 !v and throw "!"+k, s
+                # < nobody needs this? fatal.sof returns a result
                 return s
-            })
+            }
+        }
+        each ky types {
+            # make a lexical k,y
+            fatalise(k,y)
+        }
     }
     # < this without self.* scan
-    #fatal.refresh()
+    fatal.refresh()
     
     # fatal assignment, must stay same once set
     # < Babz: h =. v
