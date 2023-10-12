@@ -1,6 +1,7 @@
 <script lang="ts">
     // lifted from git@github.com:gomezcabo/svelte-cytoscape-demo.git
     import { onMount, setContext } from "svelte";
+import { hak } from "$lib/Y/Pic"
     import cytoscape from "cytoscape";
     import dagre from "cytoscape-dagre";
     import GraphStyles from "./GraphStyles.js";

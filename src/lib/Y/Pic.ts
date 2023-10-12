@@ -1234,7 +1234,8 @@ let window = self
         }
         return s
     }
-    # < GOING should mostly be X by now (complexity). was kooky ball of features.
+    # < GOING should mostly be X by now (complexity).
+    #    was kooky ball of features, eg ~~ two array thing: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap#why_weakmap
     # this is a tiny data situator of a one|two column table
     #  that you accumulate to
     $ac = &skvKV{

@@ -1,5 +1,6 @@
 import { syntaxTree } from "@codemirror/language"
 import type { EditorState } from "@codemirror/state"
+import { o_path } from "$lib/St"
 
 # codemirror integration layer
 
@@ -102,115 +103,185 @@ $save_selection_state = &st,{
     return C
 }
 
-// return an object about whatever is going on
-$whatsthis = &state,{
-    let about = state.selection.main
-    $getstr = cur => state.sliceDoc(cur.from,cur.to)
-    let str = getstr(about)
-    let tree = syntaxTree(state)
-    let s = C_('lezing',1,{pi:'lezing'},{length:str.length,...sex({},about,'from,to')})
-    
-    $cursor = tree.cursorAt(about.from, 1)
-    $nod = &m,cursor,c{
-        $range = mkrange(cursor)
-        return i_(m,C_(cursor.name,'-nodule',c||{},{range}))
-    }
-
-  // climb to the whole line
-    $parent = i_(s,C_('parent'))
-    $left = i_(s,C_('left'))
-    $inside = i_(s,C_('inside'))
-    $right = i_(s,C_('right'))
-    
-    # inside, right
-    $found_nl = 0
-    $where = inside
-    inlezz(cursor,{
-        next: cu => cu.next(),
-        # break: cu => cu.from > about.to,
-        each: &cu,d{
-            $str = getstr(cu)
-            str.includes("\n") and found_nl = 1
-            else
-            found_nl and return d.not = true
-
-            cu.from > about.to and where = right
-
-            nod(where,cu,{s:str})
-        }
-    })
-
-    # before
-    cursor = tree.cursorAt(about.from, 1)
-    inlezz(cursor,{
-        next: cu => cu.prev(),
-        break: cu => getstr(cu).includes("\n"),
-        each: cu => {
-            cu.to < about.from and nod(left,cu)
-        }
-    })
-    lefts&z.reverse()
-    
-    # parent
-    cursor = tree.cursorAt(about.from, 1)
-    $line = {}
-    inlezz(cursor,{
-        next: cu => cu.parent(),
-        each: cu => {
-            if (cu.name == 'Line') {
-                sex(line,cu,'from,to')
-            }
-            nod(parent,cu)
-        }
-    })
-
-  // etc
-    i_(s,save_selection_state(state))
-
-    return s
-}
-
-
-
-
-$inlezz = &cu,d{
-    d.next ||= cu => cu.next()
-    d.energy ||= 30
-    
-    $first = 1
-    while (d.energy-- > 6) {
-        first and first = 0
-        else
-        !d.next(cu,d) and return
-        # cursor changes to what (in the lezer grammar?) we are looking at...
-
-        d.break && d.break(cu,d) and return
+  // return an object about whatever is going on
+    # codemirror -> $look
+    $whatsthis = &state,{
+        let about = state.selection.main
+        $getstr = cur => state.sliceDoc(cur.from,cur.to)
+        let str = getstr(about)
+        let tree = syntaxTree(state)
+        let s = C_('lezing',1,{pi:'lezing'},{length:str.length,...sex({},about,'from,to')})
         
-        d.each(cu,d)
+        $cursor = tree.cursorAt(about.from, 1)
+        $nod = &m,cursor,c{
+            $range = mkrange(cursor)
+            return i_(m,C_(cursor.name,'-nodule',c||{},{range}))
+        }
+
+      // climb to the whole line
+        $parent = i_(s,C_('parent'))
+        $left = i_(s,C_('left'))
+        $inside = i_(s,C_('inside'))
+        $right = i_(s,C_('right'))
+        
+        # inside, right
+        $found_nl = 0
+        $where = inside
+        inlezz(cursor,{
+            next: cu => cu.next(),
+            # break: cu => cu.from > about.to,
+            each: &cu,d{
+                $str = getstr(cu)
+                str.includes("\n") and found_nl = 1
+                else
+                found_nl and return d.not = true
+
+                cu.from > about.to and where = right
+
+                nod(where,cu,{s:str})
+            }
+        })
+
+        # before
+        cursor = tree.cursorAt(about.from, 1)
+        inlezz(cursor,{
+            next: cu => cu.prev(),
+            break: cu => getstr(cu).includes("\n"),
+            each: cu => {
+                cu.to < about.from and nod(left,cu)
+            }
+        })
+        lefts&z.reverse()
+        
+        # parent
+        cursor = tree.cursorAt(about.from, 1)
+        $line = {}
+        inlezz(cursor,{
+            next: cu => cu.parent(),
+            each: cu => {
+                if (cu.name == 'Line') {
+                    sex(line,cu,'from,to')
+                }
+                nod(parent,cu)
+            }
+        })
+
+      // etc
+        i_(s,save_selection_state(state))
+
+        return s
     }
-}
+    # $look -> $graph )-> cytoscape
+    $graphwhats = &look,{
+        $graph = {nodes:[],edges:[],C_node:new WeakMap(),C_edges:new WeakMap}
+        $node_i = 1
+        $edge_i = 1
+        $mknode = &C{
+            $node = graph.C_node.get(C)
+            node and return
+            node = {id:'N'+(node_i++)}
+            graph.C_node.set(C,node)
+            graph.nodes.push(node)
+        }
+        $C_to_node = &C{
+            return graph.C_node.get(C)
+        }
+        # when s:edge is formed, link each C to it
+        $wm_array_add = &wm,C,s{
+            $N = wm.get(C)
+            !N and N = []; wm.set(C, N)
+            N.push(s)
+        }
+        $mkedge = &source,target,etc{
+            $edge = {id:'E'+(edge_i++)}
+            wm_array_add(graph.C_edges,source,edge)
+            wm_array_add(graph.C_edges,target,edge)
+            edge.source = C_to_node(source).id
+            edge.target = C_to_node(target).id
+            ex(edge,etc||{})
+            graph.edges.push(edge)
+        }
 
-$introplant = &s{
+        $la_dir
+        o_path(look,['top','dir','qua']) .map(({dir,qua}) => {
+            # < we want to project %id onto C:dir
+            debugger
+            mknode(dir)
+            mknode(qua)
+            mkedge(dir,qua,{label:'in'})
+        })
 
-}
-# < state-updatable pull-apart-task object? an Inc-Pro-Run, with The-This etc
-#   with a .brack for %node,name,from,to?
+        return graph
 
-# TODO
-$Lines_test = &{
-    $s = C_('lezing',1,{pi:'lezing'},{length:369,from:4,til:7})
-    sc&extrava = {gratis:'vav',lob:&{ 1 },be:'eel'}
-    sc&da = 3
-    ss&zem = "levitat"
-    $i = 0
-    s.c["zeep"] = []
-    while (i++ < 14) { s.c["zeep"][i] = 1 }
-    $Lines = me.enL({},{},{},{},s)
-    Lines += "\n  Thing\t-zip\t\"lots\""
-    $z = me.deL({},{},{},{},Lines)
-    console.log({s,Lines,z})
-    i_(s,C_(Lines,1))
-    i_(s,z)
-}
 
-export {whatsthis}
+        graph = {
+            nodes: [
+                { id: 'N1', label: 'Start' },
+                { id: 'N2', label: '4' },
+                { id: 'N4', label: '8' },
+                { id: 'N5', label: '15' },
+                { id: 'N3', label: '16' },
+                { id: 'N6', label: '23' },
+                { id: 'N7', label: '42' },
+                { id: 'N8', label: 'End' }
+            ],
+
+            edges: [
+                { id: 'E1', source: 'N1', target: 'N2' },
+                { id: 'E2', source: 'N2', target: 'N3' },
+                { id: 'E3', source: 'N3', target: 'N6' },
+                { id: 'E4', source: 'N2', target: 'N4' },
+                { id: 'E5', source: 'N4', target: 'N5' },
+                { id: 'E6', source: 'N5', target: 'N4', label: '2' },
+                { id: 'E7', source: 'N5', target: 'N6' },
+                { id: 'E8', source: 'N6', target: 'N7' },
+                { id: 'E9', source: 'N7', target: 'N7', label: '3' },
+                { id: 'E10', source: 'N7', target: 'N8' }
+            ],
+        }
+    }
+
+// fu
+    # climbing cursor.next() etc
+    $inlezz = &cu,d{
+        d.next ||= cu => cu.next()
+        d.energy ||= 30
+        
+        $first = 1
+        while (d.energy-- > 6) {
+            first and first = 0
+            else
+            !d.next(cu,d) and return
+            # cursor changes to what (in the lezer grammar?) we are looking at...
+
+            d.break && d.break(cu,d) and return
+            
+            d.each(cu,d)
+        }
+    }
+
+
+    $introplant = &s{
+
+    }
+    # < state-updatable pull-apart-task object? an Inc-Pro-Run, with The-This etc
+    #   with a .brack for %node,name,from,to?
+
+    # TODO
+    $Lines_test = &{
+        $s = C_('lezing',1,{pi:'lezing'},{length:369,from:4,til:7})
+        sc&extrava = {gratis:'vav',lob:&{ 1 },be:'eel'}
+        sc&da = 3
+        ss&zem = "levitat"
+        $i = 0
+        s.c["zeep"] = []
+        while (i++ < 14) { s.c["zeep"][i] = 1 }
+        $Lines = me.enL({},{},{},{},s)
+        Lines += "\n  Thing\t-zip\t\"lots\""
+        $z = me.deL({},{},{},{},Lines)
+        console.log({s,Lines,z})
+        i_(s,C_(Lines,1))
+        i_(s,z)
+    }
+
+export {whatsthis,graphwhats}
