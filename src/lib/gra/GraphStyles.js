@@ -6,7 +6,7 @@ export default [
         'height': '50',
         'font-size': '18',
         'font-weight': 'bold',
-        'content': `data(label)`,
+        'label': `data(data.name)`,
         'text-valign': 'center',
         'text-wrap': 'wrap',
         'text-max-width': '140',
