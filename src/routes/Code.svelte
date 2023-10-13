@@ -74,11 +74,11 @@
 <button on:click={() => overdub()}> req! </button>
 <button on:click={() => bang()}> ✴ </button>
 
-<biggroup>
+<BigGroup>
     <p>{b}</p>
     <Codemirror {code} bind:this={cm} on:kommit={kommit} />
     {#if look}<Coning t="Le-look" C={look} style=display:block />{/if}
-</biggroup>
+</BigGroup>
 
 {#if graph} 
     <BigGroup>
