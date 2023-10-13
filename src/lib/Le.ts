@@ -233,6 +233,7 @@ $mkrange = &cu,{
 
         $la_dir
         o_path(look,['top','dir','qua']) .map(({dir,qua}) => {
+            dir.t == 'state' and return
             # < we want to project %id onto C:dir
             mknode(dir)
             mknode(qua)
