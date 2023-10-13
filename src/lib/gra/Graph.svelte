@@ -37,6 +37,13 @@ import { hak } from "$lib/Y/Pic"
         cy.fit()
     }
 
+    function reload_graph(graph) {
+        console.log("reload_graph")
+        cy.remove('*')
+        load_graph(graph)
+        fauxgraphy()
+    }
+    $: ele && reload_graph(graph)
     function load_graph(graph) {
         console.log("load_graph")
         cy.add(graph.nodes.map(function(node) { return {
