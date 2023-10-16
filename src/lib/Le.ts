@@ -87,7 +87,7 @@ import type { EditorState } from "@codemirror/state"
 
 import { pit,C_,i_,o_,o_path } from "$lib/St"
 import { me } from "$lib/Y/Text"
-import { ispi,fatal,pex,ex,sex, ahk,ahsk } from "$lib/Y/Pic"
+import { ispi,fatal,pex,ex,sex, ahk,ahsk,map } from "$lib/Y/Pic"
 
 $mkrange = &cu,{
     return sex({},cu,'from,to')
@@ -149,10 +149,10 @@ $mkrange = &cu,{
         }
 
       // climb to the whole line
-        $parent = i_(s,C_('parent'))
-        $left = i_(s,C_('left'))
-        $inside = i_(s,C_('inside'))
-        $right = i_(s,C_('right'))
+        $parent = i_(s,C_('parent','-cycat'))
+        $left = i_(s,C_('left','-cycat'))
+        $inside = i_(s,C_('inside','-cycat'))
+        $right = i_(s,C_('right','-cycat'))
         
         # inside, right
         $found_nl = 0
@@ -196,6 +196,14 @@ $mkrange = &cu,{
             }
         })
 
+        # and their alignments
+        $leinri = i_(s,C_('left-inside-right','-cycons',{type:'alignmentConstraint',axis:'horizontal'}))
+        map(&n{ i_(leinri,n) }, [left,inside,right])
+
+        $parupw = i_(s,C_('parent-upwards','-cycons',{type:'alignmentConstraint',axis:'vertical'}))
+        map(&n{ i_(parupw,n) }, o_(parent))
+
+
       // etc
         s.y.state = i_(s,save_selection_state(state))
 
@@ -204,6 +212,8 @@ $mkrange = &cu,{
     # $look -> $graph )-> cytoscape
     $graphwhats = &look,{
         $graph = {nodes:[],edges:[],C_node:new WeakMap(),C_edges:new WeakMap}
+        $concon = graph.constraints_config = {}
+        
         $node_i = 1
         $edge_i = 1
         $mknode = &C,da{
@@ -235,14 +245,33 @@ $mkrange = &cu,{
             graph.edges.push(edge)
         }
 
+
+        // alignmentConstraint: {vertical: [['n1', 'n2', 'n3'], ['n4', 'n5']], horizontal: [['n2', 'n4']]},
+
         $la_dir
         o_path(look,['top','dir','qua']) .map(({dir,qua}) => {
             dir.t == 'state' and return
-            # < we want to project resultant node %id onto C:dir
-            # %dir should be groups of other nodes, aka Compound nodes
-            mknode(dir,{dir:1,weight: 75})
-            mknode(qua,{weight: 22})
-            mkedge(dir,qua,{label:'in'})
+            if (ispi(dir,'cycons')) {
+                # eg dir = C-cycons:parent-upwards {type:'alignmentConstraint',axis:'vertical'}
+                #    qua = C-nodule elsewhere
+                # constraint/nodegroup/node
+                $ar = ahsk(concon,dirc&type,dirc&axis)
+                !ar and ar = ahk(concon,dirc&type,dirc&axis,[])
+                # add a nodegroup per dir
+                dir != la_dir and ar.push([])
+                $N = ar.slice(-1)[0]
+                N.push(C_to_node(qua).id)
+            }
+            else {
+                console.log("Withpi: "+dir.t+'-'+ispi(dir)+": "+qua.t+'-'+ispi(qua))
+                
+                # < we want to project resultant node %id onto C:dir
+                # %dir should be groups of other nodes, aka Compound nodes
+                mknode(dir,{dir:1,weight: 75})
+                mknode(qua,{weight: 22})
+                mkedge(dir,qua,{label:'in'})
+            }
+            la_dir = dir
         })
 
         return graph

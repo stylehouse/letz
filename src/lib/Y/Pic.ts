@@ -54,6 +54,7 @@ let window = self
     $isfu = s => typeof s == 'function'
     $isst = s => typeof s == 'string'
     $isar = s => s && s.constructor == Array
+    # isha([]) is true! watch out
     $isha = s => s && typeof s == 'object' && !isC(s)
     $isob = s => s && typeof s == 'object'
     $isR = s => isC(s) && sy&R == s
@@ -693,12 +694,12 @@ let window = self
                     !M.length and debugger
                     $v = M.shift()
                     # empty hash at the end ensures+returns hash
-                    if (isha(v) && !hak(v)) {
+                    if (isha(v) && !hak(v) && !isar(v)) {
                         h[k] && (!isha(h[k]) || isC(h[k])) and throw "!{}||={}"
                         re = h[k] ||= {}
                     }
                     else {
-                        h[k] = v
+                        re = h[k] = v
                     }
                     return re
                 }

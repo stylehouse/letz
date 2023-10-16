@@ -16,7 +16,7 @@ import { hak } from "$lib/Y/Pic"
     let cy = null;
 
     onMount(() => {
-        cytoscape.use(dagre)
+        //cytoscape.use(dagre)
         cytoscape.use(fcose)
         cy = cytoscape({
             container: ele,
@@ -43,14 +43,25 @@ import { hak } from "$lib/Y/Pic"
         layout()
         cy.fit()
     }
+
     function layout() {
+        let concon = graph.constraints_config
         // name = dagre|fcose|circle|grid
-        cy.layout({
-            name: 'dagre',
-            rankDir: "LR",
-            nodeSep: 4,
+        let lay = cy.layout({
+
+            // name: 'dagre',
+            // rankDir: "LR",
+            // nodeSep: 4,
+
+            name: 'fcose',
+            ...concon,
             animate: 1,
-        }).run();
+        })
+
+
+
+        // < different subsets of the graph
+        lay.run();
     }
 
     function reload_graph(graph) {
