@@ -87,7 +87,7 @@ import type { EditorState } from "@codemirror/state"
 
 import { pit,C_,i_,o_,o_path } from "$lib/St"
 import { me } from "$lib/Y/Text"
-import { ispi,fatal,pex,ex,sex } from "$lib/Y/Pic"
+import { ispi,fatal,pex,ex,sex, ahk,ahsk } from "$lib/Y/Pic"
 
 $mkrange = &cu,{
     return sex({},cu,'from,to')
@@ -136,11 +136,16 @@ $mkrange = &cu,{
         let str = getstr(about)
         let tree = syntaxTree(state)
         let s = C_('lezing',1,{pi:'lezing'},{length:str.length,...sex({},about,'from,to')})
+        $tft_C = {}
         
         $cursor = tree.cursorAt(about.from, 1)
         $nod = &m,cursor,c{
             $range = mkrange(cursor)
-            return i_(m,C_(cursor.name,'-nodule',pex({range},c||{})))
+            $n = ahsk(tft_C, cursor.name,range.from,range.to)
+            n ||= C_(cursor.name,'-nodule')
+            ex(n.c,{range},c||{})
+            ahk(tft_C, cursor.name,range.from,range.to, n)
+            return i_(m,n)
         }
 
       // climb to the whole line
@@ -163,7 +168,7 @@ $mkrange = &cu,{
 
                 cu.from > about.to and where = right
 
-                nod(where,cu,{s:str})
+                nod(where,cu)
             }
         })
 
@@ -201,12 +206,11 @@ $mkrange = &cu,{
         $graph = {nodes:[],edges:[],C_node:new WeakMap(),C_edges:new WeakMap}
         $node_i = 1
         $edge_i = 1
-        $mknode = &C{
+        $mknode = &C,da{
             $node = graph.C_node.get(C)
             node and return
             node = {id:'N'+(node_i++)}
-            $da = node.data = {}
-            da.name = C.t
+            node.data = ex({name:C.t},da||{})
 
             graph.C_node.set(C,node)
             graph.nodes.push(node)
@@ -234,9 +238,10 @@ $mkrange = &cu,{
         $la_dir
         o_path(look,['top','dir','qua']) .map(({dir,qua}) => {
             dir.t == 'state' and return
-            # < we want to project %id onto C:dir
-            mknode(dir)
-            mknode(qua)
+            # < we want to project resultant node %id onto C:dir
+            # %dir should be groups of other nodes, aka Compound nodes
+            mknode(dir,{dir:1,weight: 75})
+            mknode(qua,{weight: 22})
             mkedge(dir,qua,{label:'in'})
         })
 

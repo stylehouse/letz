@@ -17,6 +17,14 @@ export default [
       }
     },
     {
+      selector: 'node[data.dir]',
+      style: {
+        'shape': 'ellipse',
+        'width': '8em',
+        'background-color': 'pink',
+      }
+    },
+    {
       selector: 'node:selected',
       style: {
         'background-color': 'darkred',

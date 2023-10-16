@@ -3,7 +3,11 @@
     import { onMount, setContext } from "svelte";
 import { hak } from "$lib/Y/Pic"
     import cytoscape from "cytoscape";
+    // these are apparently the best at either hierarchical
     import dagre from "cytoscape-dagre";
+    //   or force-directed, compound graphs
+    //    and "fairly rich set of constraint types" https://github.com/iVis-at-Bilkent/cytoscape.js-fcose
+    import fcose from 'cytoscape-fcose';
     import GraphStyles from "./GraphStyles.js";
 
     export let graph = null;
@@ -12,29 +16,41 @@ import { hak } from "$lib/Y/Pic"
     let cy = null;
 
     onMount(() => {
-         cytoscape.use(dagre)
+        cytoscape.use(dagre)
+        cytoscape.use(fcose)
         cy = cytoscape({
             container: ele,
             style: GraphStyles,
         });
-        cy.on("add", () => {
-            cy
-                .makeLayout({
-                    name: "dagre",
-                    rankDir: "TB",
-                    nodeSep: 22,
+        // cy.on("add", () => {
+        //     cy
+        //         .makeLayout({
+        //             name: "dagre",
+        //             rankDir: "TB",
+        //             nodeSep: 22,
                     
-                })
-                .run();
-        });
+        //         })
+        //         .run();
+        // });
 
         if (graph) load_graph(graph)
         fauxgraphy()
+        cy.on("touchend", layout)
     });
     function fauxgraphy() {
         let data = cy.data()
         if (hak(data)) console.log("have cy.data()",data)
+        layout()
         cy.fit()
+    }
+    function layout() {
+        // name = dagre|fcose|circle|grid
+        cy.layout({
+            name: 'dagre',
+            rankDir: "LR",
+            nodeSep: 4,
+            animate: 1,
+        }).run();
     }
 
     function reload_graph(graph) {
@@ -42,6 +58,7 @@ import { hak } from "$lib/Y/Pic"
         cy.remove('*')
         load_graph(graph)
         fauxgraphy()
+        
     }
     $: ele && reload_graph(graph)
     function load_graph(graph) {
@@ -58,17 +75,18 @@ import { hak } from "$lib/Y/Pic"
         } } ))
     }
 </script>
-
+<span on:click={() => cy.fit()}>fit()</span>
+<span on:click={layout}>layout()</span>
 <div class="graph" bind:this={ele}></div>
 
 
-<p on:click={fauxgraphy}>cy.data()</p>
+
 
 <style>
     .graph {
         width: 100%;
         height: 100%;
-        min-height:20em;
+        min-height:30em;
         min-width:20em;
 
     }
