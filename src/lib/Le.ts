@@ -199,8 +199,14 @@ $mkrange = &cu,{
         # and their alignments
         $leinri = i_(s,C_('left-inside-right','-cycons',{type:'alignmentConstraint',axis:'horizontal'}))
         map(&n{ i_(leinri,n) }, [left,inside,right])
+        $thelin = i_(s,C_('the line','-cycons',{type:'alignmentConstraint',axis:'horizontal'}))
+        map(&n{
+            map(&n{
+                i_(thelin,n)
+            }, o_(n))
+        }, [left,inside,right])
 
-        $parupw = i_(s,C_('parent-upwards','-cycons',{type:'alignmentConstraint',axis:'vertical'}))
+        $parupw = i_(s,C_('parent upwards','-cycons',{type:'alignmentConstraint',axis:'vertical'}))
         map(&n{ i_(parupw,n) }, o_(parent))
 
 
@@ -213,17 +219,18 @@ $mkrange = &cu,{
     $graphwhats = &look,{
         $graph = {nodes:[],edges:[],C_node:new WeakMap(),C_edges:new WeakMap}
         $concon = graph.constraints_config = {}
-        
+      // f
         $node_i = 1
         $edge_i = 1
         $mknode = &C,da{
             $node = graph.C_node.get(C)
-            node and return
+            node and return node
             node = {id:'N'+(node_i++)}
             node.data = ex({name:C.t},da||{})
 
             graph.C_node.set(C,node)
             graph.nodes.push(node)
+            return node
         }
         $C_to_node = &C{
             return graph.C_node.get(C)
@@ -243,32 +250,46 @@ $mkrange = &cu,{
             wm_array_add(graph.C_edges,source,edge)
             wm_array_add(graph.C_edges,target,edge)
             graph.edges.push(edge)
+            return edge
         }
 
-
-        // alignmentConstraint: {vertical: [['n1', 'n2', 'n3'], ['n4', 'n5']], horizontal: [['n2', 'n4']]},
+      // do
 
         $la_dir
         o_path(look,['top','dir','qua']) .map(({dir,qua}) => {
             dir.t == 'state' and return
             if (ispi(dir,'cycons')) {
-                # eg dir = C-cycons:parent-upwards {type:'alignmentConstraint',axis:'vertical'}
-                #    qua = C-nodule elsewhere
-                # constraint/nodegroup/node
-                $ar = ahsk(concon,dirc&type,dirc&axis)
-                !ar and ar = ahk(concon,dirc&type,dirc&axis,[])
-                # add a nodegroup per dir
-                dir != la_dir and ar.push([])
-                $N = ar.slice(-1)[0]
-                N.push(C_to_node(qua).id)
+                if (dirc&type == 'alignmentConstraint') {
+                    # for alignmentConstraint: {vertical: [['n1', 'n2', 'n3'], ['n4', 'n5']], horizontal: [['n2', 'n4']]},
+                    # eg dir = C-cycons:parent-upwards {type:'alignmentConstraint',axis:'vertical'}
+                    #    qua = C-nodule elsewhere
+                    # constraint/nodegroup/node
+                    $ar = ahsk(concon,dirc&type,dirc&axis)
+                    !ar and ar = ahk(concon,dirc&type,dirc&axis,[])
+                    # add a nodegroup per dir
+                    dir != la_dir and ar.push([])
+                    $N = ar.slice(-1)[0]
+                    N.push(C_to_node(qua).id)
+                }
+                elsif (dirc&type == 'relativePlacementConstraint') {
+                    # for relativePlacementConstraint: [{"top": "r1","bottom": "r2","gap": 150}]
+                    $ar = concon[dirc&type] ||= []
+                    $co = dir.y.replco
+                    !co and co = dir.y.replco = {}; ar.push(co)
+                    co.gap = dirc&gap || 10
+                    # < quas become .top,bottom or .left,right depending on dirc&axis
+                    $two = dirc&axis == 'vertical' ? ['top','bottom'] : ['left','right']
+                    $k = co[two[0]] ? co[two[1]] : two[0]
+                    co[k] = C_to_node(qua).id
+                }
             }
             else {
                 console.log("Withpi: "+dir.t+'-'+ispi(dir)+": "+qua.t+'-'+ispi(qua))
                 
                 # < we want to project resultant node %id onto C:dir
                 # %dir should be groups of other nodes, aka Compound nodes
-                mknode(dir,{dir:1,weight: 75})
-                mknode(qua,{weight: 22})
+                $parent = mknode(dir,{dir:1,weight: 75}).id
+                mknode(qua,{weight: 22,parent})
                 mkedge(dir,qua,{label:'in'})
             }
             la_dir = dir
