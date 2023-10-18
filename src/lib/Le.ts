@@ -267,8 +267,27 @@ $mkrange = &cu,{
 
       // do
 
+        # we mainly interpret a two-level structure (incidentally) on C-cycat:dir/C:qua
+        # make them both nodes, with the dir/qua edge
+        o_path(look,['top','dir']) .map(({dir}) => {
+            # ensure even dir without qua exist
+            if (ispi(dir,'cycat')) {
+                mknode(dir,{dir:1,weight: 75})
+            }
+        })
+        o_path(look,['top','dir','qua']) .map(({dir,qua}) => {
+            dir.t == 'state' and return
+            if (ispi(dir,'cycat')) {
+                # < we want to project resultant node %id onto C:dir
+                # %dir should be groups of other nodes, aka Compound nodes
+                $parent = mknode(dir).id
+                # this gives C:left|inside|right a 
+                $quac = 'eni'.includes(dir.t[1]) ? {parent} : {}
+                mknode(qua,quac)
+                mkedge(dir,qua,{label:'in'})
+            }
+        })
         $la_dir
-
         o_path(look,['top','dir','qua']) .map(({dir,qua}) => {
             dir.t == 'state' and return
             if (ispi(dir,'cycons')) {
@@ -292,7 +311,7 @@ $mkrange = &cu,{
                     # quas become the top,bottom or left,right depending on dirc&axis
                     $two = dirc&axis == 'vertical' ? ['top','bottom'] : ['left','right']
                     # two quas per constraint
-                    $co = dir.y.replco
+                    $co = diry&replco
                     !co and co = dir.y.replco = {}; ar.push(co)
                     # we may have more than two quas, each pair are constrained
                     $la_qua = co[two[1]]
@@ -312,13 +331,8 @@ $mkrange = &cu,{
                 else throw "-cycons non"
             }
             else if (ispi(dir,'cycat')) {
-                # < we want to project resultant node %id onto C:dir
-                # %dir should be groups of other nodes, aka Compound nodes
-                $parent = mknode(dir,{dir:1,weight: 75}).id
-                # this gives C:left|inside|right a 
-                $quac = 'eni'.includes(dir.t[1]) ? {parent} : {}
-                mknode(qua,quac)
-                mkedge(dir,qua,{label:'in'})
+                # done in previous phase, to ensure all nodes exist before linking
+            }
             }
             else throw "not -cycons|cycat", dir
             la_dir = dir
