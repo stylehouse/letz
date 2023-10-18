@@ -98,9 +98,9 @@ export function stylehouse_lite (source,filename,agent) {
 
 
   // rep(...) use
-    // see shed.git/ghosts/j/41
+    // see shed.git/ghosts/j/41 / JaBabz
 
-    // anything on a line
+    // anything on a line (was nnl in JaBabz)
     let nnl = '[^\n]+'
     // whitespace leading up to things not comments
     let nls = '[ \t]*(?! *\/\/)'
@@ -197,6 +197,30 @@ export function stylehouse_lite (source,filename,agent) {
         }
     )
 
+    // chuck error: throw "Something", C 
+    //   throws new Error("Something"), its .etc=[C]
+    //     also handles concatenated bits for "Something":
+    // < preserving the keys of etc
+    rep(
+        [
+            '(', /^\s*(?:else *)?(?!#)/, '?)',
+            'throw (', /"[^\n"]+?"/, ')',
+            '(, ?', nnl, ')?;?', /\s*$/
+        ],
+        (ind,msg,etc) => {
+            msg = msg.replace(/: ?"$/, '"')
+            let guts = `new Error(${msg})`
+            if (etc) {
+                etc = etc.replace(/^, ?/, '')
+                etc = etc.replace(/;$/, '')
+                guts = `{var er = ${guts}; er.etc = [${etc}]; throw er}`
+            } else {
+                guts = `throw ${guts};`
+            }
+            return ind + guts
+        }
+    )
+    
     // perlish elsif
     rep(
         /^(\s*)elsif ?\(/,

@@ -14,6 +14,7 @@ import {ex} from '$lib/Y/Pic.ts'
             +"$"+"art = 5\n'bla"+"tant figs'\n"
             +"    things "+"and logs "+"and stuff\n"
             +"els"+"if (1) near\n"
+            +"else throw \"figaro, figaro\", art\n"
             +"let oh = &"+"fi,gu,res"+"{ 33+3 }\n"
             +"    each"+" etc Dc&art {\n"
             +"        A.1.2.3 + ds&z\n"
