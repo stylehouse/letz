@@ -1,7 +1,8 @@
 <script lang="ts">
     // lifted from git@github.com:gomezcabo/svelte-cytoscape-demo.git
     import { onMount, setContext } from "svelte";
-import { hak } from "$lib/Y/Pic"
+    import { hak,map,havs } from "$lib/Y/Pic"
+    import DropDown from "$lib/ui/DropDown.svelte"
     import cytoscape from "cytoscape";
     // these are apparently the best at either hierarchical
     import dagre from "cytoscape-dagre";
@@ -14,54 +15,68 @@ import { hak } from "$lib/Y/Pic"
 
     let ele = null;
     let cy = null;
+    let layengs = {fcose,dagre}
+    let layeng = havs(layengs)[0]
 
     onMount(() => {
-        //cytoscape.use(dagre)
-        cytoscape.use(fcose)
+        if (!graph) return console.log("!Graph")
+        
         cy = cytoscape({
             container: ele,
             style: GraphStyles,
         });
-        // cy.on("add", () => {
-        //     cy
-        //         .makeLayout({
-        //             name: "dagre",
-        //             rankDir: "TB",
-        //             nodeSep: 22,
-                    
-        //         })
-        //         .run();
-        // });
 
-        if (graph) load_graph(graph)
+        load_graph(graph)
         fauxgraphy()
-        cy.on("touchend", layout)
     });
     function fauxgraphy() {
         let data = cy.data()
         if (hak(data)) console.log("have cy.data()",data)
         layout()
-        cy.fit()
     }
 
+    function set_layeng(v) {
+        layeng = v
+        layout()
+    }
+    let lay
     function layout() {
         let concon = graph.constraints_config
         // name = dagre|fcose|circle|grid
-        let lay = cy.layout({
+        cytoscape.use(layeng)
+        let name
+        map((s,k) => {if (s == layeng) { name = k }}, layengs)
+        if (!name) debugger
 
-            // name: 'dagre',
-            // rankDir: "LR",
-            // nodeSep: 4,
+        lay = cy.layout({
 
-            name: 'fcose',
+            name,
             ...concon,
             animate: 1,
+            animationDuration: 400,
         })
+        run_layout()
+    }
+    function run_layout(them) {
+        // different subsets of the graph
+        them ||= lay
+        them.run();
+        cy.fit({animate: 1,
+            animationDuration: 400,})
+    }
 
-
-
-        // < different subsets of the graph
-        lay.run();
+    function layout_rightchildren() {
+        let them = cy.collection()
+        let right = cy.$('node[data.name = "right"]')
+        them.merge(right).merge(right.neighbourhood())
+        them.select()
+        //return
+        cytoscape.use(dagre)
+        them.layout({
+            name:'dagre',
+            animate: 1,
+            animationDuration: 400,
+        }).run();
     }
 
     function reload_graph(graph) {
@@ -87,7 +102,10 @@ import { hak } from "$lib/Y/Pic"
     }
 </script>
 <span on:click={() => cy.fit()}>fit()</span>
+<span on:click={layout_rightchildren}>(right.)</span>
+<span on:click={run_layout}>(re-.)</span>
 <span on:click={layout}>layout()</span>
+<span>layeng: <DropDown N={layengs} set={set_layeng} /></span>
 <div class="graph" bind:this={ele}></div>
 
 

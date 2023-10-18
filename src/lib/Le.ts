@@ -309,8 +309,9 @@ $mkrange = &cu,{
                     node and co[k] = node.id
                     else console.log("node!! ",node)
                 }
+                else throw "-cycons non"
             }
-            else {
+            else if (ispi(dir,'cycat')) {
                 # < we want to project resultant node %id onto C:dir
                 # %dir should be groups of other nodes, aka Compound nodes
                 $parent = mknode(dir,{dir:1,weight: 75}).id
@@ -319,6 +320,7 @@ $mkrange = &cu,{
                 mknode(qua,quac)
                 mkedge(dir,qua,{label:'in'})
             }
+            else throw "not -cycons|cycat", dir
             la_dir = dir
         })
         $N = ahsk(concon,'relativePlacementConstraint')

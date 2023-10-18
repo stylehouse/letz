@@ -35,6 +35,17 @@ export default [
       }
     },
     {
+    selector: ':parent',
+      style: {
+  //      'background-opacity': 0.333,
+        'background-color': '#e8e8e8',
+        'border-color': '#DADADA',
+  //      'border-width': 3,
+        'text-valign': 'bottom'
+      }
+    },
+  
+    {
       selector: 'edge',
       style: {
         'curve-style': 'bezier',
