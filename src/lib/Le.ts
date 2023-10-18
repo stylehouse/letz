@@ -343,6 +343,7 @@ $mkrange = &cu,{
             d.break && d.break(cu,d) and return
             
             d.each(cu,d)
+            d.not and return
         }
     }
 
