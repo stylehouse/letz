@@ -196,31 +196,50 @@ $mkrange = &cu,{
             }
         })
 
-        # and their alignments
+      // and their alignments
         $leinri = i_(s,C_('left-inside-right','-cycons',{type:'relativePlacementConstraint',axis:'horizontal'}))
         map(&n{ i_(leinri,n) }, [left,inside,right])
         $leinri = i_(s,C_('left-inside-right','-cycons',{type:'alignmentConstraint',axis:'horizontal'}))
         map(&n{ i_(leinri,n) }, [left,inside,right])
-        $thelin = i_(s,C_('the line','-cycons',{type:'relativePlacementConstraint',axis:'horizontal'}))
-        map(&n{
-            map(&n{
-                i_(thelin,n)
-            }, o_(n))
-        }, [left,inside,right])
-        $thelin = i_(s,C_('the line','-cycons',{type:'alignmentConstraint',axis:'horizontal'}))
+        # $thelin = i_(s,C_('the line','-cycons',{type:'relativePlacementConstraint',axis:'horizontal'}))
+        # map(&n{
+        #     map(&n{
+        #         i_(thelin,n)
+        #     }, o_(n))
+        # }, [left,inside,right])
+        # $thelin = i_(s,C_('the line','-cycons',{type:'alignmentConstraint',axis:'horizontal'}))
+        # map(&n{
+        #     map(&n{
+        #         i_(thelin,n)
+        #     }, o_(n))
+        # }, [left,inside,right])
+
+        # $parupw = i_(s,C_('parent upwards','-cycons',{type:'alignmentConstraint',axis:'vertical'}))
+        # map(&n{ i_(parupw,n) }, o_(parent))
+        # parupws&z?.reverse()
+        # $parupw = i_(s,C_('parent upwards','-cycons',{type:'relativePlacementConstraint',axis:'vertical'}))
+        # map(&n{ i_(parupw,n) }, o_(parent))
+        # parupws&z?.reverse()
+
+      // edges about ordering
+        $leinri = i_(s,C_('left-inside-right','-cyedge'))
+        map(&n{ i_(leinri,n) }, [left,inside,right])
+        
+
+        $thelin = i_(s,C_('the line','-cyedge'))
         map(&n{
             map(&n{
                 i_(thelin,n)
             }, o_(n))
         }, [left,inside,right])
 
-        $parupw = i_(s,C_('parent upwards','-cycons',{type:'alignmentConstraint',axis:'vertical'}))
-        map(&n{ i_(parupw,n) }, o_(parent))
-        parupws&z?.reverse()
-        $parupw = i_(s,C_('parent upwards','-cycons',{type:'relativePlacementConstraint',axis:'vertical'}))
+        $parupw = i_(s,C_('parent upwards','-cyedge',))
         map(&n{ i_(parupw,n) }, o_(parent))
         parupws&z?.reverse()
 
+        map(&C{ c&da = {class:'along',label:'ne'} },[leinri,thelin,parupw])
+        parupwc&da.label = 'up'
+        
 
       // etc
         s.y.state = i_(s,save_selection_state(state))
@@ -231,6 +250,7 @@ $mkrange = &cu,{
     $graphwhats = &look,{
         $graph = {nodes:[],edges:[],C_node:new WeakMap(),C_edges:new WeakMap}
         $concon = graph.constraints_config = {}
+
       // f
         $node_i = 1
         $edge_i = 1
@@ -333,12 +353,20 @@ $mkrange = &cu,{
             else if (ispi(dir,'cycat')) {
                 # done in previous phase, to ensure all nodes exist before linking
             }
+            else if (ispi(dir,'cyedge')) {
+                # an edge goes through dir/*:qua
+                $src = diry&la_node
+                if (src) {
+                    mkedge(src,qua,ex({label:'along'}, dirc&da||{}))
+                }
+                diry&la_node = qua
             }
-            else throw "not -cycons|cycat", dir
+            else throw "not -cycons|cycat|cyedge", dir
             la_dir = dir
         })
-        $N = ahsk(concon,'relativePlacementConstraint')
-        grop((n,i) => i>6 && i%2, N)
+        # < why is this faulty? it removes all i>6
+        # $N = ahsk(concon,'relativePlacementConstraint')
+        # grop((n,i) => i>6 && i%2, N)
 
         return graph
     }

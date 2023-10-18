@@ -1,7 +1,8 @@
 <script lang=ts>
     //import Knob from "$lib/ui/Knob.svelte"
     import Knob from '@bismuthsoft/svelte-dj-knob';
-    let sizer = 31;
+    export let at
+    let sizer = at || 31;
 
 </script>
 

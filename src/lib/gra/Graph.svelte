@@ -30,8 +30,6 @@
         fauxgraphy()
     });
     function fauxgraphy() {
-        let data = cy.data()
-        if (hak(data)) console.log("have cy.data()",data)
         layout()
     }
 
@@ -52,6 +50,7 @@
 
             name,
             ...concon,
+                rankDir:'TB',
             animate: 1,
             animationDuration: 400,
         })
@@ -61,22 +60,27 @@
         // different subsets of the graph
         them ||= lay
         them.run();
-        cy.fit({animate: 1,
-            animationDuration: 400,})
+        cy.fit()
     }
 
     function layout_rightchildren() {
         let them = cy.collection()
         let right = cy.$('node[data.name = "right"]')
-        them.merge(right).merge(right.neighbourhood())
+        // < want to not move right itself...
+        them
+        // .merge(right)
+        .merge(right.neighbourhood())
         them.select()
         //return
         cytoscape.use(dagre)
-        them.layout({
-            name:'dagre',
-            animate: 1,
-            animationDuration: 400,
-        }).run();
+        run_layout(
+            them.layout({
+                name:'dagre',
+                rankDir:'TB',
+                animate: 1,
+                animationDuration: 400,
+            })
+        )
     }
 
     function reload_graph(graph) {
@@ -116,7 +120,7 @@
         width: 100%;
         height: 100%;
         min-height:30em;
-        min-width:20em;
+        min-width:40em;
 
     }
 </style>

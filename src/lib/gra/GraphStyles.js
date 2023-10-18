@@ -62,6 +62,14 @@ export default [
       }
     },
     {
+      selector: 'edge[class="along"]',
+      style: {
+        'color': 'lightblue',
+        'line-color': 'lightblue',
+        'target-arrow-color': 'lightblue',
+      }
+    },
+    {
       selector: 'edge[label]',
       style: {
         'content': `data(label)`,
@@ -70,7 +78,7 @@ export default [
     {
       selector: 'edge.label',
       style: {
-        'line-color': 'orange',
+        'line-color': 'white',
         'target-arrow-color': 'orange'
       }
     }

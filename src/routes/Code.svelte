@@ -37,7 +37,6 @@
         
         save = look.y.state
         
-
         graph = graphwhats(look)
         // look = graph
     }
@@ -62,6 +61,7 @@
     let floatation
 </script>
 
+<div>
 <p on:click={() => more = !more}>{#if more}no {/if}more?</p>
 {#if more}
 <CompileLite />
@@ -73,6 +73,7 @@
 
 <button on:click={() => overdub()}> req! </button>
 <button on:click={() => bang()}> ✴ </button>
+</div>
 
 <BigGroup>
     <p>{b}</p>
@@ -81,7 +82,7 @@
 </BigGroup>
 
 {#if graph} 
-    <BigGroup>
+    <BigGroup at=55>
         <Graph {graph} />
     </BigGroup>
 {/if}
@@ -90,3 +91,9 @@
     <Savable C={save} t='Codestate' {resume}/>
 </p>
 
+<style>
+    div {
+        display:block;
+
+    }
+</style>
