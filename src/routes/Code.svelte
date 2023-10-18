@@ -39,7 +39,7 @@
         
 
         graph = graphwhats(look)
-        //look = graph
+        // look = graph
     }
     let junk = [1,3,5,[6,[6,[6,[[6,[2]]]]]]]
 

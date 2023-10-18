@@ -38,15 +38,16 @@ export default [
       selector: 'edge',
       style: {
         'curve-style': 'bezier',
+        'control-point-step-size': 40,
         'color': 'darkred',
-        'text-background-color': '#ffffff',
+        'text-background-color': '#003355',
         'text-background-opacity': '1',
-        'text-background-padding': '3',
+        'text-background-padding': '1',
         'width': '3',
         'target-arrow-shape': 'triangle',
         'line-color': 'darkred',
         'target-arrow-color': 'darkred',
-        'font-weight': 'bold'
+        //'font-weight': 'bold'
       }
     },
     {

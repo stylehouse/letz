@@ -87,7 +87,7 @@ import type { EditorState } from "@codemirror/state"
 
 import { pit,C_,i_,o_,o_path } from "$lib/St"
 import { me } from "$lib/Y/Text"
-import { ispi,fatal,pex,ex,sex, ahk,ahsk,map } from "$lib/Y/Pic"
+import { ispi,fatal,pex,ex,sex, ahk,ahsk,map,grop } from "$lib/Y/Pic"
 
 $mkrange = &cu,{
     return sex({},cu,'from,to')
@@ -197,8 +197,16 @@ $mkrange = &cu,{
         })
 
         # and their alignments
+        $leinri = i_(s,C_('left-inside-right','-cycons',{type:'relativePlacementConstraint',axis:'horizontal'}))
+        map(&n{ i_(leinri,n) }, [left,inside,right])
         $leinri = i_(s,C_('left-inside-right','-cycons',{type:'alignmentConstraint',axis:'horizontal'}))
         map(&n{ i_(leinri,n) }, [left,inside,right])
+        $thelin = i_(s,C_('the line','-cycons',{type:'relativePlacementConstraint',axis:'horizontal'}))
+        map(&n{
+            map(&n{
+                i_(thelin,n)
+            }, o_(n))
+        }, [left,inside,right])
         $thelin = i_(s,C_('the line','-cycons',{type:'alignmentConstraint',axis:'horizontal'}))
         map(&n{
             map(&n{
@@ -208,6 +216,10 @@ $mkrange = &cu,{
 
         $parupw = i_(s,C_('parent upwards','-cycons',{type:'alignmentConstraint',axis:'vertical'}))
         map(&n{ i_(parupw,n) }, o_(parent))
+        parupws&z?.reverse()
+        $parupw = i_(s,C_('parent upwards','-cycons',{type:'relativePlacementConstraint',axis:'vertical'}))
+        map(&n{ i_(parupw,n) }, o_(parent))
+        parupws&z?.reverse()
 
 
       // etc
@@ -256,6 +268,7 @@ $mkrange = &cu,{
       // do
 
         $la_dir
+
         o_path(look,['top','dir','qua']) .map(({dir,qua}) => {
             dir.t == 'state' and return
             if (ispi(dir,'cycons')) {
@@ -269,31 +282,47 @@ $mkrange = &cu,{
                     # add a nodegroup per dir
                     dir != la_dir and ar.push([])
                     $N = ar.slice(-1)[0]
-                    N.push(C_to_node(qua).id)
+                    $node = C_to_node(qua)
+                    node and N.push(node.id)
+                    else console.log("node!! ",node)
                 }
                 elsif (dirc&type == 'relativePlacementConstraint') {
                     # for relativePlacementConstraint: [{"top": "r1","bottom": "r2","gap": 150}]
                     $ar = concon[dirc&type] ||= []
+                    # quas become the top,bottom or left,right depending on dirc&axis
+                    $two = dirc&axis == 'vertical' ? ['top','bottom'] : ['left','right']
+                    # two quas per constraint
                     $co = dir.y.replco
                     !co and co = dir.y.replco = {}; ar.push(co)
-                    co.gap = dirc&gap || 10
-                    # < quas become .top,bottom or .left,right depending on dirc&axis
-                    $two = dirc&axis == 'vertical' ? ['top','bottom'] : ['left','right']
-                    $k = co[two[0]] ? co[two[1]] : two[0]
-                    co[k] = C_to_node(qua).id
+                    # we may have more than two quas, each pair are constrained
+                    $la_qua = co[two[1]]
+                    if (la_qua) {
+                        co = dir.y.replco = {}
+                        ar.push(co)
+                        co[two[0]] = la_qua
+                    }
+
+                    co.gap = dirc&gap || 32
+
+                    $k = co[two[0]] ? two[1] : two[0]
+                    $node = C_to_node(qua)
+                    node and co[k] = node.id
+                    else console.log("node!! ",node)
                 }
             }
             else {
-                console.log("Withpi: "+dir.t+'-'+ispi(dir)+": "+qua.t+'-'+ispi(qua))
-                
                 # < we want to project resultant node %id onto C:dir
                 # %dir should be groups of other nodes, aka Compound nodes
                 $parent = mknode(dir,{dir:1,weight: 75}).id
-                mknode(qua,{weight: 22,parent})
+                # this gives C:left|inside|right a 
+                $quac = 'eni'.includes(dir.t[1]) ? {parent} : {}
+                mknode(qua,quac)
                 mkedge(dir,qua,{label:'in'})
             }
             la_dir = dir
         })
+        $N = ahsk(concon,'relativePlacementConstraint')
+        grop((n,i) => i>6 && i%2, N)
 
         return graph
     }
