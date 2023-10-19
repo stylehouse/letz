@@ -59,7 +59,7 @@
     function run_layout(them) {
         // different subsets of the graph
         them ||= lay
-        them.run();
+        them.run()
         cy.fit()
     }
 
@@ -119,7 +119,7 @@
     .graph {
         width: 100%;
         height: 100%;
-        min-height:30em;
+        min-height:50em;
         min-width:40em;
 
     }

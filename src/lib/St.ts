@@ -101,7 +101,7 @@ import {isst,isnu,isnum,isar,isspace,hak,havs,haks,ex} from '$lib/Y/Pic.ts'
     # get C inside C (C/C)
     export function o_(C1: C, qua: string = 'z') {
         let N = C1.sc[qua] || []
-        return N
+        return N.slice()
     }
     # C/+C for Nine. shall have %z down and .y.up
     export function pit (D,t,y,c,sc) {

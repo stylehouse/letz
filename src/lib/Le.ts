@@ -162,7 +162,7 @@ $mkrange = &cu,{
             # break: cu => cu.from > about.to,
             each: &cu,d{
                 $str = getstr(cu)
-                str.includes("\n") and found_nl = 1
+                where == right && str.includes("\n") and found_nl = 1
                 else
                 found_nl and return d.not = true
 
@@ -185,16 +185,24 @@ $mkrange = &cu,{
         
         # parent
         cursor = tree.cursorAt(about.from, 1)
-        $line = {}
         inlezz(cursor,{
             next: cu => cu.parent(),
             each: cu => {
-                if (cu.name == 'Line') {
-                    sex(line,cu,'from,to')
-                }
                 nod(parent,cu)
             }
         })
+        # varying next then parent
+        # cursor = tree.cursorAt(about.from, 1)
+        # for (let rel = 1; rel < 8; rel++) {
+        #     $nexpar = i_(s,C_(`nexpar(${rel})`,'-cycat'))
+        #     $nexts = rel
+        #     inlezz(cursor,{
+        #         next: cu => nexts-- > 0 ? cu.next() : cu.parent(),
+        #         each: cu => {
+        #             # nod(nexpar,cu)
+        #         }
+        #     })
+        # }
 
       // and their alignments
         $leinri = i_(s,C_('left-inside-right','-cycons',{type:'relativePlacementConstraint',axis:'horizontal'}))
@@ -217,9 +225,8 @@ $mkrange = &cu,{
         # $parupw = i_(s,C_('parent upwards','-cycons',{type:'alignmentConstraint',axis:'vertical'}))
         # map(&n{ i_(parupw,n) }, o_(parent))
         # parupws&z?.reverse()
-        # $parupw = i_(s,C_('parent upwards','-cycons',{type:'relativePlacementConstraint',axis:'vertical'}))
-        # map(&n{ i_(parupw,n) }, o_(parent))
-        # parupws&z?.reverse()
+        # $parupw = i_(s,C_('parent upwards vert','-cycons',{type:'relativePlacementConstraint',axis:'vertical'}))
+        # map(&ni{ i < 2 && i_(parupw,n) }, o_(parent).reverse())
 
       // edges about ordering
         $leinri = i_(s,C_('left-inside-right','-cyedge'))
