@@ -138,7 +138,9 @@ $mkrange = &cu,{
         let s = C_('lezing',1,{pi:'lezing'},{length:str.length,...sex({},about,'from,to')})
         $tft_C = {}
         
+        # start with a point
         $cursor = tree.cursorAt(about.from, 1)
+        # this cursor is now looking at a lezer node (of the language)
         $nod = &m,cursor,c{
             $range = mkrange(cursor)
             $n = ahsk(tft_C, cursor.name,range.from,range.to)
@@ -204,23 +206,23 @@ $mkrange = &cu,{
         #     })
         # }
 
-      // and their alignments
+      // and their alignment constraints
         $leinri = i_(s,C_('left-inside-right','-cycons',{type:'relativePlacementConstraint',axis:'horizontal'}))
         map(&n{ i_(leinri,n) }, [left,inside,right])
         $leinri = i_(s,C_('left-inside-right','-cycons',{type:'alignmentConstraint',axis:'horizontal'}))
         map(&n{ i_(leinri,n) }, [left,inside,right])
-        # $thelin = i_(s,C_('the line','-cycons',{type:'relativePlacementConstraint',axis:'horizontal'}))
-        # map(&n{
-        #     map(&n{
-        #         i_(thelin,n)
-        #     }, o_(n))
-        # }, [left,inside,right])
-        # $thelin = i_(s,C_('the line','-cycons',{type:'alignmentConstraint',axis:'horizontal'}))
-        # map(&n{
-        #     map(&n{
-        #         i_(thelin,n)
-        #     }, o_(n))
-        # }, [left,inside,right])
+        $thelin = i_(s,C_('the line','-cycons',{type:'relativePlacementConstraint',axis:'horizontal'}))
+        map(&n{
+            map(&n{
+                i_(thelin,n)
+            }, o_(n))
+        }, [left,inside,right])
+        $thelin = i_(s,C_('the line','-cycons',{type:'alignmentConstraint',axis:'horizontal'}))
+        map(&n{
+            map(&n{
+                i_(thelin,n)
+            }, o_(n))
+        }, [left,inside,right])
 
         # $parupw = i_(s,C_('parent upwards','-cycons',{type:'alignmentConstraint',axis:'vertical'}))
         # map(&n{ i_(parupw,n) }, o_(parent))
@@ -228,7 +230,7 @@ $mkrange = &cu,{
         # $parupw = i_(s,C_('parent upwards vert','-cycons',{type:'relativePlacementConstraint',axis:'vertical'}))
         # map(&ni{ i < 2 && i_(parupw,n) }, o_(parent).reverse())
 
-      // edges about ordering
+      // extra edges about ordering
         $leinri = i_(s,C_('left-inside-right','-cyedge'))
         map(&n{ i_(leinri,n) }, [left,inside,right])
         

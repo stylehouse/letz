@@ -9,13 +9,18 @@
     //   or force-directed, compound graphs
     //    and "fairly rich set of constraint types" https://github.com/iVis-at-Bilkent/cytoscape.js-fcose
     import fcose from 'cytoscape-fcose';
+    // and everything, interactively
+    import cola from 'cytoscape-cola'
+    // and another
+    import klay from 'cytoscape-klay'
+
     import GraphStyles from "./GraphStyles.js";
 
     export let graph = null;
 
     let ele = null;
     let cy = null;
-    let layengs = {fcose,dagre}
+    let layengs = {fcose,dagre,cola,klay}
     let layeng = havs(layengs)[0]
 
     onMount(() => {
@@ -27,15 +32,11 @@
         });
 
         load_graph(graph)
-        fauxgraphy()
-    });
-    function fauxgraphy() {
         layout()
-    }
+    });
 
     function set_layeng(v) {
         layeng = v
-        layout()
     }
     let lay
     function layout() {
@@ -43,6 +44,7 @@
         // name = dagre|fcose|circle|grid
         cytoscape.use(layeng)
         let name
+        // look up its name, which is not in the object we are passed as the one to use
         map((s,k) => {if (s == layeng) { name = k }}, layengs)
         if (!name) debugger
 
@@ -51,6 +53,7 @@
             name,
             ...concon,
                 rankDir:'TB',
+            avoidOverlap: 1,
             animate: 1,
             animationDuration: 400,
         })
@@ -87,10 +90,9 @@
         console.log("reload_graph")
         cy.remove('*')
         load_graph(graph)
-        fauxgraphy()
+        layout()
         
     }
-    $: ele && reload_graph(graph)
     function load_graph(graph) {
         console.log("load_graph")
         cy.add(graph.nodes.map(function(node) { return {
@@ -104,6 +106,9 @@
             data: { ...edge },
         } } ))
     }
+    // will not run yet
+    $: lay && layeng && layout()
+    $: ele && reload_graph(graph)
 </script>
 <span on:click={() => cy.fit()}>fit()</span>
 <span on:click={layout_rightchildren}>(right.)</span>
