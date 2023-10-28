@@ -87,7 +87,7 @@ import type { EditorState } from "@codemirror/state"
 
 import { pit,C_,i_,o_,o_path } from "$lib/St"
 import { me } from "$lib/Y/Text"
-import { ispi,fatal,pex,ex,sex, ahk,ahsk,map,grop } from "$lib/Y/Pic"
+import { ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grop } from "$lib/Y/Pic"
 
 $mkrange = &cu,{
     return sex({},cu,'from,to')
@@ -268,6 +268,16 @@ $mkrange = &cu,{
             node and return node
             node = {id:'N'+(node_i++)}
             node.data = ex({name:C.t},da||{})
+            # < figure out why+how node.* and node.data.* are different things
+
+            # < doing this stuff causes a loop somewhere that freezes devtools
+            # node.data.id = delete node.id
+            #  ex(node,node.data)
+            #  delete node.data
+
+
+            # < doing this, then commenting out again causes a loop in layout-base.js
+            #tax(node,node.data,'parent')
 
             graph.C_node.set(C,node)
             graph.nodes.push(node)
@@ -310,7 +320,7 @@ $mkrange = &cu,{
                 # < we want to project resultant node %id onto C:dir
                 # %dir should be groups of other nodes, aka Compound nodes
                 $parent = mknode(dir).id
-                # this gives C:left|inside|right a 
+                # this lets C:left|inside|right dir enclose qua+
                 $quac = 'eni'.includes(dir.t[1]) ? {parent} : {}
                 mknode(qua,quac)
                 mkedge(dir,qua,{label:'in'})

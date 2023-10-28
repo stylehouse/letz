@@ -27,13 +27,11 @@
         let name
         map((s,k) => {if (s == layeng) { name = k }}, layengs)
         if (!name) throw "nonesuch"
-        if (la_layeng != layeng) {
-            la_layeng = layeng
-            // ensure it has been given to .use()
-            cytoscape.use(layeng)
-            // stop layouting, or last layout may race-condition its way back after another is engaged
-            cy.stop()
-        }
+        la_layeng = layeng
+        // ensure it has been given to .use()
+        cytoscape.use(layeng)
+        // stop layouting, or last layout may race-condition its way back after another is engaged
+        cy.stop()
         return name
     }
 
@@ -118,7 +116,21 @@
         layout()
         
     }
+    function test_graph() {
+        return {
+            nodes: [
+                { id: 'n4', name: "inner", parent: 'n37' },
+                { id: 'n35', name: "rere", parent: 'n38' },
+                { id: 'n37', name: "med", parent: 'n38' },
+                { id: 'n38', name: "out" },
+            ],
+            edges: [
+                { id: 'e0', source: 'n35', target: 'n37', label: 'yad' },
+            ],
+        }
+    }
     function load_graph(graph) {
+        // graph = test_graph()
         console.log("load_graph")
         cy.add(graph.nodes.map(function(node) { return {
             group: "nodes",
