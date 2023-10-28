@@ -70,6 +70,17 @@ export default [
       }
     },
     {
+      selector: ':parent',
+      style: {
+        // 'color': 'black',
+        'font-weight': 'bold',
+        'background-opacity': 0.2,
+        'content': 'data(label)',
+        'text-valign': 'top',
+
+      }
+    },
+    {
       selector: 'edge[label]',
       style: {
         'content': `data(label)`,

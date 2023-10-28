@@ -1,6 +1,5 @@
 <script lang="ts">
-    // lifted from git@github.com:gomezcabo/svelte-cytoscape-demo.git
-    import { onMount, setContext } from "svelte";
+    import { onMount, setContext, tick } from "svelte";
     import { hak,map,havs } from "$lib/Y/Pic"
     import DropDown from "$lib/ui/DropDown.svelte"
     import cytoscape from "cytoscape";
@@ -22,7 +21,21 @@
     let cy = null;
     let layengs = {fcose,dagre,cola,klay}
     let layeng = havs(layengs)[0]
-    let la_layeng = null
+    let la_layeng = layeng
+    // look up its name, which is not in the object we are passed as the one to use
+    function get_layout_name(layeng) {
+        let name
+        map((s,k) => {if (s == layeng) { name = k }}, layengs)
+        if (!name) throw "nonesuch"
+        if (la_layeng != layeng) {
+            la_layeng = layeng
+            // ensure it has been given to .use()
+            cytoscape.use(layeng)
+            // stop layouting, or last layout may race-condition its way back after another is engaged
+            cy.stop()
+        }
+        return name
+    }
 
     onMount(() => {
         if (!graph) return console.log("!Graph")
@@ -31,7 +44,6 @@
             container: ele,
             style: GraphStyles,
         });
-        map((t) => cy.on(t, () => cy.fit()), ['layoutready','layoutstop'])
 
         load_graph(graph)
         layout()
@@ -39,15 +51,7 @@
 
     function get_layout_options() {
         // name = dagre|fcose|circle|grid etc
-        let name
-        // look up its name, which is not in the object we are passed as the one to use
-        map((s,k) => {if (s == layeng) { name = k }}, layengs)
-        if (!name) debugger
-        // ensure it has been given to .use()
-        if (la_layeng != layeng) {
-            cytoscape.use(layeng)
-            la_layeng = layeng
-        }
+        let name = get_layout_name(layeng)
 
         // all the constraints merged into a tree as per fcose doc / API
         let concon = graph.constraints_config
@@ -57,6 +61,9 @@
              ...concon,
             animate: 1,
             animationDuration: 344,
+            nodeDimensionsIncludeLabels: true,
+
+
             // other options, may affect things
             //  eg cytoscape.js-klay / README / API
             // dagre
@@ -64,9 +71,6 @@
             // klay
             aspectRatio: 1.3,
             avoidOverlap: 1,
-
-
-            
         }
     }
 
@@ -75,7 +79,6 @@
     }
     let lay
     function layout() {
-
         lay = cy.layout({
             ...get_layout_options()
         })
@@ -85,9 +88,6 @@
         // different subsets of the graph
         them ||= lay
         them.run()
-        // it may be too soon to do this, as per layout.run() doc:
-        //  "Synchronous (i.e. discrete) layouts finish before layout.run() returns."
-        //cy.fit()
     }
 
     function layout_rightchildren() {
@@ -105,6 +105,8 @@
                 ...get_layout_options(),
                 // always dagre
                 name:'dagre',
+                // keep look at everything
+                fit: false,
             })
         )
     }
@@ -135,7 +137,7 @@
 </script>
 <span on:click={() => cy.fit()}>fit()</span>
 <span on:click={layout_rightchildren}>(right.)</span>
-<span on:click={run_layout}>(re-.)</span>
+<span on:click={() => run_layout()}>(re-.)</span>
 <span on:click={layout}>layout()</span>
 <span>layeng: <DropDown N={layengs} set={set_layeng} /></span>
 <div class="graph" bind:this={ele}></div>
