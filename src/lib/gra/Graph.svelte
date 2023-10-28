@@ -22,6 +22,7 @@
     let cy = null;
     let layengs = {fcose,dagre,cola,klay}
     let layeng = havs(layengs)[0]
+    let la_layeng = null
 
     onMount(() => {
         if (!graph) return console.log("!Graph")
@@ -30,32 +31,53 @@
             container: ele,
             style: GraphStyles,
         });
+        map((t) => cy.on(t, () => cy.fit()), ['layoutready','layoutstop'])
 
         load_graph(graph)
         layout()
     });
+
+    function get_layout_options() {
+        // name = dagre|fcose|circle|grid etc
+        let name
+        // look up its name, which is not in the object we are passed as the one to use
+        map((s,k) => {if (s == layeng) { name = k }}, layengs)
+        if (!name) debugger
+        // ensure it has been given to .use()
+        if (la_layeng != layeng) {
+            cytoscape.use(layeng)
+            la_layeng = layeng
+        }
+
+        // all the constraints merged into a tree as per fcose doc / API
+        let concon = graph.constraints_config
+
+        return {
+            name,
+             ...concon,
+            animate: 1,
+            animationDuration: 344,
+            // other options, may affect things
+            //  eg cytoscape.js-klay / README / API
+            // dagre
+            rankDir:'TB',
+            // klay
+            aspectRatio: 1.3,
+            avoidOverlap: 1,
+
+
+            
+        }
+    }
 
     function set_layeng(v) {
         layeng = v
     }
     let lay
     function layout() {
-        let concon = graph.constraints_config
-        // name = dagre|fcose|circle|grid
-        cytoscape.use(layeng)
-        let name
-        // look up its name, which is not in the object we are passed as the one to use
-        map((s,k) => {if (s == layeng) { name = k }}, layengs)
-        if (!name) debugger
 
         lay = cy.layout({
-
-            name,
-            ...concon,
-                rankDir:'TB',
-            avoidOverlap: 1,
-            animate: 1,
-            animationDuration: 400,
+            ...get_layout_options()
         })
         run_layout()
     }
@@ -63,7 +85,9 @@
         // different subsets of the graph
         them ||= lay
         them.run()
-        cy.fit()
+        // it may be too soon to do this, as per layout.run() doc:
+        //  "Synchronous (i.e. discrete) layouts finish before layout.run() returns."
+        //cy.fit()
     }
 
     function layout_rightchildren() {
@@ -78,10 +102,9 @@
         cytoscape.use(dagre)
         run_layout(
             them.layout({
+                ...get_layout_options(),
+                // always dagre
                 name:'dagre',
-                rankDir:'TB',
-                animate: 1,
-                animationDuration: 400,
             })
         )
     }
