@@ -130,6 +130,7 @@
         }
     }
     function load_graph(graph) {
+        // < causes a loop somewhere that freezes devtools
         // graph = test_graph()
         console.log("load_graph")
         cy.add(graph.nodes.map(function(node) { return {

@@ -268,16 +268,18 @@ $mkrange = &cu,{
             node and return node
             node = {id:'N'+(node_i++)}
             node.data = ex({name:C.t},da||{})
-            # < figure out why+how node.* and node.data.* are different things
 
+
+
+            # < figure out why+how node.* and node.data.* are different things
             # < doing this stuff causes a loop somewhere that freezes devtools
             # node.data.id = delete node.id
             #  ex(node,node.data)
             #  delete node.data
-
-
             # < doing this, then commenting out again causes a loop in layout-base.js
             #tax(node,node.data,'parent')
+
+
 
             graph.C_node.set(C,node)
             graph.nodes.push(node)
