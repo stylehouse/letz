@@ -142,10 +142,22 @@ $mkrange = &cu,{
         $cursor = tree.cursorAt(about.from, 1)
         # this cursor is now looking at a lezer node (of the language)
         $nod = &m,cursor,c{
+            $isTreeCursor = &s{
+                # < where is TreeCursor? codemirror-dev.git or node dist doesn't contain it
+                #    we need to import it to do: cursor instanceof TreeCursor
+                # crude imitation of the above
+                return typeof s.parent == 'function'
+            }
+            if (!isTreeCursor(cursor)) {
+                # cast from eg _BufferNode (the cursor.node below)
+                #  even though both seem to have .name .from .to, they dont enumerate|iterate for ex()
+                cursor = cursor.cursor()
+                !cursor || !isTreeCursor(cursor) and debugger
+            }
             $range = mkrange(cursor)
             $n = ahsk(tft_C, cursor.name,range.from,range.to)
             n ||= C_(cursor.name,'-nodule')
-            ex(n.c,{range},c||{})
+            ex(n.c,{range,leznode:cursor.node},c||{})
             ahk(tft_C, cursor.name,range.from,range.to, n)
             return i_(m,n)
         }
@@ -179,7 +191,7 @@ $mkrange = &cu,{
         inlezz(cursor,{
             next: cu => cu.prev(),
             break: cu => getstr(cu).includes("\n"),
-            each: cu => {
+            each: (cu,d) => {
                 cu.to < about.from and nod(left,cu)
             }
         })
@@ -244,13 +256,43 @@ $mkrange = &cu,{
 
         $parupw = i_(s,C_('parent upwards','-cyedge',))
         map(&n{ i_(parupw,n) }, o_(parent))
-        parupws&z?.reverse()
 
         map(&C{ c&da = {class:'along',label:'ne'} },[leinri,thelin,parupw])
         parupwc&da.label = 'up'
-        
+
+      // .node.parent: up out of the grammar
+        # and cursor.node.parent-ward from every lezer node we have
+        #  we seem to skip some things doing cursor.parent()
+        #  eg also linkage of cu(.name=Sunpitness).node.parent(.name=Sunpit)
+
+        each t,from,to,C tft_C {
+            !ispi(C,'nodule') and debugger
+            # every lezer node we have (not a cursor on a node as above)
+            $node = c&leznode
+            # can start a series of edges
+            $extras = C_('extrapolations','-cyedge',{da:{label:'up'}},{via:'node'})
+            $la_node = node
+            inlezz(node,{
+                each: &node2,d{
+                    d.d == 1 and return
+                    $range = {from:node2.from,to:node2.to}
+                    # stop when we arrive at lezer nodes we have?
+                    # < Compression could prefer fewer -cyedge with longer /*
+                    console.log([d.d,node2.name,range.from,range.to])
+                    
+                    !extrass&z and nod(extras,la_node,{})
+                    nod(extras,node2,{})
+                    ahsk(tft_C, node2.name,range.from,range.to) and return d.not = 1
+                },
+                next_returns: true,
+                next: no => no.parent,
+            })
+            # ground if populated
+            extrass&z and i_(s,extras)
+        }}}
 
       // etc
+
         s.y.state = i_(s,save_selection_state(state))
 
         return s
@@ -308,8 +350,13 @@ $mkrange = &cu,{
 
       // do
 
-        # we mainly interpret a two-level structure (incidentally) on C-cycat:dir/C:qua
-        # make them both nodes, with the dir/qua edge
+        # we mainly interpret a two-level structure (incidentally) on C:dir/C:qua
+        #  usu -cycat:dir/-nodule:qua
+        #   dir being a directory full of qua lezer nodes it links
+        #  they uniquely map 1:1 to cytoscape node objects (ie cy node = C_to_node(dir)) or that hash that will become them
+        #  this works only for the "main" bunch of dir/* to link given our graph is mostly C/C
+        #   since we store dir/qua on dirs&z it can only contain that stuff when used anywhere else
+        #   < perhaps C are able to occur in many places with different children? s&z -> X...
         o_path(look,['top','dir']) .map(({dir}) => {
             # ensure even dir without qua exist
             if (ispi(dir,'cycat')) {
@@ -395,15 +442,24 @@ $mkrange = &cu,{
 // fu
     # climbing cursor.next() etc
     $inlezz = &cu,d{
+        d.d ||= 0
         d.next ||= cu => cu.next()
         d.energy ||= 30
         
         $first = 1
         while (d.energy-- > 6) {
             first and first = 0
-            else
-            !d.next(cu,d) and return
+            else {
+                # < can this be coded: d.next_returns && !(cu = d.next(cu,d)) and return
+                if (d.next_returns) {
+                    cu = d.next(cu,d)
+                    !cu and return
+                }
+                else
+                !d.next(cu,d) and return
+            }
             # cursor changes to what (in the lezer grammar?) we are looking at...
+            d.d++
 
             d.break && d.break(cu,d) and return
             

@@ -32,5 +32,5 @@ Leg { Sigil? Name }
 
 
 
-Sunpit { Sunpitness " " (SunpitHead | IOing) }
+Sunpit { Sunpitness " " (IOing | SunpitHead) }
 SunpitHead { Number | Number Title | Title }
