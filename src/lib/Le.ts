@@ -109,7 +109,7 @@ $mkrange = &cu,{
     $resume_selection_state = &vi,C{
         fatal.ispi(C,'cmglance')
         $N = []
-        $far_end = 0
+        $far_end = Infinity
         o_(C).map(&n{
             !ispi(n,'cmsel') and return
             $ra = nc&range
@@ -122,8 +122,9 @@ $mkrange = &cu,{
         #   or later error of selection.main not having .head or so
         N.push(EditorSelection.cursor(far_end))
 
+        
         vi.dispatch({
-            selection: EditorSelection.create(N, 1)
+            selection: EditorSelection.create(N)
         })
         console.log("resume_selection_state!")
     }
@@ -270,7 +271,7 @@ $mkrange = &cu,{
             # every lezer node we have (not a cursor on a node as above)
             $node = c&leznode
             # can start a series of edges
-            $extras = C_('extrapolations','-cyedge',{da:{label:'up'}},{via:'node'})
+            $extras = C_('extrapolations','-cyedge',{da:{label:'ou'}},{via:'node'})
             $la_node = node
             inlezz(node,{
                 each: &node2,d{
@@ -278,7 +279,6 @@ $mkrange = &cu,{
                     $range = {from:node2.from,to:node2.to}
                     # stop when we arrive at lezer nodes we have?
                     # < Compression could prefer fewer -cyedge with longer /*
-                    console.log([d.d,node2.name,range.from,range.to])
                     
                     !extrass&z and nod(extras,la_node,{})
                     nod(extras,node2,{})
