@@ -1,5 +1,6 @@
 import { syntaxTree } from "@codemirror/language"
 import { EditorSelection } from "@codemirror/state"
+import {TreeCursor} from "@lezer/common"
 import type { EditorState } from "@codemirror/state"
 
 # codemirror integration layer
@@ -143,17 +144,11 @@ $mkrange = &cu,{
         $cursor = tree.cursorAt(about.from, 1)
         # this cursor is now looking at a lezer node (of the language)
         $nod = &m,cursor,c{
-            $isTreeCursor = &s{
-                # < where is TreeCursor? codemirror-dev.git or node dist doesn't contain it
-                #    we need to import it to do: cursor instanceof TreeCursor
-                # crude imitation of the above
-                return typeof s.parent == 'function'
-            }
-            if (!isTreeCursor(cursor)) {
+            if (!(cursor instanceof TreeCursor)) {
                 # cast from eg _BufferNode (the cursor.node below)
                 #  even though both seem to have .name .from .to, they dont enumerate|iterate for ex()
                 cursor = cursor.cursor()
-                !cursor || !isTreeCursor(cursor) and debugger
+                !cursor || !(cursor instanceof TreeCursor) and debugger
             }
             $range = mkrange(cursor)
             $n = ahsk(tft_C, cursor.name,range.from,range.to)
@@ -291,6 +286,7 @@ $mkrange = &cu,{
             extrass&z and i_(s,extras)
         }}}
 
+      // the 
       // etc
 
         s.y.state = i_(s,save_selection_state(state))
