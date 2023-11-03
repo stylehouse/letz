@@ -25,6 +25,18 @@ export default [
       }
     },
     {
+      selector: 'node[data.texty]',
+      style: {
+        'width': ele => ((ele.data('data.texty') ?? 2)*0.5+1)+'em',
+        'text-wrap': 'none',
+        'shape': 'rectangle',
+        'color': 'lightblue',
+        'line-color': 'lightblue',
+        'background-color': 'darkblue',
+        'border-color': 'gray',
+      }
+    },
+    {
       selector: 'node:selected',
       style: {
         'background-color': 'darkred',

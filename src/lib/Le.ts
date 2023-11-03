@@ -88,7 +88,7 @@ import type { EditorState } from "@codemirror/state"
 
 import { pit,C_,i_,o_,o_path } from "$lib/St"
 import { me } from "$lib/Y/Text"
-import { ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grop } from "$lib/Y/Pic"
+import { ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grop,uniq } from "$lib/Y/Pic"
 
 $mkrange = &cu,{
     return sex({},cu,'from,to')
@@ -150,11 +150,23 @@ $mkrange = &cu,{
                 cursor = cursor.cursor()
                 !cursor || !(cursor instanceof TreeCursor) and debugger
             }
+            return _nod(m,cursor,c)
+        }
+        # without checking cursor, see above
+        #  these text nodes are separate
+        $textnod = &m,cursor,c{
+            # their .name may be their string content
+            return _nod(m,cursor,c,{index_name:'text'})
+        }
+        $_nod = &m,cursor,c,q{
+            !cursor.name and throw "cursor!name"
+            $index_name = q?.index_name ?? cursor.name
             $range = mkrange(cursor)
-            $n = ahsk(tft_C, cursor.name,range.from,range.to)
+            $n = ahsk(tft_C, index_name,range.from,range.to)
             n ||= C_(cursor.name,'-nodule')
-            ex(n.c,{range,leznode:cursor.node},c||{})
-            ahk(tft_C, cursor.name,range.from,range.to, n)
+            ex(n.c,c||{})
+            cursor.node and nc&leznode = cursor.node
+            ahk(tft_C, index_name,range.from,range.to, n)
             return i_(m,n)
         }
 
@@ -238,7 +250,7 @@ $mkrange = &cu,{
         # $parupw = i_(s,C_('parent upwards vert','-cycons',{type:'relativePlacementConstraint',axis:'vertical'}))
         # map(&ni{ i < 2 && i_(parupw,n) }, o_(parent).reverse())
 
-      // extra edges about ordering
+      // edge:ne extra edges about ordering
         $leinri = i_(s,C_('left-inside-right','-cyedge'))
         map(&n{ i_(leinri,n) }, [left,inside,right])
         
@@ -260,8 +272,13 @@ $mkrange = &cu,{
         # and cursor.node.parent-ward from every lezer node we have
         #  we seem to skip some things doing cursor.parent()
         #  eg also linkage of cu(.name=Sunpitness).node.parent(.name=Sunpit)
+        # < we can leave out any of these edge:ou that duplicate with edge:up
+        #   this can be done easily once cy data up til now is loaded...
+        #    ie add some more by querying data up til then
+        #    and we want to stream that situation...
 
         each t,from,to,C tft_C {
+            continue
             !ispi(C,'nodule') and debugger
             # every lezer node we have (not a cursor on a node as above)
             $node = c&leznode
@@ -286,7 +303,33 @@ $mkrange = &cu,{
             extrass&z and i_(s,extras)
         }}}
 
-      // the 
+      // the text split by syntax nodes
+        # intervals of text to be many-edged to syntax nodes
+        $places = []
+        each t,from,to,C tft_C {
+            places.push(from*1, to*1+1)
+        }}}
+        places = uniq(places.sort())
+
+        $text = i_(s,C_('text','-cycat'))
+        $textfilter = &s{
+            $spacearound = s.match(/^\s|\s$/)
+            $nl = s.includes("\n")
+            spacearound || nl and s = '｢'+s+'｣'
+            nl and s = s.replaceAll("\n","\\n")
+            return s
+        }
+        $from = null
+        each i,to places {
+            # sacrifice first to to be a from, do the rest in pairs
+            from == null and from = to; continue
+            $cur = {name: textfilter(getstr({from,to})), from,to}
+            textnod(text, cur, 
+                # style
+                {da: {texty:cur.name.length}}
+            )
+            from = to
+        }
       // etc
 
         s.y.state = i_(s,save_selection_state(state))
@@ -305,7 +348,7 @@ $mkrange = &cu,{
             $node = graph.C_node.get(C)
             node and return node
             node = {id:'N'+(node_i++)}
-            node.data = ex({name:C.t},da||{})
+            node.data = ex({name:C.t},c&da||{},da||{})
 
 
 
@@ -359,15 +402,20 @@ $mkrange = &cu,{
                 mknode(dir,{dir:1,weight: 75})
             }
         })
+        $compoundy = {left:1,inside:1,right:1}
         o_path(look,['top','dir','qua']) .map(({dir,qua}) => {
             dir.t == 'state' and return
             if (ispi(dir,'cycat')) {
                 # < we want to project resultant node %id onto C:dir
                 # %dir should be groups of other nodes, aka Compound nodes
-                $parent = mknode(dir).id
+                # < why is this not showing the qua inside a dir box, like the cytoscape compound demos
+                $dirid = mknode(dir).id
+                # node.data += c
+                #  (and any nc&da)
+                $c = {}
                 # this lets C:left|inside|right dir enclose qua+
-                $quac = 'eni'.includes(dir.t[1]) ? {parent} : {}
-                mknode(qua,quac)
+                compoundy[dir.t] and c.parent = dirid
+                mknode(qua,c)
                 mkedge(dir,qua,{label:'in'})
             }
         })

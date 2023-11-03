@@ -15,6 +15,7 @@ import {ex} from '$lib/Y/Pic.ts'
             +"    things "+"and logs "+"and stuff\n"
             +"els"+"if (1) near\n"
             +"else throw \"figaro, figaro\", art\n"
+            +"    !cursor.name "+"and throw \"cursor!name\", etc, V, fact+3\n"
             +"let oh = &"+"fi,gu,res"+"{ 33+3 }\n"
             +"    each"+" etc Dc&art {\n"
             +"        A.1.2.3 + ds&z\n"
