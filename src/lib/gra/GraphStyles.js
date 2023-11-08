@@ -111,4 +111,10 @@ export default [
         'line-color': '#66e',
       }
     },
+    {
+      selector: 'edge[class="outward"]',
+      style: {
+        'line-color': '#842',
+      }
+    },
   ]

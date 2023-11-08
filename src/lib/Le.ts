@@ -270,13 +270,13 @@ import { ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak } from 
             }, o_(n))
         }, [left,inside,right])
 
-        $parupw = i_(s,C_('parent upwards','-cyedge',))
+        $parupw = i_(s,C_('parent upwards','-cyedge'))
         map(&n{ i_(parupw,n) }, o_(parent))
 
-        map(&C{ c&da = {class:'along',label:'ne'} },[leinri,thelin,parupw])
-        parupwc&da.label = 'up'
+        map(&C{ c&da = {class:'along',label:'ne'} },[leinri,thelin])
+        map(&C{ c&da = {label:'up',class:'outward'} },[parupw])
 
-      // .node.parent: up out of the grammar
+      // .node.parent: outward through the grammar
         # and cursor.node.parent-ward from every lezer node we have
         #  we seem to skip some things doing cursor.parent()
         #  eg also linkage of cu(.name=Sunpitness).node.parent(.name=Sunpit)
@@ -286,15 +286,16 @@ import { ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak } from 
         #    and we want to stream that situation...
 
         each t,from,to,C tft_C {
-            continue
+            #continue
             !ispi(C,'nodule') and debugger
             # every lezer node we have (not a cursor on a node as above)
             $node = c&leznode
             # can start a series of edges
-            $extras = C_('extrapolations','-cyedge',{da:{label:'ou'}},{via:'node'})
+            $extras = C_('extrapolations','-cyedge',{da:{label:'ou',class:'outward'}},{via:'node'})
             $la_node = node
             inlezz(node,{
                 each: &node2,d{
+                    # not node itself
                     d.d == 1 and return
                     $range = {from:node2.from,to:node2.to}
                     # stop when we arrive at lezer nodes we have?
@@ -348,7 +349,7 @@ import { ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak } from 
                 !overlap and return
 
                 $classes = 'texty'
-                !range_contained(c&range,nc&range) and classes = 'textybroke'
+                !range_contained(nc&range,c&range) and classes = 'textybroke'
                 # < why can't we node.classes=Array|spoint? (we extract it from node.data in mknod)
                 #   it doesn't seem to apply
                 #classes = classes.split(' ')
@@ -371,6 +372,9 @@ import { ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak } from 
         s.y.state = i_(s,save_selection_state(state))
         parentc&no_node = 1
         textc&no_node = 1
+        each t,from,to,C tft_C {
+            t == 'Program' && ispi(C,'nodule') and c&no_node = 1
+        }}}
 
         return s
     }
@@ -378,7 +382,7 @@ import { ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak } from 
     # ...
 
     # if r2 shares any positions with r1
-    $range_overlaps = (r1,r2) => r1.from <= r2.to && r1.to >= r2.from
+    $range_overlaps = (r1,r2) => r1.from <= r2.to-1 && r1.to-1 >= r2.from
     # if r2 fits inside r1
     $range_contained = (r1,r2) => r1.from <= r2.from && r1.to >= r2.to
   
