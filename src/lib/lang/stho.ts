@@ -20,8 +20,11 @@ export const sthoLanguage = LRLanguage.define({
             styleTags({
                 Name: t.variableName,
                 IOness: t.bool,
+                Sunpit: t.heading1,
+                Title: t.heading3,
+                Sunpitness: t.deleted,
                 Sigil: t.string,
-                LineComment: t.lineComment,
+                Comment: t.lineComment,
                 "( )": t.paren
             })
         ]

@@ -16,26 +16,8 @@ export default [
         'color': 'darkred'
       }
     },
-    {
-      selector: 'node[data.dir]',
-      style: {
-        'shape': 'ellipse',
-        'width': '8em',
-        'background-color': 'pink',
-      }
-    },
-    {
-      selector: 'node[data.texty]',
-      style: {
-        'width': ele => ((ele.data('data.texty') ?? 2)*0.5+1)+'em',
-        'text-wrap': 'none',
-        'shape': 'rectangle',
-        'color': 'lightblue',
-        'line-color': 'lightblue',
-        'background-color': 'darkblue',
-        'border-color': 'gray',
-      }
-    },
+
+
     {
       selector: 'node:selected',
       style: {
@@ -93,5 +75,40 @@ export default [
         'line-color': 'white',
         'target-arrow-color': 'orange'
       }
-    }
+    },
+
+
+
+    {
+      selector: 'node[data.dir]',
+      style: {
+        'shape': 'ellipse',
+        'width': '8em',
+        'background-color': 'pink',
+      }
+    },
+    {
+      selector: 'node[data.texty]',
+      style: {
+        'width': ele => ((ele.data('data.texty') ?? 2)*0.5+1)+'em',
+        'text-wrap': 'none',
+        'shape': 'rectangle',
+        'color': 'lightblue',
+        'line-color': 'lightblue',
+        'background-color': 'darkblue',
+        'border-color': 'gray',
+      }
+    },
+    {
+      selector: 'edge[class="texty"]',
+      style: {
+        'line-color': '#33f',
+      }
+    },
+    {
+      selector: 'edge[class="textybroke"]',
+      style: {
+        'line-color': '#66e',
+      }
+    },
   ]

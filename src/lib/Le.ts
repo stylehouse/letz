@@ -88,11 +88,19 @@ import type { EditorState } from "@codemirror/state"
 
 import { pit,C_,i_,o_,o_path } from "$lib/St"
 import { me } from "$lib/Y/Text"
-import { ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grop,uniq } from "$lib/Y/Pic"
+import { ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak } from "$lib/Y/Pic"
 
-$mkrange = &cu,{
-    return sex({},cu,'from,to')
-}
+  // f
+    $mkrange = &cu,{
+        return sex({},cu,'from,to')
+    }
+    $textfilter = &s{
+        $spacearound = s.match(/^\s|\s$/)
+        $nl = s.includes("\n")
+        spacearound || nl and s = '｢'+s+'｣'
+        nl and s = s.replaceAll("\n","\\n")
+        return s
+    }
 
   // savepoints
     # get resumable state across app reloads
@@ -130,8 +138,8 @@ $mkrange = &cu,{
         console.log("resume_selection_state!")
     }
 
-  // return an object about whatever is going on
-    # codemirror -> $look
+  // state -> look
+    # return an object about whatever is going on
     $whatsthis = &state,{
         let about = state.selection.main
         $getstr = cur => state.sliceDoc(cur.from,cur.to)
@@ -164,17 +172,17 @@ $mkrange = &cu,{
             $range = mkrange(cursor)
             $n = ahsk(tft_C, index_name,range.from,range.to)
             n ||= C_(cursor.name,'-nodule')
-            ex(n.c,c||{})
+            ex(n.c,c||{},{range})
             cursor.node and nc&leznode = cursor.node
             ahk(tft_C, index_name,range.from,range.to, n)
             return i_(m,n)
         }
 
       // climb to the whole line
-        $parent = i_(s,C_('parent','-cycat'))
-        $left = i_(s,C_('left','-cycat'))
-        $inside = i_(s,C_('inside','-cycat'))
-        $right = i_(s,C_('right','-cycat'))
+        $parent = i_(s,C_('parent','-cycat',{da:{dir:1}}))
+        $left = i_(s,C_('left','-cycat',{da:{dir:1}}))
+        $inside = i_(s,C_('inside','-cycat',{da:{dir:1}}))
+        $right = i_(s,C_('right','-cycat',{da:{dir:1}}))
         
         # inside, right
         $found_nl = 0
@@ -307,18 +315,11 @@ $mkrange = &cu,{
         # intervals of text to be many-edged to syntax nodes
         $places = []
         each t,from,to,C tft_C {
-            places.push(from*1, to*1+1)
+            places.push(from*1, to*1)
         }}}
         places = uniq(places.sort())
 
-        $text = i_(s,C_('text','-cycat'))
-        $textfilter = &s{
-            $spacearound = s.match(/^\s|\s$/)
-            $nl = s.includes("\n")
-            spacearound || nl and s = '｢'+s+'｣'
-            nl and s = s.replaceAll("\n","\\n")
-            return s
-        }
+        $text = i_(s,C_('text','-cycat',{da:{dir:1}}))
         $from = null
         each i,to places {
             # sacrifice first to to be a from, do the rest in pairs
@@ -330,12 +331,59 @@ $mkrange = &cu,{
             )
             from = to
         }
+
+        # link them in order
+        $texord = i_(s,C_('text order','-cyedge',{da:{class:'along',label:'ne'}}))
+        map(&n{ i_(texord,n) }, o_(text))
+
+        # relate to any non-text node...
+        each t,from,to,C tft_C {
+            t == 'text' and continue
+            t == 'Line' and console.log([C.t,c&range])
+            o_(text) .map(&n{
+                # find range overlap: syntaxnode:C textnode:n
+                # < surely part of codemirror somewhere?
+                $overlap = range_overlaps(c&range,nc&range)
+                #C.t == 'Title' and console.log([C.t,overlap,c&range,nc&range,C,n])
+                !overlap and return
+
+                $classes = 'texty'
+                !range_contained(c&range,nc&range) and classes = 'textybroke'
+                # < why can't we node.classes=Array|spoint? (we extract it from node.data in mknod)
+                #   it doesn't seem to apply
+                #classes = classes.split(' ')
+
+                # quite a few of these
+                # only two nodes each since they don't traverse like -cyedge/* is designed to
+                # < hanging a link-to C on the -cycat/$C-nodule/-cylink
+                #   supposing we can impose that on there...
+                #    we might also group things elsehow
+                $tetosy = i_(s,C_('text to syntax','-cyedge',{da:{class:classes,label:'te'}}))
+                map(&n{ i_(tetosy,n) }, [C,n])
+            })
+        }}}
+
+
+
+
       // etc
 
         s.y.state = i_(s,save_selection_state(state))
+        parentc&no_node = 1
+        textc&no_node = 1
 
         return s
     }
+
+    # ...
+
+    # if r2 shares any positions with r1
+    $range_overlaps = (r1,r2) => r1.from <= r2.to && r1.to >= r2.from
+    # if r2 fits inside r1
+    $range_contained = (r1,r2) => r1.from <= r2.from && r1.to >= r2.to
+  
+
+  // look -> graph -> cytoscape
     # $look -> $graph )-> cytoscape
     $graphwhats = &look,{
         $graph = {nodes:[],edges:[],C_node:new WeakMap(),C_edges:new WeakMap}
@@ -345,10 +393,12 @@ $mkrange = &cu,{
         $node_i = 1
         $edge_i = 1
         $mknode = &C,da{
+            c&no_node and return
             $node = graph.C_node.get(C)
             node and return node
             node = {id:'N'+(node_i++)}
             node.data = ex({name:C.t},c&da||{},da||{})
+            tax(node,node.data,'classes')
 
 
 
@@ -376,9 +426,14 @@ $mkrange = &cu,{
             N.push(s)
         }
         $mkedge = &source,target,etc{
+            grap(n => nc&no_node, [source,target]) and return 
+
             $edge = {id:'E'+(edge_i++)}
             edge.source = C_to_node(source).id
             edge.target = C_to_node(target).id
+            # dirc&da ends up here in edge, there is no edge.data
+            # < seems to be no edge.classes, only edge.class
+            #   node.classes exists, is promoted from node.data in mknode()
             ex(edge,etc||{})
 
             wm_array_add(graph.C_edges,source,edge)
@@ -399,7 +454,7 @@ $mkrange = &cu,{
         o_path(look,['top','dir']) .map(({dir}) => {
             # ensure even dir without qua exist
             if (ispi(dir,'cycat')) {
-                mknode(dir,{dir:1,weight: 75})
+                mknode(dir)
             }
         })
         $compoundy = {left:1,inside:1,right:1}
@@ -409,7 +464,7 @@ $mkrange = &cu,{
                 # < we want to project resultant node %id onto C:dir
                 # %dir should be groups of other nodes, aka Compound nodes
                 # < why is this not showing the qua inside a dir box, like the cytoscape compound demos
-                $dirid = mknode(dir).id
+                $dirid = mknode(dir)?.id
                 # node.data += c
                 #  (and any nc&da)
                 $c = {}

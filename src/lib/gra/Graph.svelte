@@ -42,10 +42,16 @@
             container: ele,
             style: GraphStyles,
         });
+        cy.on('select', 'node', () => selection_changed())
 
         load_graph(graph)
         layout()
     });
+
+    function selection_changed() {
+        window.eles = cy.$('node:selected')
+    }
+
 
     function get_layout_options() {
         // name = dagre|fcose|circle|grid etc
@@ -58,7 +64,8 @@
             name,
              ...concon,
             animate: 1,
-            animationDuration: 344,
+            animationDuration: 2,
+            nodeSeparation: 375,
             nodeDimensionsIncludeLabels: true,
 
 
@@ -88,13 +95,17 @@
         them.run()
     }
 
-    function layout_rightchildren() {
+    function righteo() {
         let them = cy.collection()
-        let right = cy.$('node[data.name = "right"]')
+        let right = cy.$('node[data.name = "Line"]')
         // < want to not move right itself...
-        them
-        // .merge(right)
-        .merge(right.neighbourhood())
+        them.map(function(ele) {
+            let inside = ele.neighbourhood('node[data.texty]')
+            inside.map(function(ini) {
+                if (!ele.id) debugger
+                ini.data('parent',ele.id)
+            })
+        })
         them.select()
         //return
         cytoscape.use(dagre)
@@ -129,6 +140,7 @@
             ],
         }
     }
+    
     function load_graph(graph) {
         // < causes a loop somewhere that freezes devtools
         // graph = test_graph()
@@ -149,7 +161,7 @@
     $: ele && reload_graph(graph)
 </script>
 <span on:click={() => cy.fit()}>fit()</span>
-<span on:click={layout_rightchildren}>(right.)</span>
+<span on:click={righteo}>righteo())</span>
 <span on:click={() => run_layout()}>(re-.)</span>
 <span on:click={layout}>layout()</span>
 <span>layeng: <DropDown N={layengs} set={set_layeng} /></span>
