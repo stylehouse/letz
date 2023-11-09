@@ -1,4 +1,3 @@
-@precedence { ioity @left, wordsingity @left }
 @tokens {
     IOness { "i" | "o" }
     Sunpitness { "S" }
@@ -25,10 +24,11 @@ expression { Name | Number | IOing | Sunpit }
 
 
 
-IOing { IOness ' ' IOpath }
+IOing[@dynamicPrecedence=10] { IOness ' ' IOpath ~ioorblah }
 IOpath { Leg ("/" Leg)* }
 Leg { Sigil? Name }
 
 
-Sunpit { Sunpitness " " (IOing !ioity | SunpitHead !wordsingity) }
-SunpitHead { Number | Number Title | Title }
+Sunpit { Sunpitness " " (IOing | SunpitHead) }
+SunpitHead { Number | Number Heading | Heading }
+Heading[@dynamicPrecedence=-5] { Title ~ioorblah }
