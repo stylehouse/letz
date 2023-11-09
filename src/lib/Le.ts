@@ -377,6 +377,10 @@ import { ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak } from 
         textc&no_node = 1
         each t,from,to,C tft_C {
             t == 'Program' && ispi(C,'nodule') and c&no_node = 1
+            if (t == '⚠') {
+                $width = c&range.to - c&range.from
+                console.warn("Le syntax ⚠: ",{C,range:c&range,width})
+            }
         }}}
 
         return s

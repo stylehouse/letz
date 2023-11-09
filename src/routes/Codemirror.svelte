@@ -13,7 +13,7 @@
     
     import { basicSetup } from "codemirror";
     import { javascriptLanguage, istho } from "$lib/lang/istho"
-    import { stho } from "$lib/lang/stho"
+    import { stho,simpleLezerLinter } from "$lib/lang/stho"
     //import { sthovascript } from "$lib/lang/lang-javascript/src/index"
     // < change this properly, requires cm-buildhelper
     //({jsx:true,typescript:true}
@@ -95,6 +95,7 @@
                     // Document changed
                 }
             }),
+            simpleLezerLinter(),
             keymap.of(defaultKeymap),
             basicSetup,
         ],
