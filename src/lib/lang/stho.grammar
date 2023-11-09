@@ -1,4 +1,4 @@
-
+@precedence { ioity @left, wordsingity @left }
 @tokens {
     IOness { "i" | "o" }
     Sunpitness { "S" }
@@ -30,5 +30,5 @@ IOpath { Leg ("/" Leg)* }
 Leg { Sigil? Name }
 
 
-Sunpit { Sunpitness " " (IOing | SunpitHead) }
+Sunpit { Sunpitness " " (IOing !ioity | SunpitHead !wordsingity) }
 SunpitHead { Number | Number Title | Title }
