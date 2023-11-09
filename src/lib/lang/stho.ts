@@ -4,8 +4,13 @@ import { LanguageSupport, LRLanguage, indentNodeProp, foldNodeProp, foldInside,
     delimitedIndent, continuedIndent
 } from "@codemirror/language"
 import {styleTags, tags as t} from "@lezer/highlight"
+import { ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak } from "$lib/Y/Pic"
 
-const parser = buildParser(grammar)
+let parser
+let warnings = capture_warnings(
+    () => parser = buildParser(grammar)
+)
+
 // < try more of https://github.com/codemirror/lang-example/blob/main/src/index.ts
 export const sthoLanguage = LRLanguage.define({
     parser: parser.configure({
@@ -38,5 +43,19 @@ export const sthoLanguage = LRLanguage.define({
 
 // for EditorState.create extensions[]
 export function stho() {
-    return new LanguageSupport(sthoLanguage)
+    let lang = new LanguageSupport(sthoLanguage)
+    warnings and lang.warnings = warnings
+    return lang
 }
+
+
+// ta https://github.com/CodeWitchBella/codewitchbella.com/blob/main/app/routes/_nav.blog._post.2023-lezer-playground.tsx
+function capture_warnings(y) {
+    const warnings: any[] = [];
+    const stash = console.warn;
+    console.warn = (w) => warnings.push(w);
+    y()
+    console.warn = stash;
+    return warnings.length && warnings
+}
+

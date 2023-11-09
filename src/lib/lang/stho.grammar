@@ -9,7 +9,7 @@
     nl { "\n" }
     Sigil { "@" | "#" }
     space  { @whitespace }
-    @precedence {Number, Title, Sunpitness, IOness, SunpitHead, Name}
+    @precedence {Number, Title, Sunpitness, IOness, Name}
     @precedence {nl, space}
 }
 
@@ -25,8 +25,7 @@ expression { Name | Number | IOing | Sunpit }
 
 
 
-IOing[@dynamicPrecedence=10] { IOness ' ' ~IOpath }
-
+IOing { IOness ' ' IOpath }
 IOpath { Leg ("/" Leg)* }
 Leg { Sigil? Name }
 

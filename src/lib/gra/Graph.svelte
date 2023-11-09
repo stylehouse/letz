@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount, setContext, tick } from "svelte";
-    import { hak,map,havs } from "$lib/Y/Pic"
+    import { hak,map,havs,isst } from "$lib/Y/Pic"
     import DropDown from "$lib/ui/DropDown.svelte"
     import cytoscape from "cytoscape";
     // these are apparently the best at either hierarchical
@@ -19,7 +19,7 @@
 
     let ele = null;
     let cy = null;
-    let layengs = {fcose,dagre,cola,klay}
+    let layengs = {fcose,dagre,cola,klay,   grid:'grid', circle:'circle'}
     let layeng = havs(layengs)[0]
     let la_layeng = layeng
     // look up its name, which is not in the object we are passed as the one to use
@@ -29,7 +29,7 @@
         if (!name) throw "nonesuch"
         la_layeng = layeng
         // ensure it has been given to .use()
-        cytoscape.use(layeng)
+        !isst(layeng) && cytoscape.use(layeng)
         // stop layouting, or last layout may race-condition its way back after another is engaged
         cy.stop()
         return name

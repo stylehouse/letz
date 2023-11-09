@@ -1,5 +1,6 @@
 <svelte:options accessors/>
 <script lang="ts">
+    import Coning from '$lib/Coning.svelte'
     import { recur } from "$lib/Sv";
     import { onMount, onDestroy, createEventDispatcher } from "svelte";
     import { EditorState, Compartment, StateField } from "@codemirror/state";
@@ -62,14 +63,17 @@
     ]
     export let lang = langs[0];
     let language = new Compartment();
+    // the lang are functions that return a LanguageSupport, maybe with .warnings
+    let lang_itself = lang()
     let setlang = (lang) => {
-        view.dispatch({ effects: language.reconfigure(lang()) });
+        lang_itself = lang()
+        view.dispatch({ effects: language.reconfigure(lang_itself) });
     };
 
     let startState = EditorState.create({
         doc: value,
         extensions: [
-            language.of(lang()),
+            language.of(lang_itself),
 
             ...usualSetup,
             
@@ -120,6 +124,9 @@
             <option value={lang}> {lang.name} </option>
         {/each}
     </select>
+    {#if lang_itself.warnings}
+    <Coning t="Warnings from buildParser()" C={lang_itself.warnings} noC=1 style="background-color:#3e1e0e"/>
+    {/if}
 </p>
 
 <style type="css">

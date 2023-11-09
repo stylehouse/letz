@@ -32,11 +32,8 @@
         
     }
     function whatsup(view) {
-        let text = view.state.doc.toString()
         look = whatsthis(view.state)
-        
         save = look.y.state
-        
         graph = graphwhats(look)
         // look = graph
     }
