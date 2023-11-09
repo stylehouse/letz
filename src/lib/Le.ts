@@ -311,7 +311,6 @@ import { ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak } from 
             # ground if populated
             extrass&z and i_(s,extras)
         }}}
-
       // the text split by syntax nodes
         # intervals of text to be many-edged to syntax nodes
         $places = []
@@ -338,15 +337,16 @@ import { ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak } from 
         map(&n{ i_(texord,n) }, o_(text))
 
         # relate to any non-text node...
+        $text_unseen = [...o_(text)]
+        $dont_see = {text:1,Program:1}
         each t,from,to,C tft_C {
-            t == 'text' and continue
-            t == 'Line' and console.log([C.t,c&range])
+            dont_see[t] and continue
             o_(text) .map(&n{
                 # find range overlap: syntaxnode:C textnode:n
                 # < surely part of codemirror somewhere?
                 $overlap = range_overlaps(c&range,nc&range)
-                #C.t == 'Title' and console.log([C.t,overlap,c&range,nc&range,C,n])
                 !overlap and return
+                grop(n, text_unseen)
 
                 $classes = 'texty'
                 !range_contained(nc&range,c&range) and classes = 'textybroke'
@@ -363,6 +363,9 @@ import { ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak } from 
                 map(&n{ i_(tetosy,n) }, [C,n])
             })
         }}}
+        each in text_unseen {
+            nc&no_node = 1
+        }
 
 
 
