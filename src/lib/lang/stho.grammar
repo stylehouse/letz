@@ -1,6 +1,6 @@
 @tokens {
-    IOness { "i" | "o" }
-    Sunpitness { "S" }
+    IOness { "i " | "o " }
+    Sunpitness { "S " }
     Title { nonnl+ }
     Name { (@asciiLetter | "_")+ (@asciiLetter | "_" | @digit)* }
     Number { @digit+ }
@@ -8,7 +8,7 @@
     nl { "\n" }
     Sigil { "@" | "#" }
     space  { @whitespace }
-    @precedence {Number, Title, Sunpitness, IOness, Name}
+    @precedence {IOness, Number, Title, Sunpitness, Name}
     @precedence {nl, space}
 }
 
@@ -19,16 +19,22 @@ inline { Comment | expression }
 
 Comment { "#" nonnl+ }
 
-expression { Name | Number | IOing | Sunpit }
+expression { Name | Number | IOing | Sunpit | Flug }
+
+// testing https://lezer.codemirror.net/docs/guide/#allowing-ambiguity
+Flug { Flugenzoid | Flugamata }
+Flugenzoid { "[" Flugenzoidia "]" }
+Flugenzoidia { IOness ~flugal }
+Flugamata[@dynamicPrecedence=9] { "[" Flugamatatola "]" }
+Flugamatatola { Name ~flugal }
 
 
 
 
-IOing[@dynamicPrecedence=10] { IOness ' ' IOpath ~ioorblah }
-IOpath { Leg ("/" Leg)* }
-Leg { Sigil? Name }
+Sunpit { Sunpitness (IOing | SunpitHead) }
+    IOing { IOness IOpath  }
+    IOpath { Leg ("/" Leg)* }
+    Leg { Sigil? Name }
 
-
-Sunpit { Sunpitness " " (IOing | SunpitHead) }
-SunpitHead { Number | Number Heading | Heading }
-Heading[@dynamicPrecedence=-5] { Title ~ioorblah }
+    SunpitHead { Number | Number Heading | Heading }
+    Heading { Title  }

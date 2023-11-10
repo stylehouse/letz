@@ -12,7 +12,7 @@ let warnings = capture_warnings(
 )
 
 // < try more of https://github.com/codemirror/lang-example/blob/main/src/index.ts
-export const sthoLanguage = LRLanguage.define({
+export const sthoLanguage = parser && LRLanguage.define({
     parser: parser.configure({
         props: [
             indentNodeProp.add({
@@ -41,23 +41,66 @@ export const sthoLanguage = LRLanguage.define({
     },
 })
 
+
+// if stho fails to build, just get something on screen so diag can happen
+// we would just use @codemirror/lang-javascript, but its object is unwritable!?
+function stho_substitute() {
+    let parser = buildParser(
+        `@tokens { else { ![\n] } }
+        @top Program { (Lie* "\n")* }
+        Lie { else }
+    `)
+    let Language = LRLanguage.define({
+        parser: parser.configure({})
+    })
+    return new LanguageSupport(Language)
+}
+
 // for EditorState.create extensions[]
 export function stho() {
+    if (!sthoLanguage) {
+        // it failed in buildParser, with a message
+        !hak(warnings) and debugger
+        let lang = stho_substitute()
+        warnings.unshift("Failed to buildParser()")
+        lang.warnings = warnings
+        return lang
+    }
     let lang = new LanguageSupport(sthoLanguage)
     warnings and lang.warnings = warnings
     return lang
 }
 
-
+// Errors do not make their properties iterable, somehow, so it looks empty
+// perhaps this should go into Con's data climbing code, if s instanceof Error
+//  upgrading any error data we find, not leaving the paradigm of datagraphy
+function iterable_error(error) {
+    // but we can write new properties!
+    error.says = error.message
+    error.pile = error.stack.split("\n")
+}
 // ta https://github.com/CodeWitchBella/codewitchbella.com/blob/main/app/routes/_nav.blog._post.2023-lezer-playground.tsx
 function capture_warnings(y) {
     const warnings: any[] = [];
-    const stash = console.warn;
+  
+    const originalWarn = console.warn;
     console.warn = (w) => warnings.push(w);
-    y()
-    console.warn = stash;
-    return warnings.length && warnings
-}
+  
+    try {
+      y();
+    } catch (error) {
+      console.warn = originalWarn;
+      iterable_error(error)
+      warnings.unshift(error)
+      //throw error;
+    } finally {
+      console.warn = originalWarn;
+    }
+
+  
+    console.warn = originalWarn;
+    return warnings.length && warnings;
+  }
 
 
 

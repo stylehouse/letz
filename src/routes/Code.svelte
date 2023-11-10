@@ -16,7 +16,7 @@
     
     let b = ':3'
     console.log("<Code/>")
-    let start = "# yeti etc\ni thung/with/etc\n\n\nS o yeses/because/blon_itn\n  yapto\n  o figura/datch/#chang\n"
+    let start = "# yeti etc\ni thung/with/etc\n\n[y]\nS o yeses/because/blon_itn\n  yapto\n  o figura/datch/#chang\n"
 
     let code = writable(start)
 

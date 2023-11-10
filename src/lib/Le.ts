@@ -311,6 +311,7 @@ import { ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak } from 
             # ground if populated
             extrass&z and i_(s,extras)
         }}}
+      
       // the text split by syntax nodes
         # intervals of text to be many-edged to syntax nodes
         $places = []
@@ -364,6 +365,10 @@ import { ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak } from 
             })
         }}}
         each in text_unseen {
+            if (t == '⚠') {
+                debugger
+                continue
+            }
             nc&no_node = 1
         }
 
