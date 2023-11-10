@@ -88,7 +88,7 @@ import type { EditorState } from "@codemirror/state"
 
 import { pit,C_,i_,o_,o_path } from "$lib/St"
 import { me } from "$lib/Y/Text"
-import { ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak } from "$lib/Y/Pic"
+import { ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak,reverse } from "$lib/Y/Pic"
 
   // f
     $mkrange = &cu,{
@@ -146,10 +146,10 @@ import { ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak } from 
         let str = getstr(about)
         let tree = syntaxTree(state)
         let s = C_('lezing',1,{pi:'lezing'},{length:str.length,...sex({},about,'from,to')})
+        s.y.state = i_(s,save_selection_state(state))
+
         $tft_C = {}
         
-        # start with a point
-        $cursor = tree.cursorAt(about.from, 1)
         # this cursor is now looking at a lezer node (of the language)
         $nod = &m,cursor,c{
             if (!(cursor instanceof TreeCursor)) {
@@ -173,72 +173,68 @@ import { ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak } from 
             $n = ahsk(tft_C, index_name,range.from,range.to)
             n ||= C_(cursor.name,'-nodule')
             ex(n.c,c||{},{range})
+            # they all can spawn .cursor() off this:
             cursor.node and nc&leznode = cursor.node
             ahk(tft_C, index_name,range.from,range.to, n)
             return i_(m,n)
         }
 
-      // climb to the whole line
+      // climb to a few Lines
+        $Line_context = 2
+
+        # $left = i_(s,C_('left','-cycat',{da:{dir:1}}))
+        # $inside = i_(s,C_('inside','-cycat',{da:{dir:1}}))
+        # $right = i_(s,C_('right','-cycat',{da:{dir:1}}))
+
+        # start with a point
+        $cursor = tree.cursorAt(about.from, 1)
+        cursor.firstChild() and throw "cursorAt() should seek all the way in to a point"
+        
+        # now zoom out to the Line
         $parent = i_(s,C_('parent','-cycat',{da:{dir:1}}))
-        $left = i_(s,C_('left','-cycat',{da:{dir:1}}))
-        $inside = i_(s,C_('inside','-cycat',{da:{dir:1}}))
-        $right = i_(s,C_('right','-cycat',{da:{dir:1}}))
-        
-        # inside, right
-        $found_nl = 0
-        $where = inside
-        inlezz(cursor,{
-            next: cu => cu.next(),
-            # break: cu => cu.from > about.to,
-            each: &cu,d{
-                $str = getstr(cu)
-                where == right && str.includes("\n") and found_nl = 1
-                else
-                found_nl and return d.not = true
-
-                cu.from > about.to and where = right
-
-                nod(where,cu)
-            }
-        })
-
-        # before
-        cursor = tree.cursorAt(about.from, 1)
-        inlezz(cursor,{
-            next: cu => cu.prev(),
-            break: cu => getstr(cu).includes("\n"),
+        $toLine = cursor.node.cursor()
+        inlezz(toLine,{
+            # for cursor.movers() that return false if no move, so we stop
+            next: (cu,d) => cu.parent(),
             each: (cu,d) => {
-                cu.to < about.from and nod(left,cu)
-            }
-        })
-        lefts&z?.reverse()
-        
-        # parent
-        cursor = tree.cursorAt(about.from, 1)
-        inlezz(cursor,{
-            next: cu => cu.parent(),
-            each: cu => {
                 nod(parent,cu)
+                cu.name == 'Line' and d.not = 1
             }
         })
-        # varying next then parent
-        # cursor = tree.cursorAt(about.from, 1)
-        # for (let rel = 1; rel < 8; rel++) {
-        #     $nexpar = i_(s,C_(`nexpar(${rel})`,'-cycat'))
-        #     $nexts = rel
-        #     inlezz(cursor,{
-        #         next: cu => nexts-- > 0 ? cu.next() : cu.parent(),
-        #         each: cu => {
-        #             # nod(nexpar,cu)
-        #         }
-        #     })
-        # }
+
+        toLine.name != 'Line' and debugger
+
+        # go a few Lines ahead and back
+        $around = i_(s,C_('around','-cycat',{da:{dir:1}}))
+        map(&direction,{
+            if (direction == '') {
+                arounds&z = reverse(arounds&z||[])
+                nod(around,toLine)
+                return
+            }
+            inlezz(toLine.node.cursor(),{
+                next: (cu,d) => cu[direction](),
+                each: (cu,d) => {
+                    d.d > 1 and nod(around,cu)
+                    d.d > Line_context and d.not = 1
+                    $str = getstr(cu)
+                    !str.includes("\n") and console.warn("Non-\n having Line: ", [cu.from,cu.to])
+                }
+            })
+        },['nextSibling','','prevSibling'])
+
+        parentc&no_node = 1
+        
+        
 
       // and their alignment constraints
-        $leinri = i_(s,C_('left-inside-right','-cycons',{type:'relativePlacementConstraint',axis:'horizontal'}))
-        map(&n{ i_(leinri,n) }, [left,inside,right])
-        $leinri = i_(s,C_('left-inside-right','-cycons',{type:'alignmentConstraint',axis:'horizontal'}))
-        map(&n{ i_(leinri,n) }, [left,inside,right])
+        $leinri = i_(s,C_('left-inside-right','-cycons',{type:'relativePlacementConstraint',axis:'vertical'}))
+        map(&n{ i_(leinri,n) }, o_(around))
+        $leinri = i_(s,C_('left-inside-right','-cycons',{type:'alignmentConstraint',axis:'vertical'}))
+        map(&n{ i_(leinri,n) }, o_(around))
+
+        return s
+
         $thelin = i_(s,C_('the line','-cycons',{type:'relativePlacementConstraint',axis:'horizontal'}))
         map(&n{
             map(&n{
