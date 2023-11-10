@@ -317,7 +317,7 @@ import { ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak } from 
         each t,from,to,C tft_C {
             places.push(from*1, to*1)
         }}}
-        places = uniq(places.sort())
+        places = uniq(places).sort((a,b) => a-b)
 
         $text = i_(s,C_('text','-cycat',{da:{dir:1}}))
         $from = null
