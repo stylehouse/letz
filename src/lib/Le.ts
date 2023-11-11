@@ -86,9 +86,9 @@ import type { EditorState } from "@codemirror/state"
 
 
 
-import { pit,C_,i_,o_,o_path } from "$lib/St"
+import { pit,C_,i_,o_,o_path,inlace } from "$lib/St"
 import { me } from "$lib/Y/Text"
-import { ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak,reverse } from "$lib/Y/Pic"
+import { ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak,reverse,slant } from "$lib/Y/Pic"
 
   // f
     $mkrange = &cu,{
@@ -188,7 +188,9 @@ import { ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak,reverse
 
         # start with a point
         $cursor = tree.cursorAt(about.from, 1)
-        cursor.firstChild() and throw "cursorAt() should seek all the way in to a point"
+        # lies: if selection is a point on the end of the Line, there we'll be,
+        #  and firstChild() will move to what's on the line, before our selection
+        #cursor.firstChild() and throw "cursorAt() should seek all the way in to a point"
         
         # now zoom out to the Line
         $parent = i_(s,C_('parent','-cycat',{da:{dir:1}}))
@@ -205,33 +207,57 @@ import { ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak,reverse
         toLine.name != 'Line' and debugger
 
         # go a few Lines ahead and back
-        $around = i_(s,C_('around','-cycat',{da:{dir:1}}))
+        $Lines = i_(s,C_('Lines','-cycat',{da:{dir:1}}))
         map(&direction,{
             if (direction == '') {
-                arounds&z = reverse(arounds&z||[])
-                nod(around,toLine)
+                Liness&z = reverse(Liness&z||[])
+                # remember where the middle is
+                Linesc&middle = hak(Liness&z)
+                nod(Lines,toLine)
                 return
             }
             inlezz(toLine.node.cursor(),{
                 next: (cu,d) => cu[direction](),
                 each: (cu,d) => {
-                    d.d > 1 and nod(around,cu)
+                    d.d > 1 and nod(Lines,cu)
                     d.d > Line_context and d.not = 1
                     $str = getstr(cu)
                     !str.includes("\n") and console.warn("Non-\n having Line: ", [cu.from,cu.to])
                 }
             })
-        },['nextSibling','','prevSibling'])
+        },['prevSibling','','nextSibling'])
 
         parentc&no_node = 1
         
+      // fill in each Lines
+        # this one is deep claiming all -nodules for its structure
+        #  the rest is all s/*:dir/*:qua
+        $Tree = i_(s,C_('Tree','-cytree'))
+
+
+        map(&ni{
+            # bulges in the middle
+            $distance = i - Linesc&middle
+            distance < 0 and distance *= -1
+            $dl = distance < 1 ? null : 2
+            $go = nc&leznode.cursor()
+            console.log("  Line "+i+" is "+distance+" so "+dl)
+
+            itelez(go,{C:Tree,each: &no,d{
+                $z = nod(d.C,no)
+                ex(d,{t:z.t,C:z})
+
+                dl && d.d > dl and d.not = 1
+            }})
+        },o_(Lines))
         
 
+
       // and their alignment constraints
-        $leinri = i_(s,C_('left-inside-right','-cycons',{type:'relativePlacementConstraint',axis:'vertical'}))
-        map(&n{ i_(leinri,n) }, o_(around))
-        $leinri = i_(s,C_('left-inside-right','-cycons',{type:'alignmentConstraint',axis:'vertical'}))
-        map(&n{ i_(leinri,n) }, o_(around))
+        $leinri = i_(s,C_('Lines-align','-cycons',{type:'relativePlacementConstraint',axis:'vertical'}))
+        map(&n{ i_(leinri,n) }, o_(Lines))
+        $leinri = i_(s,C_('Lines-order','-cycons',{type:'alignmentConstraint',axis:'vertical'}))
+        map(&n{ i_(leinri,n) }, o_(Lines))
 
         return s
 
@@ -468,6 +494,17 @@ import { ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak,reverse
             if (ispi(dir,'cycat')) {
                 mknode(dir)
             }
+            if (ispi(dir,'cytree')) {
+                # Tree/-nodule**
+                inlace(dir,{grab:&sd{
+                    # not the container C:Tree
+                    d.d < 1 and return
+                    mknode(s)
+                    # or links to it
+                    d.d < 2 and return
+                    mkedge(d.up.s,s,{label:'in'})
+                }})
+            }
         })
         $compoundy = {left:1,inside:1,right:1}
         o_path(look,['top','dir','qua']) .map(({dir,qua}) => {
@@ -529,7 +566,7 @@ import { ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak,reverse
                 }
                 else throw "-cycons non"
             }
-            else if (ispi(dir,'cycat')) {
+            else if (ispi(dir,'cycat') || ispi(dir,'cytree')) {
                 # done in previous phase, to ensure all nodes exist before linking
             }
             else if (ispi(dir,'cyedge')) {
@@ -551,7 +588,7 @@ import { ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak,reverse
     }
 
 // fu
-    # climbing cursor.next() etc
+    # climbing cursor.next() etc, flatly
     $inlezz = &cu,d{
         d.d ||= 0
         d.next ||= cu => cu.next()
@@ -577,6 +614,58 @@ import { ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak,reverse
             d.each(cu,d)
             d.not and return
         }
+    }
+
+    # gives you a (syntaxnode,d)** traversal, scoped to the given TreeCursor
+    $itelez = &cur,d{
+        $scope = cur.node.cursor()
+        d.t ||= d.C?.t || 'top'
+        d.d ||= 1
+        d.no = cur.node
+        d.path = [d.t]
+        $not = 0
+        $verbose = 0
+        verbose && console.log("d.path scope:    \t"+scope.from+"-"+scope.to)
+        $enter = &cur,{
+            $was = d
+            $no = cur.node
+            no.from >= scope.to and not = 1
+            verbose && no.from >= scope.to and console.log("d.path: "+slant([...d.path,no.name])+" from>to! "+cur.from+"-"+cur.to)
+            not and return false
+            !d.d and debugger
+
+            # d cloned for the new place
+            d = ex({},d,{up:d,no})
+            d.d++
+            # relying on you to set d.t here
+            d.each && d.each(no,d)
+
+            d.path = [...d.path,d.t]
+            verbose && console.log("d.path: "+slant(d.path)+" --> \t"+cur.from+"-"+cur.to)
+            if (d.not) {
+                # don't want to go in
+                verbose && console.log("d.path: "+slant(d.path)+" no further")
+                #  and iterate() will not call leave
+                d = d.up
+                !d and debugger
+                return false
+            }
+            return 1
+        }
+        $leave = &cur,{
+            $was = d
+            $no = cur.node
+            not and return
+            # we should be tracking this on d**
+            # is also d.C.c.leznode
+            d.no != no and debugger
+            d = d.up
+            !d and debugger
+            verbose && console.log("d.path: "+slant(d.path)+" <--")
+            d.d == 1 and return
+            d.no != no.parent and debugger
+        }
+        cur.iterate(enter,leave)
     }
 
 
