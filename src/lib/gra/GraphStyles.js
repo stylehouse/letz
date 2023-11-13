@@ -17,6 +17,30 @@ export default [
       }
     },
 
+    {
+      selector: 'node[class="ayefour"]',
+      style: {
+        'width': '90',
+        'height': '70',
+        'background-color': 'saddlebrown',
+      }
+    },
+    {
+      selector: 'node[class="ayethree"]',
+      style: {
+        'width': '70',
+        'height': '90',
+        'background-color': 'chocolate',
+      }
+    },
+    {
+      selector: 'node[class="ayetwo"]',
+      style: {
+        'width': '70',
+        'height': '50',
+        'background-color': 'goldenrod',
+      }
+    },
 
     {
       selector: 'node:selected',

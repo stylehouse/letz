@@ -44,6 +44,7 @@
         });
         cy.on('select', 'node', () => selection_changed())
 
+        // about to do this via reactivity of ele, which seems more reliable at replacing things
         load_graph(graph)
         layout()
     });

@@ -88,7 +88,7 @@ import type { EditorState } from "@codemirror/state"
 
 import { pit,C_,i_,o_,o_path,inlace } from "$lib/St"
 import { me } from "$lib/Y/Text"
-import { ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak,reverse,slant } from "$lib/Y/Pic"
+import { isar,ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak,reverse,slant } from "$lib/Y/Pic"
 
   // f
     $mkrange = &cu,{
@@ -180,7 +180,7 @@ import { ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak,reverse
         }
 
       // climb to a few Lines
-        $Line_context = 2
+        $Line_context = 4
 
         # $left = i_(s,C_('left','-cycat',{da:{dir:1}}))
         # $inside = i_(s,C_('inside','-cycat',{da:{dir:1}}))
@@ -233,13 +233,11 @@ import { ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak,reverse
         # this one is deep claiming all -nodules for its structure
         #  the rest is all s/*:dir/*:qua
         $Tree = i_(s,C_('Tree','-cytree'))
-
-
         map(&ni{
             # bulges in the middle
             $distance = i - Linesc&middle
             distance < 0 and distance *= -1
-            $dl = distance < 1 ? null : 2
+            $dl = distance < 1 ? null : distance < 4 ? 4 : 2
             $go = nc&leznode.cursor()
             console.log("  Line "+i+" is "+distance+" so "+dl)
 
@@ -254,25 +252,60 @@ import { ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak,reverse
 
 
       // and their alignment constraints
-        $leinri = i_(s,C_('Lines-align','-cycons',{type:'relativePlacementConstraint',axis:'vertical'}))
-        map(&n{ i_(leinri,n) }, o_(Lines))
-        $leinri = i_(s,C_('Lines-order','-cycons',{type:'alignmentConstraint',axis:'vertical'}))
-        map(&n{ i_(leinri,n) }, o_(Lines))
+        $verticality = &tNc{
+            c ||= {order:1,align:1}
+            if (c.order) {
+                $leinri = i_(s,C_(t+'-order','-cycons',{type:'relativePlacementConstraint',axis:'vertical'}))
+                map(&n{ i_(leinri,n) }, N)
+            }
+            if (c.align) {
+                $leinri = i_(s,C_(t+'-align','-cycons',{type:'alignmentConstraint',axis:'vertical'}))
+                map(&n{ i_(leinri,n) }, N)
+            }
+        }
+        #verticality('Lines', o_(Lines))
 
-        return s
+        # align a bit of Tree/Line/*/* too
+        $h = {}
+        o_path(Tree,['Tree','Line','a']) .map(({Line,a}) => {
+            ahk(h,['Line'],Line)
+            ahk(h,['a'],a)
+            # make a /b? leg on the above
+            map(&b{
+                ahk(h,['b'],b)
+            }, o_(a))
+        })
+        $classes = ['ayefour','ayethree','ayetwo']
+        $classes_add = &nk{
+            fatal.ispi(n,'nodule')
+            $da = nc&da ||= {}
+            if (!isar(da.classes)) {
+                da.classes = da.classes ? da.classes.split(" ") : []
+            }
+            da.classes.push(k)
+        }
+        each iN h {
+            verticality('Tree-layer-'+i, uniq(N), )
 
-        $thelin = i_(s,C_('the line','-cycons',{type:'relativePlacementConstraint',axis:'horizontal'}))
-        map(&n{
-            map(&n{
-                i_(thelin,n)
-            }, o_(n))
-        }, [left,inside,right])
-        $thelin = i_(s,C_('the line','-cycons',{type:'alignmentConstraint',axis:'horizontal'}))
-        map(&n{
-            map(&n{
-                i_(thelin,n)
-            }, o_(n))
-        }, [left,inside,right])
+            $cla = classes.shift()
+            map(n => classes_add(n,cla),N)
+        }
+
+
+
+
+        # $thelin = i_(s,C_('the line','-cycons',{type:'relativePlacementConstraint',axis:'horizontal'}))
+        # map(&n{
+        #     map(&n{
+        #         i_(thelin,n)
+        #     }, o_(n))
+        # }, [left,inside,right])
+        # $thelin = i_(s,C_('the line','-cycons',{type:'alignmentConstraint',axis:'horizontal'}))
+        # map(&n{
+        #     map(&n{
+        #         i_(thelin,n)
+        #     }, o_(n))
+        # }, [left,inside,right])
 
         # $parupw = i_(s,C_('parent upwards','-cycons',{type:'alignmentConstraint',axis:'vertical'}))
         # map(&n{ i_(parupw,n) }, o_(parent))
@@ -280,59 +313,24 @@ import { ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak,reverse
         # $parupw = i_(s,C_('parent upwards vert','-cycons',{type:'relativePlacementConstraint',axis:'vertical'}))
         # map(&ni{ i < 2 && i_(parupw,n) }, o_(parent).reverse())
 
-      // edge:ne extra edges about ordering
-        $leinri = i_(s,C_('left-inside-right','-cyedge'))
-        map(&n{ i_(leinri,n) }, [left,inside,right])
+    #   // edge:ne extra edges about ordering
+    #     $leinri = i_(s,C_('left-inside-right','-cyedge'))
+    #     map(&n{ i_(leinri,n) }, [left,inside,right])
         
 
-        $thelin = i_(s,C_('the line','-cyedge'))
-        map(&n{
-            map(&n{
-                i_(thelin,n)
-            }, o_(n))
-        }, [left,inside,right])
+    #     $thelin = i_(s,C_('the line','-cyedge'))
+    #     map(&n{
+    #         map(&n{
+    #             i_(thelin,n)
+    #         }, o_(n))
+    #     }, [left,inside,right])
 
-        $parupw = i_(s,C_('parent upwards','-cyedge'))
-        map(&n{ i_(parupw,n) }, o_(parent))
+    #     $parupw = i_(s,C_('parent upwards','-cyedge'))
+    #     map(&n{ i_(parupw,n) }, o_(parent))
 
-        map(&C{ c&da = {class:'along',label:'ne'} },[leinri,thelin])
-        map(&C{ c&da = {label:'up',class:'outward'} },[parupw])
+    #     map(&C{ c&da = {class:'along',label:'ne'} },[leinri,thelin])
+    #     map(&C{ c&da = {label:'up',class:'outward'} },[parupw])
 
-      // .node.parent: outward through the grammar
-        # and cursor.node.parent-ward from every lezer node we have
-        #  we seem to skip some things doing cursor.parent()
-        #  eg also linkage of cu(.name=Sunpitness).node.parent(.name=Sunpit)
-        # < we can leave out any of these edge:ou that duplicate with edge:up
-        #   this can be done easily once cy data up til now is loaded...
-        #    ie add some more by querying data up til then
-        #    and we want to stream that situation...
-
-        each t,from,to,C tft_C {
-            #continue
-            !ispi(C,'nodule') and debugger
-            # every lezer node we have (not a cursor on a node as above)
-            $node = c&leznode
-            # can start a series of edges
-            $extras = C_('extrapolations','-cyedge',{da:{label:'ou',class:'outward'}},{via:'node'})
-            $la_node = node
-            inlezz(node,{
-                each: &node2,d{
-                    # not node itself
-                    d.d == 1 and return
-                    $range = {from:node2.from,to:node2.to}
-                    # stop when we arrive at lezer nodes we have?
-                    # < Compression could prefer fewer -cyedge with longer /*
-                    
-                    !extrass&z and nod(extras,la_node,{})
-                    nod(extras,node2,{})
-                    ahsk(tft_C, node2.name,range.from,range.to) and return d.not = 1
-                },
-                next_returns: true,
-                next: no => no.parent,
-            })
-            # ground if populated
-            extrass&z and i_(s,extras)
-        }}}
       
       // the text split by syntax nodes
         # intervals of text to be many-edged to syntax nodes
@@ -386,6 +384,9 @@ import { ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak,reverse
                 map(&n{ i_(tetosy,n) }, [C,n])
             })
         }}}
+
+
+
         each in text_unseen {
             if (t == '⚠') {
                 debugger
@@ -400,7 +401,7 @@ import { ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak,reverse
       // etc
 
         s.y.state = i_(s,save_selection_state(state))
-        parentc&no_node = 1
+        Linesc&no_node = 1
         textc&no_node = 1
         each t,from,to,C tft_C {
             t == 'Program' && ispi(C,'nodule') and c&no_node = 1
@@ -409,6 +410,8 @@ import { ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak,reverse
                 console.warn("Le syntax ⚠: ",{C,range:c&range,width})
             }
         }}}
+
+        console.log("End whatsthis()")
 
         return s
     }
@@ -436,7 +439,17 @@ import { ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak,reverse
             node and return node
             node = {id:'N'+(node_i++)}
             node.data = ex({name:C.t},c&da||{},da||{})
-            tax(node,node.data,'classes')
+            # according to https://js.cytoscape.org/#notation/elements-json
+            # the following are supposed to be on node rather than node.data
+            #  beware that node.data() basically returns node without the Element2 wrapper, etc
+            #   so node.data('data') gets you into data 
+            # < use scratch (non-serialisable) to link back to C?
+            tax(node,node.data,'scratch,position,selected,selectable,locked,grabbable,pannable,classes')
+            if (node.classes) {
+                # < multiple classes: contrary to the above, only node.class seems to work
+                node.class = node.classes[0]
+                node.classes[1] and throw "multiple classes"
+            }
 
 
 
@@ -499,9 +512,13 @@ import { ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak,reverse
                 inlace(dir,{grab:&sd{
                     # not the container C:Tree
                     d.d < 1 and return
-                    mknode(s)
-                    # or links to it
+                    # < parent doesn't work
+                    d.d > 1 and ahk(s.c,'da','parent',d.up.id)
+                    d.id = mknode(s).id
+
+                    #  or links to it
                     d.d < 2 and return
+                    
                     mkedge(d.up.s,s,{label:'in'})
                 }})
             }
