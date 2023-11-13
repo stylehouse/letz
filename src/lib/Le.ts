@@ -255,14 +255,18 @@ import { isar,ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak,re
 
 
       // and their alignment constraints
-        $verticality = &tNc{
+        $horizontality = &tNc{
+            verticality(t,N,c,1)
+        }
+        $verticality = &tNch{
             c ||= {order:1,align:1}
+            h = h ? 'horizontal' : 'vertical'
             if (c.order) {
-                $leinri = i_(s,C_(t+'-order','-cycons',{type:'relativePlacementConstraint',axis:'vertical'}))
+                $leinri = i_(s,C_(t+'-order','-cycons',{type:'relativePlacementConstraint',axis:h}))
                 map(&n{ i_(leinri,n) }, N)
             }
             if (c.align) {
-                $leinri = i_(s,C_(t+'-align','-cycons',{type:'alignmentConstraint',axis:'vertical'}))
+                $leinri = i_(s,C_(t+'-align','-cycons',{type:'alignmentConstraint',axis:h}))
                 map(&n{ i_(leinri,n) }, N)
             }
         }
@@ -312,11 +316,8 @@ import { isar,ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak,re
             from = to
         }
 
-        # link them in order
-        $texord = i_(s,C_('text order','-cyedge',{da:{class:'along',label:'ne'}}))
-        map(&n{ i_(texord,n) }, o_(text))
 
-        # relate to any non-text node...
+      // relate to any non-text node overlap 
         $text_unseen = [...o_(text)]
         $dont_see = {text:1,Program:1}
         # make flat list first, of overlapping
@@ -354,8 +355,31 @@ import { isar,ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak,re
             map(&n{ i_(tetosy,n) }, [C,n])
         },syntex)
 
+      // text fin
+        # ignore all \n
+        grop(([C,n]) => {
+            n.t == '｢\\n｣' and return nc&no_node = 1
+        },syntex)
 
+        # link them in order
+        # $texord = i_(s,C_('text order','-cyedge',{da:{class:'along',label:'ne'}}))
+        # map(&n{ i_(texord,n) }, o_(text))
 
+        # align Line//textnodes
+        map(&Line,i{
+            $texts = []
+            map(([C,n]) => {
+                C == Line and texts.push(n)
+            },syntex)
+
+            texts.length < 1 and return
+            # an alignment
+            horizontality("Line-"+i, [Line,...texts],{order:1})
+            # edges along texts
+            $texord = i_(s,C_('text order'+i,'-cyedge',{da:{class:'along',label:'ne'}}))
+            map(&n{ i_(texord,n) }, texts)
+            console.log({Line,texts})
+        },o_(Lines))
 
         each in text_unseen {
             if (t == '⚠') {

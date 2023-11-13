@@ -73,7 +73,6 @@ export function stho() {
 
 // Errors do not make their properties iterable, somehow, so it looks empty
 // perhaps this should go into Con's data climbing code, if s instanceof Error
-//  upgrading any error data we find, not leaving the paradigm of datagraphy
 function iterable_error(error) {
     // but we can write new properties!
     error.says = error.message
@@ -92,13 +91,11 @@ function capture_warnings(y) {
       console.warn = originalWarn;
       iterable_error(error)
       warnings.unshift(error)
-      //throw error;
     } finally {
       console.warn = originalWarn;
     }
 
   
-    console.warn = originalWarn;
     return warnings.length && warnings;
   }
 
