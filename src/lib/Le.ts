@@ -237,9 +237,12 @@ import { isar,ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak,re
             # bulges in the middle
             $distance = i - Linesc&middle
             distance < 0 and distance *= -1
-            $dl = distance < 1 ? null : distance < 4 ? 4 : 2
+            # ie, next to selection will be dl=4
+            $dl = 6 - distance
+            dl < 2 and dl = 2
+            distance < 1 and dl = null
+
             $go = nc&leznode.cursor()
-            console.log("  Line "+i+" is "+distance+" so "+dl)
 
             itelez(go,{C:Tree,each: &no,d{
                 $z = nod(d.C,no)
@@ -267,14 +270,11 @@ import { isar,ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak,re
 
         # align a bit of Tree/Line/*/* too
         $h = {}
-        o_path(Tree,['Tree','Line','a']) .map(({Line,a}) => {
-            ahk(h,['Line'],Line)
-            ahk(h,['a'],a)
-            # make a /b? leg on the above
-            map(&b{
-                ahk(h,['b'],b)
-            }, o_(a))
-        })
+        inlace(Tree,{grab:&nd{
+            ns&depth = d.d
+            !d.d || d.d > 3 and return
+            ahk(h,[d.d],n)
+        }})
         $classes = ['ayefour','ayethree','ayetwo']
         $classes_add = &nk{
             fatal.ispi(n,'nodule')
@@ -290,47 +290,6 @@ import { isar,ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak,re
             $cla = classes.shift()
             map(n => classes_add(n,cla),N)
         }
-
-
-
-
-        # $thelin = i_(s,C_('the line','-cycons',{type:'relativePlacementConstraint',axis:'horizontal'}))
-        # map(&n{
-        #     map(&n{
-        #         i_(thelin,n)
-        #     }, o_(n))
-        # }, [left,inside,right])
-        # $thelin = i_(s,C_('the line','-cycons',{type:'alignmentConstraint',axis:'horizontal'}))
-        # map(&n{
-        #     map(&n{
-        #         i_(thelin,n)
-        #     }, o_(n))
-        # }, [left,inside,right])
-
-        # $parupw = i_(s,C_('parent upwards','-cycons',{type:'alignmentConstraint',axis:'vertical'}))
-        # map(&n{ i_(parupw,n) }, o_(parent))
-        # parupws&z?.reverse()
-        # $parupw = i_(s,C_('parent upwards vert','-cycons',{type:'relativePlacementConstraint',axis:'vertical'}))
-        # map(&ni{ i < 2 && i_(parupw,n) }, o_(parent).reverse())
-
-    #   // edge:ne extra edges about ordering
-    #     $leinri = i_(s,C_('left-inside-right','-cyedge'))
-    #     map(&n{ i_(leinri,n) }, [left,inside,right])
-        
-
-    #     $thelin = i_(s,C_('the line','-cyedge'))
-    #     map(&n{
-    #         map(&n{
-    #             i_(thelin,n)
-    #         }, o_(n))
-    #     }, [left,inside,right])
-
-    #     $parupw = i_(s,C_('parent upwards','-cyedge'))
-    #     map(&n{ i_(parupw,n) }, o_(parent))
-
-    #     map(&C{ c&da = {class:'along',label:'ne'} },[leinri,thelin])
-    #     map(&C{ c&da = {label:'up',class:'outward'} },[parupw])
-
       
       // the text split by syntax nodes
         # intervals of text to be many-edged to syntax nodes
@@ -360,6 +319,8 @@ import { isar,ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak,re
         # relate to any non-text node...
         $text_unseen = [...o_(text)]
         $dont_see = {text:1,Program:1}
+        # make flat list first, of overlapping
+        $syntex = []
         each t,from,to,C tft_C {
             dont_see[t] and continue
             o_(text) .map(&n{
@@ -369,21 +330,30 @@ import { isar,ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak,re
                 !overlap and return
                 grop(n, text_unseen)
 
-                $classes = 'texty'
-                !range_contained(nc&range,c&range) and classes = 'textybroke'
-                # < why can't we node.classes=Array|spoint? (we extract it from node.data in mknod)
-                #   it doesn't seem to apply
-                #classes = classes.split(' ')
-
-                # quite a few of these
-                # only two nodes each since they don't traverse like -cyedge/* is designed to
-                # < hanging a link-to C on the -cycat/$C-nodule/-cylink
-                #   supposing we can impose that on there...
-                #    we might also group things elsehow
-                $tetosy = i_(s,C_('text to syntax','-cyedge',{da:{class:classes,label:'te'}}))
-                map(&n{ i_(tetosy,n) }, [C,n])
+                # establish a dominant syntaxnode, for fewer edge:te
+                $ow = nc&owner
+                !ow || ows&depth < s&depth and nc&owner = C
+                syntex.push([C,n])
             })
         }}}
+        map(([C,n]) => {
+            C != nc&owner and return
+
+            # if this edge:te is the only one coming off C
+            $classes = range_contained(nc&range,c&range) ? 'texty' : 'textybroke'
+            # < why can't we node.classes=Array|spoint? (we extract it from node.data in mknod)
+            #   it doesn't seem to apply
+            #classes = classes.split(' ')
+
+            # quite a few of these
+            # only two nodes each since they don't traverse like -cyedge/* is designed to
+            # < hanging a link-to C on the -cycat/$C-nodule/-cylink
+            #   supposing we can impose that on there...
+            #    we might also group things elsehow
+            $tetosy = i_(s,C_('text to syntax','-cyedge',{da:{class:classes,label:'te'}}))
+            map(&n{ i_(tetosy,n) }, [C,n])
+        },syntex)
+
 
 
 
