@@ -165,6 +165,12 @@
 <span on:click={righteo}>righteo())</span>
 <span on:click={() => run_layout()}>(re-.)</span>
 <span on:click={layout}>layout()</span>
+{#if graph?.nodetree}
+<details>
+    <summary>nodetree</summary>
+    <pre>{graph.nodetree}</pre>
+</details>
+{/if}
 <span>layeng: <DropDown N={layengs} set={set_layeng} /></span>
 <div class="graph" bind:this={ele}></div>
 

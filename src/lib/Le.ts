@@ -87,7 +87,7 @@ import type { EditorState } from "@codemirror/state"
 
 
 import { pit,C_,i_,o_,o_path,inlace } from "$lib/St"
-import { me } from "$lib/Y/Text"
+import { me,indent } from "$lib/Y/Text"
 import { isar,ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak,reverse,slant } from "$lib/Y/Pic"
 
   // f
@@ -514,6 +514,14 @@ import { isar,ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak,re
                     d.d < 2 and return
                     
                     mkedge(d.up.s,s,{label:'in'})
+                }})
+                
+                # also, make an indented name pile
+                graph.nodetree = ''
+                inlace(dir,{grab:&sd{
+                    # not the container C:Tree
+                    d.d < 1 and return
+                    graph.nodetree += indent(d.d)+s.t+"\n"
                 }})
             }
         })
