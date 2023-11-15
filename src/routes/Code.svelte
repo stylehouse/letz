@@ -58,45 +58,57 @@
     let floatation
 </script>
 
-<div>
-<p on:click={() => more = !more}>{#if more}no {/if}more?</p>
-{#if more}
-<CompileLite />
 
-<Diring t="Direr" />
+<div class="mi fathandle" style="left:0%">
+    <div>
+        <span on:click={() => more = !more}>{#if more}no {/if}more?</span>
+        {#if more}
+        <BigGroup>
+            <CompileLite />
 
-<PlayDramatics />
-{/if}
+            <Diring t="Direr" />
 
-<button on:click={() => overdub()}> req! </button>
-<button on:click={() => bang()}> ✴ </button>
-
-</div>
-
-<div>
-<BigGroup at=25>
-    <p>{b}</p>
-    <Codemirror {code} bind:this={cm} on:kommit={kommit} />
-    {#if look}<Coning t="Le-look" C={look} style=display:block />{/if}
-</BigGroup>
-
-</div>
-
-<div>
-{#if graph} 
-    <BigGroup at=53>
-        <Graph {graph} />
+            <PlayDramatics />
     </BigGroup>
-{/if}
+        {/if}
 
+        <button on:click={() => overdub()}> req! </button>
+        <button on:click={() => bang()}> ✴ </button>
+        <span>
+            <Savable C={save} t='Codestate' {resume}/>
+        </span>
+    </div>
+    <div>
+        <BigGroup>
+            <p>{b}</p>
+            <Codemirror {code} bind:this={cm} on:kommit={kommit} />
+            {#if look}<Coning t="Le-look" C={look} style=display:block />{/if}
+        </BigGroup>
+
+    </div>
 </div>
-<p>
-    <Savable C={save} t='Codestate' {resume}/>
-</p>
 
+<div class="mi" style="left:50%">
+        {#if graph} 
+            <BigGroup>
+                <Graph {graph} />
+            </BigGroup>
+        {/if}
+</div>
 <style>
+    .mi {
+        position:absolute;
+        height:100%;
+        width:50%;
+        overflow:scroll;
+    }
     div {
         display:block;
-
     }
+    span {
+        display:inline-block;
+    }
+
+
+
 </style>

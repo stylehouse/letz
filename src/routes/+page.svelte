@@ -19,11 +19,11 @@
 
 <style>
 	section {
-		display: flex;
+		/* display: flex;
 		justify-content: center;
 		align-items: center;
 		flex: 0.6;
 		flex-flow: row wrap;
-		flex-direction: row;
+		flex-direction: row; */
 	}
 </style>

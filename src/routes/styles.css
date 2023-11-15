@@ -35,6 +35,39 @@ body {
 		linear-gradient(180deg, var(--color-bg-0) 0%, var(--color-bg-1) 15%, var(--color-bg-2) 50%);
 }
 
+
+::-webkit-scrollbar {
+	width: 1.5em;
+}
+::-webkit-scrollbar-thumb {
+	border-radius: 1em;
+	background: url(copper_anodes.jpg);
+	//box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+}
+::-webkit-scrollbar-track {
+	//box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	border-radius: 1em;
+}
+.fathandle::-webkit-scrollbar-thumb {
+	width: 3.14em;
+	border-radius: 0.8em;
+	overflow: scroll;
+}
+.fathandle::-webkit-scrollbar {
+	width: 3.14em;
+	height: 0.5em;
+	border-radius: 0.8em;
+	overflow: scroll;
+}
+biggroup {
+	border: 1em solid salmon;
+	border-radius: 5em;
+	display: block;
+    max-width: calc(100% - 2em);
+	border-left-width:0.2em;
+	border-right:none;
+}
+
 h1,
 h2,
 p {
@@ -63,12 +96,6 @@ h2 {
 	font-size: 1rem;
 }
 
-biggroup {
-	border: 1em solid salmon;
-	border-radius: 5em;
-	display: inline-block;
-	max-width: 40em
-}
 pre {
 	font-size: 16px;
 	font-family: var(--font-mono);
