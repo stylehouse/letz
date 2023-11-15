@@ -3,16 +3,17 @@
 	import './styles.css';
 </script>
 
-<div class="app">
+		<slot />
+<!-- <div class="app">
 	<Header />
 
 	<main>
-		<slot />
 	</main>
 
 	<footer>
+		blah blah
 	</footer>
-</div>
+</div> -->
 
 <style>
 	.app {
