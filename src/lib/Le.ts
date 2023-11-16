@@ -239,7 +239,7 @@ import { isar,ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak,re
             distance < 0 and distance *= -1
             # ie, next to selection will be dl=4
             $dl = 6 - distance
-            dl < 2 and dl = 2
+            dl = 2
             distance < 1 and dl = null
 
             $go = nc&leznode.cursor()
@@ -373,13 +373,26 @@ import { isar,ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak,re
             },syntex)
 
             texts.length < 1 and return
+
+            $onething = texts.length < 2 && o_(Line).length == 1
+            onething and horizontality("Line/etc-"+i, [Line,...o_(Line),...texts])
             # an alignment
-            horizontality("Line-"+i, [Line,...texts],{order:1})
+            #horizontality("Line-"+i, [Line,...texts],{order:1})
             # edges along texts
-            $texord = i_(s,C_('text order'+i,'-cyedge',{da:{class:'along',label:'ne'}}))
-            map(&n{ i_(texord,n) }, texts)
-            console.log({Line,texts})
+            #$texord = i_(s,C_('text order'+i,'-cyedge',{da:{class:'along',label:'ne'}}))
+            #map(&n{ i_(texord,n) }, texts)
         },o_(Lines))
+
+        # edges along texts
+        $texord = i_(s,C_('text orderliness','-cyedge',{da:{class:'along',label:'ne'}}))
+        map((n) => {
+            $C = nc&owner
+            # trail would disappear over hidden nodes
+            #nc&no_node and return
+            
+            # < might happen with hairballing if we make these edges more elastic
+            i_(texord,n)
+        },o_(text))
 
         each in text_unseen {
             if (t == '⚠') {

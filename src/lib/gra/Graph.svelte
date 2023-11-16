@@ -93,7 +93,12 @@
     function run_layout(them) {
         // different subsets of the graph
         them ||= lay
+        try {
         them.run()
+        }
+        catch (er) {
+            console.error(er)
+        }
     }
 
     function righteo() {
@@ -157,9 +162,9 @@
             data: { ...edge },
         } } ))
     }
+    $: ele && reload_graph(graph)
     // will not run yet
     $: lay && layeng && layout()
-    $: ele && reload_graph(graph)
 </script>
 <span on:click={() => cy.fit()}>fit()</span>
 <span on:click={righteo}>righteo())</span>

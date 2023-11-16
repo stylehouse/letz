@@ -36,6 +36,7 @@
         look = whatsthis(view.state)
         save = look.y.state
         graph = graphwhats(look)
+        console.log("Yup")
         // look = graph
     }
     let junk = [1,3,5,[6,[6,[6,[[6,[2]]]]]]]
