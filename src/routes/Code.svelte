@@ -2,6 +2,8 @@
     import Graph from "$lib/gra/Graph.svelte"
     import BigGroup from "$lib/ui/BigGroup.svelte"
     import Savable from "$lib/ui/Savable.svelte"
+    import Knob from '$lib/ui/Knob.svelte';
+    import But from "$lib/ui/But.svelte"
     import PlayDramatics from "./PlayDramatics.svelte"
     import { whatsthis,graphwhats,resume_selection_state } from "$lib/Le"
     import Diring from "$lib/Diring.svelte"
@@ -11,11 +13,10 @@
     import { writable } from 'svelte/store'
     import {EditorView} from "@codemirror/view"
     import { tick } from "svelte";
-    import Knob from '@bismuthsoft/svelte-dj-knob';
     
 
     
-    let b = ':3'
+    let b = {}
     console.log("<Code/>")
     let start = "# yeti etc\ni thung/with/etc\n\n[y]\nS o yeses/because/blon_itn\n  yapto\n  o figura/datch/#chang\n"
 
@@ -40,11 +41,12 @@
     }
     let junk = [1,3,5,[6,[6,[6,[[6,[2]]]]]]]
 
-    async function overdub() {
+    
+    b.req = async function overdub() {
         let res = await fetch('http://s:8000/5835ea2230e6b4ee2b6c3645038ccaa54c110c01f0a2bfa4cefabf32ffe008bd')
         code.set(await res.text())
     }
-    function bang() {
+    b['✴'] = function bang() {
         throw "cake"
     }
     let more = 0
@@ -73,15 +75,13 @@
             </BigGroup>
         {/if}
 
-        <button on:click={() => overdub()}> req! </button>
-        <button on:click={() => bang()}> ✴ </button>
+        <But {b}/>
         <span>
             <Savable C={save} t='Codestate' {resume}/>
         </span>
     </div>
     <div>
         <BigGroup>
-            <p>{b}</p>
             <Codemirror {code} bind:this={cm} on:kommit={kommit} />
             {#if look}<Coning t="Le-look" C={look} style=display:block />{/if}
         </BigGroup>

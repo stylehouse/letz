@@ -1,7 +1,7 @@
 <!-- allows you to <Codemirror bind:this={cm} .../> and then cm.view -->
 <svelte:options accessors/>
 <script lang="ts">
-    import DropDown from "$lib/ui/DropDown.svelte"
+    import But from "$lib/ui/But.svelte"
     import Coning from '$lib/Coning.svelte'
     import { recur } from "$lib/Sv";
     import { onMount, onDestroy, createEventDispatcher } from "svelte";
@@ -49,7 +49,8 @@
     }))
     onDestroy(() => garb.map(y => y()))
 
-    let overdub = () => {
+    let b = {}
+    b.over = () => {
         cha({ from: 0, insert: "warp\n" });
     };
 
@@ -72,6 +73,7 @@
         lang_itself = lang()
         view.dispatch({ effects: language.reconfigure(lang_itself) });
     };
+    b.lang = [langs,setlang]
 
     let startState = EditorState.create({
         doc: value,
@@ -118,15 +120,9 @@
 </script>
 
 <div class="Codemirror" bind:this={ele} />
-<button on:click={() => overdub()}> overdub </button>
+<But {b}/>
 
 <span>
-    lang<DropDown N={langs} set={setlang} />
-    <!-- <select bind:value={lang} on:change={() => setlang(lang)}>
-        {#each langs as lang}
-            <option value={lang}> {lang.name} </option>
-        {/each}
-    </select> -->
     {#if lang_itself.warnings}
     <Coning t="Warnings from buildParser()" C={lang_itself.warnings} noC=1 style="background-color:#3e1e0e"/>
     {/if}
