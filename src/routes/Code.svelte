@@ -66,13 +66,13 @@
     <div>
         <span on:click={() => more = !more}>{#if more}no {/if}more?</span>
         {#if more}
-        <BigGroup>
-            <CompileLite />
+            <BigGroup>
+                <CompileLite />
 
-            <Diring t="Direr" />
+                <Diring t="Direr" />
 
-            <PlayDramatics />
-    </BigGroup>
+                <PlayDramatics />
+            </BigGroup>
         {/if}
 
         <button on:click={() => overdub()}> req! </button>
@@ -89,9 +89,8 @@
         </BigGroup>
 
     </div>
-    <span style="position:fixed; top:1em; right: calc(100% - {sizer}%);">
-        <span> size:<Knob bind:value={sizer}
-            min=0 max=100 step=2 size="3rem" /> </span>
+    <span style="position:fixed; top:1em; right: min(calc(100% - {sizer}%), calc(100% - 2rem)); z-index:500">
+        <Knob bind:value={sizer} min=0 max=100 step=2 size="2rem" />
     </span>
 </div>
 
