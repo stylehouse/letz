@@ -204,6 +204,7 @@ import { isar,ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak,re
             }
         })
 
+        
         toLine.name != 'Line' and debugger
 
         # go a few Lines ahead and back
@@ -417,8 +418,6 @@ import { isar,ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak,re
                 console.warn("Le syntax ⚠: ",{C,range:c&range,width})
             }
         }}}
-
-        console.log("End whatsthis()")
 
         return s
     }

@@ -1,5 +1,7 @@
+<!-- allows you to <Codemirror bind:this={cm} .../> and then cm.view -->
 <svelte:options accessors/>
 <script lang="ts">
+    import DropDown from "$lib/ui/DropDown.svelte"
     import Coning from '$lib/Coning.svelte'
     import { recur } from "$lib/Sv";
     import { onMount, onDestroy, createEventDispatcher } from "svelte";
@@ -26,6 +28,7 @@
 
     
     export let code:string|store
+    // see bind:this={cm}
     export let view: EditorView = undefined;
     export let ele = undefined
 
@@ -116,19 +119,20 @@
 
 <div class="Codemirror" bind:this={ele} />
 <button on:click={() => overdub()}> overdub </button>
-{#if focus}FOCUS{/if}
 
-<p>
-    lang:
-    <select bind:value={lang} on:change={() => setlang(lang)}>
+<span>
+    lang<DropDown N={langs} set={setlang} />
+    <!-- <select bind:value={lang} on:change={() => setlang(lang)}>
         {#each langs as lang}
             <option value={lang}> {lang.name} </option>
         {/each}
-    </select>
+    </select> -->
     {#if lang_itself.warnings}
     <Coning t="Warnings from buildParser()" C={lang_itself.warnings} noC=1 style="background-color:#3e1e0e"/>
     {/if}
-</p>
+</span>
+
+{#if focus}FOCUS{/if}
 
 <style type="css">
     .Codemirror {

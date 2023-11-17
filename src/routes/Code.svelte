@@ -36,7 +36,6 @@
         look = whatsthis(view.state)
         save = look.y.state
         graph = graphwhats(look)
-        console.log("Yup")
         // look = graph
     }
     let junk = [1,3,5,[6,[6,[6,[[6,[2]]]]]]]
@@ -57,7 +56,6 @@
         whatsup(cm.view)
     }
 
-    let floatation
     let sizer = 50
 </script>
 
@@ -110,6 +108,7 @@
     }
     div {
         display:block;
+        vertical-align: top;
     }
     span {
         display:inline-block;
