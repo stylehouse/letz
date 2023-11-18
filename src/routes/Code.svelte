@@ -12,9 +12,14 @@
     import CompileLite from './CompileLite.svelte'
     import { writable } from 'svelte/store'
     import {EditorView} from "@codemirror/view"
-    import { tick } from "svelte";
+    import { onMount, tick } from "svelte";
+    import Record from "./Record.svelte";
+    import { G } from "$lib/G";
     
-
+    // < be the W we are currently in
+    //   have its ioing from a mind interpreting things
+    //   usually a code
+    //   higher levels sprout
     
     let b = {}
     console.log("<Code/>")
@@ -57,7 +62,11 @@
         resume_selection_state(cm.view,C)
         whatsup(cm.view)
     }
+    G('4')
 
+    export function extra(t) {
+        debugger
+    }
     let sizer = 50
 </script>
 
@@ -79,6 +88,7 @@
         <span>
             <Savable C={save} t='Codestate' {resume}/>
         </span>
+        <Record />
     </div>
     <div>
         <BigGroup>

@@ -19,6 +19,7 @@
         Consimg = Cons
     }
     let b = {ring,range}
+
   
     onMount(() => {
       // Fetch?
@@ -31,7 +32,7 @@
 <h1>Diring</h1>
 <But {b} />
 {#if Consimg}
-<Coning t="Consimg" C={Consimg} />
+    <Coning t="Consimg" C={Consimg} />
 {/if}
 {#if D}
     <Coning t="theD" C={D} />

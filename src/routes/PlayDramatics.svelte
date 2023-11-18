@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+    import But from '$lib/ui/But.svelte';
     import { goto } from '$app/navigation'
     import { page } from '$app/stores'
     import {TheA,C_,A_,i_,inlace,o_path,o_up} from "$lib/St"
@@ -224,15 +225,18 @@
     onMount(() => {
         bloop()
     })
+    let b = {
+        "↺":bleep,
+        "✴":reconver,
+        "🠖":bloop,
+    }
 </script>
 <svelte:window on:keydown={handleKeydown}/>
 
 <biggroup>
     <h1>PlayDramatics</h1>
 <panel class=big>
-    <button on:click={() => bleep()} title="regen" > ↺ </button>
-    <button on:click={() => reconver()} > ✴ </button>
-    <button on:click={() => bloop()} > 🠖 </button>
+    <But {b} />
     <span class="numero dial">{conver}.{refresh}</span>
 </panel>
 
