@@ -228,6 +228,7 @@
 <svelte:window on:keydown={handleKeydown}/>
 
 <biggroup>
+    <h1>PlayDramatics</h1>
 <panel class=big>
     <button on:click={() => bleep()} title="regen" > ↺ </button>
     <button on:click={() => reconver()} > ✴ </button>
@@ -238,7 +239,7 @@
 
 {#if con}
 {#key conver}
-//   <p> <Con C={con}/> </p>
+   <p> <Con C={con}/> </p>
 {/key}
 {/if}
 </biggroup>

@@ -1,5 +1,6 @@
 <script lang="ts">
     import { onMount } from 'svelte';
+    import But from './ui/But.svelte';
     import { C_ } from "$lib/St"
     import Con from "$lib/pi/Con.svelte"
     import { Construct } from "$lib/Co"
@@ -17,7 +18,7 @@
         
         Consimg = Cons
     }
-
+    let b = {ring,range}
   
     onMount(() => {
       // Fetch?
@@ -27,8 +28,8 @@
 </script>
 
 <biggroup>
-<button on:click={() => ring()} > ring() </button>
-<button on:click={() => range()} > range() </button>
+<h1>Diring</h1>
+<But {b} />
 {#if Consimg}
 <Coning t="Consimg" C={Consimg} />
 {/if}

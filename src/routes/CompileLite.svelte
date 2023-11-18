@@ -1,6 +1,8 @@
 <script lang=ts>
-import {ex} from '$lib/Y/Pic.ts'
+    import {ex} from '$lib/Y/Pic.ts'
     import { stylehouse_lite } from "$lib/lang/stholite_compiler"
+    import Coning from '$lib/Coning.svelte';
+    import But from '$lib/ui/But.svelte';
     // # yes
     let compiled
     function comp () {
@@ -31,18 +33,34 @@ import {ex} from '$lib/Y/Pic.ts'
         )
     }
     comp()
+    // auto doing?
+    let b = {comp}
 </script>
 
 <biggroup>
-<button on:click={() => comp()} > comp() </button>
+    <h1>CompileLite</h1>
+    <But {b} />
 
-<pre><table style="word-wrap:break-word; max-width:80%; display:block">
+<pre><table style="word-wrap:break-word; max-width:80%;">
     {#each Object.entries(compiled) as [k,v]}
     <tr>
         <td><h1>{k}</h1></td>
-        <td>{v}</td>
+        <td>
+            {#if k == 'map'}
+                <span style="white-space:normal;margin-left:3em">
+                    <Coning t="Le-look" C={v} style=display:block />
+                </span>
+            {:else}
+                {v}
+            {/if}
+        </td>
     </tr>
-    <hr colspan="2"/>
+    <!-- <hr colspan="2"/> -->
     {/each}
 </table></pre>
 </biggroup>
+<style>
+    table td {
+        border: 1px solid rgba(64, 29, 29, 0.6)
+    }
+</style>

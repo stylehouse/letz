@@ -90,6 +90,7 @@ a:hover {
 h1 {
 	font-size: 2rem;
 	text-align: center;
+	display: inline-block;
 }
 
 h2 {
@@ -99,7 +100,7 @@ h2 {
 pre {
 	font-size: 16px;
 	font-family: var(--font-mono);
-	background-color: rgba(255, 255, 255, 0.45);
+	background-color: rgba(66, 43, 43, 0.45);
 	border-radius: 3px;
 	box-shadow: 2px 2px 6px rgb(255 255 255 / 25%);
 	padding: 0.5em;
