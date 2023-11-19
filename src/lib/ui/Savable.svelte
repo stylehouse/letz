@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
+    import { onMount, tick } from 'svelte';
     import {enL,deL,indents} from "$lib/Y/Text"
     import {isst} from "$lib/Y/Pic"
     import {inlace} from "$lib/St"
@@ -13,7 +13,8 @@
     if (!t) throw "Needs name"
     if (!resume) throw "Needs resume(C) callback"
 
-    function proc (C) {
+    async function proc (C) {
+        await tick()
         C ? saves(C) : resumes()
     }
     function saves (C) {
