@@ -59,10 +59,11 @@
     let cm = null
 
     async function resume(C) {
+        if (!cm)
         resume_selection_state(cm.view,C)
         whatsup(cm.view)
     }
-    G('4')
+    G(4)
 
     export function extra(t) {
         debugger

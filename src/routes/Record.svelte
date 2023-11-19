@@ -1,28 +1,25 @@
 <script lang="ts">
-    import { G } from "$lib/G";
+    import Coning from "$lib/Coning.svelte";
+    import { G,locate_ev } from "$lib/G";
     import But from "$lib/ui/But.svelte";
+
     import { getContext, get_current_component, onDestroy, onMount, setContext } from 'svelte/internal';
 
     let on = 0
     function enL() {
         on = 1
     }
+    let tar = {}
     function enL2(ev) {
         if (!on) return
         on = 0
         ev.preventDefault()
-        setContext
-        // < ev.target.parentNode loop until 
-        console.log({target:ev.target,name:ev.target.name})
-        const co = get_current_component();
-        if (co) {
-            // Your logic here
-            console.log({co,name:co.constructor.name})
-
-        }
+        let E = locate_ev(ev)
+        console.log(E)
+        tar = E
     }
 
-    let A = G('3')
+    let A = G(3)
     let b = {enL,doing:()=>{
         A.co.late("Stuff")
     }}
@@ -33,4 +30,5 @@
     <But {b}/>
     {#if on} />{/if}
     ...
+    {#if tar}<Coning t="ev.target" C={tar} />{/if}
 </biggroup>

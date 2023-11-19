@@ -16,6 +16,7 @@
     import { basicSetup } from "codemirror";
     import { javascriptLanguage, istho } from "$lib/lang/istho"
     import { stho,simpleLezerLinter } from "$lib/lang/stho"
+    import { G } from "$lib/G";
     //import { sthovascript } from "$lib/lang/lang-javascript/src/index"
     // < change this properly, requires cm-buildhelper
     //({jsx:true,typescript:true}
@@ -117,6 +118,7 @@
     recur(() => {
         focus = view.hasFocus;
     });
+    G(2)
 </script>
 
 <div class="Codemirror" bind:this={ele} />

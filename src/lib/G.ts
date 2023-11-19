@@ -41,3 +41,14 @@ function resolve_slope(c) {
         upco and c.slope[t] = upco
     }
 }
+
+export function locate_ev(ev) {
+    $E = {N:[]}
+    $ta = ev.target
+    while (1) {
+        E.N.unshift({t:ta.nodeName,ta})
+        ta = ta.parentNode
+        !ta || ta == document.body and break
+    }
+    return E
+}

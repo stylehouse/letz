@@ -21,7 +21,7 @@
     <nodules style="display:block; vertical-align: middle; border:5px solid #f8c; border-right:none; padding: 0 3px; margin: 0 3px; border-radius: 3px;">
     {#each nodules as n (n.t)}
         <nodule style="display:table">
-            <Con C={n}/>
+            <Con C={n} />
         </nodule>
     {/each}
     </nodules>
