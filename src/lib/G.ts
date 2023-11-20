@@ -4,6 +4,7 @@ import { get_current_component, onDestroy, onMount, setContext,getContext } from
 
 // call in onMount with your timeslopenumber
 export function G(t,co) {
+    $live = import.meta.env.SSR == false
     co ||= get_current_component()
 
     # events want to find ways up
@@ -17,11 +18,11 @@ export function G(t,co) {
     slope[t] = co
     $c = {t,co,slope}
     resolve_slope(c)
-    console.log('G:'+t+' ',c)
+    live and console.log('G:'+t+' ',c)
 
 
     co.late = &s{
-        console.log('G:'+t+' late ',{co,s})
+        live and console.log('G:'+t+' late ',{co,s})
     }
     co.parent = &{
         return c.up
