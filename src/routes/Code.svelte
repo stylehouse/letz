@@ -59,7 +59,6 @@
     let cm = null
 
     async function resume(C) {
-        if (!cm)
         resume_selection_state(cm.view,C)
         whatsup(cm.view)
     }

@@ -11,5 +11,6 @@ node_modules
 *pdf
 secrets
 *__pycache__/
-ipfs
+/ipfs/
+*sqlite
 static/thumb

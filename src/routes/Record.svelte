@@ -2,8 +2,12 @@
     import Coning from "$lib/Coning.svelte";
     import { G,locate_ev } from "$lib/G";
     import But from "$lib/ui/But.svelte";
+    import { dig, sha256 } from '$lib/Y/Pic.ts'
+
 
     import { getContext, get_current_component, onDestroy, onMount, setContext } from 'svelte/internal';
+
+    let A = G(3)
 
     let on = 0
     function enL() {
@@ -19,16 +23,34 @@
         tar = E
     }
 
-    let A = G(3)
-    let b = {enL,doing:()=>{
+    async function doing() {
         A.co.late("Stuff")
-    }}
+
+        let default_blob = "# yeti etc\ni thung/with/etc\n\n[y]\nS o yeses/because/blon_itn\n  yapto\n  o figura/datch/#chang\n"
+        let t = await sha256(default_blob)
+        let para = {t}
+        // z becomes comma-separated, server knows this means array
+        // para.z = ['blah', 'fort']
+        let params = new URLSearchParams(para);
+        let res = await fetch(
+            `/ipfs?${params.toString()}`,
+            {method:'POST',body:default_blob}
+        )
+        tar = await res.text()
+    }
+
+    let flee
+    onMount(async () => {
+        flee = await sha256("Theis")
+    })
+
+    let b = {enL,doing}
 </script>
 <svelte:window on:mousedown={enL2} />
 <biggroup>
     <h1>Record</h1>
     <But {b}/>
-    {#if on} />{/if}
+    {#if on}click a thing{/if}
     ...
     {#if tar}<Coning t="ev.target" C={tar} />{/if}
 </biggroup>
