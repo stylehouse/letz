@@ -6,21 +6,22 @@
     import { Construct } from "$lib/Co"
     import { inlace } from "$lib/St"
     import Coning from '$lib/Coning.svelte'
+    import { G } from './G';
     
     export let C = C_('/',1,{pi:'Dir',rootdir:1})
+    $: G(2).haveC("Record",C,s => C = s)
     let D
     async function ring() {
         D = Construct({I:'In',s:C,D})
     }
-    let Consimg
-    async function range() {
+    let dumped
+    async function dumpD() {
         let Cons = inlace(D,{inc:1}).filter(D => D.c.pi == 'Con')
-        
-        Consimg = Cons
+        dumped = Cons
     }
-    let b = {ring,range}
+    let b = {ring,dumpD}
 
-  
+    
     onMount(() => {
       // Fetch?
       ring()
@@ -31,8 +32,8 @@
 <biggroup>
 <h1>Diring</h1>
 <But {b} />
-{#if Consimg}
-    <Coning t="Consimg" C={Consimg} />
+{#if dumped}
+    <Coning t="N = D**" C={dumped} />
 {/if}
 {#if D}
     <Coning t="theD" C={D} />

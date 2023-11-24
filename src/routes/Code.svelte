@@ -58,11 +58,16 @@
     // < explore bind:view={view} and Codemirror export let view?
     let cm = null
 
+
+
+
+    // storage
+    G(4)
+    
     async function resume(C) {
         resume_selection_state(cm.view,C)
         whatsup(cm.view)
     }
-    G(4)
 
     export function extra(t) {
         debugger
@@ -89,6 +94,7 @@
             <Savable C={save} t='Codestate' {resume}/>
         </span>
         <Record />
+        <Diring t="Direr" />
     </div>
     <div>
         <BigGroup>

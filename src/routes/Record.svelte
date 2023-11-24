@@ -2,13 +2,20 @@
     import Coning from "$lib/Coning.svelte";
     import { G,locate_ev } from "$lib/G";
     import But from "$lib/ui/But.svelte";
-    import { dig, sha256 } from '$lib/Y/Pic.ts'
+    import { havs,dig, sha256 } from '$lib/Y/Pic.ts'
 
 
-    import { getContext, get_current_component, onDestroy, onMount, setContext } from 'svelte/internal';
+    import { getContext, get_current_component, onDestroy, onMount, setContext, tick } from 'svelte/internal';
 
-    let A = G(3)
-
+    let g = G(3)
+    let recording = []
+    g.rerecord = re => recording = re
+    let fourg
+    function look_at_g() {
+        // fourg = g.slope[4]
+        fourg = g
+    }
+    
     let on = 0
     function enL() {
         on = 1
@@ -23,8 +30,7 @@
         tar = E
     }
 
-    async function doing() {
-        A.co.late("Stuff")
+    async function ipfs_test() {
 
         let default_blob = "# yeti etc\ni thung/with/etc\n\n[y]\nS o yeses/because/blon_itn\n  yapto\n  o figura/datch/#chang\n"
         let t = await sha256(default_blob)
@@ -42,9 +48,10 @@
     let flee
     onMount(async () => {
         flee = await sha256("Theis")
+        setTimeout(() => look_at_g(), 10)
     })
 
-    let b = {enL,doing}
+    let b = {enL,ipfs_test,look_at_g}
 </script>
 <svelte:window on:mousedown={enL2} />
 <biggroup>
@@ -53,4 +60,8 @@
     {#if on}click a thing{/if}
     ...
     {#if tar}<Coning t="ev.target" C={tar} />{/if}
+    {#each recording as Rec (Rec.This.name) }
+        <Coning t="Rec {Rec.This.name}" C={Rec.This.C} noC=1 />
+    {/each}
+    {#if fourg}<Coning t="look at g" C={fourg} noC=1 />{/if}
 </biggroup>

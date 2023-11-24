@@ -1495,7 +1495,7 @@ let window = self
         return (s * mul).toFixed() / mul
     };
 
-    # apparently, sha256 is async
+    # apparently sha256 is async
     $sha256 = async function (data) {
         const buffer = new Uint8Array(
             data instanceof ArrayBuffer ? data 

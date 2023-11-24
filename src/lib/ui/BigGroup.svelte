@@ -1,5 +1,5 @@
 <script lang=ts>
-
+    // < $$slot fanciness: https://svelte.dev/docs/special-elements
 </script>
 
 

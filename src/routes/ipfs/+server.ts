@@ -52,14 +52,14 @@ import { isst, isob, sha256, isnum, isar, isspace, hak, havs, haks, ex } from '$
     export const POST: RequestHandler = async (req: Request) => {
         try {
             const t = req.url.searchParams.get('t');
-            console.log("PUT: "+t)
+            // console.log("PUT: "+t)
             let que = req.request
             let type = que.headers.get('content-type')
             let s = type.startsWith("text") ? await que.text()
                 : await que.arrayBuffer()
 
             let tt = await sha256(s)
-            console.log("PUT hash: "+tt)
+            // console.log("PUT hash: "+tt)
             if (t != tt) {
                 return createResponse({ error: "t should be "+tt }, 400);
             }
@@ -71,7 +71,7 @@ import { isst, isob, sha256, isnum, isar, isspace, hak, havs, haks, ex } from '$
             // await db.get(`DELETE FROM ipfs_in`)
             if (!hak(result)) {
                 // new
-                console.log("PUT new: "+t)
+                // console.log("PUT new: "+t)
                 result = await db.get(`INSERT INTO ipfs (t,s,ts_heartbeat)
                     VALUES (?,?,CURRENT_TIMESTAMP)`,     t,s)
                 // with links to other ipfs directly inside this one
@@ -79,7 +79,7 @@ import { isst, isob, sha256, isnum, isar, isspace, hak, havs, haks, ex } from '$
                 let z = req.url.searchParams.get('z');
                 z = z && z.split(',') || []
                 each i,ot z {
-                    console.log("PUT links: "+ot)
+                    // console.log("PUT links: "+ot)
                     await db.get(`INSERT INTO ipfs_in (t,ot)
                         VALUES (?,?)`, t,ot)
                     // these FK dont seem to be enforced, so:
@@ -96,7 +96,7 @@ import { isst, isob, sha256, isnum, isar, isspace, hak, havs, haks, ex } from '$
                         SET ts_heartbeat = CURRENT_TIMESTAMP
                         where t = ?`,t);
                 }
-                console.log("PUT uptime: ",result)
+                // console.log("PUT uptime: ",result)
             }
     
             return mimeable(req)
