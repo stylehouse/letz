@@ -122,6 +122,7 @@ input,
 button {
 	font-size: inherit;
 	font-family: inherit;
+	background-image: url('punga vase.webp')
 }
 
 button:focus:not(:focus-visible) {
