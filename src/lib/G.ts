@@ -2,8 +2,27 @@
 import type { SvelteComponent } from 'svelte';
 import { get_current_component, tick, setContext,getContext } from 'svelte/internal';
 
-import { ac, ahsk,ahk,havs } from "$lib/Y/Pic.ts"
+import { ac, ahsk,ahk,havs,dig, sha256 } from "$lib/Y/Pic.ts"
+import { pit,C_,i_,o_,o_path,inlace } from "$lib/St"
+import {enL,deL,indents} from "$lib/Y/Text"
 
+export function G(t, co) {
+    co ||= get_current_component()
+    $g = co.G
+    if (g) {
+        g.co != co and debugger
+        g.embedSlope()
+        return g
+    }
+    
+    g = new TheG(t, co);
+
+    $live = import.meta.env.SSR === false
+
+    live and console.log('G:' + t + ' ', g);
+
+    return g;
+}
 class TheG {
     
   constructor(t, co) {
@@ -57,7 +76,7 @@ class TheG {
     # C not replaced yet it is given, look into it
     rec?.C == g.C and return rec.wake_slightly()
     # replace the Rec object
-    rec = new Rec(this,g)
+    rec = new TheRec(this,g)
     ahk(this,'received_giveC_g',g.name,rec)
     rec.wake()
   }
@@ -77,7 +96,9 @@ class TheG {
         || g != this && g.find_name(name)
   }
 }
-class Rec {
+
+# a candidacy for recording sent to Record from somewhere
+export class TheRec {
     constructor(The,This) {
         # Record, the stored end
         this.The = The
@@ -96,30 +117,28 @@ class Rec {
         $g = this.The
         !g.rerecord and return console.warn("Record!g.rerecord")
         console.log("Record wake")
+        # reactive list of Reco+
         g.rerecord(
             havs(g.received_giveC_g)
         )
     }
 }
 
-export function G(t, co) {
-    co ||= get_current_component()
-    $g = co.G
-    if (g) {
-        g.co != co and debugger
-        g.embedSlope()
-        return g
-    }
+# Reco.svelte given Rec, to pool N[Reco]
+export async function Recollect(Rec,N) {
+    $co = get_current_component()
     
-    g = new TheG(t, co);
+    
+    $string = inlace(Rec.This.C,{
+        grab: (C,d) => indents(d.d*2,enL(C),'notailnl'),
+    }).join("\n")
 
-    $live = import.meta.env.SSR === false
+    $dige = await sha256("blah")
 
-    live and console.log('G:' + t + ' ', g);
-
-    return g;
+    $Reco = {string,dige}
+    console.log("To show!")
+    co.show_something(Reco)
 }
-
 
 
 

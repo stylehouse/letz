@@ -1,5 +1,6 @@
 <script lang="ts">
     import Coning from "$lib/Coning.svelte";
+    import Reco from "$lib/ui/Reco.svelte";
     import { G,locate_ev } from "$lib/G";
     import But from "$lib/ui/But.svelte";
     import { havs,dig, sha256 } from '$lib/Y/Pic.ts'
@@ -48,7 +49,7 @@
     let flee
     onMount(async () => {
         flee = await sha256("Theis")
-        setTimeout(() => look_at_g(), 10)
+        // setTimeout(() => look_at_g(), 10)
     })
 
     let b = {enL,ipfs_test,look_at_g}
@@ -61,7 +62,7 @@
     ...
     {#if tar}<Coning t="ev.target" C={tar} />{/if}
     {#each recording as Rec (Rec.This.name) }
-        <Coning t="Rec {Rec.This.name}" C={Rec.This.C} noC=1 />
+        <Reco {Rec} />
     {/each}
     {#if fourg}<Coning t="look at g" C={fourg} noC=1 />{/if}
 </biggroup>
