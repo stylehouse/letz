@@ -5,14 +5,15 @@
     export let Rec:TheRec
     // Reco we know about, eg from a remote. changes slower than Rec.
     let N = []
+    let g = G(1)
 
     let string = ''
     let dige
-    export async function show_something(Reco) {
+    g.o((Reco) => {
         string = Reco.string
         dige = Reco.dige
-    }
-    let rec = () => Recollect(Rec,N)
+    })
+    let rec = () => Recollect(g,Rec,N)
     rec()
     let b = {rec}
 </script>

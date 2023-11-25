@@ -60,17 +60,20 @@ class TheG {
     }
   }
 
-  # Diring sends Record its C
+  # we give things to others
+  # eg Diring C -> Record
   haveC(name,C,setC) {
     this.C = C
-    # reacts the component to a new C
-    this.setC = setC
+    # they react the component to a new C
+    this.o(setC)
     $g = this.find_name(name)
     !g and return
     g.giveC(this)
   }
-  # Record receives a C from Record
+  # we host those things ourselves
   # < resolve $n each This properly
+  #   one thing per g.name atm
+  # Record <- Diring C
   giveC(g) {
     $rec = ahsk(this,'received_giveC_g',g.name)
     # C not replaced yet it is given, look into it
@@ -81,6 +84,15 @@ class TheG {
     rec.wake()
   }
 
+  # they define reactive callbacks for:
+  # changing the C they started with
+  o(y) {
+    this.input_to = y
+  }
+  # giving them the D they result in
+  o(y) {
+    this.output_to = y
+  }
 
   # index by name
   introductions() {
@@ -125,19 +137,18 @@ export class TheRec {
 }
 
 # Reco.svelte given Rec, to pool N[Reco]
-export async function Recollect(Rec,N) {
-    $co = get_current_component()
-    
+export async function Recollect(g,Rec,N) {
+    $co = g.co
     
     $string = inlace(Rec.This.C,{
         grab: (C,d) => indents(d.d*2,enL(C),'notailnl'),
     }).join("\n")
 
-    $dige = await sha256("blah")
+    $dige = await sha256(string)
 
     $Reco = {string,dige}
     console.log("To show!")
-    co.show_something(Reco)
+    g.output_to(Reco)
 }
 
 
