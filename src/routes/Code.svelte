@@ -83,7 +83,7 @@
             <BigGroup>
                 <CompileLite />
 
-                <Diring t="Direr" />
+                <Diring />
 
                 <PlayDramatics />
             </BigGroup>
@@ -94,7 +94,7 @@
             <Savable C={save} t='Codestate' {resume}/>
         </span>
         <Record />
-        <Diring t="Direr" />
+        <Diring />
     </div>
     <div>
         <BigGroup>

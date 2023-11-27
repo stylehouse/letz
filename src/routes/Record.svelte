@@ -8,9 +8,12 @@
 
     import { getContext, get_current_component, onDestroy, onMount, setContext, tick } from 'svelte/internal';
 
+    // this puts our name out there (Record), which others g.send() to
     let g = G(3)
+    // invoking this receiver
     let recording = []
     g.rerecord = re => recording = re
+
     let fourg
     function look_at_g() {
         // fourg = g.slope[4]
@@ -51,12 +54,13 @@
         flee = await sha256("Theis")
         // setTimeout(() => look_at_g(), 10)
     })
+    let upg = () => g.counti = (g.counti ?? 0) + 1
 
-    let b = {enL,ipfs_test,look_at_g}
+    let b = {enL,ipfs_test,look_at_g,upg}
 </script>
 <svelte:window on:mousedown={enL2} />
 <biggroup>
-    <h1>Record</h1>
+    <h1>Record i={g.counti||0}</h1>
     <But {b}/>
     {#if on}click a thing{/if}
     ...

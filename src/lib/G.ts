@@ -6,107 +6,138 @@ import { ac, ahsk,ahk,havs,dig, sha256 } from "$lib/Y/Pic.ts"
 import { pit,C_,i_,o_,o_path,inlace } from "$lib/St"
 import {enL,deL,indents} from "$lib/Y/Text"
 
-export function G(t, co) {
-    co ||= get_current_component()
-    $g = co.G
-    if (g) {
-        g.co != co and debugger
-        g.embedSlope()
-        return g
+# *.svelte do: g = G()
+    export function G(t, co) {
+        co ||= get_current_component()
+        $g = co.G
+        if (g) {
+            console.log("rediscovered G:"+g.name)
+            g.co != co and debugger
+            g.embedSlope()
+            return g
+        }
+        
+        g = new TheG(t, co);
+
+        $live = import.meta.env.SSR === false
+
+        live and console.log('G:' + t + ' ', g);
+
+        return g;
     }
-    
-    g = new TheG(t, co);
-
-    $live = import.meta.env.SSR === false
-
-    live and console.log('G:' + t + ' ', g);
-
-    return g;
-}
-class TheG {
-    
-  constructor(t, co) {
-    this.t = t
-    this.name = co.constructor.name
-    this.co = co
-    this.t_G = {}
-    this.embedSlope()
-  }
-  embedSlope() {
-    # make discoverable to /**
-    setContext('G:' + this.t, this);
-    this.slope = {};
-    this.slope[this.t] = this;
-    # find others
-    this.resolveSlope()
-    # make discoverable to /^^
-    this.introductions()
-  }
-  resolveSlope() {
-    let t = this.t * 1;
-    let first = true;
-    while (t < 5) {
-      t++;
-      const g = getContext('G:' + t);
-      if (!g) continue;
-      
-      this.slope[t] = g;
-      
-      if (first) {
-        first = false;
-
-        this.up = g;
-      }
+    class TheG {
+        
+    constructor(t, co) {
+        this.t = t
+        this.name = co.constructor.name
+        this.co = co
+        this.t_G = {}
+        this.embedSlope()
     }
-  }
+    embedSlope() {
+        # make discoverable to /**
+        setContext('G:' + this.t, this);
+        this.slope = {};
+        this.slope[this.t] = this;
+        # find others
+        this.resolveSlope()
+        # make discoverable to /^^
+        this.introductions()
+    }
+    resolveSlope() {
+        let t = this.t * 1;
+        let first = true;
+        while (t < 5) {
+        t++;
+        const g = getContext('G:' + t);
+        if (!g) continue;
+        
+        this.slope[t] = g;
+        
+        if (first) {
+            first = false;
 
-  # we give things to others
-  # eg Diring C -> Record
-  haveC(name,C,setC) {
-    this.C = C
-    # they react the component to a new C
-    this.i(setC)
-    $g = this.find_name(name)
-    !g and return
-    g.giveC(this)
-  }
-  # we host those things ourselves
-  # < resolve $n each This properly
-  #   one thing per g.name atm
-  # Record <- Diring C
-  giveC(g) {
-    $rec = ahsk(this,'received_giveC_g',g.name)
-    # C not replaced yet it is given, look into it
-    rec?.C == g.C and return rec.wake_slightly()
-    # replace the Rec object
-    rec = new TheRec(this,g)
-    ahk(this,'received_giveC_g',g.name,rec)
-    rec.wake()
-  }
+            this.up = g;
+        }
+        }
+    }
+    # index by name
+    introductions() {
+        $g = this.up ?? this
+        $old_G = g.t_G[this.name]
+        g.t_G[this.name] = this
+    }
+    # look up name
+    find_name(name) {
+            $g = this.up || this
+            return g.t_G[name]
+                # or try at /^ ie this.up ie g
+                || g != this && g.find_name(name)
+    }
 
-  # they define reactive callbacks for:
-  # changing the C they started with
-  i(y) {
-    this.input_to = y
-  }
-  # giving them the D they result in
-  o(y) {
-    this.output_to = y
-  }
+# g.haveC, g.i|o
 
-  # index by name
-  introductions() {
-    $g = this.up ?? this
-    $old_G = g.t_G[this.name]
-    g.t_G[this.name] = this
-  }
-  # look up name
-  find_name(name) {
-    $g = this.up || this
-    return g.t_G[name]
-        # or try at /^ ie this.up ie g
-        || g != this && g.find_name(name)
-  }
+    # showing C to g
+    haveC(C,setC) {
+        # they have a C
+        this.C = C
+        # they can react the component to a new C
+        this.i(setC)
+    }
+    # we give things to others
+    # eg Diring C -> Record
+    send(name,C,setC) {
+        $g = this.find_name(name)
+        !g and debugger; return
+        g.receive(this)
+    }
+    # we host those things
+    #  using TheRec per thing, which we list to you via your g.rerecord handler
+    # < resolve $n each This properly
+    #   one thing per g.name atm
+    # Record <- Diring C
+    receive(This) {
+        # naming the two TheG as the usual outsphere|insphere dualism
+        #  The being more permanent (eg Record having saved stuff)
+        $The = this
+        # we have the last thing (as made into rec)
+        $rec = ahsk(The,'received_g',This.name)
+
+        # svelte will chase this object being different
+        #  and hopefully not eat stale This.C?
+        rec = new TheRec(The,This)
+        ahk(The,'received_g',This.name,rec)
+
+        #  when we show it a new array:
+        # reactive list of Reco+
+        The.rerecord(
+            havs(The.received_g)
+        )
+
+        # they remember having sent this rec we made for them
+        ahk(This,'sent_g',The.name,rec)
+        
+        
+
+
+        # # < GOING?
+        # # C not replaced yet it is given, look into it
+        # rec?.C == g.C and return rec.wake_slightly()
+        # # replace the Rec object
+        # rec = new TheRec(this,g)
+        # rec.wake()
+    }
+
+    # they define reactive callbacks for:
+    # changing the C they started with
+    i(y) {
+        this.input_to = y
+    }
+    # giving them the D they result in
+    o(y) {
+        this.output_to = y
+    }
+
 }
 
 # a candidacy for recording sent to Record from somewhere
@@ -131,7 +162,7 @@ export class TheRec {
         console.log("Record wake")
         # reactive list of Reco+
         g.rerecord(
-            havs(g.received_giveC_g)
+            havs(g.received_g)
         )
     }
 }

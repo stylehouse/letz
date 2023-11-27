@@ -1,9 +1,9 @@
 <script>
 	import {defor,isar,map} from "$lib/Y/Pic"
-    import DropDown from "$lib/ui/DropDown.svelte"
 	export let N
 	export let set
 	export let n
+	export let title = ''
 	let hash = !isar(N) && N
 	if (hash) {
 		N = []
@@ -12,7 +12,7 @@
 </script>
 
 
-<select bind:value={n} on:change={() => set(hash ? hash[n.t] : n)}>
+<select bind:value={n} on:change={() => set(hash ? hash[n.t] : n)} {title}>
 	{#each N as n}
 		<option value={n}> {defor(n.t,n.name,"?")} </option>
 	{/each}
