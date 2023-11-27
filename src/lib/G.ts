@@ -114,6 +114,7 @@ import {enL,deL,indents} from "$lib/Y/Text"
         rec.wake()
 
         # they remember having sent this rec we made for them
+        #  see also Dome / &etos_6
         ahk(This,'sent_g',The.name,rec)
         console.log(The.name+" receive("+This.name+")"+again)
     }
@@ -161,6 +162,7 @@ export class TheRec {
 }
 
 # Reco.svelte given Rec, to pool N[Reco]
+# we always encode the latest thing...
 export async function Recollect(g,Rec,N) {
     $co = g.co
     
@@ -171,9 +173,20 @@ export async function Recollect(g,Rec,N) {
     $dige = await sha256(string)
 
     $Reco = {string,dige}
+    
+    if (N[0] && N[0].dige == Reco.dige) {
+        # no different to last staged (encoded) thing
+    }
+    else {
+        N.push(Reco)
+    }
+
     console.log("To show!")
     g.output_to(Reco)
 }
+
+
+
 
 
 
