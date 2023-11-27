@@ -32,6 +32,7 @@
     }
     $: upto(C)
     function nestDir(f) {
+        // promote listing f to being /-Dir
         pit(s,f.f,'-Dir')
         dispatch('reCon')
     }

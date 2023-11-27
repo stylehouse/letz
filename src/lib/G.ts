@@ -65,7 +65,7 @@ class TheG {
   haveC(name,C,setC) {
     this.C = C
     # they react the component to a new C
-    this.o(setC)
+    this.i(setC)
     $g = this.find_name(name)
     !g and return
     g.giveC(this)
@@ -86,7 +86,7 @@ class TheG {
 
   # they define reactive callbacks for:
   # changing the C they started with
-  o(y) {
+  i(y) {
     this.input_to = y
   }
   # giving them the D they result in

@@ -5,6 +5,10 @@ import {C_,i_,o_,VA_ip,detect_type,inlace,TheC,TheA,o_up} from '$lib/St'
 // toCon a dumper for the A** tree
 
   // the modes of inquiry, compute
+    # a weird use of I to define slightly different loop functions
+    #  instead of being a pile of personality (library of software)
+    #  that gets switched on by the inheritable personality of the A
+    # < make d.I=sc-that-inherits
     const I_mind = {
         In: function (d) {
             return inlacing_Con({...d,
@@ -47,18 +51,23 @@ import {C_,i_,o_,VA_ip,detect_type,inlace,TheC,TheA,o_up} from '$lib/St'
     # < sip_dispatch compat. C.c.visit is not everything
     export function reConstruct (C:TheC) {
         if (C.c.pi != 'Con') throw "!Con"
+        # go up to the top level
         let top = o_up(C,{inc:1,sing:1})
+        # to recycle some settings from it (I)
         let td = top.y.d
+        # we restart a subtree of this process
         let d = {t:C.t, s:C.c.s, D:C, pretendtoplevel:1, I:td.I}
         let Cup = C.y.up
         if (Cup) {
+            # home d into the enclosing Con**
             # Conz/Con
             d.upC = Cup
             # Con//Con, becomes source of C.c.d
             let upCon = o_up(C,{til:C => C.c.pi == 'Con',sing:1})
             if (!upCon) debugger
+            # fabricate a d.up
             d.up = {C:upCon}
-            # let it create itself here
+            # let it append itself here
             # < in order (slice the rest)
             Cup.sc.z = Cup.sc.z.filter(n => n != C)
         }
@@ -462,7 +471,9 @@ import {C_,i_,o_,VA_ip,detect_type,inlace,TheC,TheA,o_up} from '$lib/St'
         let s = d.s
         let Con = d.C
         # the Con.c.s = s** instructions!
+        # go into s/* as -Con(s)/-Conz/-Con(*)
         Con.c.Cishsz = 1
+        # custom node type: -Con(s)/s-$pi 
         let pi = s.c.pi
         let Such = d.partor(pi)
 
