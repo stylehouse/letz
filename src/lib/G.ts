@@ -2,8 +2,8 @@
 import type { SvelteComponent } from 'svelte';
 import { get_current_component, tick, setContext,getContext } from 'svelte/internal';
 
-import { ac, ahsk,ahk,havs,dig, sha256 } from "$lib/Y/Pic.ts"
-import { pit,C_,i_,o_,o_path,inlace } from "$lib/St"
+import { ac, ahsk,ahk,havs, dig, sha256,ex } from "$lib/Y/Pic.ts"
+import { pit,C_,i_,o_,pito,o_path,inlace } from "$lib/St"
 import {enL,deL,indents} from "$lib/Y/Text"
 
 # *.svelte do: g = G()
@@ -97,32 +97,34 @@ import {enL,deL,indents} from "$lib/Y/Text"
     #   one thing per g.name atm
     # Record <- Diring C
     receive(This) {
-        # naming the two TheG as the usual outsphere|insphere dualism
+        # naming the two TheG The|This as the usual outsphere|insphere dualism
         #  The being more permanent (eg Record having saved stuff)
         $The = this
-        # we have the last thing (as made into rec)
-        $rec = ahsk(The,'received_g',This.name)
-        $again = rec && " again" || ""
 
-        # svelte will chase this object being different
-        #  and hopefully not eat stale This.C?
-        rec = new TheRec(The,This)
-        ahk(The,'received_g',This.name,rec)
-
-        #  when we show it a new array:
-        # reactive list of Reco+
-        rec.wake()
-
-        # they remember having sent this rec we made for them
+        # < modular intro, we know a lot about Record here
+        # Record:C/in-Rec:host/Diring-Rec:guest
+        $C = The.C
+        $host = pito(The.C,'in','-Rec')
+        $guest = pito(host,This.name,'-Rec')
+        # download new? This
+        ex(guest.c,{The,This})
+        # tell someone
+        $wake = guesty&wake || Cy&wake
+        !wake and debugger
+        wake()
+        
+        $again = guesty&wake ? " again" : ""
+        # they remember having sent this guest we made for them
         #  see also Dome / &etos_6
-        ahk(This,'sent_g',The.name,rec)
+        ahk(This,'sent_guest',The.name,guest)
         console.log(The.name+" receive("+This.name+")"+again)
     }
     # we may be called at the end of Construct()
     send_places() {
         $This = this
-        each name,rec This.sent_g {
-            rec.wake()
+        each name,guest This.sent_guest {
+            let wake = guesty&wake
+            wake and wake()
         }
     }
 

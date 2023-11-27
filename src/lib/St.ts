@@ -1,5 +1,5 @@
 // Stylehouse, a dreamy coding paradigm in ts/js
-import {isst,isnu,isnum,isar,isspace,hak,havs,haks,ex} from '$lib/Y/Pic.ts'
+import {isst,isnu,isnum,isar,isspace,hak,havs,haks,ex,theone,grep,map} from '$lib/Y/Pic.ts'
 # yeah
 // basics
     # the baskets of properties that are C.y|c|sc
@@ -109,6 +109,12 @@ import {isst,isnu,isnum,isar,isspace,hak,havs,haks,ex} from '$lib/Y/Pic.ts'
         i_(D,C)
         C.y.up = D
         return C
+    }
+    # C/+C if not exist
+    export function pito (D,t,y,c,sc) {
+        # look only for the .t
+        let had = theone(grep(n => n.t == t, o_(D)))
+        return had || pit(D,t,y,c,sc)
     }
 
 // type and data handling helpers

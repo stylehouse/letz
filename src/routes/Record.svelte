@@ -3,16 +3,33 @@
     import Reco from "$lib/ui/Reco.svelte";
     import { G,locate_ev } from "$lib/G";
     import But from "$lib/ui/But.svelte";
-    import { havs,dig, sha256 } from '$lib/Y/Pic.ts'
+    import Con from "$lib/pi/Con.svelte"
+    import { Construct } from '$lib/Co'
+    import { C_ } from '$lib/St'
+    import { havs,dig, sha256 } from '$lib/Y/Pic'
 
 
     import { getContext, get_current_component, onDestroy, onMount, setContext, tick } from 'svelte/internal';
 
     // this puts our name out there (Record), which others g.send() to
     let g = G(3)
-    // invoking this receiver
-    let recording = []
-    g.rerecord = re => recording = re
+    // which fills this out:
+    export let C = C_('Record',1,{pi:'Rec'})
+    g.haveC(C,s => C = s)
+    $: C.y.wake = async () => { await tick(); ring() }
+    
+    let D
+    async function ring() {
+        D = Construct({I:{Pi:0},s:C,D})
+        // < pipe into step 2
+    }
+    onMount(() => {
+      // Fetch?
+      ring()
+    });
+
+
+
 
     let fourg
     function look_at_g() {
@@ -65,8 +82,12 @@
     {#if on}click a thing{/if}
     ...
     {#if tar}<Coning t="ev.target" C={tar} />{/if}
-    {#each recording as Rec (Rec.This.name) }
+    {#if D}
+        <Coning t="theD" C={D} />
+        <Con C={D} />
+    {/if}
+    <!-- {#each recording as Rec (Rec.This.name) }
         <Reco {Rec} />
-    {/each}
+    {/each} -->
     {#if fourg}<Coning t="look at g" C={fourg} noC=1 />{/if}
 </biggroup>
