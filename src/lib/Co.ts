@@ -19,7 +19,7 @@ import {C_,i_,o_,VA_ip,detect_type,inlace,TheC,TheA,o_up} from '$lib/St'
         # which may inform a default name:
         d.t ||= ['to','Con',...haks(d.I)].join(" ")
 
-        return inlacing_Con({...d,
+        $C = inlacing_Con({...d,
             each: function (s,d) {
                 # try to know, label s
                 toCon_newCont(d)
@@ -35,6 +35,11 @@ import {C_,i_,o_,VA_ip,detect_type,inlace,TheC,TheA,o_up} from '$lib/St'
                 # allow the upper Con//Con to assign ressurrecta with C&Cont
             },
         })
+
+        $g = d.I.sent_places
+        g and g.send_places()
+
+        return C
     }
     # same but isolated - some Con** update
     # < sip_dispatch compat. C.c.visit is not everything

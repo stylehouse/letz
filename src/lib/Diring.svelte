@@ -9,10 +9,13 @@
     import { G } from './G';
     
     export let C = C_('/',1,{pi:'Dir',rootdir:1})
-    $: G(2).send("Record",C,s => C = s)
+    let g = G(2)
+    g.haveC(C,s => C = s)
+    g.send("Record")
+
     let D
     async function ring() {
-        D = Construct({I:{Pi:1},s:C,D})
+        D = Construct({I:{Pi:1,sent_places:g},s:C,D})
     }
     let dumped
     async function dumpD() {

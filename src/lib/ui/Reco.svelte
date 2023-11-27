@@ -14,12 +14,12 @@
         dige = Reco.dige
     })
     let rec = () => Recollect(g,Rec,N)
-    rec()
+    $: rec(), Rec
     let b = {rec}
 </script>
 <h1>Reco</h1>
 <But {b} />
-<Coning t="Rec {Rec.This.name}" C={Rec.This.C} />
+<Coning t="Rec {Rec.This.name}" C={Rec.This.C} noC=2 />
 {#if dige}
     <pre>{dige}
 {string}</pre>

@@ -102,6 +102,7 @@ import {enL,deL,indents} from "$lib/Y/Text"
         $The = this
         # we have the last thing (as made into rec)
         $rec = ahsk(The,'received_g',This.name)
+        $again = rec && " again" || ""
 
         # svelte will chase this object being different
         #  and hopefully not eat stale This.C?
@@ -110,23 +111,20 @@ import {enL,deL,indents} from "$lib/Y/Text"
 
         #  when we show it a new array:
         # reactive list of Reco+
-        The.rerecord(
-            havs(The.received_g)
-        )
+        rec.wake()
 
         # they remember having sent this rec we made for them
         ahk(This,'sent_g',The.name,rec)
-        
-        
-
-
-        # # < GOING?
-        # # C not replaced yet it is given, look into it
-        # rec?.C == g.C and return rec.wake_slightly()
-        # # replace the Rec object
-        # rec = new TheRec(this,g)
-        # rec.wake()
+        console.log(The.name+" receive("+This.name+")"+again)
     }
+    # we may be called at the end of Construct()
+    send_places() {
+        $This = this
+        each name,rec This.sent_g {
+            rec.wake()
+        }
+    }
+
 
     # they define reactive callbacks for:
     # changing the C they started with
@@ -155,15 +153,10 @@ export class TheRec {
         await tick()
         # < now remote will be ready?
     }
+    # react list of Record/Reco+
     wake() {
-        # Record
-        $g = this.The
-        !g.rerecord and return console.warn("Record!g.rerecord")
-        console.log("Record wake")
-        # reactive list of Reco+
-        g.rerecord(
-            havs(g.received_g)
-        )
+        $The = this.The
+        The.rerecord(havs(The.received_g))
     }
 }
 
