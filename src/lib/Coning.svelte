@@ -6,7 +6,7 @@
     export let t = "Coning";
     // doesn't have to be C:
     export let C;
-    // C can look like data:
+    // can treat C like data:
     export let noC = 0;
     let D;
     function upto() {

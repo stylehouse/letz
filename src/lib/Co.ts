@@ -1,51 +1,40 @@
 // < comments that start with '<' are TODOs, except this one
-import {isst,isnu,isnum,isar,isspace,hak,havs,haks,ex} from '$lib/Y/Pic.ts'
+import {isst,isnu,isnum,isar,isspace,hak,havs,haks,ex,ahk,ahsk} from '$lib/Y/Pic.ts'
 import {C_,i_,o_,VA_ip,detect_type,inlace,TheC,TheA,o_up} from '$lib/St'
 
 // toCon a dumper for the A** tree
 
-  // the modes of inquiry, compute
-    # a weird use of I to define slightly different loop functions
+  // < the diversities of inquiry, compute
+    # was a weird use of I to define slightly different loop functions
     #  instead of being a pile of personality (library of software)
     #  that gets switched on by the inheritable personality of the A
-    # < make d.I=sc-that-inherits
-    const I_mind = {
-        In: function (d) {
-            return inlacing_Con({...d,
-                each: function (s,d) {
-                    # try to know s
-                    toCon_newSomething(d)
-                    # we have uncovered some id for parent's race for meaning (d.up.resolve())
-                    # < to "resolve $n" sets of Con//Con here, as an elegant A-ism
-                    # < how async+await might help this flow control schism?
-                    # allow the upper Con//Con to assign ressurrecta with C&Cont
-                },
-            })
-        },
-        Con: function (d) {
-            return inlacing_Con({...d,
-                each: function (s,d) {
-                    # try to know s
-                    toCon_newCont(d)
-                    # then Conz simply opens that
-                    # 
-                    # we have uncovered some id for parent's race for meaning (d.up.resolve())
-                    # < to "resolve $n" sets of Con//Con here, as an elegant A-ism
-                    # < how async+await might help this flow control schism?
-                    # allow the upper Con//Con to assign ressurrecta with C&Cont
-                },
-            })
-        }
-    }
+    # < use this to make embryos of systems involving several hooks into Con** time
+    const I_mind = {}
 
   // cast data into modes
     export function Construct(d) {
-        # default to data dumping
-        d.I ||= 'Con'
-        d.t ||= 'to'+d.I
-        # methods_of_inlacing_Con
-        let I = I_mind[d.I]
-        return I(d)
+        # base type Con, does data dumping
+        #  with inheritable hooks from:
+        d.I ||= {}
+        # which may inform a default name:
+        d.t ||= ['to','Con',...haks(d.I)].join(" ")
+
+        return inlacing_Con({...d,
+            each: function (s,d) {
+                # try to know, label s
+                toCon_newCont(d)
+
+                # be s, eg 
+                d.I.Pi and toCon_newSomething(d)
+
+                # then Conz simply opens that
+                # 
+                # we have uncovered some id for parent's race for meaning (d.up.resolve())
+                # < to "resolve $n" sets of Con//Con here, as an elegant A-ism
+                # < how async+await might help this flow control schism?
+                # allow the upper Con//Con to assign ressurrecta with C&Cont
+            },
+        })
     }
     # same but isolated - some Con** update
     # < sip_dispatch compat. C.c.visit is not everything
@@ -170,10 +159,10 @@ import {C_,i_,o_,VA_ip,detect_type,inlace,TheC,TheA,o_up} from '$lib/St'
         delete dd.cv
         delete dd.pretendtoplevel
         delete dd.D
-        d.z.push(dd)
+        dd.I = ex({},dd.I)
         dd.d++
-        let N = d.spawning ||= []
-        N.push(dd)
+        ahk(d,['z'],dd)
+        ahk(d,['spawning'],dd)
     }
     # spawning
     let inity_verbose = 0
@@ -465,9 +454,6 @@ import {C_,i_,o_,VA_ip,detect_type,inlace,TheC,TheA,o_up} from '$lib/St'
     }
     # new s-Con/s-$pi from s=C the instruction insphere
     function toCon_newSomething (d) {
-        # label
-        toCon_newCont(d)
-
         let s = d.s
         let Con = d.C
         # the Con.c.s = s** instructions!
@@ -521,7 +507,6 @@ import {C_,i_,o_,VA_ip,detect_type,inlace,TheC,TheA,o_up} from '$lib/St'
         let D = Con.y.D
         if (D && D.c.boost) Con.c.boost = D.c.boost
 
-        # trusted s may not have any typ
         let typ = d.typ
         !typ and debugger
         let Cish = typ ? typ.Cish : Con.c.Cishsz

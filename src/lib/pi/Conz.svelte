@@ -1,6 +1,8 @@
 
+<svelte:options accessors/>
 <script lang="ts">
 	import { slide } from 'svelte/transition'
+    import {hak,uniq,map}  from '$lib/Y/Pic'
     import {o_}  from '$lib/St'
     import {sip_wiree}  from '$lib/Co'
     import Con from '$lib/pi/Con.svelte'
@@ -13,6 +15,8 @@
     let nodules
     function upto() {
         nodules = o_(C)
+        let nameclash = hak(uniq(map(n => n.t, nodules))) != hak(nodules)
+        if (nameclash) debugger
     }
     $: upto(C)
 </script>

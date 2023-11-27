@@ -12,7 +12,7 @@
     $: G(2).haveC("Record",C,s => C = s)
     let D
     async function ring() {
-        D = Construct({I:'In',s:C,D})
+        D = Construct({I:{Pi:1},s:C,D})
     }
     let dumped
     async function dumpD() {
