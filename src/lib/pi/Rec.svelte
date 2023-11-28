@@ -40,13 +40,12 @@
     g.o((Reco) => {
         string = Reco.string
         dige = Reco.dige
-        // a state -> guest%*
-        ex(s.sc,{string,dige})
-        //s.c.░ = dige
         N = N
-        // guest now -> downstream
-        console.log("g.o:"+dir)
-        s.c.The?.guest_done(s)
+
+        let The = g.slope[3]
+        let sect = path[1].t
+        // a state -> guest%*
+        The.o_done(sect,Reco,s)
     })
     let rec = () => real && Recollect(g,s,N)
     $: rec(), s
@@ -58,10 +57,12 @@
 </script>
 
 
-{#if real}<But {b} />
+{#if real}
+    <But {b} />
     {#if extras}+{extras} more{/if}
     <!-- <Coning t="guest" C={s} noC=2 /> -->
 {/if}
+{#if s.sc['░']}link somewhere{/if}
 {#if dige}
     <pre>{dige}
 {string}</pre>

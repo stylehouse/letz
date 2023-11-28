@@ -2,7 +2,7 @@
 import type { SvelteComponent } from 'svelte';
 import { get_current_component, tick, setContext,getContext } from 'svelte/internal';
 
-import { ac, ahsk,ahk,havs, dig, sha256,ex,now } from "$lib/Y/Pic.ts"
+import { ac, ahsk,ahk,hak,havs, dig, sha256,ex,now,grep,grop } from "$lib/Y/Pic.ts"
 import { pit,C_,i_,o_,pito,o_path,inlace } from "$lib/St"
 import {enL,deL,indents} from "$lib/Y/Text"
 
@@ -87,63 +87,21 @@ import {enL,deL,indents} from "$lib/Y/Text"
     # we give things to others
     # eg Diring C -> Record
     send(name,C,setC) {
+        this.notlive and return console.log("G.send while not live: "+this.name)
         $g = this.find_name(name)
         !g and debugger; return
-        g.receive(this)
-    }
-    # we host those things
-    #  using TheRec per thing, which we list to you via your g.rerecord handler
-    # < resolve $n each This properly
-    #   one thing per g.name atm
-    # Record <- Diring C
-    receive(This) {
-        # naming the two TheG The|This as the usual outsphere|insphere dualism
-        #  The being more permanent (eg Record having saved stuff)
-        $The = this
 
-        # < modular intro, we know a lot about Record here
-        # Record:C/in-Rec:host/Diring-Rec:guest
-        $C = The.C
-        $host = pito(The.C,'in','-Rec')
-        $guest = pito(host,This.name,'-Rec')
-        # download new? This
-        ex(guest.c,{The,This})
-        # tell someone
-        $wake = guesty&wake || Cy&wake
-        !wake and debugger
-        wake()
-        
-        $again = guesty&wake ? " again" : ""
-        # they remember having sent this guest we made for them
+        # Record hosts us
+        $guest = g.receive(this)
+        !guest and debugger
+        # Diring remember the guest Record made for them
         #  see also Dome / &etos_6
-        ahk(This,'sent_guest',The.name,guest)
-        console.log(The.name+" receive("+This.name+")"+again)
-    }
-    # Record/out/#$s <- Record/in/$s:guest
-    async transceive(s) {
-        $The = this
+        ahk(this,'sent_guest',g.name,guest)
 
-        $C = The.C
-        # out/* will be real
-        #  it will Lines Record/guest%%links, nice and easy
-        $host = pito(The.C,'out','-Rec',{real:1})
-        # the guest, without enough .c to be real
-        $guest = pito(host,s.t,'-Rec')
-
-        #  sits there with these links
-        guesty&be = s
-        ex(guest.sc,s.sc)
-        delete guests&string
-
-        # it happens up here
-        $wake = hosty&wake || Cy&wake
-        !wake and debugger
-        
-        $again = guesty&wake ? " again" : ""
-        console.log(The.name+" transceive("+s.t+")"+again)
-
-        #await tick()
-        wake()
+        # diag
+        #  they get y&wake once in a Rec.svelte
+        let again = guest.y.wake ? " again" : ""
+        console.log(name+" receive("+this.name+")"+again)
     }
     # we may be called at the end of Construct()
     send_places() {
@@ -211,6 +169,28 @@ import {enL,deL,indents} from "$lib/Y/Text"
     }
 
 
+# deletes history
+# < shrinking ooze
+#   
+export function cull_around(s) {
+    hak(ss&z) < 10 and return
+    # we have many moments of "out"
+    $cull = ss&z
+    # keep any commits we made
+    # < commit when we type into any of the Record** things
+    # < folding it all up into a book after a while, %we and all
+    cull = cull.filter(n => !ns&we)
+    # < keep definitive moments in time
+    #    ie before and after a bunch of stuff changed
+    #     aggregating many rapid moments of stuff changing
+    # < content-awareness is now all over there in Reco pools
+    cull.pop()
+    cull.shift()
+    grop((s,i) => i%2,cull)
+    
+    !hak(cull) and debugger
+    grop(cull,ss&z)
+}
 
 
 export function locate_ev(ev) {

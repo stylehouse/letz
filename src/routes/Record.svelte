@@ -1,11 +1,11 @@
 <script lang="ts">
     import Coning from "$lib/Coning.svelte";
-    import { G} from "$lib/G";
+    import {G,cull_around} from "$lib/G";
     import But from "$lib/ui/But.svelte";
     import Con from "$lib/pi/Con.svelte"
     import { Construct } from '$lib/Co'
-    import { C_ } from '$lib/St'
-    import { havs,dig, sha256 } from '$lib/Y/Pic'
+    import { C_,pito } from '$lib/St'
+    import { ac, ahsk,ahk,havs, dig, sha256,sex,ex,now } from "$lib/Y/Pic.ts"
 
 
     import { getContext, get_current_component, onDestroy, onMount, setContext, tick } from 'svelte/internal';
@@ -15,11 +15,77 @@
     // which fills this out:
     export let C = C_('Record',1,{pi:'Rec'})
     g.haveC(C,s => C = s)
-    $: C.y.wake = async () => { await tick(); ring() }
-    
-    g.guest_done = (s) => {
-        g.transceive(s)
+    // < resolve $n each This properly
+    //   one thing per g.name atm
+    // Record <- Diring C
+    g.receive = (This) => {
+        // Record/in-Rec:host/Diring-Rec:guest
+        let host = pito(C,'in','-Rec')
+        let guest = pito(host,This.name,'-Rec')
+
+        // download
+        ex(guest.c,{The:g,This})
+
+        // tell someone
+        let wake = guest.y.wake || C.y.wake
+        wake()
+
+        return guest
     }
+    let Recolink = (guest,Reco,s) => {
+        guest.y.be = s
+        guest.sc['░'] = Reco.dige
+        guest.y.string = Reco.string
+    }
+    g.o_done = async (sect,Reco,s) => {
+        // tax(s.sc,{string,dige})
+        //s.c.░ = dige
+        console.log("g.o "+sect+": "+s.t)
+
+        if (sect == 'in') {
+            // Record /in/$s:guest -> /out/#$s
+
+            // out/ will be real
+            //  it will Lines Record/guest%%links
+            let host = pito(C,'out','-Rec',{real:1})
+            // the guest, without enough .c to be real
+            let guest = pito(host,s.t,'-Rec')
+
+            //  sits there with these links
+            Recolink(guest,Reco,s)
+
+            // it happens up here
+            let wake = host.y.wake || C.y.wake
+            
+            let again = guest.y.wake ? " again" : ""
+            console.log(g.name+" transceive("+s.t+")"+again)
+
+            //await tick()
+            wake()
+        }
+        else if (sect == 'out') {
+            // Record /out/#$s -> /around/#@out
+
+            let host = pito(C,'around','-Rec',{real:1,around:1})
+            // pools like N[Reco]
+            // < shrinking ooze effect
+            cull_around(host)
+            
+            let i = host.c.around++
+            // the guest, without enough .c to be real
+            let guest = pito(host,s.t+" "+i,'-Rec')
+            //  sits there with these links
+            Recolink(guest,Reco,s)
+
+
+
+            console.log(g.name+" NEXT("+s.t+")",{guest,Reco,s})
+            let wake = host.y.wake || C.y.wake
+            wake()
+        }
+        // guest now -> downstream
+    }
+    $: C.y.wake = async () => { await tick(); ring() }
     
     // bloop!!
     let D
