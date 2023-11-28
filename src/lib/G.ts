@@ -10,11 +10,29 @@ import {enL,deL,indents} from "$lib/Y/Text"
     export function G(t, co) {
         co ||= get_current_component()
         $g = co.G
+        
+        # failed permanence.
+        # < having Record take its C from something else we can keep across HMR...
+        #   it should pull...
         if (g) {
             console.log("rediscovered G:"+g.name)
             g.co != co and debugger
             g.embedSlope()
             return g
+        }
+        else {
+            $fo = getContext('G:4')
+            $g = fo && fo.t_G && fo.t_G[co.constructor.name]
+            if (g && 0) {
+                # < possibly if we can g.i(g.C) them in a moment...
+                #   strange. breaks.
+                console.log("Re G:"+g.name)
+                #g.co != co and debugger
+                g.co = co
+                g.embedSlope()
+                return g
+            }
+            
         }
         
         g = new TheG(t, co);
