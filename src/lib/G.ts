@@ -2,7 +2,7 @@
 import type { SvelteComponent } from 'svelte';
 import { get_current_component, tick, setContext,getContext } from 'svelte/internal';
 
-import { ac, ahsk,ahk,havs, dig, sha256,ex } from "$lib/Y/Pic.ts"
+import { ac, ahsk,ahk,havs, dig, sha256,ex,now } from "$lib/Y/Pic.ts"
 import { pit,C_,i_,o_,pito,o_path,inlace } from "$lib/St"
 import {enL,deL,indents} from "$lib/Y/Text"
 
@@ -125,6 +125,9 @@ import {enL,deL,indents} from "$lib/Y/Text"
         each name,guest This.sent_guest {
             let wake = guesty&wake
             wake and wake()
+            else {
+                console.info("No wake at send_places "+This.name)
+            }
         }
     }
 
@@ -141,55 +144,46 @@ import {enL,deL,indents} from "$lib/Y/Text"
 
 }
 
-# a candidacy for recording sent to Record from somewhere
-export class TheRec {
-    constructor(The,This) {
-        # Record, the stored end
-        this.The = The
-        # Diring, the wild end
-        this.This = This
+# Recollect Reco <- guest ...
+    # Rec.svelte given Record/in/$guest-Rec
+    export async function Recollect(g,guest,N) {
+        $This = guestc&This
+        $C = This.C
+        # always encode the latest thing (working dir state -> staging)
+        $Reco = await mkReco(C)
+        # pool it in N[Reco], picking one to be
+        Reco = electReco(guest,N,Reco)
+        # < put Rec
+
+        console.log("To show!")
+        g.output_to(Reco)
     }
 
-    # react to a C coming in
-    async wake_slightly() {
-        # a remote has shared a C (repeatedly)
-        await tick()
-        # < now remote will be ready?
+    async function mkReco(C) {
+        $string = inlace(C,{
+            grab: (C,d) => indents(d.d*2,enL(C),'notailnl'),
+        }).join("\n")
+
+        $dige = await sha256(string)
+
+        $Reco = {string,dige}
+        return Reco
     }
-    # react list of Record/Reco+
-    wake() {
-        $The = this.The
-        The.rerecord(havs(The.received_g))
+    function electReco(guest,N,Reco) {
+        # staging and recent states pool in N[Reco]
+        # < guest says it wants something else reset to, for undo
+        #    git work via guest, who might show all Reco?
+        #    they want naming intelligently wrt the diff, enclosing headings etc...
+        if (N[0] && N[0].dige == Reco.dige) {
+            # same, recycle object
+            Reco = N[0]
+        }
+        else {
+            Reco.time = now()
+            N.push(Reco)
+        }
+        return Reco
     }
-}
-
-# Reco.svelte given Rec, to pool N[Reco]
-# we always encode the latest thing...
-export async function Recollect(g,Rec,N) {
-    $co = g.co
-    
-    $string = inlace(Rec.This.C,{
-        grab: (C,d) => indents(d.d*2,enL(C),'notailnl'),
-    }).join("\n")
-
-    $dige = await sha256(string)
-
-    $Reco = {string,dige}
-    
-    if (N[0] && N[0].dige == Reco.dige) {
-        # no different to last staged (encoded) thing
-    }
-    else {
-        N.push(Reco)
-    }
-
-    console.log("To show!")
-    g.output_to(Reco)
-}
-
-
-
-
 
 
 

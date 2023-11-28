@@ -298,12 +298,13 @@ import {isst,isnu,isnum,isar,isspace,hak,havs,haks,ex,theone,grep,map} from '$li
             let climbs = d.climb(C,d) .filter(D => D)
             if (d.climbs && climbs.length) d.climbs(C,d,climbs)
             if (d.not) break
-            climbs .filter(D => {
-                if (!D) return
+
+            each iD climbs {
+                !D and return
                 # recurse to C/D+
                 let zN = inlace(D,d)
                 dN_from_middle(d, zN)
-            })
+            }
 
             break
         }

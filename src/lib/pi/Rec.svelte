@@ -1,0 +1,61 @@
+<script>
+    import { createEventDispatcher, onMount } from 'svelte'
+    import { hak } from "$lib/Y/Pic"
+    import { pit,o_up } from "$lib/St"
+    import { Construct } from "$lib/Co"
+    import { G,Recollect } from "$lib/G";
+    import But from "$lib/ui/But.svelte";
+    import Coning from "$lib/Coning.svelte";
+	const dispatch = createEventDispatcher();
+    // Reco we know about, eg from a remote. changes slower than Rec.
+    let N = []
+    let g = G(1)
+
+    // we are in a -Con(s)/-Rec:C
+    export let C
+    let Con = C.y.up
+    // aka guest
+    let s = Con.c.s
+    if (!s.c.pi == 'Rec') throw "!Rec"
+    // however, some -Rec are just folders...
+    // < invent a new pi, not needing a .svelte file - define it in mind.pi.such?
+    let real = s.c.This && 1
+
+    let path = o_up(s,{until: (s) => s.c.pi != 'Rec',inc:1}).reverse()
+    let dir = path.map(s => s.t).join("/")
+    
+
+    s.y.wake = () => {
+        console.log("guest wake(): "+s.t)
+        dispatch('reCon')
+        s = s
+    }
+
+    let string = ''
+    let dige
+
+    
+    g.o((Reco) => {
+        string = Reco.string
+        dige = Reco.dige
+        N = N
+    })
+    let rec = () => real && Recollect(g,s,N)
+    $: rec(), s
+
+    let extras
+    $: extras = hak(N) > 1 && hak(N)-1
+
+    let b = {rec}
+</script>
+
+
+{#if real}<But {b} />
+    {#if extras}+{extras} more{/if}
+    <!-- <Coning t="staging pool" C={N} noC=2 /> -->
+    <h4>dir:{dir}</h4>
+{/if}
+{#if dige}
+    <pre>{dige}
+{string}</pre>
+{/if}

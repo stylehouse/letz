@@ -1,7 +1,6 @@
 <script lang="ts">
     import Coning from "$lib/Coning.svelte";
-    import Reco from "$lib/ui/Reco.svelte";
-    import { G,locate_ev } from "$lib/G";
+    import { G } from "$lib/G";
     import But from "$lib/ui/But.svelte";
     import Con from "$lib/pi/Con.svelte"
     import { Construct } from '$lib/Co'
@@ -18,9 +17,10 @@
     g.haveC(C,s => C = s)
     $: C.y.wake = async () => { await tick(); ring() }
     
+    // bloop!!
     let D
     async function ring() {
-        D = Construct({I:{Pi:0},s:C,D})
+        D = Construct({I:{Pi:1},s:C,D})
         // < pipe into step 2
     }
     onMount(() => {
@@ -86,8 +86,5 @@
         <Coning t="theD" C={D} />
         <Con C={D} />
     {/if}
-    <!-- {#each recording as Rec (Rec.This.name) }
-        <Reco {Rec} />
-    {/each} -->
     {#if fourg}<Coning t="look at g" C={fourg} noC=1 />{/if}
 </biggroup>
