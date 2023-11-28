@@ -1,6 +1,6 @@
 <script lang="ts">
     import Coning from "$lib/Coning.svelte";
-    import { G } from "$lib/G";
+    import { G} from "$lib/G";
     import But from "$lib/ui/But.svelte";
     import Con from "$lib/pi/Con.svelte"
     import { Construct } from '$lib/Co'
@@ -16,6 +16,10 @@
     export let C = C_('Record',1,{pi:'Rec'})
     g.haveC(C,s => C = s)
     $: C.y.wake = async () => { await tick(); ring() }
+    
+    g.guest_done = (s) => {
+        g.transceive(s)
+    }
     
     // bloop!!
     let D

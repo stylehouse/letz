@@ -119,6 +119,32 @@ import {enL,deL,indents} from "$lib/Y/Text"
         ahk(This,'sent_guest',The.name,guest)
         console.log(The.name+" receive("+This.name+")"+again)
     }
+    # Record/out/#$s <- Record/in/$s:guest
+    async transceive(s) {
+        $The = this
+
+        $C = The.C
+        # out/* will be real
+        #  it will Lines Record/guest%%links, nice and easy
+        $host = pito(The.C,'out','-Rec',{real:1})
+        # the guest, without enough .c to be real
+        $guest = pito(host,s.t,'-Rec')
+
+        #  sits there with these links
+        guesty&be = s
+        ex(guest.sc,s.sc)
+        delete guests&string
+
+        # it happens up here
+        $wake = hosty&wake || Cy&wake
+        !wake and debugger
+        
+        $again = guesty&wake ? " again" : ""
+        console.log(The.name+" transceive("+s.t+")"+again)
+
+        #await tick()
+        wake()
+    }
     # we may be called at the end of Construct()
     send_places() {
         $This = this
@@ -148,14 +174,13 @@ import {enL,deL,indents} from "$lib/Y/Text"
     # Rec.svelte given Record/in/$guest-Rec
     export async function Recollect(g,guest,N) {
         $This = guestc&This
-        $C = This.C
+        $C = This?.C || guest
         # always encode the latest thing (working dir state -> staging)
         $Reco = await mkReco(C)
-        # pool it in N[Reco], picking one to be
+        # pool it in N[Reco], picking one to be now
         Reco = electReco(guest,N,Reco)
-        # < put Rec
 
-        console.log("To show!")
+
         g.output_to(Reco)
     }
 
