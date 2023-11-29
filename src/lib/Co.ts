@@ -36,6 +36,9 @@ import {C_,i_,o_,VA_ip,detect_type,inlace,TheC,TheA,o_up} from '$lib/St'
             },
         })
 
+        # originating G sends again, in case of news
+        # < trust versioning done in here.
+        #   atm it is the basic el=1|9 of C**, not their properties
         $g = d.I.sent_places
         g and g.send_places()
 
@@ -528,7 +531,7 @@ import {C_,i_,o_,VA_ip,detect_type,inlace,TheC,TheA,o_up} from '$lib/St'
         let Conz = d.partor('Conz')
 
         let nodules = []
-        let N = typ.iter || d.noC ? s
+        let N = typ.iter || d.I.noC ? s
             : Cish ? o_(s)
             : []
         for (let [t,s] of Object.entries(N)) {

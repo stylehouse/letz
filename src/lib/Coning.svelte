@@ -10,7 +10,7 @@
     export let noC = 0;
     let D;
     function upto() {
-        D = Construct({ t: t, s: C, D, noC });
+        D = Construct({ t: t, s: C, D, I:{noC} });
     }
     function ring() {}
 
