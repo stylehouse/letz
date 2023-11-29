@@ -22,6 +22,12 @@
     // however, some -Rec are just folders...
     // < invent a new pi, not needing a .svelte file - define it in mind.pi.such?
     let real = s.c.real || s.c.This && 1
+    // this is a bunch of commits:
+    let slook
+    if (s.c.around) {
+        // hi
+        slook = 1
+    }
 
     let path = o_up(s,{until: (s) => s.c.pi != 'Rec',inc:1}).reverse()
     let dir = path.map(s => s.t).join("/")
@@ -60,7 +66,7 @@
 {#if real}
     <But {b} />
     {#if extras}+{extras} more{/if}
-    <!-- <Coning t="guest" C={s} noC=2 /> -->
+    {#if slook}<Coning t="guest" C={s} noC=2 />{/if}
 {/if}
 {#if s.sc['░']}link somewhere{/if}
 {#if dige}

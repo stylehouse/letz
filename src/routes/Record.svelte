@@ -67,17 +67,20 @@
             // Record /out/#$s -> /around/#@out
 
             let host = pito(C,'around','-Rec',{real:1,around:1})
-            // pools like N[Reco]
-            // < shrinking ooze effect
-            cull_around(host)
             
             let i = host.c.around++
-            // the guest, without enough .c to be real
+            // picture of out (which is really Record)
             let guest = pito(host,s.t+" "+i,'-Rec')
             //  sits there with these links
             Recolink(guest,Reco,s)
+            //  also the time
+            guest.sc.time = now()
 
 
+            // host/#out:guest+ pool like N[Reco+]
+            //  we also have N[Reco+] from encoding host/**
+            // < shrinking ooze effect
+            cull_around(host)
 
             console.log(g.name+" NEXT("+s.t+")",{guest,Reco,s})
             let wake = host.y.wake || C.y.wake
