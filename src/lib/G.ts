@@ -185,8 +185,14 @@ import {enL,deL,indents} from "$lib/Y/Text"
         }
         return Reco
     }
+    
+    export function Recolink_stillness(host,Reco) {
+        $la = o_(host).slice(-1)[0]
+        return la?.sc['░'] == Reco.dige
+    }
 
-    # look back through around:s/**
+# Aroundiness
+    # a picture looking back through around:s/**
     # < when to make sure everything is stored
     export function Aroundiness(s) {
         # tumble down s/* and sy&be=s@origin

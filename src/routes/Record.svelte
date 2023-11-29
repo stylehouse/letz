@@ -1,6 +1,6 @@
 <script lang="ts">
     import Coning from "$lib/Coning.svelte";
-    import {G,cull_around} from "$lib/G";
+    import {G,cull_around,Recolink_stillness} from "$lib/G";
     import But from "$lib/ui/But.svelte";
     import Con from "$lib/pi/Con.svelte"
     import { Construct } from '$lib/Co'
@@ -56,18 +56,14 @@
 
             // it happens up here
             let wake = host.y.wake || C.y.wake
-            
-            let again = guest.y.wake ? " again" : ""
-            console.log(g.name+" transceive("+s.t+")"+again)
-
-            //await tick()
             wake()
         }
         else if (sect == 'out') {
             // Record /out/#$s -> /around/#@out
 
             let host = pito(C,'around','-Rec',{real:1,around:1})
-            
+            if (Recolink_stillness(host,Reco)) return
+
             let i = host.c.around++
             // picture of out (which is really Record)
             let guest = pito(host,s.t+" "+i,'-Rec')
@@ -82,7 +78,6 @@
             // < shrinking ooze effect
             cull_around(host)
 
-            console.log(g.name+" NEXT("+s.t+")",{guest,Reco,s})
             let wake = host.y.wake || C.y.wake
             wake()
         }
@@ -90,7 +85,8 @@
             // Record /around -> /been/#@out
             // finally we stop encoding and just store the tree of stuff
 
-            let host = pito(C,'been','-Rec',{real:1,been:1})
+            let host = pito(C,'been','-Rec',{been:1})
+            if (Recolink_stillness(host,Reco)) return
             
             let i = host.c.been++
             // picture of out (which is really Record)
@@ -106,9 +102,10 @@
             // < shrinking ooze effect
             cull_around(host)
 
-            console.log(g.name+" NEXT("+s.t+")",{guest,Reco,s})
             let wake = host.y.wake || C.y.wake
             wake()
+        }
+        else if (sect == 'been') {
         }
         else {
             console.info("Unhandled Record o_done: "+sect)

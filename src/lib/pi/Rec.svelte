@@ -36,7 +36,6 @@
     
 
     s.y.wake = () => {
-        console.log("guest wake(): "+dir)
         dispatch('reCon')
         s = s
     }
@@ -68,8 +67,9 @@
 {#if real}
     <But {b} />
     {#if extras}+{extras} more{/if}
-    {#if slook}<Coning t="guest" C={slook} noC=2 />{/if}
 {/if}
+{#if slook}<Coning t="guest" C={slook} noC=2 />{/if}
+
 {#if s.sc['░']}ipfslink{/if}
 {#if dige}
     <pre>{dige}

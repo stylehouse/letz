@@ -94,7 +94,6 @@
             <Savable C={save} t='Codestate' {resume}/>
         </span>
         <Record />
-        <Diring />
     </div>
     <div>
         <BigGroup>
@@ -109,6 +108,7 @@
 </div>
 
 <div class="mi" style="left:{sizer}%;width:{100-sizer}%;">
+        <Diring />
         {#if graph} 
             <BigGroup>
                 <Graph {graph} />
