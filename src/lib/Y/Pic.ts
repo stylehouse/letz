@@ -327,7 +327,7 @@ let window = self
         # < variations for
         !isob(c) and c = {aft:c,inc:1}
         $it = c.aft||c.bow
-        if (iskeyish(it)){
+        if (iske(it)){
             $ki = (isar(s) ? s : keys).indexOf(it)
         }
         else {
@@ -746,7 +746,7 @@ let window = self
             c && args.length < 1 and throw "odd hashkv"
             $v = args.shift()
             c ||= {}
-            !iskeyish(k) and debugger
+            !iske(k) and debugger
             c[k] = v 
         }
         return c || {}
@@ -1016,7 +1016,7 @@ let window = self
     # text only
     $tex = &sc{
         each kv c {
-            iskeyish(v) and s [k] = c[k]
+            iske(v) and s [k] = c[k]
         }
         return s
     }

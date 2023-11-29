@@ -2,8 +2,8 @@
 import type { SvelteComponent } from 'svelte';
 import { get_current_component, tick, setContext,getContext } from 'svelte/internal';
 
-import { ac, ahsk,ahk,hak,havs, dig, sha256,ex,now,grep,grop } from "$lib/Y/Pic.ts"
-import { pit,C_,i_,o_,pito,o_path,inlace } from "$lib/St"
+import { ac, ahsk,ahk,hak,havs, dig, sha256,ex,now,grep,grop,sum,hashkv } from "$lib/Y/Pic.ts"
+import { pit,C_,i_,o_,pito,o_path,o_up,inlace } from "$lib/St"
 import {enL,deL,indents} from "$lib/Y/Text"
 
 # *.svelte do: g = G()
@@ -186,29 +186,60 @@ import {enL,deL,indents} from "$lib/Y/Text"
         return Reco
     }
 
+    # look back through around:s/**
+    # < when to make sure everything is stored
+    export function Aroundiness(s) {
+        # tumble down s/* and sy&be=s@origin
+        #  looking back through the i ... that advanced it
+        $N = inlace(s,{
+            # include the first node, s|around
+            inc:1,
+            climb: &sd{
+                # they sy&be=s@origin and 
+                $linkish = sum(sy&be && 1, s.sc['░'] && 1)
+                $z = o_(s)
+                if (linkish) {
+                    hak(z) and debugger
+                    # go to its origin
+                    return [sy&be]
+                }
+                # This ends our link trail
+                sc&This and return []
+                # nothing but links and lists of links
+                !hak(z) and debugger
+                # select only the latest /around/*
+                z = [z.pop()]
+                return z
+            }
+        })
+        $by_path = hashkv(N.map(s => [o_up(s).reverse().map(s => s.t).join("/"), s]))
+        hak(by_path) != hak(N) and debugger
+        return by_path
+    }
 
-# deletes history
-# < shrinking ooze
-#   
-export function cull_around(s) {
-    hak(ss&z) < 10 and return
-    # we have many moments of "out"
-    $cull = ss&z
-    # keep any commits we made
-    # < commit when we type into any of the Record** things
-    # < folding it all up into a book after a while, %we and all
-    cull = cull.filter(n => !ns&we)
-    # < keep definitive moments in time
-    #    ie before and after a bunch of stuff changed
-    #     aggregating many rapid moments of stuff changing
-    # < content-awareness is now all over there in Reco pools
-    cull.pop()
-    cull.shift()
-    grop((s,i) => i%2,cull)
-    
-    !hak(cull) and debugger
-    grop(cull,ss&z)
-}
+
+    # deletes history
+    # < shrinking ooze
+    #   
+    export function cull_around(s) {
+        hak(ss&z) < 10 and return
+        # we have many moments of "out"
+        $cull = ss&z
+        # keep any commits we made
+        # < commit when we type into any of the Record** things
+        # < folding it all up into a book after a while, %we and all
+        cull = cull.filter(n => !ns&we)
+        # < keep definitive moments in time
+        #    ie before and after a bunch of stuff changed
+        #     aggregating many rapid moments of stuff changing
+        # < content-awareness is now all over there in Reco pools
+        cull.pop()
+        cull.shift()
+        grop((s,i) => i%2,cull)
+        
+        !hak(cull) and debugger
+        grop(cull,ss&z)
+    }
 
 
 export function locate_ev(ev) {

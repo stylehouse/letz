@@ -86,6 +86,33 @@
             let wake = host.y.wake || C.y.wake
             wake()
         }
+        else if (sect == 'around') {
+            // Record /around -> /been/#@out
+            // finally we stop encoding and just store the tree of stuff
+
+            let host = pito(C,'been','-Rec',{real:1,been:1})
+            
+            let i = host.c.been++
+            // picture of out (which is really Record)
+            let guest = pito(host,s.t+" "+i,'-Rec')
+            //  sits there with these links
+            Recolink(guest,Reco,s)
+            //  also the time
+            guest.sc.time = now()
+
+
+            // host/#out:guest+ pool like N[Reco+]
+            //  we also have N[Reco+] from encoding host/**
+            // < shrinking ooze effect
+            cull_around(host)
+
+            console.log(g.name+" NEXT("+s.t+")",{guest,Reco,s})
+            let wake = host.y.wake || C.y.wake
+            wake()
+        }
+        else {
+            console.info("Unhandled Record o_done: "+sect)
+        }
         // guest now -> downstream
     }
     $: C.y.wake = async () => { await tick(); ring() }

@@ -3,7 +3,7 @@
     import { hak,ex } from "$lib/Y/Pic"
     import { pit,o_up } from "$lib/St"
     import { Construct } from "$lib/Co"
-    import { G,Recollect } from "$lib/G";
+    import { G,Recollect,Aroundiness } from "$lib/G";
     import But from "$lib/ui/But.svelte";
     import Coning from "$lib/Coning.svelte";
 	const dispatch = createEventDispatcher();
@@ -22,12 +22,14 @@
     // however, some -Rec are just folders...
     // < invent a new pi, not needing a .svelte file - define it in mind.pi.such?
     let real = s.c.real || s.c.This && 1
-    // this is a bunch of commits:
+    // this is a bunch of bunches of commits
     let slook
-    if (s.c.around) {
-        // hi
-        slook = 1
+    let slo = () => {
+        if (s.c.been) {
+            slook = Aroundiness(s)
+        }
     }
+    $: slo(), s
 
     let path = o_up(s,{until: (s) => s.c.pi != 'Rec',inc:1}).reverse()
     let dir = path.map(s => s.t).join("/")
@@ -66,9 +68,9 @@
 {#if real}
     <But {b} />
     {#if extras}+{extras} more{/if}
-    {#if slook}<Coning t="guest" C={s} noC=2 />{/if}
+    {#if slook}<Coning t="guest" C={slook} noC=2 />{/if}
 {/if}
-{#if s.sc['░']}link somewhere{/if}
+{#if s.sc['░']}ipfslink{/if}
 {#if dige}
     <pre>{dige}
 {string}</pre>
