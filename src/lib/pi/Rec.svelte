@@ -24,9 +24,9 @@
     let real = s.c.real || s.c.This && 1
     // this is a bunch of bunches of commits
     let slook
-    let slo = () => {
+    let slo = async () => {
         if (s.c.been) {
-            slook = Aroundiness(s)
+            slook = await Aroundiness(s)
         }
     }
     $: slo(), s

@@ -213,7 +213,7 @@ import {enL,deL,indents} from "$lib/Y/Text"
                     # by the time we fine this, s should be stored anyway
                     #  the schema has that ipfs_in joint
                     $dige = dependant.sc['░']
-                    deps_by_dige[dige] = s
+                    ahk(deps_by_dige,[dige],s)
                 }
             },
             climbs: &sdN{
@@ -227,7 +227,7 @@ import {enL,deL,indents} from "$lib/Y/Text"
         Around_layers(layers,deps_by_dige)
 
         $by_path = map(N => hashkv(N.map(s => [slupath(s), s])), layers)
-        return layers
+        return {deps_by_dige,layers}
     }
     function slupath(s,d) {
         # < d.til?
@@ -239,7 +239,6 @@ import {enL,deL,indents} from "$lib/Y/Text"
             $waits = map(s => upload_to_ipfs(s,deps_by_dige), N)
             await Promise.all(waits)
             # < handling errors?
-            debugger
         }
     }
 
@@ -291,7 +290,7 @@ import {enL,deL,indents} from "$lib/Y/Text"
             $ready = []
             $diges = []
             $unready = grep(z => {
-                $zto = sy&store
+                $zto = zy&store
                 if (zto && ztos&ok) {
                     ready.push(zto)
                     diges.push(ztos&dige)
@@ -306,9 +305,9 @@ import {enL,deL,indents} from "$lib/Y/Text"
             para.z = diges
         }
 
-        console.log("upload_to_ipfs: ",para)
+        # console.log("upload_to_ipfs: ",para)
         para.body = stos&string
-        $tar = store_send(para,s,sto)
+        await store_send(para,s,sto)
     }
     function store_init(s) {
         $sto = sy&store ||= C_('store '+s.t)
@@ -332,12 +331,23 @@ import {enL,deL,indents} from "$lib/Y/Text"
         #  < testable calls to ipfs|sessionStorage
         $body = delete para.body
         let params = new URLSearchParams(para);
+
         let res = await fetch(
             `/ipfs?${params.toString()}`,
             {method:'POST',body}
         )
-        $tar = await res.text()
-        return tar
+
+        if (res.ok) {
+            delete stos&errors
+            stos&ok = 1
+        }
+        else {
+            ahk(sto.sc,['errors'],res);
+            debugger
+            # < make this not Construct
+            #  < eventually a s<->G binding
+            sy&wake()
+        }
     }
 
 
