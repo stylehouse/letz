@@ -22,21 +22,30 @@
     // however, some -Rec are just folders...
     // < invent a new pi, not needing a .svelte file - define it in mind.pi.such?
     let real = s.c.real || s.c.This && 1
-    // this is a bunch of bunches of commits
     let slook
+    let errors
+    let ok
     let slo = async () => {
         if (s.c.been) {
+            // this makes a bunch of bunches of commits
             slook = await Aroundiness(s)
+        }
+        // things get this as they are stored
+        let sto = s.y.store
+        if (sto) {
+            if (sto.sc.errors) errors = sto.sc.errors
+            if (sto.sc.ok) ok = 1
         }
     }
     $: slo(), s
+    
 
     let path = o_up(s,{until: (s) => s.c.pi != 'Rec',inc:1}).reverse()
     let dir = path.map(s => s.t).join("/")
     
 
-    s.y.wake = () => {
-        dispatch('reCon')
+    s.y.wake = (know) => {
+        know || dispatch('reCon')
         s = s
     }
 
@@ -71,13 +80,24 @@
     {#if extras}+{extras} more{/if}
 {/if}
 
-{#if slook}
-    <Coning t="guest" C={slook} noC=2 />
-{/if}
-
 {#if s.sc['░']}ipfslink{/if}
+{#if errors}
+    <span class="ok">Errors:</span>
+        <Coning t="guest" C={errors} noC=2 />
+{/if}
+{#if ok}<span class="ok">OK</span>{/if}
+
 {#if dige}
     <span on:click={togstring}>{ dige.slice(0,12) }</span>
     
     {#if showstring}<pre>{string}</pre>{/if}
 {/if}
+
+{#if slook}
+    <Coning t="guest" C={slook} noC=2 />
+{/if}
+
+<style>
+    .ok { color: green }
+    .error { color: red }
+</style>

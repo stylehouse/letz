@@ -1,6 +1,6 @@
 <script lang="ts">
     import Coning from "$lib/Coning.svelte";
-    import {G,cull_around,Recolink_stillness} from "$lib/G";
+    import {G,cull_around,Recolink,Recolink_stillness} from "$lib/G";
     import But from "$lib/ui/But.svelte";
     import Con from "$lib/pi/Con.svelte"
     import { Construct } from '$lib/Co'
@@ -31,11 +31,6 @@
         wake()
 
         return guest
-    }
-    let Recolink = (guest,Reco,s) => {
-        guest.y.be = s
-        guest.sc['░'] = Reco.dige
-        guest.y.string = Reco.string
     }
     g.o_done = async (sect,Reco,s) => {
         // tax(s.sc,{string,dige})

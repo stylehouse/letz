@@ -119,7 +119,7 @@ import {enL,deL,indents} from "$lib/Y/Text"
         # diag
         #  they get y&wake once in a Rec.svelte
         let again = guest.y.wake ? " again" : ""
-        console.log(name+" receive("+this.name+")"+again)
+        # console.log(name+" receive("+this.name+")"+again)
     }
     # we may be called at the end of Construct()
     send_places() {
@@ -128,7 +128,8 @@ import {enL,deL,indents} from "$lib/Y/Text"
             let wake = guesty&wake
             wake and wake()
             else {
-                console.info("No wake at send_places "+This.name)
+                # it seems to manage
+                # console.info("No wake at send_places "+This.name)
             }
         }
     }
@@ -160,6 +161,7 @@ import {enL,deL,indents} from "$lib/Y/Text"
         g.output_to(Reco)
     }
 
+    # Reco = print C**
     async function mkReco(C) {
         $string = inlace(C,{
             grab: (C,d) => indents(d.d*2,enL(C),'notailnl'),
@@ -170,6 +172,7 @@ import {enL,deL,indents} from "$lib/Y/Text"
         $Reco = {string,dige}
         return Reco
     }
+    # multiple Reco compete for use
     function electReco(guest,N,Reco) {
         # staging and recent states pool in N[Reco]
         # < guest says it wants something else reset to, for undo
@@ -185,7 +188,14 @@ import {enL,deL,indents} from "$lib/Y/Text"
         }
         return Reco
     }
-    
+    # Reco download to a C that hosts them 
+    #  sto should be deleted by Recolink pushing news
+    export function Recolink(guest,Reco,s) {
+        guest.y.be = s
+        guest.sc['░'] != Reco.dige and delete guesty&store
+        guest.sc['░'] = Reco.dige
+        guest.y.string = Reco.string
+    }
     # "same, recycle object" for around|been/* serial-numbered lists
     export function Recolink_stillness(host,Reco) {
         $la = o_(host).slice(-1)[0]
@@ -297,7 +307,13 @@ import {enL,deL,indents} from "$lib/Y/Text"
                 }
                 else return 1
             },deps)
-            hak(unready) and debugger; return
+            # updating faster than storage gets ready can get you here
+            # < hmm we are probably not supposed to happen anymore?
+            if (hak(unready)) {
+                console.log("unready to "+s.t+" "+t+": ",
+                    unready.map(n => n.t+" "+n.sc['░']))
+                return
+            }
             # make (s)/sto** (no y&up)
             stos&z = ready
             # as a URI z becomes comma-separated, server must know this means array
@@ -315,9 +331,9 @@ import {enL,deL,indents} from "$lib/Y/Text"
         $ons = {dige:s.sc['░'],string:sy&string}
 
         # checks:
-            # we may be repeating this
             # check sto%dige,string are same
-            # < when might ~~%dige,string? reset to a Reco variant?
+            #  we may be repeating this (from Aroundiness)
+            #  sto should be deleted by Recolink pushing news
             $onsto = sex({},sto.sc,haks(ons))
             hak(onsto) && !heq(ons,onsto) and debugger
         
@@ -342,12 +358,15 @@ import {enL,deL,indents} from "$lib/Y/Text"
             stos&ok = 1
         }
         else {
+            # res doesn't .hasOwnProperty() all its info, peel it with map()
+            res = sex({res},map(n=>n,res),'status,statusText')
             ahk(sto.sc,['errors'],res);
             debugger
-            # < make this not Construct
-            #  < eventually a s<->G binding
-            sy&wake()
         }
+        # storage may get ready before Rec.svelte reacts to having this bit of Record/**
+        #!sy&wake and debugger
+        # 1 makes this not Construct
+        sy&wake && sy&wake(1)
     }
 
 
