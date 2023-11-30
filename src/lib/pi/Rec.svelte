@@ -61,6 +61,8 @@
     $: extras = hak(N) > 1 && hak(N)-1
 
     let b = {rec}
+    let showstring = 0
+    let togstring = () => showstring = !showstring
 </script>
 
 
@@ -68,10 +70,14 @@
     <But {b} />
     {#if extras}+{extras} more{/if}
 {/if}
-{#if slook}<Coning t="guest" C={slook} noC=2 />{/if}
+
+{#if slook}
+    <Coning t="guest" C={slook} noC=2 />
+{/if}
 
 {#if s.sc['░']}ipfslink{/if}
 {#if dige}
-    <pre>{dige}
-{string}</pre>
+    <span on:click={togstring}>{ dige.slice(0,12) }</span>
+    
+    {#if showstring}<pre>{string}</pre>{/if}
 {/if}

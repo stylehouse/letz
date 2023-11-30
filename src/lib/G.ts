@@ -2,7 +2,7 @@
 import type { SvelteComponent } from 'svelte';
 import { get_current_component, tick, setContext,getContext } from 'svelte/internal';
 
-import { ac, ahsk,ahk,hak,havs, dig, sha256,ex,now,grep,grop,sum,hashkv } from "$lib/Y/Pic.ts"
+import { ac, ahsk,ahk,hak,haks,havs, dig, sha256,sex,ex,now,grep,grop,map,sum,hashkv,fatal,heq,reverse } from "$lib/Y/Pic.ts"
 import { pit,C_,i_,o_,pito,o_path,o_up,inlace } from "$lib/St"
 import {enL,deL,indents} from "$lib/Y/Text"
 
@@ -186,41 +186,158 @@ import {enL,deL,indents} from "$lib/Y/Text"
         return Reco
     }
     
+    # "same, recycle object" for around|been/* serial-numbered lists
     export function Recolink_stillness(host,Reco) {
         $la = o_(host).slice(-1)[0]
         return la?.sc['░'] == Reco.dige
     }
 
 # Aroundiness
+    # note: things compile: '$N =' -> 'var N =', '...and...' -> 'if(...) { ... }'
     # a picture looking back through around:s/**
     # < when to make sure everything is stored
     export function Aroundiness(s) {
         # tumble down s/* and sy&be=s@origin
         #  looking back through the i ... that advanced it
-        $N = inlace(s,{
+        $links_by_depth = {}
+        $deps_by_dige = {}
+        $N = inroundce(s,{
+            a_link: &sd{
+                # collect all storables
+                ahk(links_by_depth,[d.d],s)
+
+                # track dependencies
+                d.was_link = d
+                $dependant = d.up?.was_link?.s
+                if (dependant) {
+                    # by the time we fine this, s should be stored anyway
+                    #  the schema has that ipfs_in joint
+                    $dige = dependant.sc['░']
+                    deps_by_dige[dige] = s
+                }
+            },
+            climbs: &sdN{
+                # do only the latest /been/Arounding
+                d.d == 0 and N.splice(0,hak(N)-1)
+            }
+        })
+        # deepest layers first
+        $layers = reverse(havs(links_by_depth))
+        # go async
+        Around_layers(layers,deps_by_dige)
+
+        $by_path = map(N => hashkv(N.map(s => [slupath(s), s])), layers)
+        return layers
+    }
+    function slupath(s,d) {
+        # < d.til?
+        return o_up(s).reverse().map(s => s.t).join("/")
+    }
+    # asyncily PUT each layers of requests
+    async function Around_layers(layers,deps_by_dige) {
+        each iN layers {
+            $waits = map(s => upload_to_ipfs(s,deps_by_dige), N)
+            await Promise.all(waits)
+            # < handling errors?
+            debugger
+        }
+    }
+
+    # tumble down s/* or sy&be=s@origin
+    #  the latter are given to d.a_link()
+    function inroundce(s,d) {
+        fatal.isC(s)
+        !d.a_link and debugger
+        # tumble down s/* and sy&be=s@origin
+        return inlace(s,{
+            ...d,
             # include the first node, s|around
             inc:1,
             climb: &sd{
-                # they sy&be=s@origin and 
+                # they sy&be=s@origin and s%░
                 $linkish = sum(sy&be && 1, s.sc['░'] && 1)
                 $z = o_(s)
                 if (linkish) {
                     hak(z) and debugger
+
+                    d.a_link and d.a_link(s,d)
+
                     # go to its origin
                     return [sy&be]
                 }
-                # This ends our link trail
-                sc&This and return []
+                # have a This at the end our link trail
+                if (sc&This) {
+                    hak(z) and debugger
+                    return []
+                }
                 # nothing but links and lists of links
                 !hak(z) and debugger
-                # select only the latest /around/*
-                z = [z.pop()]
                 return z
             }
         })
-        $by_path = hashkv(N.map(s => [o_up(s).reverse().map(s => s.t).join("/"), s]))
-        hak(by_path) != hak(N) and debugger
-        return by_path
+    }
+    # < cause async flickering in the uploading -Rec
+    # < then come back here (a Promise group?)
+    async function upload_to_ipfs(s,deps_by_dige) {
+        # create|get|check sy&store
+        $sto = store_init(s)
+        
+        let t = stos&dige
+        let para = {t}
+
+        # check deps
+        $deps = deps_by_dige[stos&dige]
+        if (deps) {
+            $ready = []
+            $diges = []
+            $unready = grep(z => {
+                $zto = sy&store
+                if (zto && ztos&ok) {
+                    ready.push(zto)
+                    diges.push(ztos&dige)
+                }
+                else return 1
+            },deps)
+            hak(unready) and debugger; return
+            # make (s)/sto** (no y&up)
+            stos&z = ready
+            # as a URI z becomes comma-separated, server must know this means array
+            # < didnt it used to make multiples? eg [1,2] -> ?z=1&z=2
+            para.z = diges
+        }
+
+        console.log("upload_to_ipfs: ",para)
+        para.body = stos&string
+        $tar = store_send(para,s,sto)
+    }
+    function store_init(s) {
+        $sto = sy&store ||= C_('store '+s.t)
+        # what we copy from s%*
+        $ons = {dige:s.sc['░'],string:sy&string}
+
+        # checks:
+            # we may be repeating this
+            # check sto%dige,string are same
+            # < when might ~~%dige,string? reset to a Reco variant?
+            $onsto = sex({},sto.sc,haks(ons))
+            hak(onsto) && !heq(ons,onsto) and debugger
+        
+            # the server checks the given dige (called t in the PUT handler) is for the string
+        
+        ex(sto.sc,ons)
+        return sto
+    }
+    async function store_send(para,s,sto) {
+        # < global fetch queue? getContext a proxy, see g-j / R%Inn
+        #  < testable calls to ipfs|sessionStorage
+        $body = delete para.body
+        let params = new URLSearchParams(para);
+        let res = await fetch(
+            `/ipfs?${params.toString()}`,
+            {method:'POST',body}
+        )
+        $tar = await res.text()
+        return tar
     }
 
 
@@ -239,8 +356,7 @@ import {enL,deL,indents} from "$lib/Y/Text"
         #    ie before and after a bunch of stuff changed
         #     aggregating many rapid moments of stuff changing
         # < content-awareness is now all over there in Reco pools
-        cull.pop()
-        cull.shift()
+        cull = cull.slice(1,-4)
         grop((s,i) => i%2,cull)
         
         !hak(cull) and debugger
