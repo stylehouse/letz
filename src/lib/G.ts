@@ -6,6 +6,13 @@ import { ac, ahsk,ahk,hak,haks,havs, dig, sha256,sex,ex,now,grep,grop,map,sum,ha
 import { pit,C_,i_,o_,pito,o_path,o_up,inlace } from "$lib/St"
 import {enL,deL,indents} from "$lib/Y/Text"
 
+# f
+    # s^^^ -> a/pa/th
+    function slupath(s,d) {
+        # < d.til?
+        return o_up(s).reverse().map(s => s.t).join("/")
+    }
+
 # *.svelte do: g = G()
     export function G(t, co) {
         co ||= get_current_component()
@@ -239,10 +246,6 @@ import {enL,deL,indents} from "$lib/Y/Text"
         $by_path = map(N => hashkv(N.map(s => [slupath(s), s])), layers)
         return {deps_by_dige,layers}
     }
-    function slupath(s,d) {
-        # < d.til?
-        return o_up(s).reverse().map(s => s.t).join("/")
-    }
     # asyncily PUT each layers of requests
     async function Around_layers(layers,deps_by_dige) {
         each iN layers {
@@ -285,6 +288,7 @@ import {enL,deL,indents} from "$lib/Y/Text"
             }
         })
     }
+    
     # < cause async flickering in the uploading -Rec
     # < then come back here (a Promise group?)
     async function upload_to_ipfs(s,deps_by_dige) {
@@ -393,13 +397,15 @@ import {enL,deL,indents} from "$lib/Y/Text"
     }
 
 
-export function locate_ev(ev) {
-    $E = {N:[]}
-    $ta = ev.target
-    while (1) {
-        E.N.unshift({t:ta.nodeName,ta})
-        ta = ta.parentNode
-        !ta || ta == document.body and break
+# html elements -> somewhere
+# < universal drag+drop interactions for all Con
+    export function locate_ev(ev) {
+        $E = {N:[]}
+        $ta = ev.target
+        while (1) {
+            E.N.unshift({t:ta.nodeName,ta})
+            ta = ta.parentNode
+            !ta || ta == document.body and break
+        }
+        return E
     }
-    return E
-}
