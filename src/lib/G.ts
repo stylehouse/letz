@@ -296,6 +296,8 @@ import {enL,deL,indents} from "$lib/Y/Text"
     async function upload_to_ipfs(s,deps_by_dige) {
         # create|get|check sy&store
         $sto = store_init(s)
+
+        stos&ok and return
         
         let t = stos&dige
         let para = {t}
