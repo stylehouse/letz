@@ -622,6 +622,7 @@ let window = self
         # ioty may N=C/*
         $M = (isC(N) ? me&ioty,N : N||[]) .map(n => isC(n) ? n.t : n)
             .filter(t => t != null && (not == null || t != not))
+        !hak(M) and return ''
         $s = M.shift()
         join ||= '-'
         each in M {

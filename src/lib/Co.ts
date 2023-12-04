@@ -1,5 +1,5 @@
 // < comments that start with '<' are TODOs, except this one
-import {isst,isnu,isnum,isar,isspace,hak,havs,haks,ex,ahk,ahsk} from '$lib/Y/Pic.ts'
+import {isst,isnu,isnum,isar,isspace,hak,havs,haks,ex,ahk,ahsk,map} from '$lib/Y/Pic.ts'
 import {C_,i_,o_,VA_ip,detect_type,inlace,TheC,TheA,o_up} from '$lib/St'
 
 // toCon a dumper for the A** tree
@@ -19,13 +19,14 @@ import {C_,i_,o_,VA_ip,detect_type,inlace,TheC,TheA,o_up} from '$lib/St'
         # which may inform a default name:
         d.t ||= ['to','Con',...haks(d.I)].join(" ")
 
-        $C = inlacing_Con({...d,
+        $them = []
+        d = inlacing_Con({...d,
             each: function (s,d) {
                 # try to know, label s
                 toCon_newCont(d)
 
-                # be s, eg 
-                d.I.Pi and toCon_newSomething(d)
+                # be s, eg -Rec
+                d.I.Pi and them.push(toCon_newSomething(d))
 
                 # then Conz simply opens that
                 # 
@@ -36,13 +37,17 @@ import {C_,i_,o_,VA_ip,detect_type,inlace,TheC,TheA,o_up} from '$lib/St'
             },
         })
 
+        d.I.midule && map(&C{
+            d.I.midule(C,c&s)
+        },them)
+
         # originating G sends again, in case of news
         # < trust versioning done in here.
         #   atm it is the basic el=1|9 of C**, not their properties
         $g = d.I.sent_places
         g and g.send_places()
 
-        return C
+        return d.C
     }
     # same but isolated - some Con** update
     # < sip_dispatch compat. C.c.visit is not everything
@@ -112,7 +117,7 @@ import {C_,i_,o_,VA_ip,detect_type,inlace,TheC,TheA,o_up} from '$lib/St'
         
         inlacing_Con_commit(d)
 
-        return d.C
+        return d
     }
     function inlacing_Con_commit (d) {
         let C = d.C
@@ -247,7 +252,7 @@ import {C_,i_,o_,VA_ip,detect_type,inlace,TheC,TheA,o_up} from '$lib/St'
                 inlacing_step2(d.resolving.shift())
         }
         else {
-            return inlacing(d)
+            inlacing(d)
         }
     }
 
@@ -467,9 +472,12 @@ import {C_,i_,o_,VA_ip,detect_type,inlace,TheC,TheA,o_up} from '$lib/St'
         # the Con.c.s = s** instructions!
         # go into s/* as -Con(s)/-Conz/-Con(*)
         Con.c.Cishsz = 1
-        # custom node type: -Con(s)/s-$pi 
+        # custom node type: -Con(s)/-$pi(s)
         let pi = s.c.pi
         let Such = d.partor(pi)
+        # Such is stamped with c&version and y&D, etc
+        #  while the s** is grasped by it:
+        Suchc&s = s
 
         # < act as $pi before s** loads?
         #    usually pi creates s** from $s
@@ -477,6 +485,7 @@ import {C_,i_,o_,VA_ip,detect_type,inlace,TheC,TheA,o_up} from '$lib/St'
 
         # it's left up to the $pi.svelte that receives this s** situation
         # eg pi=Dir will <Dir C={Such} />
+        return Such
     }
     # -Con/-Cont detailing s as data, no context
     function toCon_newCont (d) {

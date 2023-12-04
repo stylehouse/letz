@@ -5,7 +5,7 @@
     import Con from "$lib/pi/Con.svelte"
     import { Construct } from '$lib/Co'
     import { C_,pito } from '$lib/St'
-    import { ac, ahsk,ahk,havs, dig, sha256,sex,ex,now } from "$lib/Y/Pic.ts"
+    import { ac, ahsk,ahk,havs,haks,coint,joint, dig, sha256,sex,ex,nex,now,ispi } from "$lib/Y/Pic.ts"
 
 
     import { getContext, get_current_component, onDestroy, onMount, setContext, tick } from 'svelte/internal';
@@ -15,7 +15,26 @@
     let g = G(3)
     // which fills this out:
     export let C = C_('Record',1,{pi:'Rec'})
-    g.haveC(C,s => C = s)
+    // wasteful compute of the entire C**, should only happen when its small
+    $: C.y.wake = async () => { await tick(); ring() }
+    // output of our encoding process
+    let D
+    // our process
+    let I = {
+        // Con spawn their sc&pi
+        Pi:1,
+        //  and then process them here:
+        midule: function (C,s) {
+            let isa = coint(haks(nex({},s.c,'pi')))
+            console.log("midule:   "+(ispi(s)||"")+"   "+isa,{C,s})
+            // define -Rec that c&real|been
+        }
+    }
+    async function ring() {
+        D = Construct({I,s:C,D})
+    }
+    onMount(() => ring())
+    // g.haveC(C,s => C = s)
     // < resolve $n each This properly
     //   one thing per g.name atm
     // Record <- Diring C
@@ -111,18 +130,6 @@
         }
         // guest now -> downstream
     }
-    $: C.y.wake = async () => { await tick(); ring() }
-    
-    // bloop!!
-    let D
-    async function ring() {
-        D = Construct({I:{Pi:1},s:C,D})
-        // < pipe into step 2
-    }
-    onMount(() => {
-      // Fetch?
-      ring()
-    });
 
 
     let b = {}
