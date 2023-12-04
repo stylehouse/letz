@@ -53,7 +53,7 @@ import {C_,i_,o_,VA_ip,detect_type,inlace,TheC,TheA,o_up} from '$lib/St'
         # to recycle some settings from it (I)
         let td = top.y.d
         # we restart a subtree of this process
-        let d = {t:C.t, s:C.c.s, D:C, pretendtoplevel:1, I:td.I}
+        let d = {t:C.t, s:C.c.s, D:C, pretendtoplevel:1, I:ex({},td.I)}
         let Cup = C.y.up
         if (Cup) {
             # home d into the enclosing Con**

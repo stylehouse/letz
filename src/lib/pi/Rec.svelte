@@ -18,7 +18,7 @@
     let s = Con.c.s
     if (!s.c.pi == 'Rec') throw "!Rec"
     //  will be asked for later...
-    g.haveC(s)
+    // g.haveC(s)
     // however, some -Rec are just folders...
     // < invent a new pi, not needing a .svelte file - define it in mind.pi.such?
     let real = s.c.real || s.c.This && 1
@@ -58,6 +58,7 @@
         dige = Reco.dige
         N = N
 
+        // tell The:Record that its /#$sect/ has a (Reco,s) ready
         let The = g.slope[3]
         let sect = path[1].t
         // a state -> guest%*

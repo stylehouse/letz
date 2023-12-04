@@ -180,6 +180,8 @@ import {enL,deL,indents} from "$lib/Y/Text"
         return Reco
     }
     # multiple Reco compete for use
+    # < the Reco+ and kommit|been/* serial-numbered lists
+    #    are the same things. see Recolink_stillness
     function electReco(guest,N,Reco) {
         # staging and recent states pool in N[Reco]
         # < guest says it wants something else reset to, for undo
@@ -203,7 +205,7 @@ import {enL,deL,indents} from "$lib/Y/Text"
         guest.sc['░'] = Reco.dige
         guest.y.string = Reco.string
     }
-    # "same, recycle object" for around|been/* serial-numbered lists
+    # "same, recycle object" for kommit|been/* serial-numbered lists
     export function Recolink_stillness(host,Reco) {
         $la = o_(host).slice(-1)[0]
         return la?.sc['░'] == Reco.dige
@@ -211,7 +213,7 @@ import {enL,deL,indents} from "$lib/Y/Text"
 
 # Aroundiness
     # note: things compile: '$N =' -> 'var N =', '...and...' -> 'if(...) { ... }'
-    # a picture looking back through around:s/**
+    # a picture looking back through kommit:s/**
     # < when to make sure everything is stored
     export function Aroundiness(s) {
         # tumble down s/* and sy&be=s@origin
@@ -263,7 +265,7 @@ import {enL,deL,indents} from "$lib/Y/Text"
         # tumble down s/* and sy&be=s@origin
         return inlace(s,{
             ...d,
-            # include the first node, s|around
+            # include the first node, s|kommit
             inc:1,
             climb: &sd{
                 # they sy&be=s@origin and s%░

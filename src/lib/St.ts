@@ -111,7 +111,7 @@ import {isst,isnu,isnum,isar,isspace,hak,havs,haks,ex,theone,grep,map} from '$li
         return C
     }
     # C/+C if not exist
-    export function pito (D,t,y,c,sc) {
+    export function pito (D,t,y?,c?,sc?) {
         # look only for the .t
         let had = theone(grep(n => n.t == t, o_(D)))
         return had || pit(D,t,y,c,sc)

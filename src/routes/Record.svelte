@@ -20,8 +20,8 @@
     //   one thing per g.name atm
     // Record <- Diring C
     g.receive = (This) => {
-        // Record/in-Rec:host/Diring-Rec:guest
-        let host = pito(C,'in','-Rec')
+        // Record/bloube-Rec:host/Diring-Rec:guest
+        let host = pito(C,'bloube','-Rec')
         let guest = pito(host,This.name,'-Rec')
 
         // download
@@ -38,12 +38,12 @@
         //s.c.░ = dige
         console.log("g.o "+sect+": "+s.t)
 
-        if (sect == 'in') {
-            // Record /in/$s:guest -> /out/#$s
+        if (sect == 'bloube') {
+            // Record /bloube/$s:guest -> /treeh/#$s
 
-            // out/ will be real
+            // treeh/ will be real
             //  it will Lines Record/guest%%links
-            let host = pito(C,'out','-Rec',{real:1})
+            let host = pito(C,'treeh','-Rec',{real:1})
             // the guest, without enough .c to be real
             let guest = pito(host,s.t,'-Rec')
 
@@ -54,14 +54,14 @@
             let wake = host.y.wake || C.y.wake
             wake()
         }
-        else if (sect == 'out') {
-            // Record /out/#$s -> /around/#@out
+        else if (sect == 'treeh') {
+            // Record /treeh -> /kommit/#@treeh
 
-            let host = pito(C,'around','-Rec',{real:1,around:1})
+            let host = pito(C,'kommit','-Rec',{real:1,kommit:1})
             if (Recolink_stillness(host,Reco)) return
 
-            let i = host.c.around++
-            // picture of out (which is really Record)
+            let i = host.c.kommit++
+            // picture of treeh (which is really Record)
             let guest = pito(host,s.t+" "+i,'-Rec')
             //  sits there with these links
             Recolink(guest,Reco,s)
@@ -69,7 +69,7 @@
             guest.sc.time = now()
 
 
-            // host/#out:guest+ pool like N[Reco+]
+            // host/#treeh:guest+ pool like N[Reco+]
             //  we also have N[Reco+] from encoding host/**
             // < shrinking ooze effect
             cull_around(host)
@@ -77,15 +77,18 @@
             let wake = host.y.wake || C.y.wake
             wake()
         }
-        else if (sect == 'around') {
-            // Record /around -> /been/#@out
+        else if (sect == 'kommit') {
+            // Record /kommit -> /been/#@out
+            // we commit a bunch of recent commits
+            //  first, previous and current are always available
+            //  < and branch meta objects
             // finally we stop encoding and just store the tree of stuff
 
             let host = pito(C,'been','-Rec',{been:1})
             if (Recolink_stillness(host,Reco)) return
             
             let i = host.c.been++
-            // picture of out (which is really Record)
+            // a picture of kommit
             let guest = pito(host,s.t+" "+i,'-Rec')
             //  sits there with these links
             Recolink(guest,Reco,s)
