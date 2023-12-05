@@ -12,7 +12,7 @@
     import CompileLite from './CompileLite.svelte'
     import { writable } from 'svelte/store'
     import {EditorView} from "@codemirror/view"
-    import { onMount, tick } from "svelte";
+    import { onMount, setContext, tick } from "svelte";
     import Record from "./Record.svelte";
     import { G } from "$lib/G";
     
@@ -20,6 +20,8 @@
     //   have its ioing from a mind interpreting things
     //   usually a code
     //   higher levels sprout
+    // store state
+    setContext('storage',[])
     
     let b = {}
     console.log("<Code/>")

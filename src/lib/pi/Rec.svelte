@@ -26,10 +26,9 @@
     let errors
     let ok
     let slo = async () => {
-        if (s.c.been) {
-            // this makes a bunch of bunches of commits
-            slook = await Aroundiness(s)
-        }
+        // sc&been datadumps deps
+        //  it used to do Aroundiness(s) here
+        slook = s.y.slook
         // things get this as they are stored
         let sto = s.y.store
         if (sto) {
@@ -45,26 +44,18 @@
     
 
     s.y.wake = (know) => {
-        know || dispatch('reCon')
+        // know || dispatch('reCon')
         s = s
+        string = s.y.Reco?.sc.string
+        dige = s.y.Reco?.sc.dige
+        N = s.y.collect?.sc.z
     }
 
     let string = ''
     let dige
 
     
-    g.o((Reco) => {
-        string = Reco.string
-        dige = Reco.dige
-        N = N
-
-        // tell The:Record that its /#$sect/ has a (Reco,s) ready
-        let The = g.slope[3]
-        let sect = path[1].t
-        // a state -> guest%*
-        The.o_done(sect,Reco,s)
-    })
-    let rec = () => real && Recollect(g,s,N)
+    let rec = () => s.y.wake()
     $: rec(), s
 
     let extras

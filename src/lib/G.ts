@@ -2,7 +2,7 @@
 import type { SvelteComponent } from 'svelte';
 import { get_current_component, tick, setContext,getContext } from 'svelte/internal';
 
-import { ac, ahsk,ahk,hak,haks,havs, dig, sha256,sex,ex,now,grep,grop,map,sum,hashkv,fatal,heq,reverse } from "$lib/Y/Pic.ts"
+import { ac, ahsk,ahk,hak,haks,havs, dig, sha256,sex,ex,now,grep,grop,map,sum,hashkv,flatten,fatal,heq,reverse } from "$lib/Y/Pic.ts"
 import { pit,C_,i_,o_,pito,o_path,o_up,inlace } from "$lib/St"
 import {enL,deL,indents} from "$lib/Y/Text"
 
@@ -13,6 +13,7 @@ import {enL,deL,indents} from "$lib/Y/Text"
         return o_up(s).reverse().map(s => s.t).join("/")
     }
 
+# < GOING? these are A
 # *.svelte do: g = G()
     export function G(t, co) {
         co ||= get_current_component()
@@ -44,13 +45,14 @@ import {enL,deL,indents} from "$lib/Y/Text"
         
         g = new TheG(t, co);
 
+        # vite doing SSR != live
         $live = import.meta.env.SSR === false
-
-        live and console.log('G:' + t + ' ', g);
+        g.notlive = !live
+        # live and console.log('G:' + t + ' ', g);
 
         return g;
     }
-    class TheG {
+    export class TheG {
         
     constructor(t, co) {
         this.t = t
@@ -100,7 +102,9 @@ import {enL,deL,indents} from "$lib/Y/Text"
                 || g != this && g.find_name(name)
     }
 
-# g.haveC, g.i|o
+# g.haveC, send*, I_am, g.i|o
+    # these functions show permanent features of the component to the g
+    #  which is fast becoming just a suite of functions
 
     # showing C to g
     haveC(C,setC) {
@@ -109,35 +113,41 @@ import {enL,deL,indents} from "$lib/Y/Text"
         # they can react the component to a new C
         this.i(setC)
     }
-    # we give things to others
-    # eg Diring C -> Record
-    send(name,C,setC) {
-        this.notlive and return console.log("G.send while not live: "+this.name)
-        $g = this.find_name(name)
-        !g and debugger; return
 
+    # we host things for others
+
+    # we are basically discoverable, eg t=storage
+    I_am(t) {
+        let storages:Array<TheG> = getContext(t)
+        while (storages.shift()) 1
+        storages.push(this)
+    }
+    # look up name
+    _who_is(t) {
+        let to = getContext(t)[0]
+        !to and throw "G.send no such to: "+to
+        return to
+    }
+
+    # we give things to others (who have defined g.receive)
+    # eg Diring C -> Record via t=storage (an alias)
+    send(t) {
+        # vite doing SSR shouldnt get here
+        this.notlive and return;
+        #throw "G.send while not live: "+this.name
+        $to = this._who_is(t)
         # Record hosts us
-        $guest = g.receive(this)
-        !guest and debugger
+        $guest = to.receive(this)
+        !guest and throw "!guest"
         # Diring remember the guest Record made for them
         #  see also Dome / &etos_6
-        ahk(this,'sent_guest',g.name,guest)
-
-        # diag
-        #  they get y&wake once in a Rec.svelte
-        let again = guest.y.wake ? " again" : ""
-        # console.log(name+" receive("+this.name+")"+again)
+        ahk(this,'sent_guest',to.name,guest)
     }
     # we may be called at the end of Construct()
     send_places() {
         $This = this
         each name,guest This.sent_guest {
-            let wake = guesty&wake
-            wake and wake()
-            else {
-                # it seems to manage
-                # console.info("No wake at send_places "+This.name)
-            }
+            guesty&compute && guesty&compute()
         }
     }
 
@@ -154,18 +164,25 @@ import {enL,deL,indents} from "$lib/Y/Text"
 
 }
 
+
+
+
 # Recollect Reco <- guest ...
-    # Rec.svelte given Record/in/$guest-Rec
-    export async function Recollect(g,guest,N) {
-        $This = guestc&This
-        $C = This?.C || guest
+    # Rec.svelte may be given Record/in/$guest-Rec
+    # g is Record, and it is Construct()ing around this:
+    export async function Recollect(g,s) {
+        $This = sc&This
+        $C = This?.C || s
         # always encode the latest thing (working dir state -> staging)
         $Reco = await mkReco(C)
-        # pool it in N[Reco], picking one to be now
-        Reco = electReco(guest,N,Reco)
+        # pool it in sy&collect/-Reco, picking one to be now
+        Reco = electReco(s,Reco)
+        s.y.Reco = Reco
 
-
-        g.output_to(Reco)
+        # tell Record that it has an s ready
+        g.o_done(s)
+        # went via component for no reason
+        # g.output_to(Reco)
     }
 
     # Reco = print C**
@@ -176,24 +193,27 @@ import {enL,deL,indents} from "$lib/Y/Text"
 
         $dige = await sha256(string)
 
-        $Reco = {string,dige}
+        $Reco = C_('a','-Reco',{},{string,dige})
         return Reco
     }
     # multiple Reco compete for use
     # < the Reco+ and kommit|been/* serial-numbered lists
     #    are the same things. see Recolink_stillness
-    function electReco(guest,N,Reco) {
+    function electReco(s,Reco) {
         # staging and recent states pool in N[Reco]
-        # < guest says it wants something else reset to, for undo
-        #    git work via guest, who might show all Reco?
+        # < s says it wants something else reset to, for undo
+        #    git work via s, who might show all Reco?
         #    they want naming intelligently wrt the diff, enclosing headings etc...
-        if (N[0] && N[0].dige == Reco.dige) {
+        $co = s.y.collect ||= C_('a','-Recollector')
+        
+        $latest = o_(co).slice(-1)[0]
+        if (latest && latests&dige == Recos&dige) {
             # same, recycle object
-            Reco = N[0]
+            Reco = latest 
         }
         else {
-            Reco.time = now()
-            N.push(Reco)
+            Recos&time = now()
+            i_(co,Reco)
         }
         return Reco
     }
@@ -201,21 +221,26 @@ import {enL,deL,indents} from "$lib/Y/Text"
     #  sto should be deleted by Recolink pushing news
     export function Recolink(guest,Reco,s) {
         guest.y.be = s
-        guest.sc['░'] != Reco.dige and delete guesty&store
-        guest.sc['░'] = Reco.dige
-        guest.y.string = Reco.string
+        guest.sc['░'] != Recos&dige and delete guesty&store
+        guest.sc['░'] = Recos&dige
+        guest.y.string = Recos&string
+    }
+    # "same, recycle object" for bloube/:guest
+    export function Recolink_stillness(guest,Reco) {
+        return guest?.sc['░'] == Recos&dige
     }
     # "same, recycle object" for kommit|been/* serial-numbered lists
-    export function Recolink_stillness(host,Reco) {
+    # for when you will later Recolink(guest,Reco) if ~
+    export function host_Recolink_stillness(host,Reco) {
         $la = o_(host).slice(-1)[0]
-        return la?.sc['░'] == Reco.dige
+        return la?.sc['░'] == Recos&dige
     }
 
 # Aroundiness
     # note: things compile: '$N =' -> 'var N =', '...and...' -> 'if(...) { ... }'
     # a picture looking back through kommit:s/**
     # < when to make sure everything is stored
-    export function Aroundiness(s) {
+    export function Aroundiness(g,s) {
         # tumble down s/* and sy&be=s@origin
         #  looking back through the i ... that advanced it
         $links_by_depth = {}
@@ -243,18 +268,21 @@ import {enL,deL,indents} from "$lib/Y/Text"
         # deepest layers first
         $layers = reverse(havs(links_by_depth))
         # go async
-        Around_layers(layers,deps_by_dige)
+        Around_layers(g,s,layers,deps_by_dige)
+
+        # < drive an event now
 
         $by_path = map(N => hashkv(N.map(s => [slupath(s), s])), layers)
         return {deps_by_dige,layers}
     }
     # asyncily PUT each layers of requests
-    async function Around_layers(layers,deps_by_dige) {
+    async function Around_layers(g,s,layers,deps_by_dige) {
         each iN layers {
             $waits = map(s => upload_to_ipfs(s,deps_by_dige), N)
             await Promise.all(waits)
             # < handling errors?
         }
+        g.o_done(s)
     }
 
     # tumble down s/* or sy&be=s@origin

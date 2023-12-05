@@ -11,7 +11,7 @@
     export let C = C_('/',1,{pi:'Dir',rootdir:1})
     let g = G(2)
     g.haveC(C,s => C = s)
-    g.send("Record")
+    g.send("storage")
 
     let D
     async function ring() {

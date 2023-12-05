@@ -224,6 +224,7 @@ import {isst,isnu,isnum,isar,isspace,hak,havs,haks,ex,theone,grep,map} from '$li
     export function o_up(A, d?) {
         # default what to look for: everything
         d ||= { inc: 1 };
+        d.til ||= d.all || d.until
         if (!d.til) {
             # only up to A.3==A2.3
             #   use d.til to include the first A.3!=A2.3
