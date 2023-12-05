@@ -37,9 +37,11 @@ import {C_,i_,o_,VA_ip,detect_type,inlace,TheC,TheA,o_up} from '$lib/St'
             },
         })
 
-        d.I.midule && map(&C{
-            d.I.midule(C,c&s)
-        },them)
+        if (d.I.midule) {
+            each iC them {
+                d.I.midule(C,c&s)
+            }
+        }
 
         # originating G sends again, in case of news
         # < trust versioning done in here.
