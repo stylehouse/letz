@@ -1,7 +1,7 @@
 import type { RequestHandler } from '../$types';
 import sqlite3 from 'sqlite3'
 import { open } from 'sqlite'
-import { isst, isob, sha256, isnum, isar, isspace, hak, havs, haks, ex } from '$lib/Y/Pic.ts'
+import { isst, isob, sha256, isnum, isar, isspace, hak, havs, haks, ex, map } from '$lib/Y/Pic.ts'
 // am immutable blob store
 //  t:sha256(s) => s
 // PUT t,s(,z=[dependency t+])
@@ -10,7 +10,8 @@ import { isst, isob, sha256, isnum, isar, isspace, hak, havs, haks, ex } from '$
 // db, schema 
     const db = await open({
         filename: 'ipfs.sqlite',
-        driver: sqlite3.verbose().Database
+        driver: sqlite3.verbose().Database,
+        //pool: { min: 1, max: 6 } // allow up to 6 concurrent connections
     });
     // await db.get(`DROP TABLE ipfs`)
     // await db.get(`DROP TABLE ipfs_in`)
@@ -72,21 +73,24 @@ import { isst, isob, sha256, isnum, isar, isspace, hak, havs, haks, ex } from '$
             if (!hak(result)) {
                 // new
                 // console.log("PUT new: "+t)
-                result = await db.get(`INSERT INTO ipfs (t,s,ts_heartbeat)
-                    VALUES (?,?,CURRENT_TIMESTAMP)`,     t,s)
+
                 // with links to other ipfs directly inside this one
                 // unused except to sanity check your deps are known to the server.
+                // these FK dont seem to be enforced, so:
                 let z = req.url.searchParams.get('z');
                 z = z && z.split(',') || []
+                try {
+                    await ipfs_in_check(z)
+                } catch (err) {
+                    return createResponse({ error: err.message }, 400);  
+                }
+
+                result = await db.get(`INSERT INTO ipfs (t,s,ts_heartbeat)
+                    VALUES (?,?,CURRENT_TIMESTAMP)`,     t,s)
                 each i,ot z {
                     // console.log("PUT links: "+ot)
                     await db.get(`INSERT INTO ipfs_in (t,ot)
                         VALUES (?,?)`, t,ot)
-                    // these FK dont seem to be enforced, so:
-                    result = await db.get(`SELECT t from ipfs where t = ?`,ot)
-                    if (!hak(result)) {
-                        return createResponse({ error: "dependency not known: "+ot }, 400);
-                    }
                 }
             }
             else {
@@ -101,10 +105,22 @@ import { isst, isob, sha256, isnum, isar, isspace, hak, havs, haks, ex } from '$
     
             return mimeable(req)
         } catch (error) {
-            console.error(error)
+            console.error("Error in ipfs PUT: "+error.message)
             return createResponse({ error: error.message }, 500);
         }
     };
+    
+    async function ipfs_in_check(z) {
+        let dependencyChecks = z.map(
+            ot => db.get(`SELECT t from ipfs where t = ?`,ot)
+                .then(result => {
+                    if (!hak(result)) {
+                        throw new Error(`Dependency not found: ${ot}`)
+                    }  
+                })
+        )
+        await Promise.all(dependencyChecks);
+    }
 
 // serverjunk
     function mimeable(req:Request, data:any) {
