@@ -12,11 +12,45 @@
 
     import { getContext, get_current_component, onDestroy, onMount, setContext, tick } from 'svelte/internal';
     import Grabber from "$lib/ui/Grabber.svelte";
+    import BigGroup from "$lib/ui/BigGroup.svelte";
 
     // this puts our name out there (Record), which others g.send() to
     let g = G(3)
     g.I_am("storage")
-    // which fills this out:
+  // compute(s)
+    // how deep in Record** to wake
+    // C|B indifferent (except for vaguely unused se)
+    let computable_upward = (s) => {
+        return o_up(s,{inc:1,all:s => s.y.C,sing:1})
+    }
+    let section_upward = (s) => {
+        // < o_up d.sing=1 should work
+        return o_up(s,{inc:1,until:s => s==C}).pop()
+    }
+    let compute = async (s) => {
+        // what Record/*:se/...s is wanting to think
+        let se = section_upward(s)
+        let goer = computable_upward(s)
+        if (goer == C && !C.y.C) {
+            // we should be along soon...
+            if (se.t != 'bloube') {
+                debugger
+            }
+            return
+        }
+        // a place we have Constructed before
+        let Something = goer.y.C
+        // it's the -Con/Rec-Rec:Something
+        if (!ispi(goer,Something.t)) debugger
+        let Con = Something.y.up
+        fatal.ispi(Con,'Con')
+
+        // < debounce and group?
+        await tick()
+
+        reConstruct(Con)
+    }
+  // C
     export let C = C_('Record',1,{pi:'Rec'})
     // init these so we can partition compute by them sooner
     pito(C,'bloube','-Rec')
@@ -69,41 +103,10 @@
     async function ring() {
         D = Construct({I,s:C,D})
     }
-    // g.haveC(C,s => C = s)
     // < resolve $n each This properly
     //   one thing per g.name atm
+    //   will be easy to path everything if we Con Code**
     // Record <- Diring C
-
-    // how deep in Record** to wake
-    let computable_upward = (s) => {
-        return o_up(s,{inc:1,all:s => s.y.C,sing:1})
-    }
-    let section_upward = (s) => {
-        // < o_up d.sing=1 should work
-        return o_up(s,{inc:1,until:s => s==C}).pop()
-    }
-    let compute = async (s) => {
-        // what Record/*:se/...s is wanting to think
-        let se = section_upward(s)
-        let goer = computable_upward(s)
-        if (goer == C && !C.y.C) {
-            // we should be along soon...
-            if (se.t != 'bloube') {
-                debugger
-            }
-            return
-        }
-        // a place we have Constructed before
-        let Something = goer.y.C
-        if (Something.t != goer.c.pi) debugger
-        let Con = Something.y.up
-        fatal.ispi(Con,'Con')
-
-        // < debounce and group?
-        await tick()
-
-        reConstruct(Con)
-    }
     g.receive = (This:TheG) => {
         // Record/bloube-Rec:host/Diring-Rec:guest
         let host = pito(C,'bloube','-Rec')
@@ -209,7 +212,8 @@
     }
     
 
-    // now, the elsewhere:
+  // B
+    // now, the elsewhere to display what's tangling
     let B = C_('Record portal',1,{pi:'Rec'})
     let BD
     let BI = {
@@ -238,12 +242,16 @@
 <biggroup>
     <h1>Record</h1>
     <But {b}/>
-    <Grabber />
+    <!-- <Grabber /> -->
     {#if 1 && D}
-        <!-- <Coning t="theD" C={D} /> -->
-        <Con C={D} />
+        <BigGroup>
+            <!-- <Coning t="theD" C={D} /> -->
+            <Con C={D} />
+        </BigGroup>
     {/if}
     {#if 1 && BD}
-        <Con C={BD} />
+        <BigGroup>
+            <Con C={BD} />
+        </BigGroup>
     {/if}
 </biggroup>

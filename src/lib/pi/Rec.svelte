@@ -22,39 +22,36 @@
     // however, some -Rec are just folders...
     // < invent a new pi, not needing a .svelte file - define it in mind.pi.such?
     let real = s.c.real || s.c.This && 1
+
+    let string = ''
+    let dige
     let slook
     let errors
     let ok
+    let sto
     let slo = async () => {
         // sc&been datadumps deps
         //  it used to do Aroundiness(s) here
         slook = s.y.slook
         // things get this as they are stored
-        let sto = s.y.store
+        sto = s.y.store
         if (sto) {
             if (sto.sc.errors) errors = sto.sc.errors
             if (sto.sc.ok) ok = 1
         }
+        // on the origin side (s.y.be) from a s.y.store there was s.y.Reco:
+        string = s.y.Reco?.sc.string
+        dige = s.y.Reco?.sc.dige
+        N = s.y.collect?.sc.z
+        // s = s
     }
-    $: slo(), s
     
 
     let path = o_up(s,{until: (s) => s.c.pi != 'Rec',inc:1}).reverse()
     let dir = path.map(s => s.t).join("/")
     
 
-    s.y.wake = (know) => {
-        // know || dispatch('reCon')
-        s = s
-        string = s.y.Reco?.sc.string
-        dige = s.y.Reco?.sc.dige
-        N = s.y.collect?.sc.z
-    }
-
-    let string = ''
-    let dige
-
-    
+    s.y.wake = () => slo()
     let rec = () => s.y.wake()
     $: rec(), s
 
@@ -62,33 +59,49 @@
     $: extras = hak(N) > 1 && hak(N)-1
 
     let b = {rec}
-    let showstring = 0
-    let togstring = () => showstring = !showstring
+    let togs = {}
+    let tog = (t) => {
+        togs[t] = !togs[t]
+    }
 </script>
 
-
+<But {b} />
 {#if real}
-    <But {b} />
     {#if extras}+{extras} more{/if}
 {/if}
 
 {#if s.sc['░']}ipfslink{/if}
-{#if errors}
-    <span class="ok">Errors:</span>
-        <Coning t="guest" C={errors} noC=2 />
-{/if}
-{#if ok}<span class="ok">OK</span>{/if}
 
 {#if dige}
-    <span on:click={togstring}>{ dige.slice(0,12) }</span>
+    <span on:click={()=>tog('string')}>{ dige.slice(0,12) }</span>
     
-    {#if showstring}<pre>{string}</pre>{/if}
+    {#if togs.string}<pre>{string}</pre>{/if}
 {/if}
 
+<!-- /been/ data -->
 {#if slook}
-    <Coning t="guest" C={slook} noC=2 />
+    <span on:click={()=>tog('slook')}>slook?</span>
+    
+    {#if togs.slook}
+        <Coning t="guest" C={slook} noC=2 />
+    {/if}
 {/if}
 
+<!-- if s.y.store -->
+{#if sto}
+    {#if errors}
+        <span class="ok">Errors:</span>
+            <Coning C={errors} />
+    {/if}
+    {#if ok}<span class="ok">OK</span>{/if}
+
+    <span on:click={()=>tog('sto')}>sto?</span>
+    {#if togs.sto}
+        <Coning t="sto" C={{s,sto}} noC=2 />
+    {/if}
+{/if}
+
+    
 <style>
     .ok { color: green }
     .error { color: red }
