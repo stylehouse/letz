@@ -191,8 +191,17 @@ import {isst,isnu,isnum,isar,isspace,hak,havs,haks,ex,theone,grep,map} from '$li
     export function o_path (A, d) {
         if (isst(d)) d = d.split('/')
         if (isar(d)) d = { path: d }
-        d.path = d.path.map(pa => isst(pa) ? {t:pa} : pa)
+        d.path = d.path.map(pa => isst(pa) ? {ark:pa} : pa)
+        d.path.map(pa => {
+            # < could go the other way, since A:such and %%thing:such
+            #    iirc :this was how to cast to a type in some lang
+            #   it's a way to say what you want the column to be called (pa.ark)
+            #    on the far side of another expression, eg what the C.t must be:
+            pa.ark.includes(':') and [pa.t,pa.ark] = pa.ark.split(':')
+        })
+
         if (!d.path) throw "!d.path"
+        let want_last_column = null
         # d+ with complete d.path
         let N = []
         d.grab = function (C:C,d) {
@@ -203,6 +212,9 @@ import {isst,isnu,isnum,isar,isspace,hak,havs,haks,ex,theone,grep,map} from '$li
             # somewhere named in path
             let pa = d.path[d.d]
             if (pa == null) throw "off path"
+            if (pa.t != null) {
+                C.t != pa.t and return d.not = 1
+            }
             let ark = pa.ark || pa.t
             d.c[ark] = d
             d.sc[ark] = C
@@ -212,12 +224,16 @@ import {isst,isnu,isnum,isar,isspace,hak,havs,haks,ex,theone,grep,map} from '$li
             if (!d.path[d.d+1]) {
                 # only go as far as the path
                 d.not = 1
+                # only rows that complete the path
                 N.push(d)
+                # return last column instead of rows
+                ark == '*' and want_last_column = ark
             }
         }
         inlace(A, d)
         # return many d.sc of many .$ark=C (and .d=d)
         # < group by?
+        want_last_column and return N.map(d => d.sc[want_last_column])
         return N.map(d => d.sc)
     }
     # climb A^^ til d.(for|until|before) is found
