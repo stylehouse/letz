@@ -109,6 +109,8 @@ import { isar,ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak,re
 
         each in st.selection.ranges {
             $range = mkrange(n)
+            # cursor at 0 seems to be default so don't save it
+            range.from == 0 && range.to == 0 and continue
             i_(C,C_('sel','-cmsel',{range}))
         }
 
@@ -126,6 +128,9 @@ import { isar,ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak,re
             far_end = Math.min(far_end,ra.to)
             N.push( EditorSelection.range(ra.from, ra.to) )
         })
+        # no -cmglance/-cmsel
+        # < leave selection as is or set to nothing?
+        far_end == Infinity and return
         # < it needs a single point in there as well?
         #   as per https://codemirror.net/examples/selection/ subtly
         #   or later error of selection.main not having .head or so
@@ -136,6 +141,7 @@ import { isar,ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak,re
             selection: EditorSelection.create(N)
         })
         console.log("resume_selection_state!")
+        return true
     }
 
   // state -> look

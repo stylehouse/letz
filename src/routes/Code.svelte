@@ -68,7 +68,7 @@
     
     async function resume(C) {
         resume_selection_state(cm.view,C)
-        whatsup(cm.view)
+            && whatsup(cm.view)
     }
 
     export function extra(t) {
