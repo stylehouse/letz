@@ -6,7 +6,7 @@
     import But from "$lib/ui/But.svelte";
     import Con from "$lib/pi/Con.svelte"
     import { Construct, reConstruct } from '$lib/Co'
-    import { C_,pito,o_up,o_ } from '$lib/St'
+    import { C_,pito,o_up,o_,i_,o_path } from '$lib/St'
     import { map,ac, ahsk,ahk,havs,haks,hak,coint,joint, dig, sha256,sex,ex,nex,now,ispi,fatal } from "$lib/Y/Pic.ts"
 
 
@@ -18,6 +18,11 @@
     g.I_am("storage")
     // which fills this out:
     export let C = C_('Record',1,{pi:'Rec'})
+    // init these so we can partition compute by them sooner
+    pito(C,'bloube','-Rec')
+    pito(C,'treeh','-Rec',{real:1})
+    pito(C,'kommit','-Rec',{real:1,kommit:1})
+    pito(C,'been','-Rec',{been:1})
 
     // wasteful compute of the entire C**, should only happen when its small
     $: C.y.wake = async () => {
@@ -43,7 +48,8 @@
             s.y.C = C
 
             // these two processes go async
-            //  and both require some /*
+            // both require some s/* to bother running - ie an empty kommit isn't a kommit
+            //  unless s.c.This, which s pretends to be
             if (!s.c.This && !hak(o_(s))) return
 
             let real = s.c.real || s.c.This && 1
@@ -63,9 +69,6 @@
     async function ring() {
         D = Construct({I,s:C,D})
     }
-    onMount(() => {
-        ring()
-    })
     // g.haveC(C,s => C = s)
     // < resolve $n each This properly
     //   one thing per g.name atm
@@ -204,21 +207,43 @@
         },
         // guest now -> downstream
     }
-    // init these so we can partition compute by them sooner
-    pito(C,'bloube','-Rec')
-    pito(C,'treeh','-Rec',{real:1})
-    pito(C,'kommit','-Rec',{real:1,kommit:1})
-    pito(C,'been','-Rec',{been:1})
     
 
-    let b = {ring}
+    // now, the elsewhere:
+    let B = C_('Record portal',1,{pi:'Rec'})
+    let BD
+    let BI = {
+        // Con spawn their sc&pi, resolve etc is all figured out (somewhere)
+        Pi:1,
+    }
+    let bop = () => {
+        // replaces n/* with N
+        let mkso = (n,N) => { delete n.sc.z; N.map(z => i_(n,z)) }
+
+        // gather a limited view of Record**
+        mkso(pito(B,'items'),o_path(C,'/bloube:se/*'))
+        mkso(pito(B,'times'),o_path(C,'/kommit:se/*'))
+
+
+
+        BD = Construct({I:BI,s:B,D:BD})
+    }
+
+    onMount(() => {
+        ring()
+        bop()
+    })
+    let b = {ring,bop}
 </script>
 <biggroup>
     <h1>Record</h1>
     <But {b}/>
     <Grabber />
-    {#if D}
-        <Coning t="theD" C={D} />
+    {#if 1 && D}
+        <!-- <Coning t="theD" C={D} /> -->
         <Con C={D} />
+    {/if}
+    {#if 1 && BD}
+        <Con C={BD} />
     {/if}
 </biggroup>

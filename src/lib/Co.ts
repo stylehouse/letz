@@ -26,7 +26,7 @@ import {C_,i_,o_,VA_ip,detect_type,inlace,TheC,TheA,o_up} from '$lib/St'
                 toCon_newCont(d)
 
                 # be s, eg -Rec
-                d.I.Pi and them.push(toCon_newSomething(d))
+                d.I.Pi && sc&pi and them.push(toCon_newSomething(d))
 
                 # then Conz simply opens that
                 # 
