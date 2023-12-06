@@ -523,7 +523,7 @@ let me = self.me = {}
             y = m [0]
         }
         y ||= "1"
-        y * 1 == NaN and debugger
+        isNaN(y*1) and debugger
         # < see scv(cv)
         y = {cv:1*('0.'+y)}
         
