@@ -8,18 +8,30 @@ import { isst, isob, sha256, isnum, isar, isspace, hak, havs, haks, ex, map } fr
 // GET t(,mime=Content-Type to serve it with, allowing javascript, image etc)
 
 // db, schema 
-    const db = await open({
+    let db
+    try {
+    db = await open({
         filename: 'ipfs.sqlite',
         driver: sqlite3.verbose().Database,
         //pool: { min: 1, max: 6 } // allow up to 6 concurrent connections
     });
-    // await db.get(`DROP TABLE ipfs`)
-    // await db.get(`DROP TABLE ipfs_in`)
+
+    if (0) {
+        console.log("recreating database!")
+        await db.get(`
+            DROP INDEX IF EXISTS idx_ipfs_in_t;
+            DROP INDEX IF EXISTS idx_ipfs_in_ot;
+            DROP INDEX IF EXISTS idx_ipfs_t;
+            DROP INDEX IF EXISTS idx_ipfs_ts_heartbeat;
+            DROP TABLE IF EXISTS ipfs_in;
+            DROP TABLE IF EXISTS ipfs;
+        `)
+    }
     await db.exec(`
         CREATE TABLE IF NOT EXISTS ipfs (
             t TEXT PRIMARY KEY UNIQUE,
-            ts_heartbeat TIMESTAMP,
-            ts_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            ts_heartbeat REAL,
+            ts_created REAL DEFAULT (strftime('%s', 'now')),
             s BLOB
         );
         
@@ -35,7 +47,10 @@ import { isst, isob, sha256, isnum, isar, isspace, hak, havs, haks, ex, map } fr
         CREATE INDEX IF NOT EXISTS idx_ipfs_t ON ipfs(t);
         CREATE INDEX IF NOT EXISTS idx_ipfs_ts_heartbeat ON ipfs(ts_heartbeat);
     `);
-
+    } catch (error) {
+        console.error("Database setup error: "+error.message)
+        throw error
+    }
 
 // API
     // note: req is a bunch of things like:
@@ -65,7 +80,7 @@ import { isst, isob, sha256, isnum, isar, isspace, hak, havs, haks, ex, map } fr
                 return createResponse({ error: "t should be "+tt }, 400);
             }
             let result = await db.get(`SELECT t,
-                 strftime('%s', CURRENT_TIMESTAMP) - strftime('%s', ts_heartbeat) as heartbeat_ago
+                 strftime('%s', 'now') - ts_heartbeat as heartbeat_ago
                  from ipfs where t = ?`,t);
             // result = {}
             // await db.get(`DELETE FROM ipfs`)
@@ -86,7 +101,7 @@ import { isst, isob, sha256, isnum, isar, isspace, hak, havs, haks, ex, map } fr
                 }
 
                 result = await db.get(`INSERT INTO ipfs (t,s,ts_heartbeat)
-                    VALUES (?,?,CURRENT_TIMESTAMP)`,     t,s)
+                    VALUES (?,?,strftime('%s', 'now'))`, t,s)
                 each i,ot z {
                     // console.log("PUT links: "+ot)
                     await db.get(`INSERT INTO ipfs_in (t,ot)
@@ -94,10 +109,10 @@ import { isst, isob, sha256, isnum, isar, isspace, hak, havs, haks, ex, map } fr
                 }
             }
             else {
-                // update row heartbeat if > two minutes old
-                if (result.heartbeat_ago > 120) {
+                // update row heartbeat if > five minutes old
+                if (result.heartbeat_ago > 300) {
                     result = await db.get(`UPDATE ipfs
-                        SET ts_heartbeat = CURRENT_TIMESTAMP
+                        SET ts_heartbeat = strftime('%s', 'now')
                         where t = ?`,t);
                 }
                 // console.log("PUT uptime: ",result)
@@ -109,7 +124,7 @@ import { isst, isob, sha256, isnum, isar, isspace, hak, havs, haks, ex, map } fr
             return createResponse({ error: error.message }, 500);
         }
     };
-    
+
     async function ipfs_in_check(z) {
         let dependencyChecks = z.map(
             ot => db.get(`SELECT t from ipfs where t = ?`,ot)

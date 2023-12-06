@@ -20,16 +20,7 @@ let window = self
  // main
    // types
     # this is time, UTC (no timezone)
-    $now = () => new Date()
-    class Time extends Date {
-        # sqlite
-        toJSON() {
-            $s = super.toJSON()
-            s.replace(/T/,' ')
-            s.replace(/Z/,'')
-            return s
-        }
-    }
+    $now = () => new Date().getTime() / 1000
     # is this a C
     # see also St.ts / detect_type() / typ.Cish
     $isC = &s{
