@@ -70,7 +70,7 @@
     {#if extras}+{extras} more{/if}
 {/if}
 
-{#if s.sc['░']}ipfslink{/if}
+{#if s.sc['░']}ipfs{/if}
 
 {#if dige}
     <span on:click={()=>tog('string')}>{ dige.slice(0,12) }</span>

@@ -76,7 +76,7 @@
         //  and then process them here:
         midule: function (C,s) {
             let isa = coint(haks(nex({},s.c,'pi')))
-            // console.log("midule:   "+(ispi(s)||"")+"   "+isa,{C,s})
+            // console.log("midule: "+s.t+"\t\t"+(ispi(s)||"")+"\t"+isa,{C,s})
 
             // mark as Construct()ed
             s.y.C = C
@@ -178,6 +178,8 @@
             cull_around(host)
 
             compute(host)
+            // C/kommit resync -> B/times
+            bop()
         },
         kommit: (s,Reco) => {
             // Record /kommit -> /been/#@out
