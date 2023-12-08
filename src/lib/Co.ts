@@ -19,14 +19,22 @@ import {C_,i_,o_,VA_ip,detect_type,inlace,TheC,TheA,o_up} from '$lib/St'
         # which may inform a default name:
         d.t ||= ['to','Con',...haks(d.I)].join(" ")
 
-        $them = []
+        $Pi_C = []
         d = inlacing_Con({...d,
             each: function (s,d) {
                 # try to know, label s
                 toCon_newCont(d)
 
                 # be s, eg -Rec
-                d.I.Pi && sc&pi and them.push(toCon_newSomething(d))
+                if (d.I.Pi && sc&pi) {
+                    $C = toCon_newSomething(d)
+                    # these become the set of things we likely want to iterate
+                    #  see such overalls
+                    Pi_C.push(C)
+                    # UNUSED hook per Pi C here in the time of inlacing_step1()
+                    #  early enough to spawn extra -Con/-$pi
+                    d.I.do_Pi_early && d.I.do_Pi_early(C,c&s,d,toCon_newSomething)
+                }
 
                 # then Conz simply opens that
                 # 
@@ -37,9 +45,12 @@ import {C_,i_,o_,VA_ip,detect_type,inlace,TheC,TheA,o_up} from '$lib/St'
             },
         })
 
-        if (d.I.midule) {
-            each iC them {
-                d.I.midule(C,c&s)
+        if (d.I.do_later) {
+            d.I.do_later(d)
+        }
+        if (d.I.do_Pi_later) {
+            each iC Pi_C {
+                d.I.do_Pi_later(C,c&s)
             }
         }
 
@@ -468,14 +479,15 @@ import {C_,i_,o_,VA_ip,detect_type,inlace,TheC,TheA,o_up} from '$lib/St'
         
     }
     # new s-Con/s-$pi from s=C the instruction insphere
-    function toCon_newSomething (d) {
-        let s = d.s
+    function toCon_newSomething (d,s,pi) {
+        s ||= d.s
         let Con = d.C
         # the Con.c.s = s** instructions!
         # go into s/* as -Con(s)/-Conz/-Con(*)
-        Con.c.Cishsz = 1
+        # < redundant since isC(s) we want to iterate s/* rather than s.*
+        Conc&Cishsz = 1
         # custom node type: -Con(s)/-$pi(s)
-        let pi = s.c.pi
+        pi ||= s.c.pi
         let Such = d.partor(pi)
         # Such is stamped with c&version and y&D, etc
         #  while the s** is grasped by it:

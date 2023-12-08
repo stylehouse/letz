@@ -8,7 +8,8 @@
     import Conz from '$lib/pi/Conz.svelte';
     import Dir from '$lib/pi/Dir.svelte';
     import Rec from '$lib/pi/Rec.svelte';
-    let pis = {Cont, Conz, Dir, Rec}
+    import Kom from '$lib/pi/Kom.svelte';
+    let pis = {Cont, Conz, Dir, Rec,Kom}
     // our instructions: (-Con/(-Cont|-Conz))**
     export let C
     let boost = C.c.boost || 0

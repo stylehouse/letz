@@ -406,6 +406,28 @@ import {enL,deL,indents} from "$lib/Y/Text"
     }
 
 
+# makeso, cull*
+    # sync n/#@z with N[z]
+    #  i $n/#@z:e o N/:z
+    #  instead of recreating them every time (immutable state), which is also possible...
+    # as in Record C/kommit -> B/times
+    # usually adds one new item, sometimes they vanish
+    export function makeso(n,N,d) {
+        d ||= {}
+        $was = ns&z || []
+        $neu = N.slice()
+        # find the old in the new (removingly)
+        $goners = was.filter(e => !hak(grop(z => z == ey&be, neu)))
+        # make them slink away
+        goners.map(e => es&going ||= now())
+        # z have a spacer made (#@z)
+        neu.map(z => {
+            # with y&up
+            $e = pit(n,z.t)
+            ey&be = z
+            d.creation && d.creation(e,z,n)
+        })
+    }
     # deletes history
     # < shrinking ooze
     #   
@@ -427,6 +449,7 @@ import {enL,deL,indents} from "$lib/Y/Text"
         !hak(cull) and debugger
         grop(cull,ss&z)
     }
+
 
 
 # html elements -> somewhere

@@ -2,7 +2,9 @@
     import Coning from "$lib/Coning.svelte";
     import { G,TheG,
         cull_around,Recolink,Recolink_stillness,host_Recolink_stillness,
-        Recollect,Aroundiness } from "$lib/G";
+        Recollect,Aroundiness,
+        makeso
+     } from "$lib/G";
     import But from "$lib/ui/But.svelte";
     import Con from "$lib/pi/Con.svelte"
     import { Construct, reConstruct } from '$lib/Co'
@@ -74,9 +76,9 @@
         // Con spawn their sc&pi, resolve etc is all figured out (somewhere)
         Pi:1,
         //  and then process them here:
-        midule: function (C,s) {
+        do_Pi_later: function (C,s) {
             let isa = coint(haks(nex({},s.c,'pi')))
-            // console.log("midule: "+s.t+"\t\t"+(ispi(s)||"")+"\t"+isa,{C,s})
+            // console.log("do_Pi_later: "+s.t+"\t\t"+(ispi(s)||"")+"\t"+isa,{C,s})
 
             // mark as Construct()ed
             s.y.C = C
@@ -217,19 +219,29 @@
   // B
     // now, the elsewhere to display what's tangling
     let B = C_('Record portal',1,{pi:'Rec'})
+    let items = pito(B,'items','-Kom')
+    let times = pito(B,'times','-Kom')
     let BD
     let BI = {
         // Con spawn their sc&pi, resolve etc is all figured out (somewhere)
         Pi:1,
+        do_Pi_early: (C,s,d,newSomething) => {
+            // < an extra Pi
+
+            newSomething(d,s,'Kom')
+            console.log("Seeing "+s.t)
+        },
+        do_later: (d) => {
+
+        },
     }
     let bop = () => {
-        // replaces n/* with N
-        let mkso = (n,N) => { delete n.sc.z; N.map(z => i_(n,z)) }
 
         // gather a limited view of Record**
-        mkso(pito(B,'items'),o_path(C,'/bloube:se/*'))
-        mkso(pito(B,'times'),o_path(C,'/kommit:se/*'))
-
+        let creation = e => e.c.pi = 'Kom'
+        makeso(items, o_path(C,'/bloube:se/*'),{creation});
+        makeso(items, o_path(C,'/kommit:se/*'),{creation});
+        // es&going = now() when it stops coming in
 
 
         BD = Construct({I:BI,s:B,D:BD})

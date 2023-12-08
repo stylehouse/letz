@@ -58,7 +58,8 @@
     let extras
     $: extras = hak(N) > 1 && hak(N)-1
 
-    let b = {rec}
+    let o = () => tog('dump')
+    let b = {rec,o}
     let togs = {}
     let tog = (t) => {
         togs[t] = !togs[t]
@@ -76,6 +77,12 @@
     <span on:click={()=>tog('string')}>{ dige.slice(0,12) }</span>
     
     {#if togs.string}<pre>{string}</pre>{/if}
+{/if}
+
+<!-- data dump -->
+
+{#if togs.dump}
+    <Coning t="s" C={s} noC=2 />
 {/if}
 
 <!-- /been/ data -->
