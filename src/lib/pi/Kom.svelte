@@ -47,7 +47,7 @@
         }
         if (s.sc.going) clas = 'going'
     }
-    $: calc(), level,msg
+    $: calc(), level, msg, C, s
 
 
     let o = () => tog('dump')
