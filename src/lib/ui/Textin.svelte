@@ -1,7 +1,7 @@
 <script>
     // what ghostily to write there
     export let t = " "
-    export let v = "bind:v={somevar} me"
+    export let v
     let waits = v
     let ghostily = 'ghostily'
     function enter() {
@@ -11,6 +11,7 @@
     }
     function keydown(e) {
         console.log("Textin press: "+e.key)
+        if (e.key == 'Escape') leave()
     }
     function leave() {
         v = waits

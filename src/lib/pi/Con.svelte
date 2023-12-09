@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { slide } from 'svelte/transition'
     import {onMount, onDestroy, getContext} from 'svelte'
     import {o_}  from '$lib/St'
     import {sip_wiree, reConstruct}  from '$lib/Co'

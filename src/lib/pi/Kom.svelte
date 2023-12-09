@@ -1,6 +1,6 @@
 <script>
     import { createEventDispatcher, onMount } from 'svelte'
-    import { hak,ex,map } from "$lib/Y/Pic"
+    import { hak,ex,dex,map } from "$lib/Y/Pic"
     import { pit,o_up } from "$lib/St"
     import { Construct } from "$lib/Co"
     import { G,Recollect,Aroundiness } from "$lib/G";
@@ -8,6 +8,7 @@
     import Coning from "$lib/Coning.svelte";
     import Knob from '$lib/ui/Knob.svelte';
     import Textin from '$lib/ui/Textin.svelte';
+    import Proper from '$lib/ui/Proper.svelte';
 	const dispatch = createEventDispatcher();
     // Reco we know about, eg from a remote. changes slower than Rec.
     let N = []
@@ -20,44 +21,54 @@
     let s = Con.c.s
     if (!s.c.pi == 'Rec') throw "!Rec"
 
-    let thinghood
+    let be
     if (s.y.be) {
-        // a /kommit/*
-        thinghood = 1 
+        // a /kommit/*, or something we put there
+        be = s.y.be
     }
+    let clas = ''
     
-    // < the property adjuster thing. gestural 
-    let msg = null
-    let level = s.sc.level || 0
+    // < the property adjuster thing. gestural
+    let msg
+    let level
+    onMount(() => {
+        if (be) {
+            msg = be.sc.msg || null
+            level = be.sc.level || 0
+        }
+    })
     function calc() {
-        // if (level) level *= 0.1; level = Math.round(level)
-        let settings = {level,msg}
-        console.log("-Kom "+s.t+" sets: ",settings)
-        map((v,k) => {
-            if (v) {
-                s.sc[k] = v
-            }
-            else {
-                delete s.sc[k]
-            }
-        },settings)
+        if (be) {
+            // if (level) level *= 0.1; level = Math.round(level)
+            let settings = {level,msg}
+            console.log("-Kom "+s.t+" sets: ",settings)
+            // hash copy, deleting
+            dex(be.sc,settings)
+        }
+        if (s.sc.going) clas = 'going'
     }
     $: calc(), level,msg
 
 
-
     let o = () => tog('dump')
-    let b = {Kom:calc,o}
+    let b = {Kom:calc,o: () => tog('dump'),P:() => tog('Proper')}
     let togs = {}
     let tog = (t) => {
         togs[t] = !togs[t]
     }
 </script>
-{#if thinghood}
-<div>
+{#if be}
+<div class={clas}>
     <But {b} />
     <!-- <Knob bind:value={level} min=0 max=5 /> -->
     <Textin bind:v={msg} />
+    {#if togs.Proper}
+        <Proper {C} {s} ig="level,msg"/>
+        {#if be}
+            <div>y&be <Proper {C} s={be} /></div>
+        {/if}
+    {/if}
+
 </div>
 {/if}
     
@@ -69,7 +80,8 @@
 
 
 <style>
-    div * { display:inline-block }
+    .going { opacity: 0.5; }
+    /* div * { display:inline-block } */
     .ok { color: green }
     .error { color: red }
 </style>

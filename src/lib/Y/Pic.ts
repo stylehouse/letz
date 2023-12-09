@@ -1021,11 +1021,16 @@ let window = self
         }
         return s
     }
-    # defined only
+    # hash copy, or delete if null|0|''
     $dex = &sc{
-        each kv c {
-            v != null and s [k] = c[k]
-        }
+        map((v,k) => {
+            if (v) {
+                s[k] = v
+            }
+            else {
+                delete s[k]
+            }
+        },c)
         return s
     }
     # selective ex, taking out (unless $k:0)
