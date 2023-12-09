@@ -225,10 +225,8 @@
     let BI = {
         // Con spawn their sc&pi, resolve etc is all figured out (somewhere)
         Pi:1,
-        do_Pi_early: (C,s,d,newSomething) => {
+        do_Pi_early: (C,s,d) => {
             // < an extra Pi
-
-            newSomething(d,s,'Kom')
             console.log("Seeing "+s.t)
         },
         do_later: (d) => {
@@ -240,7 +238,7 @@
         // gather a limited view of Record**
         let creation = e => e.c.pi = 'Kom'
         makeso(items, o_path(C,'/bloube:se/*'),{creation});
-        makeso(items, o_path(C,'/kommit:se/*'),{creation});
+        makeso(times, o_path(C,'/kommit:se/*'),{creation});
         // es&going = now() when it stops coming in
 
 
