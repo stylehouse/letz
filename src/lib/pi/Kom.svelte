@@ -47,11 +47,20 @@
         }
         if (s.sc.going) clas = 'going'
     }
-    $: calc(), level, msg, C, s
+    $: calc(), msg, C, s
 
+    let leves = 0
+    function leve() {
+        leves += 1
+    }
+    $: leve(), level
+    
 
-    let o = () => tog('dump')
-    let b = {Kom:calc,o: () => tog('dump'),P:() => tog('Proper')}
+    let b = {Kom:calc,
+        o: () => tog('dump'),
+        P:() => tog('Proper'),
+        l:() => tog('leveladjs'),
+    }
     let togs = {}
     let tog = (t) => {
         togs[t] = !togs[t]
@@ -60,8 +69,11 @@
 {#if be}
 <div class={clas}>
     <But {b} />
-    <!-- <Knob bind:value={level} min=0 max=5 /> -->
+    <Knob bind:value={level} min=0 max=5 step=1 />
     <Textin bind:v={msg} />
+    {#if togs.leveladjs}
+        leves:{leves}
+    {/if}
     {#if togs.Proper}
         <Proper {C} {s} ig="level,msg"/>
         {#if be}
