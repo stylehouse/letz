@@ -16,7 +16,8 @@
 	// how finely you notch the range
 	//  step=0.001 is too small to adjust with movement in pixels
 	export let step = 1;
-	export let space = 500;
+	//  300px seems good can be done in either direction by a relaxed hand
+	export let space = 300;
 	export let size = "2rem";
 
 	let elem: Element;
@@ -26,14 +27,20 @@
 	let moved = false;
 	// remember where we started each time
 	let started = null
+	// when a new value has been output, each time
+	let outpute = false
+	// buffer value until it has changed a whole step
+	let rawValue = null;
 	// usually there's a pointerup event to release the lock
 	let release = () => {
 		// console.log("On release")
+		// knob settles into where it may be rounded to
+		rawValue = value
+		// workaround a kwin-wayland bug?
+		move_pointer_to_where_it_started()
 		// the essential unlock()
 		//  can also be called ad hoc when our claim to the interaction seems to be falling apart
 		unlock()
-		// workaround a kwin-wayland bug?
-		move_pointer_to_where_it_started()
 		// just clicking on the value takes you to typing in a new one
 		if (!moved) elemVal.select()
 	}
@@ -45,8 +52,11 @@
 		let lockchange = () => locksanity()
 		document.addEventListener("pointerlockchange", lockchange)
 		document.addEventListener("pointermove", knobMove)
+
 		moved = false
 		started = {clientX:ev.clientX,clientY:ev.clientY}
+		outpute = false
+
 		// console.log("Start pointer at ",started)
 		unlock = () => {
 			// console.log("unlock")
@@ -60,38 +70,44 @@
 	onDestroy(unlock);
 
 	// fit our range onto a standard drag-distance space
-	//  500px seems good can be done in either direction by a relaxed hand
 	let range = max - min;
 	let scaleFactor = space / range;
 	function scaleMovement(distance: number) {
 		return (distance /= scaleFactor);
 	}
 
-	// buffer value until it has changed a whole step
-	let rawValue = null;
-	// make a lower multiple of step
-	function floorToStep(v: number) {
+	// make v multiple of step
+	function roundToStep(v: number) {
 		let surplus = v % step;
-		// be lenient enough to avoid float error making the last step unattainable (untested)
-		if (surplus + 0.000001 > step) surplus = 0;
-		// again, float error 
-		return dec(v - surplus,8);
+		v -= surplus
+		if (surplus*2 >= step) {
+			v -= -step
+		}
+		return dec(v,8);
 	}
-
 	function knobMove(event: PointerEvent): void {
-		const { movementY } = event;
+		let { movementY } = event;
 		if (movementY) {
 			moved = true;
 			if (rawValue == null) rawValue = value;
+			if (outpute == false && scaleFactor >= 42) {
+				// to the first step (either way) a bit easier
+				movementY *= 1.618
+			}
 			// accumulate this change
 			rawValue = clamp(min, rawValue - scaleMovement(movementY), max);
-			// output a multiple of step below that
-			value = floorToStep(rawValue);
+			// output a multiple of step near that
+			let newValue = roundToStep(rawValue)
+			if (newValue != value) {
+				outpute = true
+				value = newValue
+			}
 		}
 		locksanity()
 	}
+	// < this doesn't seem to work around this bug: https://bugs.kde.org/show_bug.cgi?id=478462
 	let move_pointer_to_where_it_started = async () => {
-		// https://bugs.kde.org/show_bug.cgi?id=478462
+		if (!started) return
     	await new Promise(resolve => setTimeout(resolve, 150));
 		// await tick()
 		var event = new MouseEvent('mousemove', {
@@ -154,7 +170,7 @@
 		overflow: hidden;
 	}
 	input {
-		width: 2em;
+		width: 1.2em;
 		text-align: center;
 		background: none;
 		border: none;
