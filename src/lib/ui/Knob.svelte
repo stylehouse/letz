@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { onDestroy } from "svelte";
+    import { onDestroy, tick } from "svelte";
 
 	// < gestures to step up|down scale...
 	//	  a C to the bottom 1/10, where the top of the previous range was
@@ -24,13 +24,18 @@
 	let unlock: Function = () => 1;
 	// a lock becomes a selection when not moved
 	let moved = false;
+	// remember where we started each time
+	let started = null
+	// usually there's a pointerup event to release the lock
 	let release = () => {
-		console.log("On release")
+		// console.log("On release")
+		// the essential unlock()
+		//  can also be called ad hoc when our claim to the interaction seems to be falling apart
 		unlock()
-		if (!moved) {
-			// just clicking on the value takes you to typing in a new one
-			elemVal.select()
-		}
+		// workaround a kwin-wayland bug?
+		move_pointer_to_where_it_started()
+		// just clicking on the value takes you to typing in a new one
+		if (!moved) elemVal.select()
 	}
 	let locksanity = () => document.pointerLockElement != elem && unlock()
 	let lock = (ev) => {
@@ -41,7 +46,10 @@
 		document.addEventListener("pointerlockchange", lockchange)
 		document.addEventListener("pointermove", knobMove)
 		moved = false
+		started = {clientX:ev.clientX,clientY:ev.clientY}
+		// console.log("Start pointer at ",started)
 		unlock = () => {
+			// console.log("unlock")
 			document.removeEventListener("pointermove", knobMove)
 			document.removeEventListener("pointerlockchange", lockchange)
 			document.pointerLockElement == elem
@@ -82,6 +90,19 @@
 		}
 		locksanity()
 	}
+	let move_pointer_to_where_it_started = async () => {
+		// https://bugs.kde.org/show_bug.cgi?id=478462
+    	await new Promise(resolve => setTimeout(resolve, 150));
+		// await tick()
+		var event = new MouseEvent('mousemove', {
+			bubbles: true,
+			cancelable: true,
+			view: window,
+			clientX: started.clientX,
+			clientY: started.clientY
+		});
+		document.dispatchEvent(event)
+	}
 	let clamp = (a,b,c) => {
 		return Math.min(Math.max(a, b), c);
 	}
@@ -90,16 +111,14 @@
         let mul = '1e'+precision
         return (s * mul).toFixed() / mul
     }
+	// also, we can type stuff in
 	let onInputChange = (ev) => {
 		let v = ev.currentTarget.value
-		if (v*1 == v) {
-			value = v
-		}
-		else {
-			console.error("Ungood knob input", v)
-		}
+		if (v*1 != v) return console.error("Ungood knob input", v)
+		value = v
 	}
 
+	// the min and max values cause the knob to lean either way
 	let lean
 	$: lean = value == min ? +5 : value == max ? -5 : 0
 	let width = "1.2em"
