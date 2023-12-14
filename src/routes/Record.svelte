@@ -54,6 +54,7 @@
     }
   // C
     export let C = C_('Record',1,{pi:'Rec'})
+    g.haveC(C,s => C = s)
     // init these so we can partition compute by them sooner
     pito(C,'bloube','-Rec')
     pito(C,'treeh','-Rec',{real:1})
@@ -219,6 +220,9 @@
   // B
     // now, the elsewhere to display what's tangling
     let B = C_('Record portal',1,{pi:'Rec'})
+    // it is recoverable from HMR that might recreate $C and $B
+    B = C.y.theB || B
+    C.y.theB = B
     let items = pito(B,'items','-Kom')
     let times = pito(B,'times','-Kom')
     let BD
@@ -250,7 +254,7 @@
     })
 
     let b = {ring,bop,
-        showC: () => tog('showC'),
+        showC: (a) => tog('showC'),
     }
     let togs = {}
     let tog = t => togs[t] = !togs[t]

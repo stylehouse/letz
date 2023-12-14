@@ -91,15 +91,28 @@ import {enL,deL,indents} from "$lib/Y/Text"
     # index by name
     introductions() {
         $g = this.up ?? this
-        $old_G = g.t_G[this.name]
+        # look up our name
+        #  in one who might also be resurrecting from old_G
+        $og = g.t_G[this.name] || g.old_G?.t_G[this.name]
+        if (!this.up && !this.notlive) {
+            # the top one remembers itself as a global variable
+            if (!og) {
+                og = navigator['G:' + this.t]
+            }
+            navigator['G:' + this.t] = this
+        }
+        if (og) {
+            this.old_G = og
+            delete og.old_G
+        }
         g.t_G[this.name] = this
     }
     # look up name
     find_name(name) {
-            $g = this.up || this
-            return g.t_G[name]
-                # or try at /^ ie this.up ie g
-                || g != this && g.find_name(name)
+        $g = this.up || this
+        return g.t_G[name]
+            # or try at /^ ie this.up ie g
+            || g != this && g.find_name(name)
     }
 
 # g.haveC, send*, I_am, g.i|o
@@ -112,6 +125,14 @@ import {enL,deL,indents} from "$lib/Y/Text"
         this.C = C
         # they can react the component to a new C
         this.i(setC)
+        this.notlive and return
+        # make this recoverable after HMR that might recreate the component
+        if (this.old_G) {
+            console.log("Recovering olde C:"+this.name)
+            this.C = this.old_G.C
+            # < should we tick()?
+            this.input_to(this.C)
+        }
     }
 
     # we host things for others
