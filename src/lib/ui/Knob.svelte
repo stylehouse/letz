@@ -27,7 +27,7 @@
 	let moved = false;
 	// remember where we started each time
 	let started = null
-	// when a new value has been output, each time
+	// once a new value has been output, each time
 	let outpute = false
 	// buffer value until it has changed a whole step
 	let rawValue = null;
@@ -46,7 +46,6 @@
 	}
 	let locksanity = () => document.pointerLockElement != elem && unlock()
 	let lock = (ev) => {
-		ev.stopPropagation();
 		elem.requestPointerLock();
 		// to not stick around after alt-tab (or other unknown interference)
 		let lockchange = () => locksanity()
@@ -141,7 +140,7 @@
 	let height = "1.2em"
 </script>
 
-<zf bind:this={elem} on:pointerdown={lock} on:pointerup={release}>
+<zf bind:this={elem} on:pointerdown|stopPropagation={lock} on:pointerup={release}>
 	<span id="knob">
 		<svg {width} {height}>
 			<circle class="knobBg" cx="5" cy="{10 + lean}" r="10"/>
