@@ -39,9 +39,7 @@
     })
     function calc() {
         if (be) {
-            // if (level) level *= 0.1; level = Math.round(level)
             let settings = {level,msg}
-            console.log("-Kom "+s.t+" sets: ",settings)
             // hash copy, deleting
             dex(be.sc,settings)
         }
@@ -55,6 +53,7 @@
     }
     $: leve(), level
     
+    let delta = s.sc.delta
 
     let b = {Kom:calc,
         o: () => tog('dump'),
@@ -71,8 +70,8 @@
     <But {b} />
     <Knob bind:value={level} min=0 max=5 step=1 />
     <Textin bind:v={msg} />
-    {#if togs.leveladjs}
-        leves:{leves}
+    {#if delta}
+        <span>{delta}s ago</span>
     {/if}
     {#if togs.Proper}
         <Proper {C} {s} ig="level,msg"/>

@@ -9,7 +9,7 @@
     import Con from "$lib/pi/Con.svelte"
     import { Construct, reConstruct } from '$lib/Co'
     import { C_,pito,o_up,o_,i_,o_path } from '$lib/St'
-    import { map,ac, ahsk,ahk,havs,haks,hak,coint,joint, dig, sha256,sex,ex,nex,now,ispi,fatal } from "$lib/Y/Pic.ts"
+    import { map,grep,ac,dec, ahsk,ahk,havs,haks,hak,coint,joint,arbowa, dig, sha256,sex,ex,nex,now,ispi,fatal } from "$lib/Y/Pic.ts"
 
 
     import { getContext, get_current_component, onDestroy, onMount, setContext, tick } from 'svelte/internal';
@@ -226,11 +226,26 @@
         // Con spawn their sc&pi, resolve etc is all figured out (somewhere)
         Pi:1,
         do_Pi_early: (C,s,d) => {
-            // < an extra Pi
-            console.log("Seeing "+s.t)
+            // < inheritable C%somethings, targeting
+            let uC = C.y.up?.c.Kom
+            let us = s.y.up
+            // switch planes
+            let beof = (s) => fatal.isC(s.y.be)
+            if (times == us) {
+                // arbowa: finds one us/* before s, works on arrays or C
+                let prev = arbowa(us,s)
+                if (prev) {
+                    // times/*%delta to the previous
+                    let pair = grep(map(s => beof(s).sc.time, [prev,s]))
+                    if (pair[0] && pair[1]) {
+                        s.sc.delta = dec(pair[0] - pair[1],0)
+                    }
+                }
+            }
+            us && console.log("Seeing "+us.t+"/"+s.t, {C,s})
         },
         do_later: (d) => {
-
+            
         },
     }
     let bop = () => {
@@ -255,7 +270,7 @@
     <h1>Record</h1>
     <But {b}/>
     <!-- <Grabber /> -->
-    {#if 1 && D}
+    {#if 0 && D}
         <BigGroup>
             <!-- <Coning t="theD" C={D} /> -->
             <Con C={D} />
