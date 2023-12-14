@@ -2,7 +2,7 @@
 import type { SvelteComponent } from 'svelte';
 import { get_current_component, tick, setContext,getContext } from 'svelte/internal';
 
-import { ac, ahsk,ahk,hak,haks,havs, dig, sha256,sex,ex,now,grep,grop,map,sum,hashkv,flatten,fatal,heq,reverse } from "$lib/Y/Pic.ts"
+import { ac, ahsk,ahk,hak,haks,havs, dec,dig, sha256,sex,ex,now,grep,grop,map,sum,arbowa,hashkv,flatten,fatal,heq,reverse } from "$lib/Y/Pic.ts"
 import { pit,C_,i_,o_,pito,o_path,o_up,inlace } from "$lib/St"
 import {enL,deL,indents} from "$lib/Y/Text"
 
@@ -405,6 +405,46 @@ import {enL,deL,indents} from "$lib/Y/Text"
         sy&wake && sy&wake(1)
     }
 
+# Betime, the UI functions
+    # Record B/items|times** iterates here (at do_Pi_early) 
+    export function Betime({C,s,d,items,times}) {
+        # < inheritable C%somethings, targeting
+        # the -Kom/s-Kom
+        let uC = C.y.up?.c.Kom
+        let us = s.y.up
+        # switch planes
+        let beof = (s) => fatal.isC(s.y.be)
+        if (times == us) {
+            # arbowa: finds one us/* before s, works on arrays or C
+            let prev = arbowa(us,s)
+            if (prev) {
+                # to the previous (parent commit)
+
+                # time difference
+                # times/*%delta = pairwise *//@be%time 
+                let pair = grep(map(s => beof(s).sc.time, [prev,s]))
+                if (pair[0] && pair[1]) {
+                    s.sc.delta = dec(pair[0] - pair[1],0)
+                }
+
+                # text difference
+                # times/*%diff = pairwise *(//@be)+/*(//@be)
+                $N = o_up(s,{inc:1,climb:s => [sy&be]})
+                sc&look = N
+                
+                # < look up this version in treeh//@collect/* ?
+                #   that should be a clone+encode of treeh
+                #    to capture the version of Diring
+                #    ~~ A:K (or a C:K?) used to be the copy coming out of J osc
+                #  < which need hash indexen
+                #    and to garbage collect where times says
+            }
+            else if (!prev) {
+
+            }
+        }
+        us && console.log("Seeing "+us.t+"/"+s.t, {C,s})
+    }
 
 # makeso, cull*
     # sync n/#@z with N[z]

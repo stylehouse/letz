@@ -85,6 +85,9 @@
     
 <!-- data dump -->
 
+    {#if s.c.look}
+        <Coning t="look" C={s.c.look} noC=2  />
+    {/if}
     {#if togs.dump}
         <Coning t="s" C={s} noC=2 />
     {/if}
