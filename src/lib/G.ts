@@ -2,7 +2,7 @@
 import type { SvelteComponent } from 'svelte';
 import { get_current_component, tick, setContext,getContext } from 'svelte/internal';
 
-import { ac, ahsk,ahk,hak,haks,havs, dec,dig, sha256,sex,ex,ex2,now,grep,grop,map,sum,arbowa,hashkv,flatten,fatal,heq,reverse } from "$lib/Y/Pic.ts"
+import { ac, ahsk,ahk,hak,haks,havs, dec,dig, sha256,sex,ex,nex,now,grep,grop,map,sum,arbowa,hashkv,flatten,fatal,heq,reverse } from "$lib/Y/Pic.ts"
 import { pit,C_,i_,o_,pito,o_path,o_up,inlace } from "$lib/St"
 import {enL,deL,indents} from "$lib/Y/Text"
 
@@ -206,6 +206,16 @@ import {enL,deL,indents} from "$lib/Y/Text"
         # g.output_to(Reco)
     }
 
+    function Klone(C,d) {
+        $K = C_(C.t)
+        # we reinput /*, no up
+        nex(K.y,C.y,'up')
+        ex(K.c,C.c)
+        nex(K.sc,C.sc,'z')
+        d.K and i_(d.K,K)
+        d.K = K
+        return K
+    }
     # Reco = print C**
     async function mkReco(C) {
         $topK
@@ -214,18 +224,12 @@ import {enL,deL,indents} from "$lib/Y/Text"
             #  in eg C:"treeh $i"/C:Diring%dige are needed to look up that version of C:Diring
 
             # clone the C** into K**
-            $K = C_(C.t,C.y.cv)
-            ex(K.c,C.c)
-            ex(K.sc,C.sc)
-            # we reinput /*
-            delete Ks&z
-            d.K and i_(d.K,K)
-            d.K = K
+            $K = Klone(C,d)
             topK ||= K
             
-            # the usual K compressions...
-            K.y = K.y.cv ? {cv:K.y.cv} : {}
+            # < compress: mute unstorables adhoc
             # < maybe any C in K.*.*, maybe any ref in K.c...
+            #   but leaving enough to find origin etc.
 
             # encode Lines
             $L = enL(K)
@@ -485,7 +489,7 @@ import {enL,deL,indents} from "$lib/Y/Text"
                 # times/*%diff = pairwise *(//@be)+:treeh/**(//@be)+:bloub
                 $Recotreeh = Recolink_lookup(sy&be)
                 $RecobloubeN = Recolink_discovery(Recotreeh)
-                sc&look = Recotreeh
+                sc&look = RecobloubeN
                 return
 
                 $bloubesof = (s) => {

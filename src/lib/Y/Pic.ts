@@ -1011,7 +1011,7 @@ let window = self
         return s
     }
     # selectively not extending
-    #  nex(c,s,c) extends what isnt in c.* yet
+    #  nex(s,c,s) extends what isnt in s.* yet
     $nex = &scq{
         q = peli(q)
         each kv c {
