@@ -2,7 +2,7 @@
 import type { SvelteComponent } from 'svelte';
 import { get_current_component, tick, setContext,getContext } from 'svelte/internal';
 
-import { ac, ahsk,ahk,hak,haks,havs, dec,dig, sha256,sex,ex,now,grep,grop,map,sum,arbowa,hashkv,flatten,fatal,heq,reverse } from "$lib/Y/Pic.ts"
+import { ac, ahsk,ahk,hak,haks,havs, dec,dig, sha256,sex,ex,ex2,now,grep,grop,map,sum,arbowa,hashkv,flatten,fatal,heq,reverse } from "$lib/Y/Pic.ts"
 import { pit,C_,i_,o_,pito,o_path,o_up,inlace } from "$lib/St"
 import {enL,deL,indents} from "$lib/Y/Text"
 
@@ -208,13 +208,45 @@ import {enL,deL,indents} from "$lib/Y/Text"
 
     # Reco = print C**
     async function mkReco(C) {
+        $topK
+        $encode = (C,d) => {
+            # C cloning, compressing and encoding
+            #  in eg C:"treeh $i"/C:Diring%dige are needed to look up that version of C:Diring
+
+            # clone the C** into K**
+            $K = C_(C.t,C.y.cv)
+            ex(K.c,C.c)
+            ex(K.sc,C.sc)
+            # we reinput /*
+            delete Ks&z
+            d.K and i_(d.K,K)
+            d.K = K
+            topK ||= K
+            
+            # the usual K compressions...
+            K.y = K.y.cv ? {cv:K.y.cv} : {}
+            # < maybe any C in K.*.*, maybe any ref in K.c...
+
+            # encode Lines
+            $L = enL(K)
+            K.y.string = L
+            K.y.d = d
+
+            # indentedly joining these
+            return L
+        }
         $string = inlace(C,{
-            grab: (C,d) => indents(d.d*2,enL(C),'notailnl'),
+            grab: (C,d) => indents(d.d*2, encode(C,d), 'notailnl'),
         }).join("\n")
+        !topK and debugger
 
         $dige = await sha256(string)
 
+        # < Betime could rename these better than 'a'
         $Reco = C_('a','-Reco',{},{string,dige})
+        # also, have an immutable copy of it all
+        Recos&z = [topK]
+
         return Reco
     }
     # multiple Reco compete for use
@@ -225,7 +257,7 @@ import {enL,deL,indents} from "$lib/Y/Text"
         # < s says it wants something else reset to, for undo
         #    git work via s, who might show all Reco?
         #    they want naming intelligently wrt the diff, enclosing headings etc...
-        $co = s.y.collect ||= C_('a','-Recollector')
+        $co = s.y.collect ||= C_('collect','-Recollector')
         
         $latest = o_(co).slice(-1)[0]
         if (latest && latests&dige == Recos&dige) {
@@ -235,6 +267,7 @@ import {enL,deL,indents} from "$lib/Y/Text"
         else {
             Recos&time = now()
             i_(co,Reco)
+            ahk(co,'y','Reco_by_dige',Recos&dige,Reco)
         }
         return Reco
     }
@@ -449,9 +482,28 @@ import {enL,deL,indents} from "$lib/Y/Text"
                 }
 
                 # text difference
-                # times/*%diff = pairwise *(//@be)+/*(//@be)
-                $N = o_up(s,{inc:1,climb:s => [sy&be]})
-                sc&look = N
+                # times/*%diff = pairwise *(//@be)+:treeh/**(//@be)+:bloub
+                $Recotreeh = Recolink_lookup(sy&be)
+                $RecobloubeN = Recolink_discovery(Recotreeh)
+                sc&look = Recotreeh
+                return
+
+                $bloubesof = (s) => {
+                    $Recotreeh = Recolink_lookup(sy&be)
+                    $RecobloubeN = Recolink_discovery(Recotreeh)
+                        .map(link => Recolink_lookup(link))
+                    return RecobloubeN
+                }
+                $a = bloubesof(prev)
+                $b = bloubesof(s)
+                # .t union these...
+                a = map((s) => {
+                    $other = theone(grop(z => z.t == s.t,b))
+                    return [a,other]
+                },a)
+                a.push(...b)
+                sc&look = a
+
                 
                 # < look up this version in treeh//@collect/* ?
                 #   that should be a clone+encode of treeh
@@ -465,6 +517,22 @@ import {enL,deL,indents} from "$lib/Y/Text"
             }
         }
         us && console.log("Seeing "+us.t+"/"+s.t, {C,s})
+    }
+    function Recolink_lookup(link) {
+        $dige = link.sc['░']
+        !dige and debugger
+        # C:treeh, but is not immutable
+        $origin = linky&be
+        # look up the version
+        $co = originy&collect
+        $Reco = ahsk(co,'y','Reco_by_dige',dige)
+        !Reco and debugger
+        return Reco
+    }
+    function Recolink_discovery(s) {
+        # s can be Reco, since Reco%dige
+        #  aot the uber-presentable alternative name:
+        return inlace(s,{grab:(s) => s.sc['░'] && s})
     }
 
 # makeso, cull*

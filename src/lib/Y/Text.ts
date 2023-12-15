@@ -10,7 +10,7 @@ let self = {}
 let me = self.me = {}
 
  // diffing
-    $dmp = null
+        $dmp = null
     $diff = &sSc{
         dmp ||= new DiffMatchPatch()
         c ||= {}
