@@ -87,19 +87,12 @@ import type { EditorState } from "@codemirror/state"
 
 
 import { pit,C_,i_,o_,o_path,inlace } from "$lib/St"
-import { me,indent } from "$lib/Y/Text"
+import { me,indent,textfilter } from "$lib/Y/Text"
 import { isar,ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak,reverse,slant } from "$lib/Y/Pic"
 
   // f
     $mkrange = &cu,{
         return sex({},cu,'from,to')
-    }
-    $textfilter = &s{
-        $spacearound = s.match(/^\s|\s$/)
-        $nl = s.includes("\n")
-        spacearound || nl and s = '｢'+s+'｣'
-        nl and s = s.replaceAll("\n","\\n")
-        return s
     }
 
   // savepoints

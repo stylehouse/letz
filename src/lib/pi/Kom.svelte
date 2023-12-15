@@ -9,6 +9,7 @@
     import Knob from '$lib/ui/Knob.svelte';
     import Textin from '$lib/ui/Textin.svelte';
     import Proper from '$lib/ui/Proper.svelte';
+    import Diff from '$lib/ui/Diff.svelte';
 	const dispatch = createEventDispatcher();
     // Reco we know about, eg from a remote. changes slower than Rec.
     let N = []
@@ -54,6 +55,7 @@
     $: leve(), level
     
     let delta = s.sc.delta
+    let diff = s.sc.diff
 
     let b = {Kom:calc,
         o: () => tog('dump'),
@@ -72,6 +74,9 @@
     <Textin bind:v={msg} />
     {#if delta}
         <span>{delta}s ago</span>
+    {/if}
+    {#if diff}
+        <Diff {diff}/>
     {/if}
     {#if togs.Proper}
         <Proper {C} {s} ig="level,msg"/>

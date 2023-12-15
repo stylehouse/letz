@@ -2,9 +2,9 @@
 import type { SvelteComponent } from 'svelte';
 import { get_current_component, tick, setContext,getContext } from 'svelte/internal';
 
-import { ac, ahsk,ahk,hak,haks,havs, dec,dig, sha256,sex,ex,nex,now,grep,grop,map,sum,arbowa,hashkv,flatten,fatal,heq,reverse } from "$lib/Y/Pic.ts"
+import { ac, ahsk,ahk,theone,hak,haks,havs, dec,dig, sha256,sex,ex,nex,now,grep,grop,armap,map,sum,arbowa,hashkv,flatten,fatal,heq,reverse } from "$lib/Y/Pic.ts"
 import { pit,C_,i_,o_,pito,o_path,o_up,inlace } from "$lib/St"
-import {enL,deL,indents} from "$lib/Y/Text"
+import {diff,enL,deL,indents} from "$lib/Y/Text"
 
 # f
     # s^^^ -> a/pa/th
@@ -487,26 +487,35 @@ import {enL,deL,indents} from "$lib/Y/Text"
 
                 # text difference
                 # times/*%diff = pairwise *(//@be)+:treeh/**(//@be)+:bloub
-                $Recotreeh = Recolink_lookup(sy&be)
-                $RecobloubeN = Recolink_discovery(Recotreeh)
-                sc&look = RecobloubeN
-                return
-
-                $bloubesof = (s) => {
+                $by_ti = {}
+                map(&si{
                     $Recotreeh = Recolink_lookup(sy&be)
-                    $RecobloubeN = Recolink_discovery(Recotreeh)
-                        .map(link => Recolink_lookup(link))
-                    return RecobloubeN
-                }
-                $a = bloubesof(prev)
-                $b = bloubesof(s)
-                # .t union these...
-                a = map((s) => {
-                    $other = theone(grop(z => z.t == s.t,b))
-                    return [a,other]
-                },a)
-                a.push(...b)
-                sc&look = a
+                    Recolink_discovery(Recotreeh)
+                        .map(link => {
+                            $Recobloube = Recolink_lookup(link)
+                            # the above doesn't know the name 'Diring' anymore
+                            # < it should probably come from $origin
+                            # so index these
+                            ahk(by_ti, link.t,i, Recobloube)
+                        })
+                }, [prev,s])
+
+                # .t unioned
+
+                map(&Nt{
+                    # N are all just named 'a'
+                    # ensure this is two long
+                    N[0] ||= ''
+                    N[1] ||= ''
+                    $M = diff(
+                        ...armap(s => s && ss&string || '', N),
+                        {},
+                    )
+                    # C:new|gone|same with c&s='text'
+                    s.sc.diff = M
+                },by_ti)
+                
+
 
                 
                 # < look up this version in treeh//@collect/* ?

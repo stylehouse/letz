@@ -8,6 +8,15 @@ import DiffMatchPatch from "diff-match-patch"
 # export default self, so users import {deL,oleak,me} from 'Tex'
 let self = {}
 let me = self.me = {}
+ // chewing on
+    $textfilter = &sc{
+        c ||= {}
+        $spacearound = s.match(/^\s|\s$/)
+        $nl = s.includes("\n")
+        spacearound || nl and s = '｢'+s+'｣'
+        nl and s = s.replaceAll("\n","\\n")
+        return s
+    }
 
  // diffing
         $dmp = null
@@ -18,11 +27,11 @@ let me = self.me = {}
         dmp.Diff_Timeout = 1; # second
         dmp.Diff_EditCost = c.edar || 4
 
-        $d = dmp.diff_main(s, S);
+        $diffs = dmp.diff_main(s, S);
         # idealise the size of the groups coming/going
         c.chunk ||= 'word';
-        c.chunk == 'line' and dmp.diff_cleanupSemantic(d)
-        c.chunk == 'word' and dmp.diff_cleanupEfficiency(d)
+        c.chunk == 'line' and dmp.diff_cleanupSemantic(diffs)
+        c.chunk == 'word' and dmp.diff_cleanupEfficiency(diffs)
         # or letters at a time, nice and noisy
         
         # convert to C+
@@ -658,4 +667,4 @@ let me = self.me = {}
     $deL = s => me.deL({},{},{},{},s)
     $enL = s => me.enL({},{},{},{},s)
 
-export {me, enj,dej, enL,deL, indent,indents}
+export {textfilter,diff,me, enj,dej, enL,deL, indent,indents}
