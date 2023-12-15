@@ -29,3 +29,12 @@ runs commands that might error, has ncurses interface.
 various podman-build are implied.
 
 should be secure, only uses core python.
+
+
+
+## ipfs.py
+
+**blob store**
+
+deprecated, see src/routes/ipfs/+server.ts
+

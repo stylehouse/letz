@@ -4,10 +4,15 @@
 
 ## install
 
-Clone this, then:
+Clone this. Probably to ~/src/letz.
+
+The following can be opted out of mostly by hacking the job list in zap.py:
+ - sudo apt install podman
+   - opt out: use Docker, rename Containerfile
+ - Point the hostname `sa` to where to ssh to run containers, or to localhost in ```/etc/hosts```
+   - opt out: delete the ssh step
 
 ```bash
-sudo apt install lsyncd virt-manager sshfs openssh-server python3-flask
 git submodule init
 git submodule update
 # < the "gox" qemu vm creation (a debian)
@@ -15,7 +20,9 @@ git submodule update
 #   sudo apt install lsyncd podman sshfs openssh-server
 py/zap.py init
 ```
-Reconfigure `zap.py` if you didn't have a [vm host named gox](https://github.com/stylehouse/stylehouse/blob/151fe09b32e4562e20a67ac2766a3259a794b4d6/G/Lafr/Inside#L1168). Anything could be needed here, not sure. `init` is untested.
+Having read a bit of `zap.py` first.
+
+You probably don't need a vm with containers inside, [things get very job-security over there](https://github.com/stylehouse/stylehouse/blob/151fe09b32e4562e20a67ac2766a3259a794b4d6/G/Lafr/Inside#L1168)
 
 ## run
 run:
@@ -25,5 +32,8 @@ py/zap.py
 
 # description
 
-domes in, domes out
+computer parts.
 
+# status
+
+research-grade, difficult to say
