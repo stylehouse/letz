@@ -21,12 +21,11 @@
 </script>
 
 <!-- <zo>{#if neu}<zneu>+{neu}</zneu>{/if}{#if gone}<zgone>-{gone}</zgone>{/if}</zo> -->
-<zo>
     {#each diff as n}
-    <zo class={n.t}>
         {#if n.t == 'same'}
             <!-- <code>x{n.c.s.length}</code> -->
         {:else}
+    <zo class={n.t}>
             <code>
             {#each textfilter(n.c.s).split("\t") as s,i}
                 {#if i > 0}
@@ -35,10 +34,9 @@
                 {s}
             {/each}
             </code>
-        {/if}
     </zo>
+        {/if}
     {/each}
-</zo>
 
 <style>
     code {
@@ -47,7 +45,7 @@
     zo {
         background-color: rgba(12, 15, 34, 0.418);
         border: 0.12em dotted rgb(114, 250, 159);
-        border-radius: calc(max(0.4em, 15%));
+        border-radius: calc(max(0.2em, 15%));
         font-size: 86%;
     }
     ztab { color: rgb(160, 86, 17); margin: 0.1em; }

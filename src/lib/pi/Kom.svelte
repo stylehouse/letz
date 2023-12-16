@@ -77,7 +77,12 @@
         <span>{delta}s</span>
     {/if}
     {#if diff}
-        <Diff {diff}/>
+        {#each diff as n}
+        <zo>
+            <zc>{n.t}</zc>
+            <Diff diff={n.sc.z}/>
+        </zo>
+        {/each}
     {/if}
     {#if togs.Proper}
         <Proper {C} {s} ig="level,msg"/>
@@ -104,4 +109,13 @@
     /* div * { display:inline-block } */
     .ok { color: green }
     .error { color: red }
+    zo {
+        background-color: rgba(12, 15, 34, 0.418);
+        border: 0.12em dotted rgb(114, 250, 159);
+        border-radius: calc(max(0.4em, 15%));
+        font-size: 86%;
+    }
+    zc {
+        color:rgb(173, 173, 189);
+    }
 </style>

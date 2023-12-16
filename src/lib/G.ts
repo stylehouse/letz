@@ -487,7 +487,7 @@ import {diff,enL,deL,indents} from "$lib/Y/Text"
 
                 # text difference
                 # times/*%diff = pairwise *(//@be)+:treeh/**(//@be)+:bloub
-                s.sc.diff ||= generate_diff(prev,s)
+                s.sc.diff = generate_diff(prev,s)
                 
 
 
@@ -522,8 +522,9 @@ import {diff,enL,deL,indents} from "$lib/Y/Text"
                 })
         }, [a,b])
 
-        $first
-        map(&Nt{
+
+        # C:$t /C:new|gone|same with c&s='text'
+        return armap(&Nt{
             # N are all just named 'a'
             # ensure this is two long
             N[0] ||= ''
@@ -532,10 +533,8 @@ import {diff,enL,deL,indents} from "$lib/Y/Text"
                 ...armap(s => s && ss&string || '', N),
                 {},
             )
-            # C:new|gone|same with c&s='text'
-            first = M
+            return C_(t,1,{},{z:M})
         },by_ti)
-        return first
     }
     function Recolink_lookup(link) {
         $dige = link.sc['░']
