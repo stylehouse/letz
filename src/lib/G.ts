@@ -487,33 +487,7 @@ import {diff,enL,deL,indents} from "$lib/Y/Text"
 
                 # text difference
                 # times/*%diff = pairwise *(//@be)+:treeh/**(//@be)+:bloub
-                $by_ti = {}
-                map(&si{
-                    $Recotreeh = Recolink_lookup(sy&be)
-                    Recolink_discovery(Recotreeh)
-                        .map(link => {
-                            $Recobloube = Recolink_lookup(link)
-                            # the above doesn't know the name 'Diring' anymore
-                            # < it should probably come from $origin
-                            # so index these
-                            ahk(by_ti, link.t,i, Recobloube)
-                        })
-                }, [prev,s])
-
-                # .t unioned
-
-                map(&Nt{
-                    # N are all just named 'a'
-                    # ensure this is two long
-                    N[0] ||= ''
-                    N[1] ||= ''
-                    $M = diff(
-                        ...armap(s => s && ss&string || '', N),
-                        {},
-                    )
-                    # C:new|gone|same with c&s='text'
-                    s.sc.diff = M
-                },by_ti)
+                s.sc.diff ||= generate_diff(prev,s)
                 
 
 
@@ -530,6 +504,38 @@ import {diff,enL,deL,indents} from "$lib/Y/Text"
             }
         }
         us && console.log("Seeing "+us.t+"/"+s.t, {C,s})
+    }
+    # only works on B/times/*
+    # < more than one bloube
+    function generate_diff(a,b) {
+        # .t unioned
+        $by_ti = {}
+        map(&si{
+            $Recotreeh = Recolink_lookup(sy&be)
+            Recolink_discovery(Recotreeh)
+                .map(link => {
+                    $Recobloube = Recolink_lookup(link)
+                    # the above doesn't know the name 'Diring' anymore
+                    # < it should probably come from $origin
+                    # so index these
+                    ahk(by_ti, link.t,i, Recobloube)
+                })
+        }, [a,b])
+
+        $first
+        map(&Nt{
+            # N are all just named 'a'
+            # ensure this is two long
+            N[0] ||= ''
+            N[1] ||= ''
+            $M = diff(
+                ...armap(s => s && ss&string || '', N),
+                {},
+            )
+            # C:new|gone|same with c&s='text'
+            first = M
+        },by_ti)
+        return first
     }
     function Recolink_lookup(link) {
         $dige = link.sc['░']

@@ -49,23 +49,24 @@
     $: calc(), msg, C, s
 
     let leves = 0
-    function leve() {
-        leves += 1
-    }
-    $: leve(), level
     
     let delta = s.sc.delta
     let diff = s.sc.diff
 
-    let b = {Kom:calc,
-        o: () => tog('dump'),
-        P:() => tog('Proper'),
-        l:() => tog('leveladjs'),
-    }
+    let b = {ui: () => tog('ui')}
     let togs = {}
     let tog = (t) => {
         togs[t] = !togs[t]
     }
+    function leve() {
+        togs.ui && ex(b, {
+            Kom: calc,
+            o: () => tog('dump'),
+            P:() => tog('Proper'),
+            l:() => tog('leveladjs'),
+        })
+    }
+    $: leve()
 </script>
 {#if be}
 <div class={clas}>
@@ -73,7 +74,7 @@
     <Knob bind:value={level} min=0 max=5 step=1 />
     <Textin bind:v={msg} />
     {#if delta}
-        <span>{delta}s ago</span>
+        <span>{delta}s</span>
     {/if}
     {#if diff}
         <Diff {diff}/>
