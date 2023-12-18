@@ -1,6 +1,7 @@
 <script>
     import { createEventDispatcher, onMount } from 'svelte'
-    import { hak,ex,dex,map } from "$lib/Y/Pic"
+    import { hak,ex,dex,map,haks,joint } from "$lib/Y/Pic"
+    import { enj } from "$lib/Y/Text"
     import { pit,o_up } from "$lib/St"
     import { Construct } from "$lib/Co"
     import { G,Recollect,Aroundiness } from "$lib/G";
@@ -48,32 +49,40 @@
     }
     $: calc(), msg, C, s
 
-    let leves = 0
     
     let delta = s.sc.delta
     let diff = s.sc.diff
 
-    let b = {ui: () => tog('ui')}
     let togs = {}
     let tog = (t) => {
         togs[t] = !togs[t]
     }
+    let b = 'not'
+    let bid = ''
     function leve() {
+        b = {ui: () => tog('ui')}
+        // we pull a tray of buttons out
         togs.ui && ex(b, {
             Kom: calc,
             o: () => tog('dump'),
             P:() => tog('Proper'),
             l:() => tog('leveladjs'),
         })
+        // for some reason the above 'b = ...'
+        //   is not enough to react <But {b}/>
+        //  but 'togs[t] = ...' gets us here
+        //   though it requires that '$: ..., togs'
+        // so we make a cache version, see {#key bid}
+        bid = joint(haks(b))
     }
-    $: leve()
+    $: leve(),togs
 </script>
 {#if be}
 <div class={clas}>
-    <But {b} />
+    {#key bid}<But {b} />{/key}
     <Knob bind:value={level} min=0 max=5 step=1 />
     <Textin bind:v={msg} />
-    {#if delta}
+    {#if delta != null}
         <span>{delta}s</span>
     {/if}
     {#if diff}
