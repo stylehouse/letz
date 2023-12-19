@@ -50,8 +50,14 @@
     $: calc(), msg, C, s
 
     
-    let delta = s.sc.delta
-    let diff = s.sc.diff
+    let delta
+    let diff
+    function slo() {
+        delta = s.sc.delta
+        diff = s.sc.diff
+    }
+    s.y.wake = () => slo()
+    $: slo(), s
 
     let togs = {}
     let tog = (t) => {

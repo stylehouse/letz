@@ -15,6 +15,12 @@
     let nodules
     function upto() {
         nodules = o_(C)
+        // check names
+        //  the '#each ... (n.t)' below means those things are keyed by n.t
+        //   keyed|indexed|addressed|identified|individuated|remembered
+        //  atm we use the array indices to individuate [C,C,C],
+        //   which gets very incorrect if things start rearranging
+        //  < should be a Cid - they identity
         let nameclash = hak(uniq(map(n => n.t, nodules))) != hak(nodules)
         if (nameclash) debugger
     }

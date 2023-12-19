@@ -469,6 +469,9 @@ import {diff,enj,enL,deL,indents} from "$lib/Y/Text"
     export function Betime({C,s,d,items,times}) {
         # < inheritable C%somethings, targeting
         # the -Kom/s-Kom
+        let Con = C.y.up
+        # give ^-Conz/-Con a Ct, see 'atm we use the array indices to individuate [C,C,C]'
+        Con.t = s.t
         let uC = C.y.up?.c.Kom
         let us = s.y.up
         # switch planes
@@ -568,12 +571,12 @@ import {diff,enj,enL,deL,indents} from "$lib/Y/Text"
     $disable_other_cull_process = 1
     export function Betimes({items,times}) {
         $N = o_(times)
-        hak(N) < 5 and return
+        hak(N) < 8 and return
         # these times/* are from kommit/*
         $one = N[0]
         $ori = oney&be
         $kommit = oriy&up
-        $desired_number = 3
+        $desired_number = 6
         # how to change times/*
         $add = []
         $remove = []
@@ -587,10 +590,11 @@ import {diff,enj,enL,deL,indents} from "$lib/Y/Text"
 
         # find unconscious commits
         $would_cull = times_cullable(look)
+        $couldda_culled = hak(would_cull)
 
         # see if those rules alproduce enough squishing
         $desired_reduction = hak(look) - desired_number
-        if (hak(would_cull) < desired_reduction) {
+        if (0 && hak(would_cull) < desired_reduction) {
             # subbranch
             #   < we finally replace them with a Recolink to the kommit including them
             $would_subbranch = agoodchunkof(look)
@@ -601,7 +605,6 @@ import {diff,enj,enL,deL,indents} from "$lib/Y/Text"
         }
         else {
             # only so many
-            $couldda_culled = hak(would_cull)
             would_cull = would_cull.slice(0, desired_reduction)
             remove.push(...delook(would_cull))
         }
@@ -610,18 +613,29 @@ import {diff,enj,enL,deL,indents} from "$lib/Y/Text"
 
         # apply the change!
         map(&s{
+            
+        },add)
+        map(&s{
             $be = sy&be
             # allow delete from times/*
             ss&goable = now()
             # delete from kommit/*
             $ko = bey&up
             grop(be,kos&z)
-            # drop diff cache of the next one
-            $ne = arafta(timess&z,s)
+        },remove) 
+        map(&s{
+            # drop diff cache + wake several of them...
+            #  now that all %goable are set on ones skip over
+            # < this doesn't seem to work too well.
+            $ne = timeses_prev_realthing(s,'aft')
             ne and delete nes&diff
+            ne and ney&wake && ney&wake()
             # < slower delete from times/*
             grop(s,timess&z)
-        },remove) 
+        },remove)
+        # < the above wake is not doing it?
+        # wake everyone
+        o_(times).map(s => sy&wake && sy&wake())
 
 
         $c = {desired_reduction,couldda_culled,add,remove}

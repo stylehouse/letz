@@ -240,7 +240,6 @@
         },
     }
     let bop = () => {
-
         // gather a limited view of Record**
         let creation = e => e.c.pi = 'Kom'
         makeso(items, o_path(C,'/bloube:se/*'),{creation});
