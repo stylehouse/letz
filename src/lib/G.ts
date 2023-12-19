@@ -2,7 +2,7 @@
 import type { SvelteComponent } from 'svelte';
 import { get_current_component, tick, setContext,getContext } from 'svelte/internal';
 
-import { ac, ahsk,ahk,theone,hak,haks,havs, dec,dig, sha256,sex,ex,nex,now,grep,grop,armap,map,sum,arafta,arbowa,hashkv,flatten,fatal,heq,reverse } from "$lib/Y/Pic.ts"
+import { ac, ahsk,ahk,theone,hak,haks,havs, dec,dig, sha256,sex,ex,nex,now,grep,grop,armap,map,sum,ksaf,hashkv,flatten,fatal,heq,reverse } from "$lib/Y/Pic.ts"
 import { pit,C_,i_,o_,pito,o_path,o_up,inlace } from "$lib/St"
 import {diff,enj,enL,deL,indents} from "$lib/Y/Text"
 
@@ -475,14 +475,13 @@ import {diff,enj,enL,deL,indents} from "$lib/Y/Text"
         let beof = (s) => fatal.isC(s.y.be)
         if (times == us) {
             let prev = null
-            if (ss&going || ss&goable) {
+            if (!timeses_realthing(s)) {
                 # someone has deleted s, and it's just hanging around...
                 # leave diff as it was, commit log is lies until its gone
             }
             else {
-                # dig a cave in this memory here (is new every Construct)
-                prev = usy&last_diffable
-                usy&last_diffable = s
+                # find previous real commit
+                prev = timeses_prev_realthing(s)
             }
             if (prev) {
                 # to the previous (parent commit)
@@ -495,13 +494,27 @@ import {diff,enj,enL,deL,indents} from "$lib/Y/Text"
                 # text difference
                 # times/*%diff = pairwise *(//@be)+:treeh/**(//@be)+:bloub
                 s.sc.diff = generate_diff(prev,s)
-                
-            }
-            else if (!prev) {
-
             }
         }
         # us && console.log("Seeing "+us.t+"/"+s.t, {C,s})
+    }
+    # B/times/* only diff things that are real
+    function timeses_prev_realthing(s,direction) {
+        $times = sy&up
+        # things
+        !timess&z and return
+        # in order of proximity
+        $c = {near:1}
+        # either direction from s
+        direction ||= 'bow'
+        c[direction] = s
+        return ksaf(timess&z,c)
+            # that could be diffed to
+            .filter(s => timeses_realthing(s)) [0]
+    }
+    # B/times/* only diff things that are real
+    function timeses_realthing(s) {
+        return !(ss&going || ss&goable)
     }
     # only works on B/times/*
     # < more than one bloube
