@@ -2,9 +2,9 @@
 import type { SvelteComponent } from 'svelte';
 import { get_current_component, tick, setContext,getContext } from 'svelte/internal';
 
-import { ac, ahsk,ahk,theone,hak,haks,havs, dec,dig, sha256,sex,ex,nex,now,grep,grop,armap,map,sum,arbowa,hashkv,flatten,fatal,heq,reverse } from "$lib/Y/Pic.ts"
+import { ac, ahsk,ahk,theone,hak,haks,havs, dec,dig, sha256,sex,ex,nex,now,grep,grop,armap,map,sum,arafta,arbowa,hashkv,flatten,fatal,heq,reverse } from "$lib/Y/Pic.ts"
 import { pit,C_,i_,o_,pito,o_path,o_up,inlace } from "$lib/St"
-import {diff,enL,deL,indents} from "$lib/Y/Text"
+import {diff,enj,enL,deL,indents} from "$lib/Y/Text"
 
 # f
     # s^^^ -> a/pa/th
@@ -464,6 +464,7 @@ import {diff,enL,deL,indents} from "$lib/Y/Text"
     }
 
 # Betime, the UI functions
+  # Betime per -Kom
     # Record B/items|times** iterates here (at do_Pi_early) 
     export function Betime({C,s,d,items,times}) {
         # < inheritable C%somethings, targeting
@@ -473,37 +474,34 @@ import {diff,enL,deL,indents} from "$lib/Y/Text"
         # switch planes
         let beof = (s) => fatal.isC(s.y.be)
         if (times == us) {
-            # arbowa: finds one us/* before s, works on arrays or C
-            let prev = arbowa(us,s)
+            let prev = null
+            if (ss&going || ss&goable) {
+                # someone has deleted s, and it's just hanging around...
+                # leave diff as it was, commit log is lies until its gone
+            }
+            else {
+                # dig a cave in this memory here (is new every Construct)
+                prev = usy&last_diffable
+                usy&last_diffable = s
+            }
             if (prev) {
                 # to the previous (parent commit)
 
                 # time difference
                 # times/*%delta = pairwise *//@be%time 
-                let pair = grep(map(s => beof(s).sc.time, [prev,s]))
-                if (pair[0] && pair[1]) {
-                    s.sc.delta = dec(pair[0] - pair[1],0)
-                }
+                let [a,b] = grep(map(s => beof(s).sc.time, [prev,s]))
+                a && b and s.sc.delta = dec(b - a,0)
 
                 # text difference
                 # times/*%diff = pairwise *(//@be)+:treeh/**(//@be)+:bloub
                 s.sc.diff = generate_diff(prev,s)
                 
-
-
-                
-                # < look up this version in treeh//@collect/* ?
-                #   that should be a clone+encode of treeh
-                #    to capture the version of Diring
-                #    ~~ A:K (or a C:K?) used to be the copy coming out of J osc
-                #  < which need hash indexen
-                #    and to garbage collect where times says
             }
             else if (!prev) {
 
             }
         }
-        us && console.log("Seeing "+us.t+"/"+s.t, {C,s})
+        # us && console.log("Seeing "+us.t+"/"+s.t, {C,s})
     }
     # only works on B/times/*
     # < more than one bloube
@@ -552,6 +550,101 @@ import {diff,enL,deL,indents} from "$lib/Y/Text"
         #  aot the uber-presentable alternative name:
         return inlace(s,{grab:(s) => s.sc['░'] && s})
     }
+  # Betimes altogether
+    # Record B finishes up here (at do_later)
+    $disable_other_cull_process = 1
+    export function Betimes({items,times}) {
+        $N = o_(times)
+        hak(N) < 5 and return
+        # these times/* are from kommit/*
+        $one = N[0]
+        $ori = oney&be
+        $kommit = oriy&up
+        $desired_number = 3
+        # how to change times/*
+        $add = []
+        $remove = []
+        
+        # not things already going
+        $maybe = grep(s => !(ss&going || ss&goable), N)
+        # separate just the data we want to look at
+        # < another layer of C for this
+        $look = map(s => sex({t:s.t,s},s.sc,'delta,msg,level'),maybe)
+        $delook = N => map(o => o.s, N)
+
+        # find unconscious commits
+        $would_cull = times_cullable(look)
+
+        # see if those rules alproduce enough squishing
+        $desired_reduction = hak(look) - desired_number
+        if (hak(would_cull) < desired_reduction) {
+            # subbranch
+            #   < we finally replace them with a Recolink to the kommit including them
+            $would_subbranch = agoodchunkof(look)
+            remove.push(...delook(would_subbranch))
+            # < find a /kommit including them
+            $branch = C_('TODO kommit')
+            add.push(branch)
+        }
+        else {
+            # only so many
+            $couldda_culled = hak(would_cull)
+            would_cull = would_cull.slice(0, desired_reduction)
+            remove.push(...delook(would_cull))
+        }
+
+
+
+        # apply the change!
+        map(&s{
+            $be = sy&be
+            # allow delete from times/*
+            ss&goable = now()
+            # delete from kommit/*
+            $ko = bey&up
+            grop(be,kos&z)
+            # drop diff cache of the next one
+            $ne = arafta(timess&z,s)
+            ne and delete nes&diff
+            # < slower delete from times/*
+            grop(s,timess&z)
+        },remove) 
+
+
+        $c = {desired_reduction,couldda_culled,add,remove}
+        c.times = times
+        c.kommit = kommit
+        # timesc&look = c
+        console.log("Betimes", c)
+    }
+
+    # find sequences (>1) of unconscious commits
+    #  we never squish into conscious commits
+    #  only the vague units of time between events with potentially minimal meaning
+    function times_cullable(look) {
+        $la = null
+        $cullable = grep(&o{
+            $conscious = o.msg || o.level
+            !conscious && !la and return 1
+            la = conscious
+        },look)
+        # max delta before a commit should be subbranched rather than squished
+        #  otherwise with no %msg or %level we would never leave a trail
+        $max_delta = 30
+        cullable = grep(&o{
+            return o.delta < max_delta
+        },cullable)
+        $most_cullable = cullable.sort((a, b) => a.delta - b.delta)
+        $would_cull = agoodchunkof(most_cullable)
+        return would_cull
+    }
+    # a bit more than most of them, eg 20->12, 12->7
+    function agoodchunkof(N) {
+        return N.slice(0,Math.floor(hak(N) / 1.618))
+    }
+
+    
+    # < treeh//@collect/* garbage collect where times says
 
 # makeso, cull*
     # sync n/#@z with N[z]
@@ -594,7 +687,7 @@ import {diff,enL,deL,indents} from "$lib/Y/Text"
         grop((s,i) => i%2,cull)
         
         !hak(cull) and debugger
-        grop(cull,ss&z)
+        !disable_other_cull_process and grop(cull,ss&z)
     }
 
 

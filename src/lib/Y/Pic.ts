@@ -363,6 +363,11 @@ let window = self
         let c = {bow:s,near:1}
         return ksaf(N,c)[0]
     }
+    $arafta = &Ns{
+        isC(N) and N = o_(N)
+        let c = {aft:s,near:1}
+        return ksaf(N,c)[0]
+    }
     
     # check if A.1 and A.3 have anything between them
     me.listbetween = &acgtN,items{
@@ -1537,4 +1542,4 @@ let window = self
 # BUILT WITH $ perl -ne 'END { print"\n" }; print "$1 " if /^\s*\$(\w+) =/'  src/lib/Y/Pic.ts
 # after you search: ^    (?:self|window).(\w+)
 #      and replace:     $$$1
-export {me, now, isC, Cye, iske, spacechars, isspace, num, isnum, isnu, isfu, isst, isar, isha, isob, isR, hasR, isho, ish, isit, isitemic, ispi, fatal, fatas, csof, sof, Aof, Cof, arbowa, ksaf, flatten, theone, grep, grap, grop, grepout, map, pam, armap, rap, fuN, flatorray, sum, split, idint, cint, daint, coint, slant, spant, joint, notoneor, defor, hav, havs, dis, ahk, hashkv, numf, cvs, scv, gteqcv, cvlt, lt, sz, isnk, splitnkgk, peel, depeel, peli, peelish, arq, ex, mex, sex, nex, tex, dex, tax, pex, ex2, exable, expets, expe, exts, extil, haks, hak, uniq, lineate, ac, arou, aroh, fio, tvsortz, vsortz, ah, ahsk, heq, hakd, reverse, sca, scaf, dec,sha256,dig}
+export {me, now, isC, Cye, iske, spacechars, isspace, num, isnum, isnu, isfu, isst, isar, isha, isob, isR, hasR, isho, ish, isit, isitemic, ispi, fatal, fatas, csof, sof, Aof, Cof, ksaf, arbowa, arafta, flatten, theone, grep, grap, grop, grepout, map, pam, armap, rap, fuN, flatorray, sum, split, idint, cint, daint, coint, slant, spant, joint, notoneor, defor, hav, havs, dis, ahk, hashkv, numf, cvs, scv, gteqcv, cvlt, lt, sz, isnk, splitnkgk, peel, depeel, peli, peelish, arq, ex, mex, sex, nex, tex, dex, tax, pex, ex2, exable, expets, expe, exts, extil, haks, hak, uniq, lineate, ac, arou, aroh, fio, tvsortz, vsortz, ah, ahsk, heq, hakd, reverse, sca, scaf, dec,sha256,dig}

@@ -3,7 +3,7 @@
     import { G,TheG,
         cull_around,Recolink,Recolink_stillness,host_Recolink_stillness,
         Recollect,Aroundiness,
-        makeso,Betime
+        makeso,Betime,Betimes
      } from "$lib/G";
     import But from "$lib/ui/But.svelte";
     import Con from "$lib/pi/Con.svelte"
@@ -48,7 +48,7 @@
         fatal.ispi(Con,'Con')
 
         // < debounce and group?
-        await tick()
+        // await tick()
 
         reConstruct(Con)
     }
@@ -232,8 +232,11 @@
         do_Pi_early: (C,s,d) => {
             Betime({C,s,d,items,times})
         },
+        do_Pi_later: function (C,s) {
+            // mark as Construct()ed
+            s.y.C = C
+        },
         do_later: (d) => {
-            
         },
     }
     let bop = () => {
@@ -244,6 +247,8 @@
         makeso(times, o_path(C,'/kommit:se/*'),{creation});
         // es&going = now() when it stops coming in
 
+        // < es&goable
+        Betimes({items,times})
 
         BD = Construct({I:BI,s:B,D:BD})
     }
