@@ -569,7 +569,7 @@ import {diff,enj,enL,deL,indents} from "$lib/Y/Text"
   # Betimes altogether
     # Record B finishes up here (at do_later)
     $disable_other_cull_process = 1
-    export function Betimes({items,times}) {
+    export function Betimes({items,times,kommit}) {
         $N = o_(times)
         hak(N) < 8 and return
         # these times/* are from kommit/*
@@ -590,11 +590,11 @@ import {diff,enj,enL,deL,indents} from "$lib/Y/Text"
 
         # find unconscious commits
         $would_cull = times_cullable(look)
-        $couldda_culled = hak(would_cull)
+        $couldda_culled = would_cull
 
         # see if those rules alproduce enough squishing
         $desired_reduction = hak(look) - desired_number
-        if (0 && hak(would_cull) < desired_reduction) {
+        if (hak(would_cull) < desired_reduction) {
             # subbranch
             #   < we finally replace them with a Recolink to the kommit including them
             $would_subbranch = agoodchunkof(look)
@@ -611,34 +611,40 @@ import {diff,enj,enL,deL,indents} from "$lib/Y/Text"
 
 
 
-        # apply the change!
+        # apply the change
         map(&s{
-            
+            debugger
+            # top-post this grouper thing
+            kommits&z.unshift(s)
         },add)
+        # properly delete one round later
+        grop(s => ss&goable && ss&going, timess&z)
         map(&s{
             $be = sy&be
-            # allow delete from times/*
+            # allow delete from times/*, becomes translucent
             ss&goable = now()
             # delete from kommit/*
             $ko = bey&up
             grop(be,kos&z)
         },remove) 
+        $rediff = []
         map(&s{
             # drop diff cache + wake several of them...
-            #  now that all %goable are set on ones skip over
+            #  now that all %goable are set on ones to skip over
             # < this doesn't seem to work too well.
             $ne = timeses_prev_realthing(s,'aft')
-            ne and delete nes&diff
-            ne and ney&wake && ney&wake()
-            # < slower delete from times/*
-            grop(s,timess&z)
+            if (ne) {
+                rediff.push(ne)
+                delete nes&diff
+                # < GOING we dont have to wake anyone?
+                # ney&wake && ney&wake()
+            }
         },remove)
-        # < the above wake is not doing it?
-        # wake everyone
-        o_(times).map(s => sy&wake && sy&wake())
+        # < GOING we dont have to wake everyone?
+        # o_(times).map(s => sy&wake && sy&wake())
 
 
-        $c = {desired_reduction,couldda_culled,add,remove}
+        $c = {desired_reduction,couldda_culled,add,remove,rediff}
         c.times = times
         c.kommit = kommit
         # timesc&look = c

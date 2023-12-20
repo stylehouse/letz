@@ -244,10 +244,11 @@
         let creation = e => e.c.pi = 'Kom'
         makeso(items, o_path(C,'/bloube:se/*'),{creation});
         makeso(times, o_path(C,'/kommit:se/*'),{creation});
+        let kommit = pito(C,'kommit')
         // es&going = now() when it stops coming in
 
         // < es&goable
-        Betimes({items,times})
+        Betimes({items,times,kommit})
 
         BD = Construct({I:BI,s:B,D:BD})
     }

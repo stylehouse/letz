@@ -34,30 +34,28 @@
     let msg
     let level
     onMount(() => {
+        // we only read these once at init
         if (be) {
             msg = be.sc.msg || null
             level = be.sc.level || 0
         }
     })
+    let delta
+    let diff
     function calc() {
+        // put any adjustments
         if (be) {
             let settings = {level,msg}
             // hash copy, deleting
             dex(be.sc,settings)
         }
-        if (s.sc.going) clas = 'going'
-    }
-    $: calc(), msg, C, s
-
-    
-    let delta
-    let diff
-    function slo() {
+        // get things to see
+        if (s.sc.going || s.sc.goable) clas = 'going'
         delta = s.sc.delta
         diff = s.sc.diff
     }
-    s.y.wake = () => slo()
-    $: slo(), s
+    $: calc(), msg,level, C, s
+    s.y.wake = () => calc()
 
     let togs = {}
     let tog = (t) => {
@@ -129,8 +127,10 @@
         border: 0.12em dotted rgb(114, 250, 159);
         border-radius: calc(max(0.4em, 15%));
         font-size: 86%;
+        display:inline-table;
     }
     zc {
         color:rgb(173, 173, 189);
+        display:table-cell;
     }
 </style>
