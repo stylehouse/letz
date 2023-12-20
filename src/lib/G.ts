@@ -649,12 +649,14 @@ import {diff,enj,enL,deL,indents} from "$lib/Y/Text"
     #  we never squish into conscious commits
     #  only the vague units of time between events with potentially minimal meaning
     function times_cullable(look) {
+        # go in reverse to throw away the earlier of the two
+        #  the going patch merges into the next one with|based-on it
         $la = null
         $cullable = grep(&o{
             $conscious = o.msg || o.level
             !conscious && !la and return 1
             la = conscious
-        },look)
+        },reverse(look))
         # max delta before a commit should be subbranched rather than squished
         #  otherwise with no %msg or %level we would never leave a trail
         $max_delta = 30
