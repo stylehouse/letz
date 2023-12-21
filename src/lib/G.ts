@@ -410,7 +410,7 @@ import {diff,enj,enL,deL,indents} from "$lib/Y/Text"
             }
             # make (s)/sto** (no y&up)
             stos&z = ready
-            # as a URI z becomes comma-separated, server must know this means array
+            # as a URI, z becomes comma-separated, server must know this means array
             # < didnt it used to make multiples? eg [1,2] -> ?z=1&z=2
             para.z = diges
         }
@@ -464,43 +464,56 @@ import {diff,enj,enL,deL,indents} from "$lib/Y/Text"
     }
 
 # Betime, the UI functions
+        # switch planes
+        let beof = (s) => fatal.isC(s.y.be)
   # Betime per -Kom
     # Record B/items|times** iterates here (at do_Pi_early) 
     export function Betime({C,s,d,items,times}) {
         # < inheritable C%somethings, targeting
-        # the -Kom/s-Kom
+        # the Con-Kom(s)/s-Kom
         let Con = C.y.up
-        # give ^-Conz/-Con a Ct, see 'atm we use the array indices to individuate [C,C,C]'
-        Con.t = s.t
+
+        Inspherical({Con,s})
+
         let uC = C.y.up?.c.Kom
         let us = s.y.up
-        # switch planes
-        let beof = (s) => fatal.isC(s.y.be)
         if (times == us) {
-            let prev = null
-            if (!timeses_realthing(s)) {
-                # someone has deleted s, and it's just hanging around...
-                # leave diff as it was, commit log is lies until its gone
-            }
-            else {
-                # find previous real commit
-                prev = timeses_prev_realthing(s)
-            }
-            if (prev) {
-                # to the previous (parent commit)
-
-                # time difference
-                # times/*%delta = pairwise *//@be%time 
-                let [a,b] = grep(map(s => beof(s).sc.time, [prev,s]))
-                a && b and s.sc.delta = dec(b - a,0)
-
-                # text difference
-                # times/*%diff = pairwise *(//@be)+:treeh/**(//@be)+:bloub
-                s.sc.diff = generate_diff(prev,s)
-            }
+            # B/times/*
+            o_times_star(s)
         }
         # us && console.log("Seeing "+us.t+"/"+s.t, {C,s})
     }
+
+    # B/times/*
+    function o_times_star(s) {
+        let prev = null
+        if (!timeses_realthing(s)) {
+            # someone has deleted s, and it's just hanging around...
+            # leave diff as it was, commit log is lies until its gone
+        }
+        else {
+            # find previous real commit
+            prev = timeses_prev_realthing(s)
+        }
+        if (prev) {
+            # to the previous (parent commit)
+            # < make specific to -Kom somehow...
+            o_times_Kom__pairwise(prev,s)
+        }
+    }
+    # to the previous (parent commit)
+    function o_times_Kom__pairwise(prev) {
+        # time difference
+        # times/*%delta = pairwise *//@be%time 
+        let [a,b] = grep(map(s => beof(s).sc.time, [prev,s]))
+        a && b and s.sc.delta = dec(b - a,0)
+
+        # text difference
+        # times/*%diff = pairwise *(//@be)+:treeh/**(//@be)+:bloub
+        s.sc.diff = generate_diff(prev,s)
+    }
+
+
     # B/times/* only diff things that are real
     function timeses_prev_realthing(s,direction) {
         $times = sy&up
@@ -680,6 +693,17 @@ import {diff,enj,enL,deL,indents} from "$lib/Y/Text"
 
     
     # < treeh//@collect/* garbage collect where times says
+
+# Inspherical
+    # a mode, complements I.Pi
+    #  suppose they (s**) don't all have c&pi, so dont Pi, but would this...
+    function Inspherical({Con,s}) {
+        # give ^-Conz/-Con better names
+        #  from s.t, the insphere - rather than its position in the -Conz%z array indice, which is senile
+        #   see 'atm we use the array indices to individuate [C,C,C]'
+        Con.t = s.t
+        # < do some Con%style hacks to not double-label it, etc
+    }
 
 # makeso, cull*
     # sync n/#@z with N[z]
