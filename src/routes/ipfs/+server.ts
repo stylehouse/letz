@@ -82,12 +82,10 @@ import { isst, isob, sha256, isnum, isar, isspace, hak, havs, haks, ex, map } fr
             let result = await db.get(`SELECT t,
                  strftime('%s', 'now') - ts_heartbeat as heartbeat_ago
                  from ipfs where t = ?`,t);
-            // result = {}
-            // await db.get(`DELETE FROM ipfs`)
-            // await db.get(`DELETE FROM ipfs_in`)
+
+
             if (!hak(result)) {
                 // new
-                // console.log("PUT new: "+t)
 
                 // with links to other ipfs directly inside this one
                 // unused except to sanity check your deps are known to the server.
@@ -106,6 +104,15 @@ import { isst, isob, sha256, isnum, isar, isspace, hak, havs, haks, ex, map } fr
                     // console.log("PUT links: "+ot)
                     await db.get(`INSERT INTO ipfs_in (t,ot)
                         VALUES (?,?)`, t,ot)
+                }
+                try {
+                } catch (err) {
+                    if (err.message.startsWith('SQLITE_CONSTRAINT: UNIQUE constraint failed: ipfs.t')) {
+                        // a race from read to insert. since immutable it is no problem at all.
+                    }
+                    else {
+                        throw err
+                    }
                 }
             }
             else {
