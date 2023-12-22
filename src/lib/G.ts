@@ -502,7 +502,7 @@ import {diff,enj,enL,deL,indents} from "$lib/Y/Text"
         }
     }
     # to the previous (parent commit)
-    function o_times_Kom__pairwise(prev) {
+    function o_times_Kom__pairwise(prev,s) {
         # time difference
         # times/*%delta = pairwise *//@be%time 
         let [a,b] = grep(map(s => beof(s).sc.time, [prev,s]))
