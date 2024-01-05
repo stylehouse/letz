@@ -639,12 +639,17 @@ import {diff,enj,enL,deL,indents} from "$lib/Y/Text"
             # delete from kommit/*
             $ko = bey&up
             grop(be,kos&z)
-        },remove) 
+        },remove)
+
+        # drop diff cache
+        # < wake certain of them
+        #   atm in bop() / Betimes(),Construct() 
+        #    ie we wake|compute everything in B**
+        #     all Kom.svelte getting a new $C with mostly the same in it
+        #    > reConstruct() a subset of B** depending on what's happening
+        #      would need to subset resolve $n, or insert into branched times/-Kom**
         $rediff = []
         map(&s{
-            # drop diff cache + wake several of them...
-            #  now that all %goable are set on ones to skip over
-            # < this doesn't seem to work too well.
             $ne = timeses_prev_realthing(s,'aft')
             if (ne) {
                 rediff.push(ne)
@@ -703,6 +708,7 @@ import {diff,enj,enL,deL,indents} from "$lib/Y/Text"
         #   see 'atm we use the array indices to individuate [C,C,C]'
         Con.t = s.t
         # < do some Con%style hacks to not double-label it, etc
+        fatal.isC(s)
     }
 
 # makeso, cull*
