@@ -678,9 +678,10 @@ import {diff,enj,enL,deL,indents} from "$lib/Y/Text"
         $la = null
         $cullable = grep(&o{
             $conscious = o.msg || o.level
-            !conscious && !la and return 1
+            $yup = !conscious && !la
             la = conscious
-        },reverse(look))
+            return yup
+        }, reverse(look))
         # max delta before a commit should be subbranched rather than squished
         #  otherwise with no %msg or %level we would never leave a trail
         $max_delta = 30
