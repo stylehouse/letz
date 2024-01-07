@@ -45,6 +45,8 @@
         let kommit = pito(C,'kommit')
         // es&going = now() when it stops coming in
         console.log("get Betimes",kommit)
+        // < generate_diff() works on a bunch of Recolink_discovery(),
+        //   which we need to mock
         Betimes({times,kommit})
 
         D = Construct({I,s:C,D})
