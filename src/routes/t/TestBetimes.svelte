@@ -17,6 +17,8 @@
 
     // the C** -> D situator
     export let C = C_('TestBetimes',1,{pi:'Rec'})
+    // staging things into kommit/*
+    let treeh = pito(C,'treeh','-Rec',{real:1})
     // the kommit/* -> times/* situator
     let kommit = pito(C,'kommit','-Kom',{kommit:1})
     let times = pito(C,'times','-Kom')
@@ -57,23 +59,17 @@
 
     // what we encode -> kommit/*
     let stuff = C_("stuff")
+    // the diff will match C:stuff with itself from [a,b]
+    let i_treeh = (s,Reco) => {
+        let host = treeh
+        // the guest
+        let guest = pito(host,s.t,'-Rec')
+        if (Recolink_stillness(guest,Reco)) return
 
-    let tock = async () => {
-        refresh++
-        // reality changes, ie /bloube
-        let s = stuff
-        pito(s,'bit of a '+refresh)
-        await Recollect({o_done:()=>{}}, s)
-
-        let Reco = s.y.Reco
-        if (!Reco) return console.error("No Reco",s)
-
-
-
-
-        // we just pop this here
-        //  a bit less than shunting through /bloube and /treeh
-
+        //  sits there with these links
+        Recolink(guest,Reco,s)
+    }
+    let i_kommit = (s,Reco) => {
         let host = kommit
         if (host_Recolink_stillness(host,Reco)) return console.log("still Reco",s)
 
@@ -83,9 +79,35 @@
         //  sits there with these links
         Recolink(guest,Reco,s)
         //  also the time
+        // < fetime
         guest.sc.time = now()
+    }
+    let tock = async () => {
+        refresh++
+        // reality changes, ie /bloube
+        let s = stuff
+        pito(s,'bit of a '+refresh)
+
+        // picture stuff
+        await Recollect({o_done:()=>{}}, s)
+        let Reco = s.y.Reco
+        if (!Reco) return console.error("No Reco",s)
+
+        // link to the bloube as a treeh/*
+        i_treeh(s,Reco)
+
+        // picture treeh** with all its links, right now
+        await Recollect({o_done:()=>{}}, treeh)
+        Reco = treeh.y.Reco
+        if (!Reco) return console.error("No treeh Reco",treeh)
 
 
+        // note this picture|moment|configuration of treeh** as a kommit
+        i_kommit(treeh,Reco)
+
+        // < we should Betime() before we Betimes(), using %%waits or so
+        //   so the latest patch is known when we are squashing commits in Betimes()
+        D = Construct({I,s:C,D})
 
 
         stuff = stuff

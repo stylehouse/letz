@@ -539,7 +539,9 @@ import {diff,enj,enL,deL,indents} from "$lib/Y/Text"
     # only works on B/times/*
     # < more than one bloube
     function generate_diff(a,b) {
+        # a+b are W containing links to things we actually want to diff
         # .t unioned
+        #  ie /$t/$i/$Reco, with the x.i treated like an array for the pair
         $by_ti = {}
         map(&si{
             $Recotreeh = Recolink_lookup(sy&be)
@@ -552,7 +554,6 @@ import {diff,enj,enL,deL,indents} from "$lib/Y/Text"
                     ahk(by_ti, link.t,i, Recobloube)
                 })
         }, [a,b])
-
 
         # C:$t /C:new|gone|same with c&s='text'
         return armap(&Nt{
