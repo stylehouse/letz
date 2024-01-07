@@ -4,12 +4,13 @@
     import Savable from "$lib/ui/Savable.svelte"
     import Knob from '$lib/ui/Knob.svelte';
     import But from "$lib/ui/But.svelte"
-    import PlayDramatics from "./PlayDramatics.svelte"
-    import { whatsthis,graphwhats,resume_selection_state } from "$lib/Le"
+    import PlayDramatics from "./t/PlayDramatics.svelte"
+    import TestBetimes from './t/TestBetimes.svelte'
+    import CompileLite from './t/CompileLite.svelte'
     import Diring from "$lib/Diring.svelte"
+    import { whatsthis,graphwhats,resume_selection_state } from "$lib/Le"
     import Codemirror from './Codemirror.svelte'
     import Coning from '$lib/Coning.svelte'
-    import CompileLite from './CompileLite.svelte'
     import { writable } from 'svelte/store'
     import {EditorView} from "@codemirror/view"
     import { onMount, setContext, tick } from "svelte";
@@ -80,9 +81,11 @@
 
 <div class="mi fathandle" style="left:0%;width:{sizer}%;">
     <div>
+        <TestBetimes />
         <span on:click={() => more = !more}>{#if more}no {/if}more?</span>
         {#if more}
             <BigGroup>
+
                 <CompileLite />
 
                 <Diring />

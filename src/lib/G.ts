@@ -291,7 +291,10 @@ import {diff,enj,enL,deL,indents} from "$lib/Y/Text"
     # for when you will later Recolink(guest,Reco) if ~
     export function host_Recolink_stillness(host,Reco) {
         $la = o_(host).slice(-1)[0]
-        return la?.sc['░'] == Recos&dige
+        # < why this errors (read prop 'sc' of undefined)
+        #    when la?.sc is supposed to prevent that?
+        #return la?.sc['░'] == Recos&dige
+        return la && la.sc['░'] == Recos&dige
     }
 
 # Aroundiness
@@ -468,10 +471,11 @@ import {diff,enj,enL,deL,indents} from "$lib/Y/Text"
         let beof = (s) => fatal.isC(s.y.be)
   # Betime per -Kom
     # Record B/items|times** iterates here (at do_Pi_early) 
-    export function Betime({C,s,d,items,times}) {
+    export function Betime({C,s,d,times}) {
         # < inheritable C%somethings, targeting
         # the Con-Kom(s)/s-Kom
         let Con = C.y.up
+        fatal.isC(times)
 
         Inspherical({Con,s})
 
@@ -728,7 +732,8 @@ import {diff,enj,enL,deL,indents} from "$lib/Y/Text"
         goners.map(e => es&going ||= now())
         # z have a spacer made (#@z)
         neu.map(z => {
-            # with y&up
+            # pit() here makes a new C with only .t (spacer)
+            #  inserts into n/* with zy&up=n
             $e = pit(n,z.t)
             ey&be = z
             d.creation && d.creation(e,z,n)
