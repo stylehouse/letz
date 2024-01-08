@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { onMount } from "svelte";
+    import { createEventDispatcher, onMount, tick } from "svelte";
     import { G,TheG,
         cull_around,Recolink,Recolink_stillness,host_Recolink_stillness,
         Recollect,Aroundiness,
@@ -13,14 +13,14 @@
     import { map,grep,ac, ahsk,ahk,havs,haks,hak,coint,joint, dig, sha256,sex,ex,nex,now,ispi,fatal } from "$lib/Y/Pic.ts"
     import Coning from "$lib/Coning.svelte";
 
-    
 
-    // the C** -> D situator
+
+  // the C** -> D situator, including the call to Betimes()
     export let C = C_('TestBetimes',1,{pi:'Rec'})
     // staging things into kommit/*
     let treeh = pito(C,'treeh','-Rec',{real:1})
     // the kommit/* -> times/* situator
-    let kommit = pito(C,'kommit','-Kom',{kommit:1})
+    let kommit = pito(C,'kommit','-Rec',{real:1,kommit:1})
     let times = pito(C,'times','-Kom')
     // the one-thing processor
     //  per thing as part of Construct() climbing C**
@@ -57,7 +57,9 @@
         bop()
     })
 
-    // what we encode -> kommit/*
+
+
+  // whathow we encode -> kommit/*
     let stuff = C_("stuff")
     // the diff will match C:stuff with itself from [a,b]
     let i_treeh = (s,Reco) => {
@@ -79,17 +81,18 @@
         //  sits there with these links
         Recolink(guest,Reco,s)
         //  also the time
-        // < fetime
-        guest.sc.time = now()
+        guest.sc.time = fenow()
     }
-    let tock = async () => {
-        refresh++
+    let tock = async (spam) => {
         // reality changes, ie /bloube
         let s = stuff
-        pito(s,'bit of a '+refresh)
+        spam ||= ['bit of a '+refresh]
+        map((t) => pito(s,t), spam)
+        refresh++
 
+        
         // picture stuff
-        await Recollect({o_done:()=>{}}, s)
+        await Recollect({o_done:()=>{},fenow}, s)
         let Reco = s.y.Reco
         if (!Reco) return console.error("No Reco",s)
 
@@ -97,7 +100,7 @@
         i_treeh(s,Reco)
 
         // picture treeh** with all its links, right now
-        await Recollect({o_done:()=>{}}, treeh)
+        await Recollect({o_done:()=>{},fenow}, treeh)
         Reco = treeh.y.Reco
         if (!Reco) return console.error("No treeh Reco",treeh)
 
@@ -114,7 +117,60 @@
     }
     $: bop(), stuff
 
-    let b = {bop,tock}
+
+
+  // the story plays out...
+    // timetravel
+    let time = now().toPrecision(2)*1
+    let fenow = () => {
+        return time + refresh
+    }
+    let tocken = async (spam) => {
+        await tock(spam)
+        await tick()
+    }
+    let play = async () => {
+        // if (refresh > 1) reset()
+        await tocken(['thissing'])
+        await tocken(['thatting','thingy'])
+        await tocken(['thussing'])
+        await tocken(['etcerating'])
+        refresh += 10
+        await tocken(['jub malpha'])
+        await tocken(['jub mbeta'])
+        await tocken(['jub mgamma'])
+        refresh += 10
+        await tocken(['mub malpha'])
+        await tocken(['mub mbeta'])
+        await tocken(['mub mgamma'])
+        refresh += 20
+        await tocken(['tub malpha'])
+        await tocken(['tub mbeta'])
+        await tocken(['tub mgamma'])
+        refresh += 6
+        await tocken(['wub malpha'])
+        await tocken(['wub mbeta'])
+        await tocken(['wub mgamma'])
+        refresh += 16
+        await tocken(['zub malpha'])
+        await tocken(['zub mbeta'])
+        await tocken(['zub mgamma'])
+        refresh += 16
+        await tocken(['xub malpha'])
+        await tocken(['xub mbeta'])
+        await tocken(['xub mgamma'])
+        refresh += 16
+        await tocken(['yub malpha'])
+        await tocken(['yub mbeta'])
+        await tocken(['yub mgamma'])
+        console.log("Done!?")
+    }
+
+    // API to change the {#key} block we are in
+    export let resetself
+    let reset = () => resetself && resetself()
+
+    let b = {bop,tock,play,reset}
 </script>
 
 

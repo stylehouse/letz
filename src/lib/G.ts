@@ -197,7 +197,7 @@ import {diff,enj,enL,deL,indents} from "$lib/Y/Text"
         # always encode the latest thing (working dir state -> staging)
         $Reco = await mkReco(C)
         # pool it in sy&collect/-Reco, picking one to be now
-        Reco = electReco(s,Reco)
+        Reco = electReco(s,Reco,g)
         s.y.Reco = Reco
 
         # tell Record that it has an s ready
@@ -256,7 +256,7 @@ import {diff,enj,enL,deL,indents} from "$lib/Y/Text"
     # multiple Reco compete for use
     # < the Reco+ and kommit|been/* serial-numbered lists
     #    are the same things. see Recolink_stillness
-    function electReco(s,Reco) {
+    function electReco(s,Reco,g) {
         # staging and recent states pool in N[Reco]
         # < s says it wants something else reset to, for undo
         #    git work via s, who might show all Reco?
@@ -269,7 +269,8 @@ import {diff,enj,enL,deL,indents} from "$lib/Y/Text"
             Reco = latest 
         }
         else {
-            Recos&time = now()
+            # < GOING unused, we put atreeh%time
+            Recos&time = g && g.fenow && g.fenow() || now()
             i_(co,Reco)
             ahk(co,'y','Reco_by_dige',Recos&dige,Reco)
         }

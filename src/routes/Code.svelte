@@ -76,12 +76,17 @@
         debugger
     }
     let sizer = 50
+    
+    let reset_TestBetimes = () => {
+        key_TestBetimes = key_TestBetimes + 1
+    }
+    let key_TestBetimes = 1
 </script>
 
 
 <div class="mi fathandle" style="left:0%;width:{sizer}%;">
     <div>
-        <TestBetimes />
+        {#key key_TestBetimes}<TestBetimes resetself={reset_TestBetimes}/>{/key}
         <span on:click={() => more = !more}>{#if more}no {/if}more?</span>
         {#if more}
             <BigGroup>
