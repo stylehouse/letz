@@ -603,8 +603,10 @@ import {diff,enj,enL,deL,indents} from "$lib/Y/Text"
         # not things already going
         $maybe = grep(s => !(ss&going || ss&goable), N)
         # separate just the data we want to look at
+        #  and our o.delta is now looking the other way
+        #   just to avoid having to look at the stayer's delta when considering a merge...
         # < another layer of C for this
-        $look = map(s => sex({t:s.t,s},s.sc,'delta,msg,level'),maybe)
+        $look = make_look_from_times(maybe)
         $delook = N => map(o => o.s, N)
 
         # find unconscious commits
@@ -674,6 +676,22 @@ import {diff,enj,enL,deL,indents} from "$lib/Y/Text"
         # timesc&look = c
         console.log("Betimes", c)
     }
+    function make_look_from_times (N) {
+        $look = map(s => sex({t:s.t,s},s.sc,'msg,level'),N)
+        $prev_o = null
+        map((o) => {
+            if (prev_o) {
+                $s = o.s
+                let [a,b] = grep(map(s => beof(s).sc.time, [prev_o.s,s]))
+                !(a && b) and debugger
+                # this o.delta is to the next thing now
+                #  whereas s%delta is to the previous (see o_times_Kom__pairwise())
+                prev_o.delta = dec(b - a,0)
+            }
+            prev_o = o
+        }, look)
+        return look
+    }
 
     # find sequences (>1) of unconscious commits
     #  we never squish into conscious commits
@@ -682,12 +700,13 @@ import {diff,enj,enL,deL,indents} from "$lib/Y/Text"
         # go in reverse to throw away the earlier of the two
         #  the going patch merges into the next one with|based-on it
         $la = null
+        look = reverse(look)
         $cullable = grep(&o{
             $conscious = o.msg || o.level
             $yup = !conscious && !la
             la = conscious
             return yup
-        }, reverse(look))
+        }, look)
         # max delta before a commit should be subbranched rather than squished
         #  otherwise with no %msg or %level we would never leave a trail
         $max_delta = 30

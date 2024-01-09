@@ -46,16 +46,12 @@
         makeso(times, o_path(C,'/kommit:se/*'),{creation});
         let kommit = pito(C,'kommit')
         // es&going = now() when it stops coming in
-        console.log("get Betimes",kommit)
         // < generate_diff() works on a bunch of Recolink_discovery(),
         //   which we need to mock
         Betimes({times,kommit})
 
         D = Construct({I,s:C,D})
     }
-    onMount(() => {
-        bop()
-    })
 
 
 
@@ -150,6 +146,18 @@
         refresh += 6
         await tocken(['wub malpha'])
         await tocken(['wub mbeta'])
+        // if you stop here, we've just merged:
+        //  prior to :
+        //    treeh 10 (mub,mub):N -> treeh 11 (...N,tub)
+        //   I have a feeling about their y&be%time:
+        //    1700000031 (delta 2) and 1700000052 (delta 23?)
+        //   delta is going the wrong way!
+        //  after :
+        //    treeh 7|10|13 are all each full of jub|mub|tub
+        //   lovely.
+        //  < is delta:
+        //     going the wrong way
+        //     not recomputed when neighbours change
         await tocken(['wub mgamma'])
         refresh += 16
         await tocken(['zub malpha'])
@@ -157,15 +165,60 @@
         await tocken(['zub mgamma'])
         refresh += 16
         await tocken(['xub malpha'])
+        // if you stop here, we've grouped all tub|wub
+        //  since their delta is smallest (refresh += 6)
         await tocken(['xub mbeta'])
         await tocken(['xub mgamma'])
         refresh += 16
+        // if you stop here, we've grouped all xub,
+        //  including the one that has only just been entered
         await tocken(['yub malpha'])
+        // if you stop here, we've grouped all jub|mub
         await tocken(['yub mbeta'])
         await tocken(['yub mgamma'])
-        console.log("Done!?")
+        await tocken(['yub mgzolza'])
+        await tocken(['yub mgzolzaya'])
+        refresh += 16
+        // now we're always merging into the newest thing
+        // < keep the earlier of merged sy&be%time
+        //   so this >20s long stretch can be broken up:
+        await tocken(['yub mgzolzayanja'])
+        await tocken(['yub mgbebe'])
+        await tocken(['yub mgyeyee'])
+        await tocken(['yub mgyeayee'])
+        await tocken(['yub mgyebyee'])
+        await tocken(['yub mgyecyee'])
+        await tocken(['yub mgyedyee'])
+        await tocken(['yub mgyeeyee'])
+        await tocken(['yub mgyeaxee'])
+        await tocken(['yub mgyebxee'])
+        await tocken(['yub mgyecxee'])
+        await tocken(['yub mgyedxee'])
+        await tocken(['yub mgyeexee'])
+        refresh += 16
+        await tocken(['yub mgyeaxea'])
+        await tocken(['yub mgyebxea'])
+        await tocken(['yub mgyecxea'])
+        await tocken(['yub mgyedxea'])
+        await tocken(['yub mgyeexea'])
+        await tocken(['yub mgyeaxeb'])
+        await tocken(['yub mgyebxeb'])
+        await tocken(['yub mgyecxeb'])
+        await tocken(['yub mgyedxeb'])
+        await tocken(['yub mgyeexeb'])
+        await tocken(['yub mgyeaxec'])
+        await tocken(['yub mgyebxec'])
+        await tocken(['yub mgyecxec'])
+        await tocken(['yub mgyedxec'])
+        // await tocken(['yub mgyeexec'])
+        // refresh += 26
+        // await tocken(['yub xuxilato'])
+        // console.log("Done!?")
     }
 
+    onMount(() => {
+        play()
+    })
     // API to change the {#key} block we are in
     export let resetself
     let reset = () => resetself && resetself()
