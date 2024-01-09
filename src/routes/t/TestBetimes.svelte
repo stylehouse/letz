@@ -152,13 +152,10 @@
         //   I have a feeling about their y&be%time:
         //    1700000031 (delta 2) and 1700000052 (delta 23?)
         //   delta is going the wrong way!
-        //  after e06b12ff24c and prior to :
+        //  after e06b12ff24c and prior to 3cadede6a46:
         //    treeh 7|10|13 are all each full of jub|mub|tub
         //   lovely.
-        //  after  it happens a couple of tocken() later...
-        //  < is delta:
-        //     going the wrong way (yep)
-        //     not recomputed when neighbours change
+        //  after 3cadede6a46 it happens a couple of tocken() later...
         await tocken(['wub mgamma'])
         refresh += 16
         await tocken(['zub malpha'])
