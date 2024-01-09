@@ -632,6 +632,50 @@ import {diff,enj,enL,deL,indents} from "$lib/Y/Text"
 
 
 
+        # < wake certain of them
+        #   atm in bop() / Betimes(),Construct() 
+        #    ie we wake|compute everything in B**
+        #     all Kom.svelte getting a new $C with mostly the same in it
+        #    > reConstruct() a subset of B** depending on what's happening
+        #      would need to subset resolve $n, or insert into branched times/-Kom**
+        map(&s{
+            # the pairs of things
+            $ne = timeses_prev_realthing(s,'aft')
+            !ne and debugger
+            
+            # sanity check which two are involved...
+            #  we can't possibly be merging across conscious (%msg|level) things
+                # < define all these subselects, make one "main"
+            $o = theone(grep(o => o.s == s,couldda_culled))
+            !o and debugger
+            if (ne != o.mergible_with.s) {
+                # avoid merging anywhere near conscious (%msg|level) things
+                # which the ne doesn't know about 
+                debugger
+                ne = o.mergible_with.s
+            }
+
+            if (ne) {
+                # drop diff cache
+                delete nes&diff
+
+                # < GOING we dont have to wake anyone?
+                # ney&wake && ney&wake()
+                
+                # the earlier thing (s) goes away
+                #  but gives its earlier %time to ne
+                # < %time is a range, delta is computed for a pair
+                $earlier = sy&be.sc.time
+                $later = ney&be.sc.time
+                earlier > later and debugger
+                ney&be.sc.time = earlier
+            }
+        },remove)
+        # < GOING we dont have to wake everyone?
+        # o_(times).map(s => sy&wake && sy&wake())
+
+
+
         # apply the change
         map(&s{
             debugger
@@ -649,28 +693,8 @@ import {diff,enj,enL,deL,indents} from "$lib/Y/Text"
             grop(be,kos&z)
         },remove)
 
-        # drop diff cache
-        # < wake certain of them
-        #   atm in bop() / Betimes(),Construct() 
-        #    ie we wake|compute everything in B**
-        #     all Kom.svelte getting a new $C with mostly the same in it
-        #    > reConstruct() a subset of B** depending on what's happening
-        #      would need to subset resolve $n, or insert into branched times/-Kom**
-        $rediff = []
-        map(&s{
-            $ne = timeses_prev_realthing(s,'aft')
-            if (ne) {
-                rediff.push(ne)
-                delete nes&diff
-                # < GOING we dont have to wake anyone?
-                # ney&wake && ney&wake()
-            }
-        },remove)
-        # < GOING we dont have to wake everyone?
-        # o_(times).map(s => sy&wake && sy&wake())
 
-
-        $c = {desired_reduction,couldda_culled,add,remove,rediff}
+        $c = {desired_reduction,couldda_culled,add,remove}
         c.times = times
         c.kommit = kommit
         # timesc&look = c
@@ -693,6 +717,7 @@ import {diff,enj,enL,deL,indents} from "$lib/Y/Text"
         return look
     }
 
+
     # find sequences (>1) of unconscious commits
     #  we never squish into conscious commits
     #  only the vague units of time between events with potentially minimal meaning
@@ -700,11 +725,15 @@ import {diff,enj,enL,deL,indents} from "$lib/Y/Text"
         # go in reverse to throw away the earlier of the two
         #  the going patch merges into the next one with|based-on it
         $la = null
+        $la_o = null
         look = reverse(look)
         $cullable = grep(&o{
             $conscious = o.msg || o.level
             $yup = !conscious && !la
+            # this is actually next (reverse)
+            yup and o.mergible_with = la_o
             la = conscious
+            la_o = o
             return yup
         }, look)
         # max delta before a commit should be subbranched rather than squished

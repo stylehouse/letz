@@ -147,16 +147,17 @@
         await tocken(['wub malpha'])
         await tocken(['wub mbeta'])
         // if you stop here, we've just merged:
-        //  prior to :
+        //  prior to e06b12ff24c:
         //    treeh 10 (mub,mub):N -> treeh 11 (...N,tub)
         //   I have a feeling about their y&be%time:
         //    1700000031 (delta 2) and 1700000052 (delta 23?)
         //   delta is going the wrong way!
-        //  after :
+        //  after e06b12ff24c and prior to :
         //    treeh 7|10|13 are all each full of jub|mub|tub
         //   lovely.
+        //  after  it happens a couple of tocken() later...
         //  < is delta:
-        //     going the wrong way
+        //     going the wrong way (yep)
         //     not recomputed when neighbours change
         await tocken(['wub mgamma'])
         refresh += 16
@@ -210,10 +211,10 @@
         await tocken(['yub mgyebxec'])
         await tocken(['yub mgyecxec'])
         await tocken(['yub mgyedxec'])
-        // await tocken(['yub mgyeexec'])
-        // refresh += 26
-        // await tocken(['yub xuxilato'])
-        // console.log("Done!?")
+        await tocken(['yub mgyeexec'])
+        refresh += 26
+        await tocken(['yub xuxilato'])
+        console.log("Done!?")
     }
 
     onMount(() => {
