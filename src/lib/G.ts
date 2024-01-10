@@ -515,7 +515,7 @@ import {diff,enj,enL,deL,indents} from "$lib/Y/Text"
 
         # text difference
         # times/*%diff = pairwise *(//@be)+:treeh/**(//@be)+:bloub
-        s.sc.diff = generate_diff(prev,s)
+        s.sc.diff ||= generate_diff(prev,s)
     }
 
 
