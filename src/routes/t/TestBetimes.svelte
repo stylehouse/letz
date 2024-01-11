@@ -211,6 +211,9 @@
         await tocken(['yub mgyeexec'])
         refresh += 26
         await tocken(['yub xuxilato'])
+        for (let i of Array(15).fill('')) {
+            await tock()
+        }
         console.log("Done!?")
     }
 
