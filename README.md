@@ -4,10 +4,11 @@
 
 ## install
 
-Clone this. Probably to ~/src/letz.
+Clone this. Probably to `~/src/letz`.
 
 The following can be opted out of mostly by hacking the job list in zap.py:
  - sudo apt install podman
+   - and [use overlayfs for speed](https://howsecologysquad.blogspot.com/2023/10/plodman.html)
    - opt out: use Docker, rename Containerfile
  - Point the hostname `sa` to where to ssh to run containers, or to localhost in ```/etc/hosts```
    - opt out: delete the ssh step
