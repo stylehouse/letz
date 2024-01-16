@@ -21,29 +21,11 @@
         C = v
         update = C.c.version
     })
-    
-
-    // label from above (key into here - Cont%Ct is the s.t on the inside)
-    let t
-    let sip
-    let quee
-    let chat = 0
-    function upto() {
-        t = C.t
-        quee = update || '='
-        sip = C.c.ip.join('.')
-        chat && console.log("anbup",C.c.ip)
-    }
-    chat && console.log("mozwales",C.c.ip)
-    $: upto(C,boost)
-
-    onMount(() => {
-        //if (sip == '1.2.1.2.2') debugger
-    });
 
     // TODO not sure how to get boost into the toCon process
     function boosting (e, negate=false) {
-        boost += e.ctrlKey || negate ? -1 : 1
+        negate = e.ctrlKey || negate
+        boost += negate ? -1 : 1
         C.c.boost = boost
         // try again here
         //  saves having to click ring() at the top
@@ -52,15 +34,39 @@
         //     require ring() to get the most unfolded D**
         reCon(e)
     }
+    
+
+    // label from above (key into here - Cont%Ct is the s.t on the inside)
+    let t
+    let sip
+    let quee
+    function upto() {
+        t = C.t
+        quee = update || '='
+        sip = C.c.ip.join('.')
+        C.y.boosting = boosting
+    }
+    $: upto(C,boost)
+
+    onMount(() => {
+        //if (sip == '1.2.1.2.2') debugger
+    });
+    
     // refreshing the process, when children want to adjust things
     function reCon (e) {
         C = reConstruct(C)
     }
     // < this wants overlaying|geo via a parent
     let datadump
+    
+    // avoid stating this twice (as Con.t and Cont%Ct)
+    let no_label = false
+    if (C.sc.avoid_restating_Ct) {
+        no_label = true
+    }
 </script>
 
-<span style="color:deepskyblue" on:pointerdown={(e) => boosting(e)}>{t}</span>
+{#if !no_label}<span style="color:deepskyblue" on:pointerdown={(e) => boosting(e)}>{t}</span>{/if}
 {#if boost} <span style="color:blueviolet" on:pointerdown={(e) => boosting(e,'negate')}>+{boost}</span>{/if}
 {#if C.c.unwired} <span style="color:red">!wired</span>{/if}
 

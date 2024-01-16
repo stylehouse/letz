@@ -762,8 +762,14 @@ import {diff,enj,enL,deL,indents} from "$lib/Y/Text"
         #  from s.t, the insphere - rather than its position in the -Conz%z array indice, which is senile
         #   see 'atm we use the array indices to individuate [C,C,C]'
         Con.t = s.t
-        # < do some Con%style hacks to not double-label it, etc
         fatal.isC(s)
+
+        # do some Con%$style hacks to not double-label it, etc
+        $Cont = Conc&Cont
+        if (Con.t == Conts&Ct) {
+            # avoid stating this twice (as Con.t and Cont%Ct)
+            Con.sc.avoid_restating_Ct = 1
+        }
     }
 
 # makeso, cull*
