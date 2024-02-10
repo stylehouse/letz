@@ -141,10 +141,12 @@
 </script>
 
 <zf bind:this={elem} on:pointerdown|stopPropagation={lock} on:pointerup={release}>
-	<span id="knob">
-		<svg {width} {height}>
-			<circle class="knobBg" cx="5" cy="{10 + lean}" r="10"/>
-		</svg>
+	<span id="knobaura">
+		<span id="knobblob">
+			<svg {width} {height}>
+				<circle class="knobBg" cx="5" cy="{10 + lean}" r="10"/>
+			</svg>
+		</span>
 	</span>
 	<input
 		type="text"
@@ -156,7 +158,10 @@
 </zf>
 
 <style>
-	#knob {
+	#knobaura {
+    	position: relative;
+	}
+	#knobblob {
 		position: absolute;
 		z-index: -1;
 		pointer-events: none;
