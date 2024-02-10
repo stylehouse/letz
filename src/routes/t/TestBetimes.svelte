@@ -21,7 +21,7 @@
     let treeh = pito(C,'treeh','-Rec',{real:1})
     // the kommit/* -> times/* situator
     let kommit = pito(C,'kommit','-Rec',{real:1,kommit:1})
-    let times = pito(C,'times','-Kom')
+    let times = pito(C,'times','-Kom',{consoley:1})
     // the one-thing processor
     //  per thing as part of Construct() climbing C**
     let I = {

@@ -57,6 +57,7 @@
     $: calc(), msg,level, C, s
     s.y.wake = () => calc()
 
+    // < b.ui = {Kom,o,P,l}, a sub-panel to be opened
     let togs = {}
     let tog = (t) => {
         togs[t] = !togs[t]
@@ -80,7 +81,13 @@
         bid = joint(haks(b))
     }
     $: leve(),togs
+
 </script>
+
+{#if s.c.consoley}
+    <h1>consoley!</h1>
+{/if}
+
 {#if be}
 <div class={clas}>
     {#key bid}<But {b} />{/key}
