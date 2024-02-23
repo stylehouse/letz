@@ -34,18 +34,17 @@ corpus = [dictionary.doc2bow(doc) for doc in processed_docs]
 # Train LDA model
 lda_model = models.LdaModel(corpus, num_topics=12, id2word=dictionary)
 
-def space_out_weights(lighter,accumulator):
+def space_out_weights(lighter, accumulator):
     while lighter > 0.01:
         lighter -= 0.01
-        accumulator("    ")
+        accumulator("\t")
 
 # Print the most significant words for each topic
 for idx, topic in lda_model.print_topics():
-    string = "Topic {}: ".format(idx+1)
-    def accumulator(s):
-        nonlocal string
-        string += s
-    
+    string_parts = ["Topic {}: ".format(idx+1)]
+    def stringup(s):
+        string_parts.append(s)
+
     topic_terms = lda_model.get_topic_terms(idx, topn=10)
     last_weight = 1
     for term_id, weight in topic_terms:
@@ -53,10 +52,12 @@ for idx, topic in lda_model.print_topics():
 
         lighter = last_weight - weight
         if lighter > 0.01:
+            if last_weight < 1:
+                space_out_weights(lighter, stringup)
             last_weight = weight
-            space_out_weights(lighter,accumulator)
-            string += " {:.3f}  ".format(weight)
-        
-        string += " {}".format(term)
-    print(string)
+            stringup("{:.3f}".format(weight))
+
+        stringup(" {}".format(term))
+    print(''.join(string_parts))
+
 
