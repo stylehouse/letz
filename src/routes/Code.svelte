@@ -17,8 +17,6 @@
     import Record from "./Record.svelte";
     
     import { G } from "$lib/G";
-    let goodbye = 1
-    let good‍bye = 2
     
     // < be the W we are currently in
     //   have its ioing from a mind interpreting things
