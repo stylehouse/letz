@@ -122,7 +122,6 @@
 
 <div class="mi" style="left:{sizer}%;width:{100-sizer}%;">
         <Diring />
-        <KMeans />
         {#if graph} 
             <BigGroup>
                 <Graph {graph} />
