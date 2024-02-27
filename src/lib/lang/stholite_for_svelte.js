@@ -14,7 +14,18 @@ export function stho_vite() {
         name: 'stylehouse_lite-compile-plugin',
         enforce: 'pre',
         transform(code, id) {
-            if (id.endsWith('.ts')) {
+            let stylescript = id.includes('/tawhito/')
+            let typescript = id.endsWith('.ts')
+            if (stylescript && typescript) throw "both stylescript and typescript? "+id
+            if (stylescript) {
+                // code as it is in stylehouse.git/G/Lafr/Fish for example
+                //  having no imports or exports, just defining globals
+                //   on self.* or me.*
+                // < wrap it in something here?
+                // or
+                // < lezer dumping out a .ts when edited?
+            }
+            if (stylescript || typescript) {
                 // console.log("Found a "+id)
                 let ts = stylehouse_lite(code,id,'vite');
                 // if (code != compiled.code) console.log("We won!!!",compiled.code.slice(0,200))

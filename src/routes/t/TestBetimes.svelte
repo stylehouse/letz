@@ -12,7 +12,7 @@
     import { C_,pito,o_up,o_,i_,o_path } from '$lib/St'
     import { map,grep,ac, ahsk,ahk,havs,haks,hak,coint,joint, dig, sha256,sex,ex,nex,now,ispi,fatal } from "$lib/Y/Pic.ts"
     import Coning from "$lib/Coning.svelte";
-
+    import {nothing} from "$lib/tawhito/Dongtoe";
 
 
   // the C** -> D situator, including the call to Betimes()
@@ -51,6 +51,8 @@
         Betimes({times,kommit})
 
         D = Construct({I,s:C,D})
+
+        let jon = nothing({yes:1,no:2})
     }
 
 

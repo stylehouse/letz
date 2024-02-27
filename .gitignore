@@ -14,3 +14,4 @@ secrets
 /ipfs/
 *sqlite
 static/thumb
+py/bits of python/lda_input_text

@@ -1,0 +1,7 @@
+# yeah
+import {isst,isnu,isnum,isar,isspace,hak,havs,haks,ex,theone,grep,map} from '$lib/Y/Pic.ts'
+    $nothing = &sc{
+        $keys = haks(s)
+        return keys
+    }
+    export {nothing}
