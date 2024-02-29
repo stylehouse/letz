@@ -54,6 +54,7 @@
 
 
 <code>
+    <huh>Savable</huh>
     <But {b} />
     <code>{lines}</code>
 </code>
@@ -61,6 +62,9 @@
 <style>
     .nah {
         color: burlywood;
+    }
+    code huh {
+        font-size: 1.4rem;
     }
     code {
         border: 3px solid green;
