@@ -1,10 +1,11 @@
 <script lang="ts">
     import { createEventDispatcher, onMount, tick } from "svelte";
-    import { G,TheG,
-        cull_around,Recolink,Recolink_stillness,host_Recolink_stillness,
+    import { G,TheG  } from "$lib/G";
+    import { cull_around,Recolink,Recolink_stillness,host_Recolink_stillness,
         Recollect,Aroundiness,
         makeso,Betime,Betimes
-    } from "$lib/G";
+    } from "$lib/treeing/Betimes";
+
     import BigGroup from "$lib/ui/BigGroup.svelte";
     import But from "$lib/ui/But.svelte";
     import Con from "$lib/pi/Con.svelte"

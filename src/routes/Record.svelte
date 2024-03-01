@@ -1,10 +1,12 @@
 <script lang="ts">
     import Coning from "$lib/Coning.svelte";
     import { G,TheG,
-        cull_around,Recolink,Recolink_stillness,host_Recolink_stillness,
+     } from "$lib/G";
+    import {cull_around,Recolink,Recolink_stillness,host_Recolink_stillness,
         Recollect,Aroundiness,
         makeso,Betime,Betimes
-     } from "$lib/G";
+     } from "$lib/treeing/Betimes";
+    import {mkReco} from "$lib/treeing/data";
     import But from "$lib/ui/But.svelte";
     import Con from "$lib/pi/Con.svelte"
     import { Construct, reConstruct } from '$lib/Co'

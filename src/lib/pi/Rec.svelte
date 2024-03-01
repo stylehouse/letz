@@ -3,7 +3,8 @@
     import { hak,ex } from "$lib/Y/Pic"
     import { pit,o_up } from "$lib/St"
     import { Construct } from "$lib/Co"
-    import { G,Recollect,Aroundiness } from "$lib/G";
+    import { G } from "$lib/G";
+    import { Recollect,Aroundiness } from "$lib/treeing/Betimes";
     import But from "$lib/ui/But.svelte";
     import Coning from "$lib/Coning.svelte";
 	const dispatch = createEventDispatcher();
