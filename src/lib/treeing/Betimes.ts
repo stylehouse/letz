@@ -368,6 +368,8 @@ export { Recolink,Recolink_stillness,host_Recolink_stillness,makeso};
             # avoid stating this twice (as Con.t and Cont%Ct)
             Con.sc.avoid_restating_Ct = 1
         }
+        # make coming and going smooth
+        Con.sc.animal = 1
     }
 
 #  cull*

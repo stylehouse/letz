@@ -124,8 +124,11 @@
     let fenow = () => {
         return time + refresh
     }
+    // animate time nicely or not - a toggle
+    let asapily = false
     let tocken = async (spam) => {
         await tock(spam)
+        if (!asapily) await new Promise(resolve => setTimeout(resolve, 72));
         await tick()
     }
     let play = async () => {
@@ -226,8 +229,9 @@
     // API to change the {#key} block we are in
     export let resetself
     let reset = () => resetself && resetself()
+    let asap = () => asapily = !asapily
 
-    let b = {bop,tock,play,reset}
+    let b = {bop,tock,play,reset,asap}
 </script>
 
 

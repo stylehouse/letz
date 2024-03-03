@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { slide } from 'svelte/transition'
+	import { quintOut } from 'svelte/easing';
     import {onMount, onDestroy, getContext} from 'svelte'
     import {o_}  from '$lib/St'
     import {sip_wiree, reConstruct}  from '$lib/Co'
@@ -64,6 +65,10 @@
     if (C.sc.avoid_restating_Ct) {
         no_label = true
     }
+    let duration = 0
+    if (C.sc.animal) {
+        duration = 90
+    }
 </script>
 
 {#if !no_label}<span style="color:deepskyblue" on:pointerdown={(e) => boosting(e)}>{t}</span>{/if}
@@ -78,8 +83,9 @@
 <!-- <revision style="color:darkcyan; text-decoration:underline">{quee}</revision> -->
 
 
-{#each o_(C) as n}
-    <span style="display:inline-block; vertical-align: middle; border:2px solid gainsboro; border-right:none; padding: 0 3px; margin: 0 3px; border-radius: 3px;">
+{#each o_(C) as n (n.t)}
+    <span transition:slide={{ duration, easing: quintOut }}
+        style="display:inline-block; vertical-align: middle; border:2px solid gainsboro; border-right:none; padding: 0 3px; margin: 0 3px; border-radius: 3px;">
         <svelte:component on:reCon="{reCon}" this={pis[n.c.pi]} C={n}/>
     </span>
 {/each}
