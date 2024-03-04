@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { slide } from 'svelte/transition'
 	import { quintOut } from 'svelte/easing';
-    import {onMount, onDestroy, getContext} from 'svelte'
+    import {onMount, afterUpdate, onDestroy, getContext} from 'svelte'
+    import {sex,now}  from '$lib/Y/Pic'
     import {o_}  from '$lib/St'
     import {sip_wiree, reConstruct}  from '$lib/Co'
     import Coning from '$lib/Coning.svelte';
@@ -11,6 +12,7 @@
     import Dir from '$lib/pi/Dir.svelte';
     import Rec from '$lib/pi/Rec.svelte';
     import Kom from '$lib/pi/Kom.svelte';
+    import Chart from '$lib/ui/Chart.svelte';
     let pis = {Cont, Conz, Dir, Rec,Kom}
     // our instructions: (-Con/(-Cont|-Conz))**
     export let C
@@ -53,6 +55,32 @@
         //if (sip == '1.2.1.2.2') debugger
     });
     
+    // track space, maybe
+    // the div|space that wraps everything in Con
+    let wrapper
+    // Con update version?
+    let update_num = 0
+    let spam = {C,update_num:0,N:[]}
+    let geometricating = C.t == 'treeh 16'
+    
+    afterUpdate(() => {
+        let oldness = now() - spam.asat
+        if (!oldness) return
+        spam.asat = now()
+        let version = spam.update_num++
+        if (!geometricating) return
+        let geo = wrapper.getBoundingClientRect().toJSON()
+        let ge = sex({},geo,'width,height,top,left')
+        ge.time = version
+        // ge.now = now()
+        // ge.C = C
+        // console.log("Geometry "+version+": "+C.t,ge)
+        spam.N.push(ge)
+        spam.update && spam.update()
+        // spam = spam
+    })
+    
+
     // refreshing the process, when children want to adjust things
     function reCon (e) {
         C = reConstruct(C)
@@ -71,6 +99,11 @@
     }
 </script>
 
+<div bind:this={wrapper}>
+{#if geometricating}
+    <Chart {spam} vers={spam.update_num}/> 
+{/if}
+ 
 {#if !no_label}<span style="color:deepskyblue" on:pointerdown={(e) => boosting(e)}>{t}</span>{/if}
 {#if boost} <span style="color:blueviolet" on:pointerdown={(e) => boosting(e,'negate')}>+{boost}</span>{/if}
 {#if C.c.unwired} <span style="color:red">!wired</span>{/if}
@@ -89,3 +122,4 @@
         <svelte:component on:reCon="{reCon}" this={pis[n.c.pi]} C={n}/>
     </span>
 {/each}
+</div>
