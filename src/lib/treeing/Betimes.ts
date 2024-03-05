@@ -296,7 +296,7 @@ export { Recolink,Recolink_stillness,host_Recolink_stillness,makeso};
         c.times = times
         c.kommit = kommit
         # timesc&look = c
-        # console.log("Betimes", c)
+        console.log("Betimes", c)
     }
     function make_look_from_times (N) {
         $look = map(s => sex({t:s.t,s},s.sc,'msg,level'),N)

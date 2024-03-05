@@ -3,7 +3,7 @@
 	import { quintOut } from 'svelte/easing';
     import {onMount, afterUpdate, onDestroy, getContext} from 'svelte'
     import {sex,now}  from '$lib/Y/Pic'
-    import {o_}  from '$lib/St'
+    import {o_,o_up}  from '$lib/St'
     import {sip_wiree, reConstruct}  from '$lib/Co'
     import Coning from '$lib/Coning.svelte';
     // < look into https://github.com/kaisermann/svelte-loadable to name these at runtime
@@ -61,22 +61,29 @@
     // Con update version?
     let update_num = 0
     let spam = {C,update_num:0,N:[]}
+
     let geometricating = C.t == 'treeh 16'
-    
+    if (geometricating) {
+        // another clause
+        let upCon = o_up(C,{til:s => s.c.pi == 'Con',sing:1})
+        geometricating = upCon && upCon.t == 'times'
+    }
+    let vers = 0
     afterUpdate(() => {
-        let oldness = now() - spam.asat
-        if (!oldness) return
-        spam.asat = now()
-        let version = spam.update_num++
         if (!geometricating) return
+        console.log("afterUpdgeo")
+        let oldness = now() - (spam.asat||0)
+        if (oldness < 0.3) return
+        spam.asat = now()
+        vers = ++spam.update_num
         let geo = wrapper.getBoundingClientRect().toJSON()
         let ge = sex({},geo,'width,height,top,left')
-        ge.time = version
+        ge.time = vers
         // ge.now = now()
         // ge.C = C
-        // console.log("Geometry "+version+": "+C.t,ge)
+        // console.log("Geometry "+vers+": "+C.t,ge)
         spam.N.push(ge)
-        spam.update && spam.update()
+        // spam.update && spam.update()
         // spam = spam
     })
     
@@ -101,7 +108,7 @@
 
 <div bind:this={wrapper}>
 {#if geometricating}
-    <Chart {spam} vers={spam.update_num}/> 
+    <Chart {spam} /> 
 {/if}
  
 {#if !no_label}<span style="color:deepskyblue" on:pointerdown={(e) => boosting(e)}>{t}</span>{/if}
