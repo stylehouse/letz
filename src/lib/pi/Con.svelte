@@ -62,7 +62,13 @@
     let update_num = 0
     let spam = {C,update_num:0,N:[]}
 
-    let geometricating = C.t == 'treeh 16'
+    let geometricating = C.t.startsWith('treeh ')
+    if (geometricating) {
+        // another clause
+        let number = C.t.split(' ')[1]*1
+        let goodnumbers = [16] //27,40,55]
+        geometricating = goodnumbers.includes(number)   
+    }
     if (geometricating) {
         // another clause
         let upCon = o_up(C,{til:s => s.c.pi == 'Con',sing:1})
@@ -77,14 +83,13 @@
         spam.asat = now()
         vers = ++spam.update_num
         let geo = wrapper.getBoundingClientRect().toJSON()
-        let ge = sex({},geo,'width,height,top,left')
+        let ge = sex({},geo,'width,height')
         ge.time = vers
         // ge.now = now()
         // ge.C = C
-        // console.log("Geometry "+vers+": "+C.t,ge)
         spam.N.push(ge)
+        // < this may be necessary if we contract elsewhere to graph this
         // spam.update && spam.update()
-        // spam = spam
     })
     
 
@@ -108,7 +113,9 @@
 
 <div bind:this={wrapper}>
 {#if geometricating}
-    <Chart {spam} /> 
+    <span id="geom">
+        <Chart {spam} /> 
+    </span>
 {/if}
  
 {#if !no_label}<span style="color:deepskyblue" on:pointerdown={(e) => boosting(e)}>{t}</span>{/if}
@@ -130,3 +137,10 @@
     </span>
 {/each}
 </div>
+
+<style>
+    #geom {
+        position: absolute;
+        left: 42em;
+    }
+</style>
