@@ -2,7 +2,7 @@
 	import { slide } from 'svelte/transition'
 	import { quintOut } from 'svelte/easing';
     import {onMount, afterUpdate, onDestroy, getContext} from 'svelte'
-    import {sex,now}  from '$lib/Y/Pic'
+    import {sex,now,map,dec,ex,heq}  from '$lib/Y/Pic'
     import {o_,o_up}  from '$lib/St'
     import {sip_wiree, reConstruct}  from '$lib/Co'
     import Coning from '$lib/Coning.svelte';
@@ -12,7 +12,7 @@
     import Dir from '$lib/pi/Dir.svelte';
     import Rec from '$lib/pi/Rec.svelte';
     import Kom from '$lib/pi/Kom.svelte';
-    import Chart from '$lib/ui/Chart.svelte';
+    // import Chart from '$lib/ui/Chart.svelte';
     let pis = {Cont, Conz, Dir, Rec,Kom}
     // our instructions: (-Con/(-Cont|-Conz))**
     export let C
@@ -58,11 +58,11 @@
     // track space, maybe
     // the div|space that wraps everything in Con
     let wrapper
+    let spacer
     // Con update version?
     let update_num = 0
     let spam = {C,update_num:0,N:[]}
-
-    let geometricating = C.t.startsWith('treeh ')
+    let geometricating = 0 && C.t.startsWith('treeh ')
     if (geometricating) {
         // another clause
         let number = C.t.split(' ')[1]*1
@@ -75,7 +75,7 @@
         geometricating = upCon && upCon.t == 'times'
     }
     let vers = 0
-    afterUpdate(() => {
+    let geometricate = () => {
         if (!geometricating) return
         console.log("afterUpdgeo")
         let oldness = now() - (spam.asat||0)
@@ -84,12 +84,69 @@
         vers = ++spam.update_num
         let geo = wrapper.getBoundingClientRect().toJSON()
         let ge = sex({},geo,'width,height')
+        //'width,height,top,left')
         ge.time = vers
         // ge.now = now()
         // ge.C = C
         spam.N.push(ge)
         // < this may be necessary if we contract elsewhere to graph this
         // spam.update && spam.update()
+    }
+
+    // to put juddering stuff-changing-everywhere elements
+    //  into a spatial suspension
+    //  wrapper's width+height become spacer's
+    //  positions of spacers become wrapper's
+    let sizing = {}
+    let getnumbers = (ele,q) => {
+        if (!ele) return {}
+        let geo = ele.getBoundingClientRect().toJSON()
+        // dec(v,1) rounds to 1 dp
+        return map((v) => dec(v,1), sex({},geo,q))
+    }
+    let hmm = async (wait) => {
+        await new Promise(resolve => setTimeout(resolve, wait||43));
+    }
+    let spaciness = 'relative'
+    let unique_animal
+    let animalsizing = async (uniquely,ttl,was) => {
+        if (unique_animal != uniquely) return
+        if (!C.sc.animal) return
+        if (C.c.d < 2) return
+        await hmm()
+        if (!wrapper) return
+        if (C.t != 'treeh 16') return
+        // return;
+
+        was ||= ex({},sizing)
+        ex(sizing,getnumbers(wrapper,'width,height'))
+        if (was && heq(was,sizing)) return
+        sizing = sizing
+        
+        
+        await hmm()
+
+        was = ex({},sizing)
+        sizing = ex(sizing,getnumbers(spacer,'top,left'))
+        if (was && heq(was,sizing)) return
+        ex(sizing,{top:1,left:1})
+        sizing = sizing
+
+        spaciness = 'absolute'
+        console.log("anime "+C.t,sizing)
+
+        // spacer's 
+        ttl ||= 0
+        if (ttl < 3) {
+            let was = ex({},sizing)
+            await hmm(555)
+            animalsizing(uniquely,ttl+1,was)
+        }
+    }
+
+    afterUpdate(() => {
+        geometricate()
+        animalsizing(unique_animal = {})
     })
     
 
@@ -111,7 +168,9 @@
     }
 </script>
 
-<div bind:this={wrapper}>
+<div id="spacer" bind:this={spacer} style="width: {sizing.width||0}px; height: {sizing.height||0}px;"></div>
+<div id="wrapper" bind:this={wrapper} 
+    style="left: {sizing.left||0}px; top: {sizing.top||0}px; position:{spaciness};">
 {#if geometricating}
     <span id="geom">
         <Chart {spam} /> 
@@ -132,7 +191,11 @@
 
 {#each o_(C) as n (n.t)}
     <span transition:slide={{ duration, easing: quintOut }}
-        style="display:inline-block; vertical-align: middle; border:2px solid gainsboro; border-right:none; padding: 0 3px; margin: 0 3px; border-radius: 3px;">
+        style="display:inline-block; vertical-align: middle; border:2px solid gainsboro;
+               border-right:none; padding: 0 3px; margin: 0 3px;
+               border-radius: 3px;
+               position: relative;
+               ">
         <svelte:component on:reCon="{reCon}" this={pis[n.c.pi]} C={n}/>
     </span>
 {/each}

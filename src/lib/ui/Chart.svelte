@@ -177,8 +177,8 @@
 
     .color-key {
         display: inline-block;
-        width: 15px;
-        height: 15px;
+        /* width: 15px;
+        height: 15px; */
         margin-right: 15%;
         /* border: 1px solid #fff; */
     }
