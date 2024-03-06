@@ -31,7 +31,7 @@
     <nodules style="display:block; vertical-align: middle; border:5px solid #f8c; border-right:none; padding: 0 3px; margin: 0 3px; border-radius: 3px;">
     <!-- the (n.t) means indexed by that, should be a Cid - they are reused for identity -->
     {#each nodules as n (n.t)}
-        <nodule style="display:table; position: sticky; top: 0px;" >
+        <nodule style="display:table; position: relative;" >
             <!-- <zo>(t:{n.t})</zo> -->
             <Con C={n} />
         </nodule>
