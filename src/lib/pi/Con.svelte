@@ -118,6 +118,7 @@
         if (C.t != 'treeh 16') return
         // return;
 
+
         was ||= ex({},sizing)
         ex(sizing,getnumbers(wrapper,'width,height'))
         if (was && heq(was,sizing)) return
@@ -127,9 +128,9 @@
         await hmm()
 
         was = ex({},sizing)
-        sizing = ex(sizing,getnumbers(spacer,'top,left'))
+        ex(sizing,getnumbers(spacer,'top,left'))
         if (was && heq(was,sizing)) return
-        ex(sizing,{top:1,left:1})
+        ex(sizing,{top:0,left:0})
         sizing = sizing
 
         spaciness = 'absolute'
