@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { slide } from 'svelte/transition'
 	import { quintOut } from 'svelte/easing';
+    import { tweened } from 'svelte/motion';
+    import { flip } from 'svelte/animate';
     import {onMount, afterUpdate, onDestroy, getContext} from 'svelte'
     import {slupath}  from '$lib/treeing/Betimes'
     import {sex,now,map,dec,ex,heq}  from '$lib/Y/Pic'
@@ -59,7 +61,19 @@
     // track space, maybe
     // the div|space that wraps everything in Con
     let wrapper
+
     let spacer
+    // is fed from wrapper:
+    let spacerHeight = tweened(0, {
+        duration: 300,
+        easing: quintOut
+    });
+    let spacerWidth = tweened(0, {
+        duration: 300,
+        easing: quintOut
+    });
+
+
     // Con update version?
     let spam = {C,began:now(),vers:0,N:[]}
     // are we charting
@@ -102,7 +116,14 @@
     //  into a spatial suspension
     //  wrapper's width+height become spacer's
     //  wrapper is position:absolute referenced to their parent, see <nodule> in Conz
-    //  
+    
+    // the theory is simple:
+    // $: {
+    //     spacerHeight.set(wrapperHeight);
+    // }
+    // afterUpdate(() => {
+    //     wrapperHeight = wrapper.offsetHeight;
+    // });
     let sizing = {}
     let hmm = async (wait) => {
         await new Promise(resolve => setTimeout(resolve, wait||43));
@@ -131,11 +152,13 @@
             width: wrapper.offsetWidth,
             height: wrapper.offsetHeight
         }
+        // animated transition
+        spacerHeight.set(ge.width+3)
+        spacerWidth.set(ge.height)
+        // and into our sizing thinkyport.
+        //  this is the think, other than spam
         ex(sizing,ge)
-        sizing.width += 3
         if (was && heq(was,sizing)) return
-        // < animated transition
-        sizing = sizing
         
         await hmm()
 
@@ -145,6 +168,7 @@
         
         spaciness = 'absolute'
         spatialising = 1
+        ex(sizing,{he:dec($spacerHeight,0),we:dec($spacerWidth,0)})
         console.log("animalsizing "+slupath(C),sizing)
         // whether we came from afterUpdate or by reverb
         if (ttl) ge.reverb = ttl
@@ -184,8 +208,11 @@
     $: backgroundism = spatialising ? "#ffc2" : "none"
 </script>
 
-<div id="spacer" bind:this={spacer} style="width: {sizing.width||0}px; height: {sizing.height||0}px;"></div>
-<div id="wrapper" bind:this={wrapper} 
+<div id="spacer" bind:this={spacer} style="width: {$spacerWidth||0}px; height: {$spacerHeight||0}px;"></div>
+<div
+    id="wrapper"
+    bind:this={wrapper}
+
     style="left: {sizing.left||0}px; top: {sizing.top||0}px; position:{spaciness};">
 {#if geometricating}
     <span id="geom">
@@ -206,7 +233,9 @@
 
 
 {#each o_(C) as n (n.t)}
-    <span transition:slide={{ duration, easing: quintOut }}
+    <span
+        transition:slide={{ duration, easing: quintOut }}
+        animate:flip={{ duration: 300 }}
         style="display:inline-block; vertical-align: middle; border:2px solid gainsboro;
                border-right:none; padding: 0 3px; margin: 0 3px;
                border-radius: 3px;
