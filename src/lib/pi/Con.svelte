@@ -130,6 +130,9 @@
     }
     // wrapper's positioning mode
     let spaciness = 'relative'
+    // < how folded up the nodules should be
+    //  default is display:table-row
+    let foldfactor = 0
     let unique_animal
     onDestroy(() => { unique_animal = 0 })
     let spatialising = 0
@@ -140,6 +143,7 @@
         let number = C.t.split(' ')[1]*1
         let goodnumbers = [16,27,40,55]
         if (!(goodnumbers.includes(number) || C.t == 'times' || C.c.d == 1)) return
+        if (C.c.d == 0) return
 
         await hmm()
         if (unique_animal != uniquely) return
@@ -152,8 +156,10 @@
             width: wrapper.offsetWidth,
             height: wrapper.offsetHeight
         }
+        // < each wants padding based on its historical wildness
+        //   but only in this foldfactor
         // animated transition
-        spacerWidth.set(ge.width + 3)
+        spacerWidth.set(ge.width)
         spacerHeight.set(ge.height)
         // sizing stabilises
         ex(sizing,ge)
@@ -166,7 +172,7 @@
         ex(sizing,{top:0,left:0})
         
         spaciness = 'absolute'
-        spatialising = 1
+        spatialising = 0
         
         // sample the animated transition
         ex(ge,{
@@ -217,38 +223,48 @@
     id="wrapper"
     bind:this={wrapper}
 
-    style="left: {sizing.left||0}px; top: {sizing.top||0}px; position:{spaciness};">
+    style="
+        left: {sizing.left||0}px;
+         top: {sizing.top||0}px;
+         position:{spaciness};
+
+        display:table-row;
+    ">
 {#if geometricating}
     <span id="geom">
         <Chart {spam} /> 
     </span>
 {/if}
  
+<span>
 {#if !no_label}<span style="color:deepskyblue" on:pointerdown={(e) => boosting(e)}>{t}</span>{/if}
 {#if boost} <span style="color:blueviolet" on:pointerdown={(e) => boosting(e,'negate')}>+{boost}</span>{/if}
 {#if C.c.unwired} <span style="color:red">!wired</span>{/if}
-
 <!-- <c_sip style="font-size:70%" on:pointerdown={(e) => datadump = 1}> {sip} </c_sip> -->
-{#if datadump}
-    <!-- data dump (leaving the mind our Con** is from) -->
-    <Coning C={C.c.s} noC />
-{/if}
 <!-- <revision style="color:darkcyan; text-decoration:underline">{quee}</revision> -->
-
+</span>
 
 {#each o_(C) as n (n.t)}
     <span
         transition:slide={{ duration, easing: quintOut }}
-        animate:flip={{ duration: 300 }}
         style="display:inline-block; vertical-align: middle; border:2px solid gainsboro;
                border-right:none; padding: 0 3px; margin: 0 3px;
                border-radius: 3px;
                position: relative;
                background: {backgroundism};
+               display:table-cell;
                ">
         <svelte:component on:reCon="{reCon}" this={pis[n.c.pi]} C={n}/>
     </span>
 {/each}
+
+
+<span>
+    {#if datadump}
+        <!-- data dump (leaving the mind our Con** is from) -->
+        <Coning C={C.c.s} noC />
+    {/if}
+</span>
 </div>
 
 <style>
