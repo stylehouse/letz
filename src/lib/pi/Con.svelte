@@ -85,14 +85,20 @@
         let oldness = now() - (confusospam.asat||0)
         if (oldness < 0.3) return
         confusospam.asat = now()
+        
+        // svelte can even see this adjustment to spam:
         vers = ++spam.update_num
-        let geo = wrapper.getBoundingClientRect().toJSON()
-        let ge = sex({},geo,'width,height')
-        //'width,height,top,left')
+        // < does this one take less time? it's only 0.5ms ish
+        // let geo = wrapper.getBoundingClientRect().toJSON()
+        let ge = {
+            width: wrapper.offsetWidth,
+            height: wrapper.offsetHeight
+        }
         ge.time = vers
         // ge.now = now()
         // ge.C = C
         confusospam.N.push(ge)
+        if (vers == 50) debugger
         // < this may be necessary if we contract elsewhere to graph this
         // spam.update && spam.update()
     }
@@ -103,12 +109,6 @@
     //  wrapper is position:absolute referenced to their parent, see <nodule> in Conz
     //  
     let sizing = {}
-    let getnumbers = (ele,q) => {
-        if (!ele) return {}
-        let geo = ele.getBoundingClientRect().toJSON()
-        // dec(v,1) rounds to 1 dp
-        return map((v) => dec(v,1), sex({},geo,q))
-    }
     let hmm = async (wait) => {
         await new Promise(resolve => setTimeout(resolve, wait||43));
     }
@@ -125,13 +125,15 @@
         if (!(goodnumbers.includes(number) || C.t == 'times' || C.c.d == 1)) return
 
         await hmm()
-        if (!wrapper) return
-        // if (C.t != 'treeh 16') return
-        // return;
+        if (!wrapper) return console.error("animalsizing No #wrapper yet")
 
         // was may be passed from a longer-ago moment of animalsizing
         was ||= ex({},sizing)
-        ex(sizing,getnumbers(wrapper,'width,height'))
+        let ge = {
+            width: wrapper.offsetWidth,
+            height: wrapper.offsetHeight
+        }
+        ex(sizing,ge)
         sizing.width += 3
         if (was && heq(was,sizing)) return
         // < animated transition
