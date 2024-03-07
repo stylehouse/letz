@@ -86,7 +86,7 @@
 </script>
 
 {#if s.c.consoley}
-    <h1>consoley!</h1>
+    <h4>consoley!</h4>
 {/if}
 
 {#if be}

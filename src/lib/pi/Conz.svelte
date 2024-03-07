@@ -32,6 +32,7 @@
     <!-- the (n.t) means indexed by that, should be a Cid - they are reused for identity -->
     {#each nodules as n (n.t)}
         <nodule style="display:table; position: relative;" >
+            <!--   -->
             <!-- <zo>(t:{n.t})</zo> -->
             <Con C={n} />
         </nodule>

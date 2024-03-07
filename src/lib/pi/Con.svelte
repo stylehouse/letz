@@ -227,8 +227,9 @@
         left: {sizing.left||0}px;
          top: {sizing.top||0}px;
          position:{spaciness};
+         display:table-row;
+         wdith:100%;
 
-        display:table-row;
     ">
 {#if geometricating}
     <span id="geom">
@@ -253,6 +254,7 @@
                position: relative;
                background: {backgroundism};
                display:table-cell;
+               wdith:100%;
                ">
         <svelte:component on:reCon="{reCon}" this={pis[n.c.pi]} C={n}/>
     </span>
