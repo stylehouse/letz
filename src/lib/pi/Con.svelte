@@ -61,44 +61,39 @@
     let wrapper
     let spacer
     // Con update version?
-    let update_num = 0
-    let spam = {C,update_num:0,N:[]}
-    let geometricating = 1 && C.t.startsWith('kommi')
-    if (0) {
-        if (geometricating) {
-            // another clause
-            let number = C.t.split(' ')[1]*1
-            let goodnumbers = [27] //16,27,40,55]
-            geometricating = goodnumbers.includes(number)   
+    let spam = {C,began:now(),vers:0,N:[]}
+    // are we charting
+    let is_geometricating = () => {
+        let geometricating = 1 && C.t.startsWith('kommi')
+        if (0) {
+            if (geometricating) {
+                // another clause
+                let number = C.t.split(' ')[1]*1
+                let goodnumbers = [27] //16,27,40,55]
+                geometricating = goodnumbers.includes(number)   
+            }
+            if (geometricating) {
+                // another clause
+                let upCon = o_up(C,{til:s => s.c.pi == 'Con',sing:1})
+                geometricating = upCon && upCon.t == 'times'
+            }
         }
-        if (geometricating) {
-            // another clause
-            let upCon = o_up(C,{til:s => s.c.pi == 'Con',sing:1})
-            geometricating = upCon && upCon.t == 'times'
-        }
+        return geometricating
     }
-    let vers = 0
+    let geometricating = is_geometricating()
     let confusospam = spam
-    let geometricate = () => {
-        if (!geometricating) return
-        console.log("afterUpdgeo")
+    let geometricate = (ge) => {
         let oldness = now() - (confusospam.asat||0)
         if (oldness < 0.3) return
         confusospam.asat = now()
+        spam.vers ++
         
-        // svelte can even see this adjustment to spam:
-        vers = ++spam.update_num
-        // < does this one take less time? it's only 0.5ms ish
-        // let geo = wrapper.getBoundingClientRect().toJSON()
-        let ge = {
-            width: wrapper.offsetWidth,
-            height: wrapper.offsetHeight
-        }
-        ge.time = vers
-        // ge.now = now()
-        // ge.C = C
+        ge.time = dec(spam.asat - spam.began,3)
         confusospam.N.push(ge)
-        if (vers == 50) debugger
+
+        if (spam.vers == 50) debugger
+        // console.log("geometricate ")
+
         // < this may be necessary if we contract elsewhere to graph this
         // spam.update && spam.update()
     }
@@ -115,6 +110,7 @@
     // wrapper's positioning mode
     let spaciness = 'relative'
     let unique_animal
+    onDestroy(() => { unique_animal = 0 })
     let spatialising = 0
     let animalsizing = async (uniquely,ttl,was) => {
         if (unique_animal != uniquely) return
@@ -125,7 +121,9 @@
         if (!(goodnumbers.includes(number) || C.t == 'times' || C.c.d == 1)) return
 
         await hmm()
-        if (!wrapper) return console.error("animalsizing No #wrapper yet")
+        if (unique_animal != uniquely) return
+        // happens a lot once we unMount!
+        if (!wrapper) return
 
         // was may be passed from a longer-ago moment of animalsizing
         was ||= ex({},sizing)
@@ -148,8 +146,11 @@
         spaciness = 'absolute'
         spatialising = 1
         console.log("animalsizing "+slupath(C),sizing)
+        // whether we came from afterUpdate or by reverb
+        if (ttl) ge.reverb = ttl
+        geometricating && geometricate(ge)
 
-        // keep going a few times
+        // reverb - keep going a few times
         ttl ||= 0
         if (ttl < 3) {
             let was = ex({},sizing)
@@ -159,7 +160,6 @@
     }
 
     afterUpdate(() => {
-        geometricate()
         animalsizing(unique_animal = {})
     })
     

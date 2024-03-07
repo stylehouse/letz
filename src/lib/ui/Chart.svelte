@@ -4,7 +4,6 @@
     import Chart from 'chart.js/auto'; // Auto import for all chart types
 
     export let spam = {}
-    export let vers
 
     let chartContainer;
     let myChart;
@@ -103,9 +102,10 @@
         make_ys_labels()
         console.log("Upd'd Chart", myChart.data)
     }
-    // listens to vers etc to upding()
-    $: upding(vers, spam)
+    $: upding(spam)
 
+    // send reactivity
+    // < unused - reactivity of spam prop does ok?
     spam.update = (a) => {
         spam = spam
         console.log("spamn update")
