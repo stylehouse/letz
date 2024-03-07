@@ -8,7 +8,7 @@ import { mkReco,electReco,
     makeso,slupath} from "$lib/treeing/data";
 import { generate_diff} from "$lib/treeing/diff";
 import { upload_to_ipfs} from "$lib/treeing/ipfs";
-export { Recolink,Recolink_stillness,host_Recolink_stillness,makeso};
+export { Recolink,Recolink_stillness,host_Recolink_stillness,makeso,slupath};
 
 # Recollect Reco <- guest ...
     # Rec.svelte may be given Record/in/$guest-Rec
@@ -296,7 +296,7 @@ export { Recolink,Recolink_stillness,host_Recolink_stillness,makeso};
         c.times = times
         c.kommit = kommit
         # timesc&look = c
-        console.log("Betimes", c)
+        # console.log("Betimes", c)
     }
     function make_look_from_times (N) {
         $look = map(s => sex({t:s.t,s},s.sc,'msg,level'),N)

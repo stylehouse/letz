@@ -2,6 +2,7 @@
 	import { slide } from 'svelte/transition'
 	import { quintOut } from 'svelte/easing';
     import {onMount, afterUpdate, onDestroy, getContext} from 'svelte'
+    import {slupath}  from '$lib/treeing/Betimes'
     import {sex,now,map,dec,ex,heq}  from '$lib/Y/Pic'
     import {o_,o_up}  from '$lib/St'
     import {sip_wiree, reConstruct}  from '$lib/Co'
@@ -12,7 +13,7 @@
     import Dir from '$lib/pi/Dir.svelte';
     import Rec from '$lib/pi/Rec.svelte';
     import Kom from '$lib/pi/Kom.svelte';
-    // import Chart from '$lib/ui/Chart.svelte';
+    import Chart from '$lib/ui/Chart.svelte';
     let pis = {Cont, Conz, Dir, Rec,Kom}
     // our instructions: (-Con/(-Cont|-Conz))**
     export let C
@@ -62,25 +63,28 @@
     // Con update version?
     let update_num = 0
     let spam = {C,update_num:0,N:[]}
-    let geometricating = 0 && C.t.startsWith('treeh ')
-    if (geometricating) {
-        // another clause
-        let number = C.t.split(' ')[1]*1
-        let goodnumbers = [16] //27,40,55]
-        geometricating = goodnumbers.includes(number)   
-    }
-    if (geometricating) {
-        // another clause
-        let upCon = o_up(C,{til:s => s.c.pi == 'Con',sing:1})
-        geometricating = upCon && upCon.t == 'times'
+    let geometricating = 1 && C.t.startsWith('kommi')
+    if (0) {
+        if (geometricating) {
+            // another clause
+            let number = C.t.split(' ')[1]*1
+            let goodnumbers = [27] //16,27,40,55]
+            geometricating = goodnumbers.includes(number)   
+        }
+        if (geometricating) {
+            // another clause
+            let upCon = o_up(C,{til:s => s.c.pi == 'Con',sing:1})
+            geometricating = upCon && upCon.t == 'times'
+        }
     }
     let vers = 0
+    let confusospam = spam
     let geometricate = () => {
         if (!geometricating) return
         console.log("afterUpdgeo")
-        let oldness = now() - (spam.asat||0)
+        let oldness = now() - (confusospam.asat||0)
         if (oldness < 0.3) return
-        spam.asat = now()
+        confusospam.asat = now()
         vers = ++spam.update_num
         let geo = wrapper.getBoundingClientRect().toJSON()
         let ge = sex({},geo,'width,height')
@@ -88,7 +92,7 @@
         ge.time = vers
         // ge.now = now()
         // ge.C = C
-        spam.N.push(ge)
+        confusospam.N.push(ge)
         // < this may be necessary if we contract elsewhere to graph this
         // spam.update && spam.update()
     }
@@ -96,7 +100,8 @@
     // to put juddering stuff-changing-everywhere elements
     //  into a spatial suspension
     //  wrapper's width+height become spacer's
-    //  positions of spacers become wrapper's
+    //  wrapper is position:absolute referenced to their parent, see <nodule> in Conz
+    //  
     let sizing = {}
     let getnumbers = (ele,q) => {
         if (!ele) return {}
@@ -107,36 +112,42 @@
     let hmm = async (wait) => {
         await new Promise(resolve => setTimeout(resolve, wait||43));
     }
+    // wrapper's positioning mode
     let spaciness = 'relative'
     let unique_animal
+    let spatialising = 0
     let animalsizing = async (uniquely,ttl,was) => {
         if (unique_animal != uniquely) return
         if (!C.sc.animal) return
-        if (C.c.d < 2) return
+        // if (C.c.d <3) return
+        let number = C.t.split(' ')[1]*1
+        let goodnumbers = [16,27,40,55]
+        if (!(goodnumbers.includes(number) || C.t == 'times' || C.c.d == 1)) return
+
         await hmm()
         if (!wrapper) return
-        if (C.t != 'treeh 16') return
+        // if (C.t != 'treeh 16') return
         // return;
 
-
+        // was may be passed from a longer-ago moment of animalsizing
         was ||= ex({},sizing)
         ex(sizing,getnumbers(wrapper,'width,height'))
+        sizing.width += 3
         if (was && heq(was,sizing)) return
+        // < animated transition
         sizing = sizing
-        
         
         await hmm()
 
-        was = ex({},sizing)
-        ex(sizing,getnumbers(spacer,'top,left'))
-        if (was && heq(was,sizing)) return
+        // never changes, position relative to Conz's <nodule>
+        // where spacer sits the wrapper hovers
         ex(sizing,{top:0,left:0})
-        sizing = sizing
-
+        
         spaciness = 'absolute'
-        console.log("anime "+C.t,sizing)
+        spatialising = 1
+        console.log("animalsizing "+slupath(C),sizing)
 
-        // spacer's 
+        // keep going a few times
         ttl ||= 0
         if (ttl < 3) {
             let was = ex({},sizing)
@@ -167,6 +178,8 @@
     if (C.sc.animal) {
         duration = 90
     }
+    let backgroundism
+    $: backgroundism = spatialising ? "#ffc2" : "none"
 </script>
 
 <div id="spacer" bind:this={spacer} style="width: {sizing.width||0}px; height: {sizing.height||0}px;"></div>
@@ -196,6 +209,7 @@
                border-right:none; padding: 0 3px; margin: 0 3px;
                border-radius: 3px;
                position: relative;
+               background: {backgroundism};
                ">
         <svelte:component on:reCon="{reCon}" this={pis[n.c.pi]} C={n}/>
     </span>
