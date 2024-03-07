@@ -153,10 +153,9 @@
             height: wrapper.offsetHeight
         }
         // animated transition
-        spacerHeight.set(ge.width+3)
-        spacerWidth.set(ge.height)
-        // and into our sizing thinkyport.
-        //  this is the think, other than spam
+        spacerWidth.set(ge.width + 3)
+        spacerHeight.set(ge.height)
+        // sizing stabilises
         ex(sizing,ge)
         if (was && heq(was,sizing)) return
         
@@ -168,8 +167,13 @@
         
         spaciness = 'absolute'
         spatialising = 1
-        ex(sizing,{he:dec($spacerHeight,0),we:dec($spacerWidth,0)})
-        console.log("animalsizing "+slupath(C),sizing)
+        
+        // sample the animated transition
+        ex(ge,{
+            he:dec($spacerHeight,0),
+            we:dec($spacerWidth,0)
+        })
+        console.log("animalsizing "+slupath(C),ge)
         // whether we came from afterUpdate or by reverb
         if (ttl) ge.reverb = ttl
         geometricating && geometricate(ge)
