@@ -45,7 +45,8 @@
             'green','blue','red','beige','orange','brown','pink'
         ]
         map((k) => {
-            ys_colours[k] = colours.shift()
+            let it = ys_colours[k] = colours.shift()
+            if (!it) throw "send colours"
         }, ys)
 
         // fills in data later
@@ -73,7 +74,7 @@
             }
 
         });
-        console.log("Init'd Chart", datasets)
+        // console.log("Init'd Chart", datasets)
     }
     onMount(() => {
         init()
@@ -92,7 +93,6 @@
         // x labels? jaink?
         myChart.data.labels = spam.N.map(q => q[x])
 
-        // console.log("Upd'n Chart")
         map((k,i) => {
             myChart.data.datasets[i] ||= {}
             myChart.data.datasets[i].data = spam.N.map(q => dec(q[k],0))
@@ -100,7 +100,7 @@
 
         myChart.update()
         make_ys_labels()
-        console.log("Upd'd Chart", myChart.data)
+        // console.log("Upd'd Chart", myChart.data)
     }
     $: upding(spam)
 
@@ -134,7 +134,7 @@
         
         ys_labels = ys_labels
         
-        console.log("ys_labels: ",ys_labels)
+        // console.log("ys_labels: ",ys_labels)
     }
 
 
