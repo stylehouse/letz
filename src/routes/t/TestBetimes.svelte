@@ -128,7 +128,7 @@
     let asapily = false
     let tocken = async (spam) => {
         await tock(spam)
-        if (!asapily) await new Promise(resolve => setTimeout(resolve, 72));
+        if (!asapily) await new Promise(resolve => setTimeout(resolve, 696));
         await tick()
     }
     let play = async () => {

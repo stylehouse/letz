@@ -137,14 +137,19 @@
     onDestroy(() => { unique_animal = 0 })
     let spatialising = 0
     let animalsizing = async (uniquely,ttl,was) => {
-        if (unique_animal != uniquely) return
+        // tidy parallel trails of this
+        if (unique_animal != uniquely) return console.log("tidy parallel trails of animalsizing")
+
         if (!C.sc.animal) return
+
         // if (C.c.d <3) return
         let number = C.t.split(' ')[1]*1
         let goodnumbers = [16,27,40,55]
         // if (!(goodnumbers.includes(number) || C.t == 'times' || C.c.d == 1)) return
         // if (C.c.d == 0) return
         if (C.c.d > 2) return
+
+
 
         await hmm()
         if (unique_animal != uniquely) return
@@ -213,7 +218,7 @@
     }
     let duration = 0
     if (C.sc.animal) {
-        duration = 90
+        duration = 491
     }
     let backgroundism
     $: backgroundism = spatialising ? "#ffc2" : "none"
