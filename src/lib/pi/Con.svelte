@@ -142,8 +142,9 @@
         // if (C.c.d <3) return
         let number = C.t.split(' ')[1]*1
         let goodnumbers = [16,27,40,55]
-        if (!(goodnumbers.includes(number) || C.t == 'times' || C.c.d == 1)) return
-        if (C.c.d == 0) return
+        // if (!(goodnumbers.includes(number) || C.t == 'times' || C.c.d == 1)) return
+        // if (C.c.d == 0) return
+        if (C.c.d > 2) return
 
         await hmm()
         if (unique_animal != uniquely) return
@@ -217,7 +218,7 @@
     let backgroundism
     $: backgroundism = spatialising ? "#ffc2" : "none"
 </script>
-
+<nondual style="position: relative; width:100%;" >
 <div id="spacer" bind:this={spacer} style="width: {$spacerWidth||0}px; height: {$spacerHeight||0}px;"></div>
 <div
     id="wrapper"
@@ -228,7 +229,7 @@
          top: {sizing.top||0}px;
          position:{spaciness};
          display:table-row;
-         wdith:100%;
+         width:100%;
 
     ">
 {#if geometricating}
@@ -268,6 +269,7 @@
     {/if}
 </span>
 </div>
+</nondual>
 
 <style>
     #geom {
