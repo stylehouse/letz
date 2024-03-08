@@ -5,7 +5,7 @@
     import { flip } from 'svelte/animate';
     import {onMount, afterUpdate, onDestroy, getContext} from 'svelte'
     import {slupath}  from '$lib/treeing/Betimes'
-    import {sex,now,map,dec,ex,heq}  from '$lib/Y/Pic'
+    import {sex,now,map,dec,ex,heq,hak,haks,joint}  from '$lib/Y/Pic'
     import {o_,o_up}  from '$lib/St'
     import {sip_wiree, reConstruct}  from '$lib/Co'
     import Coning from '$lib/Coning.svelte';
@@ -98,7 +98,8 @@
     let confusospam = spam
     let geometricate = (ge) => {
         let oldness = now() - (confusospam.asat||0)
-        if (oldness < 0.3) return
+        // about 5% of the time?
+        if (oldness < 0.15) return console.log("freshness")
         confusospam.asat = now()
         spam.vers ++
         
@@ -125,21 +126,47 @@
     //     wrapperHeight = wrapper.offsetHeight;
     // });
     let sizing = {}
+    // never changes, position relative to Conz's <nodule>
+    // where spacer sits the wrapper hovers
+    ex(sizing,{top:0,left:0})
+    // speed animal instincts will be applied
     let hmm = async (wait) => {
         await new Promise(resolve => setTimeout(resolve, wait||43));
     }
-    // wrapper's positioning mode
+    // wrapper's positioning mode, becomes absolute
     let spaciness = 'relative'
     // < how folded up the nodules should be
     //  default is display:table-row
     let foldfactor = 0
+    let look_selected = 0
+    // high level
+    let sizefield = []
+    let animalsizing = async (ge) => {
+        spaciness = 'absolute'
+        look_selected = 0
+        if (ge?.width == null) throw "!ge"
+        // < each wants padding based on its historical wildness
+        //   but only in this foldfactor
+        // animated transition
+        spacerWidth.set(ge.width)
+        spacerHeight.set(ge.height)
+        
+        
+        // sample the animated transition
+        ex(ge,{
+            he:dec($spacerHeight,0),
+            we:dec($spacerWidth,0)
+        })
+        // console.log("animalsizing "+slupath(C),ge)
+
+        await hmm()
+    }
+    // low level - ripple
     let unique_animal
     onDestroy(() => { unique_animal = 0 })
-    let spatialising = 0
-    let animalsizing = async (uniquely,ttl,was) => {
+    let animalsizing_loop = async (uniquely,ttl,was) => {
         // tidy parallel trails of this
-        if (unique_animal != uniquely) return console.log("tidy parallel trails of animalsizing")
-
+        if (unique_animal != uniquely) return
         if (!C.sc.animal) return
 
         // if (C.c.d <3) return
@@ -150,57 +177,44 @@
         if (C.c.d > 2) return
 
 
-
-        await hmm()
         if (unique_animal != uniquely) return
         // happens a lot once we unMount!
         if (!wrapper) return
 
-        // was may be passed from a longer-ago moment of animalsizing
+        // was may be passed from a longer ago
         was ||= ex({},sizing)
+        // make sizing current
         let ge = {
             width: wrapper.offsetWidth,
             height: wrapper.offsetHeight
         }
-        // < each wants padding based on its historical wildness
-        //   but only in this foldfactor
-        // animated transition
-        spacerWidth.set(ge.width)
-        spacerHeight.set(ge.height)
-        // sizing stabilises
         ex(sizing,ge)
-        if (was && heq(was,sizing)) return
-        
-        await hmm()
-
-        // never changes, position relative to Conz's <nodule>
-        // where spacer sits the wrapper hovers
-        ex(sizing,{top:0,left:0})
-        
-        spaciness = 'absolute'
-        spatialising = 0
-        
-        // sample the animated transition
-        ex(ge,{
-            he:dec($spacerHeight,0),
-            we:dec($spacerWidth,0)
-        })
-        console.log("animalsizing "+slupath(C),ge)
         // whether we came from afterUpdate or by reverb
         if (ttl) ge.reverb = ttl
-        geometricating && geometricate(ge)
+
+        // model chaos
+        let modeledat = now()
+        await animalsizing(ge)
+        await geometricating && geometricate(ge)
+        console.log('sizing took '+(now()-modeledat))
+
+
+        // sizing stabilises
+        if (ttl && was && heq(was,sizing)) return console.log("sizing stabilises "+(ttl||0))
 
         // reverb - keep going a few times
         ttl ||= 0
         if (ttl < 3) {
             let was = ex({},sizing)
-            await hmm(555)
-            animalsizing(uniquely,ttl+1,was)
+            setTimeout(() => {
+                animalsizing_loop(uniquely,ttl+1,was),
+                500
+            })
         }
     }
 
     afterUpdate(() => {
-        animalsizing(unique_animal = {})
+        animalsizing_loop(unique_animal = {})
     })
     
 
@@ -221,7 +235,7 @@
         duration = 491
     }
     let backgroundism
-    $: backgroundism = spatialising ? "#ffc2" : "none"
+    $: backgroundism = look_selected ? "#ffc2" : "none"
     let displaymode = C.c.d == 0 ? 'table' : 'table-cell'
 </script>
 <nondual style="position: relative; width:100%; display:{displaymode};" >
