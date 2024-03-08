@@ -29,7 +29,7 @@
 
 {#if nodules.length}
     <nodules style="
-        display:block;
+        display:inline-table;
         vertical-align: middle;
         border:5px solid #f8c;
         border-right:none;
