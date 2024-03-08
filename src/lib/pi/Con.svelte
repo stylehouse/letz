@@ -105,7 +105,7 @@
         ge.time = dec(spam.asat - spam.began,3)
         confusospam.N.push(ge)
 
-        if (spam.vers == 50) debugger
+        if (spam.vers == 42) debugger
         // console.log("geometricate ")
 
         // < this may be necessary if we contract elsewhere to graph this
@@ -217,8 +217,10 @@
     }
     let backgroundism
     $: backgroundism = spatialising ? "#ffc2" : "none"
+    let displaymode = C.c.d == 0 ? 'table' : 'table-cell'
 </script>
-<nondual style="position: relative; width:100%;" >
+<nondual style="position: relative; width:100%; display:{displaymode};" >
+    <!--  -->
 <div id="spacer" bind:this={spacer} style="width: {$spacerWidth||0}px; height: {$spacerHeight||0}px;"></div>
 <div
     id="wrapper"
@@ -228,17 +230,19 @@
         left: {sizing.left||0}px;
          top: {sizing.top||0}px;
          position:{spaciness};
-         display:table-row;
-         width:100%;
 
     ">
+
+    <!-- display:table-row;
+    width:100%; -->
 {#if geometricating}
     <span id="geom">
         <Chart {spam} /> 
     </span>
 {/if}
  
-<span>
+<span style="display:table-cell;" >
+    ~
 {#if !no_label}<span style="color:deepskyblue" on:pointerdown={(e) => boosting(e)}>{t}</span>{/if}
 {#if boost} <span style="color:blueviolet" on:pointerdown={(e) => boosting(e,'negate')}>+{boost}</span>{/if}
 {#if C.c.unwired} <span style="color:red">!wired</span>{/if}
@@ -247,7 +251,7 @@
 </span>
 
 {#each o_(C) as n (n.t)}
-    <span
+    <giverto
         transition:slide={{ duration, easing: quintOut }}
         style="display:inline-block; vertical-align: middle; border:2px solid gainsboro;
                border-right:none; padding: 0 3px; margin: 0 3px;
@@ -255,19 +259,24 @@
                position: relative;
                background: {backgroundism};
                display:table-cell;
-               wdith:100%;
-               ">
-        <svelte:component on:reCon="{reCon}" this={pis[n.c.pi]} C={n}/>
-    </span>
+               "
+        title="{C.t}-{C.c.pi}/{n.t}-{n.c.pi}">
+        <takerto >
+            <svelte:component on:reCon="{reCon}" this={pis[n.c.pi]} C={n}/>
+        </takerto>
+    </giverto>
+    <!-- 
+               display:table-cell;
+               wdith:100%; -->
 {/each}
 
 
-<span>
     {#if datadump}
+<span style="display:table-cell;" >
         <!-- data dump (leaving the mind our Con** is from) -->
         <Coning C={C.c.s} noC />
-    {/if}
 </span>
+    {/if}
 </div>
 </nondual>
 
