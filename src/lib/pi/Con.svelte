@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { slide } from 'svelte/transition'
+	import { fly,slide,scale,crossfade } from 'svelte/transition'
 	import { quintOut } from 'svelte/easing';
     import { tweened } from 'svelte/motion';
     import { flip } from 'svelte/animate';
@@ -95,18 +95,19 @@
         return geometricating
     }
     let geometricating = is_geometricating()
+    let verbose = geometricating
     let confusospam = spam
     let geometricate = (ge) => {
         let oldness = now() - (confusospam.asat||0)
         // about 5% of the time?
-        if (oldness < 0.15) return console.log("freshness")
+        if (oldness < 0.15) return verbose && console.log("freshness")
         confusospam.asat = now()
         spam.vers ++
         
         ge.time = dec(spam.asat - spam.began,3)
         confusospam.N.push(ge)
 
-        if (spam.vers == 42) debugger
+        // if (spam.vers == 42) debugger
         // console.log("geometricate ")
 
         // < this may be necessary if we contract elsewhere to graph this
@@ -155,15 +156,15 @@
         // sample the animated transition
         ex(ge,{
             he:dec($spacerHeight,0),
-            we:dec($spacerWidth,0)
+            wi:dec($spacerWidth,0)
         })
         // console.log("animalsizing "+slupath(C),ge)
 
-        await hmm()
     }
     // low level - ripple
     let unique_animal
     onDestroy(() => { unique_animal = 0 })
+
     let animalsizing_loop = async (uniquely,ttl,was) => {
         // tidy parallel trails of this
         if (unique_animal != uniquely) return
@@ -196,11 +197,13 @@
         let modeledat = now()
         await animalsizing(ge)
         await geometricating && geometricate(ge)
-        console.log('sizing took '+(now()-modeledat))
+        // < includes Chart update after geometricate(ge)?
+        await hmm()
+        verbose && console.log('sizing took '+(now()-modeledat))
 
 
         // sizing stabilises
-        if (ttl && was && heq(was,sizing)) return console.log("sizing stabilises "+(ttl||0))
+        if (ttl && was && heq(was,sizing)) return verbose && console.log("sizing stabilises "+(ttl||0))
 
         // reverb - keep going a few times
         ttl ||= 0
@@ -270,8 +273,10 @@
 </span>
 
 {#each o_(C) as n (n.t)}
+<!-- fly,slide,scale,crossfade -->
     <giverto
-        transition:slide={{ duration, easing: quintOut }}
+        in:slide={{ duration:333,easing:quintOut,opacity:1 }}
+        out:scale={{ duration:222,easing:quintOut,opacity:1 }}
         style="display:inline-block; vertical-align: middle; border:2px solid gainsboro;
                border-right:none; padding: 0 3px; margin: 0 3px;
                border-radius: 3px;
