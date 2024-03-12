@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { fly,slide,scale,crossfade } from 'svelte/transition'
-	import { quintOut } from 'svelte/easing';
+	import { quintOut,linear } from 'svelte/easing';
     import { tweened } from 'svelte/motion';
     import { flip } from 'svelte/animate';
     import {onMount, afterUpdate, onDestroy, getContext} from 'svelte'
@@ -95,7 +95,7 @@
         return geometricating
     }
     let geometricating = is_geometricating()
-    let verbose = geometricating
+    let verbose = 1 && geometricating
     let confusospam = spam
     let geometricate = (ge) => {
         let oldness = now() - (confusospam.asat||0)
@@ -160,6 +160,7 @@
         })
         // console.log("animalsizing "+slupath(C),ge)
 
+        itisgiven()
     }
     // low level - ripple
     let unique_animal
@@ -199,11 +200,11 @@
         await geometricating && geometricate(ge)
         // < includes Chart update after geometricate(ge)?
         await hmm()
-        verbose && console.log('sizing took '+(now()-modeledat))
+        // verbose && console.log('sizing took '+(now()-modeledat))
 
 
         // sizing stabilises
-        if (ttl && was && heq(was,sizing)) return verbose && console.log("sizing stabilises "+(ttl||0))
+        if (ttl && heq(was,sizing)) return verbose && console.log("sizing stabilises "+(ttl||0))
 
         // reverb - keep going a few times
         ttl ||= 0
@@ -219,6 +220,15 @@
     afterUpdate(() => {
         animalsizing_loop(unique_animal = {})
     })
+
+    // flash a background colour
+    let givenbg = tweened(0,{duration:300,easing:linear})
+    function itisgiven() {
+        givenbg.set(1, { hard: true });
+        // .then(() => {
+            givenbg.set(0);
+        // });
+    }
     
 
     // refreshing the process, when children want to adjust things
@@ -252,7 +262,7 @@
         left: {sizing.left||0}px;
          top: {sizing.top||0}px;
          position:{spaciness};
-
+         background-color: hsla(120, 100%, 75%, {$givenbg})
     ">
 
     <!-- display:table-row;
@@ -263,7 +273,8 @@
     </span>
 {/if}
  
-<span style="display:table-cell;" >
+<span style="display:table-cell;
+    background: hsla(255,255,255,255)" >
     ~
 {#if !no_label}<span style="color:deepskyblue" on:pointerdown={(e) => boosting(e)}>{t}</span>{/if}
 {#if boost} <span style="color:blueviolet" on:pointerdown={(e) => boosting(e,'negate')}>+{boost}</span>{/if}
@@ -308,5 +319,6 @@
     #geom {
         position: absolute;
         left: 42em;
+        background: hsla(hue, saturation, lightness, alpha)
     }
 </style>
