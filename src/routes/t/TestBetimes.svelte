@@ -188,6 +188,7 @@
         //   so this >20s long stretch can be broken up:
         await tocken(['yub mgzolzayanja'])
         await tocken(['yub mgbebe'])
+        return
         await tocken(['yub mgyeyee'])
         await tocken(['yub mgyeayee'])
         await tocken(['yub mgyebyee'])

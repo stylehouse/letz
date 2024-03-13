@@ -191,20 +191,20 @@
             height: wrapper.offsetHeight
         }
         ex(sizing,ge)
+        let change = !heq(was,sizing)
         // whether we came from afterUpdate or by reverb
         if (ttl) ge.reverb = ttl
 
         // model chaos
         let modeledat = now()
-        await animalsizing(ge)
+        change && await animalsizing(ge)
         await geometricating && geometricate(ge)
         // < includes Chart update after geometricate(ge)?
         await hmm()
         // verbose && console.log('sizing took '+(now()-modeledat))
 
-
         // sizing stabilises
-        if (ttl && heq(was,sizing)) return verbose && console.log("sizing stabilises "+(ttl||0))
+        if (ttl && !change) return verbose && console.log("sizing stabilises "+(ttl||0))
 
         // reverb - keep going a few times
         ttl ||= 0
@@ -224,10 +224,10 @@
     // flash a background colour
     let givenbg = tweened(0,{duration:300,easing:linear})
     function itisgiven() {
-        givenbg.set(1, { hard: true });
-        // .then(() => {
+        givenbg.set(1, { hard: true })
+        .then(() => {
             givenbg.set(0);
-        // });
+        });
     }
     
 
@@ -262,8 +262,9 @@
         left: {sizing.left||0}px;
          top: {sizing.top||0}px;
          position:{spaciness};
-         background-color: hsla(120, 100%, 75%, {$givenbg})
+        background-color: hsla(120, 100%, 75%, {$givenbg})
     ">
+    <!--  -->
 
     <!-- display:table-row;
     width:100%; -->
@@ -288,7 +289,8 @@
     <giverto
         in:slide={{ duration:333,easing:quintOut,opacity:1 }}
         out:scale={{ duration:222,easing:quintOut,opacity:1 }}
-        style="display:inline-block; vertical-align: middle; border:2px solid gainsboro;
+        style="display:inline-block; vertical-align: middle;
+               border: 2px solid gainsboro;
                border-right:none; padding: 0 3px; margin: 0 3px;
                border-radius: 3px;
                position: relative;
