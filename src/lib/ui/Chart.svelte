@@ -42,8 +42,27 @@
 
         // assigned colours
         let colours = [
-            'green','blue','red','beige','orange','brown','pink'
-        ]
+            '#FF4D4D', // Bright Red
+            '#4D94FF', // Sky Blue
+            '#B566FF', // Purple
+            '#FFD14D', // Orange
+            '#4DFF9D', // Mint Green
+            '#FF9D4D', // Coral
+            '#9D4DFF', // Violet
+            '#4DFFA6', // Aquamarine
+            '#FFA64D', // Tangerine
+            '#A64DFF', // Lavender
+            '#4DFF4D', // Lime Green
+            '#FF4DFF', // Hot Pink
+            '#FFD7D7', // Light Coral
+            '#C2C2D6', // Lavender Gray
+            '#FFDAB9', // Peach Puff
+            '#98FB98', // Pale Green
+            '#AFEEEE', // Pale Turquoise
+            '#DB7093', // Pale Violet Red
+            '#FFEFD5', // Papaya Whip
+            '#FFDAB9' // Peach Puff
+        ];
         map((k) => {
             let it = ys_colours[k] = colours.shift()
             if (!it) throw "send colours"
