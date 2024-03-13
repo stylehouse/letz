@@ -262,7 +262,6 @@
         left: {sizing.left||0}px;
          top: {sizing.top||0}px;
          position:{spaciness};
-        background-color: hsla(120, 100%, 75%, {$givenbg})
     ">
     <!--  -->
 
@@ -290,7 +289,7 @@
         in:slide={{ duration:333,easing:quintOut,opacity:1 }}
         out:scale={{ duration:222,easing:quintOut,opacity:1 }}
         style="display:inline-block; vertical-align: middle;
-               border: 2px solid gainsboro;
+               border: 3px solid gainsboro;
                border-right:none; padding: 0 3px; margin: 0 3px;
                border-radius: 3px;
                position: relative;
@@ -298,6 +297,12 @@
                display:table-cell;
                "
         title="{C.t}-{C.c.pi}/{n.t}-{n.c.pi}">
+        <sleeve style="width:cal(100% + 6px);height:100%;position:absolute;
+            border-left:1em solid hsla(120, 100%, 75%, {$givenbg});
+            border-radius: 0.3em;
+            top:-3px;
+            left:-3px;
+            "></sleeve>
         <takerto >
             <svelte:component on:reCon="{reCon}" this={pis[n.c.pi]} C={n}/>
         </takerto>
