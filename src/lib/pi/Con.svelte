@@ -5,7 +5,7 @@
     import { flip } from 'svelte/animate';
     import {onMount, afterUpdate, onDestroy, getContext} from 'svelte'
     import {slupath}  from '$lib/treeing/Betimes'
-    import {sex,now,map,dec,ex,heq,hak,haks,joint}  from '$lib/Y/Pic'
+    import {sex,now,map,dec,ex,heq,hak,haks,joint,sum}  from '$lib/Y/Pic'
     import {o_,o_up}  from '$lib/St'
     import {sip_wiree, reConstruct}  from '$lib/Co'
     import Coning from '$lib/Coning.svelte';
@@ -141,16 +141,118 @@
     let foldfactor = 0
     let look_selected = 0
     // high level
-    let sizefield = []
+
+    // record of recent geometries
+        let sizefield = []
+        let sizehop = {}
+        function add_size(ge) {
+            sizefield.push(ex({now:now()},ge))
+            // population limit
+            while (sizefield.length > 9) sizefield.shift()
+        }
+        function read_sizefield(k) {
+            // age limit
+            while (now() - sizefield[0]?.now > 1.3) sizefield.shift()
+            return sizefield.map(c => c[k])
+        }
+        // each wants padding based on its historical wildness
+        // < but only in this foldfactor (ie we make things wrap differently)
+        function getwobble(N) {
+            let wobs = []
+            let la = null
+            N.map(v => {
+                if (la != null) {
+                    let s = la - v
+                    if (isNaN(s)) debugger
+                    if (s < 0) s *= -1
+                    wobs.push(1*s)
+                }
+                la = v
+            })
+            if (!wobs.length) return la/9
+            let total = sum(...wobs)
+            let average = total / wobs.length
+            return average
+        }
+        function good_size(ge) {
+            let ks = ['width','height']
+            // record the apparent width|height
+            add_size(ge);
+            let de = {}
+            map((k) => {
+                // the recent values of this measurement
+                let column = read_sizefield(k)
+
+                let max = Math.max(...column)
+
+                // < std deviation?
+                let wob = getwobble(column)
+                if (wob < (max/50)) wob = 0
+                if (geometricating && k == 'width') {
+                    debugger
+                }
+                de[k] = dec((1*max) + (1*wob)/5,0)
+                // make these available to Chart:
+                ge['good_'+k] = de[k]
+                ge['wob_'+k] = wob
+
+                if (isNaN(de[k])) debugger
+                // de[k] = max
+            }, ks)
+
+
+            let sizehopped = ''
+            if (!sizehop.now || now() - sizehop.now > 1.3) {
+                // a while since sizehop, set to an ideal
+                sizehop = ex({now:now()},de)
+                sizehopped = 'ideal'
+            }
+            else {
+                // see if what we set it to before (sizehop) is close enough to our current guess (ge)
+                //  this should avoid lots of slight adjustments around wobbling geo
+                let close_enough = 1
+                map((k) => {
+                    let wob = getwobble([de[k],sizehop[k]])
+                    if (isNaN(wob)) debugger
+                    let far = wob > de[k]/4
+                    if (far) close_enough = 0
+                }, ks)
+                if (close_enough) {
+                    // keep it how it is...
+                    sizehopped = 'keep'
+                    map((k) => {
+
+                        de['void_'+k] = de[k]
+                        de[k] = sizehop[k]
+                    },ks)
+                }
+                else {
+                    sizehopped = 'alter'
+                }
+                
+            }
+
+            // give Chart what we decided
+            ex(ge,de)
+            if (geometricating) {
+                console.log("good_size: "+sizehopped,de)
+            }
+            return de
+        }
+    
     let animalsizing = async (ge) => {
         spaciness = 'absolute'
         look_selected = 0
         if (ge?.width == null) throw "!ge"
-        // < each wants padding based on its historical wildness
-        //   but only in this foldfactor
+
+        // desired shape of spacer, given recent turmoil
+        let de = good_size(ge)
+        // ex({},ge)
+        // 
+        
         // animated transition
-        spacerWidth.set(ge.width)
-        spacerHeight.set(ge.height)
+        spacerWidth.set(de.width)
+        spacerHeight.set(de.height)
         
         
         // sample the animated transition
@@ -204,7 +306,7 @@
         // verbose && console.log('sizing took '+(now()-modeledat))
 
         // sizing stabilises
-        if (ttl && !change) return verbose && console.log("sizing stabilises "+(ttl||0))
+        // if (ttl && !change) return verbose && console.log("sizing stabilises "+(ttl||0))
 
         // reverb - keep going a few times
         ttl ||= 0
