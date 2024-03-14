@@ -79,7 +79,7 @@
     // are we charting
     let is_geometricating = () => {
         let geometricating = 1 && C.t.startsWith('kommi')
-        
+
         if (0) {
             if (geometricating) {
                 // another clause
@@ -145,16 +145,18 @@
 
     // record of recent geometries
         let sizefield = []
+        let sizefield_agelimit = 1.6
+        let sizefield_poplimit = 77
         let sizehop = {}
         function add_size(ge) {
             sizefield.push(ex({now:now()},ge))
             // population limit
-            while (sizefield.length > 9) sizefield.shift()
+            while (sizefield.length > sizefield_poplimit) sizefield.shift()
         }
         function read_sizefield(k,timestamp) {
             timestamp ||= now()
             // age limit
-            while (timestamp - sizefield[0]?.now > 1.3) sizefield.shift()
+            while (timestamp - sizefield[0]?.now > sizefield_agelimit) sizefield.shift()
             return sizefield.map(c => c[k])
         }
         // each wants padding based on its historical wildness
@@ -164,10 +166,7 @@
             let la = null
             N.map(v => {
                 if (la != null) {
-                    let s = la - v
-                    if (isNaN(s)) debugger
-                    if (s < 0) s *= -1
-                    wobs.push(1*s)
+                    wobs.push(num_distance(la,v))
                 }
                 la = v
             })
@@ -179,6 +178,12 @@
             let total = sum(...wobs)
             let average = total / wobs.length
             return average
+        }
+        function num_distance(a,b) {
+            let s = a - b
+            if (isNaN(s)) debugger
+            if (s < 0) s *= -1
+            return s
         }
         function good_size(ge) {
             let timestamp = now()
@@ -203,6 +208,8 @@
                 // make these available to Chart:
                 ge['good_'+k] = good
                 ge['wob_'+k] = wob
+
+                if (good < ge[k]) debugger
 
                 if (isNaN(de[k])) debugger
                 // de[k] = max
