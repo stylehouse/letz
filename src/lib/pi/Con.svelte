@@ -79,6 +79,7 @@
     // are we charting
     let is_geometricating = () => {
         let geometricating = 1 && C.t.startsWith('kommi')
+        
         if (0) {
             if (geometricating) {
                 // another clause
@@ -150,9 +151,10 @@
             // population limit
             while (sizefield.length > 9) sizefield.shift()
         }
-        function read_sizefield(k) {
+        function read_sizefield(k,timestamp) {
+            timestamp ||= now()
             // age limit
-            while (now() - sizefield[0]?.now > 1.3) sizefield.shift()
+            while (timestamp - sizefield[0]?.now > 1.3) sizefield.shift()
             return sizefield.map(c => c[k])
         }
         // each wants padding based on its historical wildness
@@ -169,31 +171,37 @@
                 }
                 la = v
             })
-            if (!wobs.length) return la/9
+            if (!wobs.length) {
+                // wobbley geometries could be too long ago
+                // < return la/9 if we are at the beginning of time?
+                return 0
+            }
             let total = sum(...wobs)
             let average = total / wobs.length
             return average
         }
         function good_size(ge) {
+            let timestamp = now()
             let ks = ['width','height']
             // record the apparent width|height
             add_size(ge);
             let de = {}
             map((k) => {
                 // the recent values of this measurement
-                let column = read_sizefield(k)
+                let column = read_sizefield(k,timestamp)
 
                 let max = Math.max(...column)
 
                 // < std deviation?
                 let wob = getwobble(column)
-                if (wob < (max/50)) wob = 0
-                if (geometricating && k == 'width') {
-                    debugger
-                }
-                de[k] = dec((1*max) + (1*wob)/5,0)
+                let a_negligible_wob = max/50
+                // < ever-widening due to width being l
+                if (wob < a_negligible_wob) wob = 0
+                let wob_margin = wob/5
+                let good = dec(max + wob_margin,0)
+                de[k] = good
                 // make these available to Chart:
-                ge['good_'+k] = de[k]
+                ge['good_'+k] = good
                 ge['wob_'+k] = wob
 
                 if (isNaN(de[k])) debugger
@@ -266,9 +274,9 @@
     }
     // low level - ripple
     let unique_animal
-    onDestroy(() => { unique_animal = 0 })
+    onDestroy(() => { unique_animal = {} })
 
-    let animalsizing_loop = async (uniquely,ttl,was) => {
+    let animalsizing_loop = async (uniquely,ttl=null,was=null) => {
         // tidy parallel trails of this
         if (unique_animal != uniquely) return
         if (!C.sc.animal) return
@@ -298,8 +306,9 @@
         if (ttl) ge.reverb = ttl
 
         // model chaos
-        let modeledat = now()
-        change && await animalsizing(ge)
+        change && 
+            await animalsizing(ge)
+        
         await geometricating && geometricate(ge)
         // < includes Chart update after geometricate(ge)?
         await hmm()
@@ -319,7 +328,8 @@
         }
     }
 
-    afterUpdate(() => {
+    afterUpdate(async () => {
+        // await hmm()
         animalsizing_loop(unique_animal = {})
     })
 
