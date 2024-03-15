@@ -198,7 +198,6 @@
                 let max = Math.max(...column)
 
                 // < std deviation?
-                if (column.length == 2 && geometricating) debugger
                 let wob = getwobble(column)
                 let a_negligible_wob = max/50
                 // < ever-widening due to width being l
@@ -280,23 +279,23 @@
     }
     // low level - ripple
     let unique_animal
+    afterUpdate(async () => {
+        // await hmm()
+        animalsizing_loop(unique_animal = {})
+    })
     onDestroy(() => { unique_animal = {} })
 
     let animalsizing_loop = async (uniquely,ttl=null,was=null) => {
         // tidy parallel trails of this
         if (unique_animal != uniquely) return
         if (!C.sc.animal) return
-
         // if (C.c.d <3) return
         let number = C.t.split(' ')[1]*1
         let goodnumbers = [16,27,40,55]
         // if (!(goodnumbers.includes(number) || C.t == 'times' || C.c.d == 1)) return
         // if (C.c.d == 0) return
         if (C.c.d > 2) return
-
-
         if (unique_animal != uniquely) return
-        // happens a lot once we unMount!
         if (!wrapper) return
 
         // was may be passed from a longer ago
@@ -337,10 +336,6 @@
         }
     }
 
-    afterUpdate(async () => {
-        // await hmm()
-        animalsizing_loop(unique_animal = {})
-    })
 
     // flash a background colour
     let givenbg = tweened(0,{duration:300,easing:linear})

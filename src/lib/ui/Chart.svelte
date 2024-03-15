@@ -173,11 +173,6 @@
         return lastDataPoint
     }
     let label_height = 20
-    function num_distance(a,b) {
-        let s = b - a
-        if (s < 0) s *= -1
-        return s
-    }
     function spread_ys_labels(ys_labels) {
         // sort by y
         ys_labels = ys_labels.sort((a,b) => a.y - b.y)
@@ -201,7 +196,7 @@
         
         squidge(0,0)
 
-        console.log("ys_labels: ",map(lab => sex({},lab,'y,further'),ys_labels))
+        // console.log("ys_labels: ",map(lab => sex({},lab,'y,further'),ys_labels))
         return ys_labels
     }
 
