@@ -145,7 +145,7 @@
 
     // record of recent geometries
         let sizefield = []
-        let sizefield_agelimit = 1.6
+        let sizefield_agelimit = 4.3
         let sizefield_poplimit = 77
         let sizehop = {}
         function add_size(ge) {
@@ -198,6 +198,7 @@
                 let max = Math.max(...column)
 
                 // < std deviation?
+                if (column.length == 2 && geometricating) debugger
                 let wob = getwobble(column)
                 let a_negligible_wob = max/50
                 // < ever-widening due to width being l
@@ -207,9 +208,7 @@
                 de[k] = good
                 // make these available to Chart:
                 ge['good_'+k] = good
-                ge['wob_'+k] = wob
-
-                if (good < ge[k]) debugger
+                ge['wob_'+k] = wob*10
 
                 if (isNaN(de[k])) debugger
                 // de[k] = max
@@ -311,6 +310,9 @@
         let change = !heq(was,sizing)
         // whether we came from afterUpdate or by reverb
         if (ttl) ge.reverb = ttl
+        // the wrapper
+        ge.x = ge.width
+        ge.y = ge.height
 
         // model chaos
         change && 
