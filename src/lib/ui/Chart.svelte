@@ -1,6 +1,6 @@
 <script>
     import { beforeUpdate, onMount } from 'svelte';
-    import {sex,nex,haks,fatal,hak,armap,map,grep,uniq,dec} from "$lib/Y/Pic"
+    import {sex,nex,haks,hak,fatal,armap,map,grep,uniq,dec} from "$lib/Y/Pic"
     import Chart from 'chart.js/auto'; // Auto import for all chart types
 
     export let spam = {}
@@ -111,7 +111,7 @@
 
         // x labels? jaink?
         myChart.data.labels = spam.N.map(q => q[x])
-
+        // each column
         map((k,i) => {
             myChart.data.datasets[i] ||= {}
             myChart.data.datasets[i].data = spam.N.map(q => dec(q[k],0))
@@ -133,11 +133,12 @@
     // also, those labels:
     function make_ys_labels() {
         const canvasRect = chartContainer.getBoundingClientRect();
-        const chartData = myChart.data;
 
         ys_labels = armap((k) => {
-            const datasetIndex = chartData.datasets.findIndex(d => d.label === k);
-            const lastDataPoint = chartData.datasets[datasetIndex].data.slice(-1)[0]; 
+            let lastDataPoint = latest_datapoint(k)
+
+            if (lastDataPoint == null || isNaN(lastDataPoint)) return null
+
             const yAxis = myChart.scales['y'];
             const yPixel = yAxis.getPixelForValue(lastDataPoint);
 
@@ -147,13 +148,61 @@
             return {
                 x: xPixel, y: yPixel,
                 colour: ys_colours[k],
-                label: k
+                label: k,
+                lastDataPoint
             }
         }, ys);
+        ys_labels = grep(ys_labels)
+        if (!hak(ys_labels)) return
         
-        ys_labels = ys_labels
+        ys_labels = spread_ys_labels(ys_labels)
         
-        // console.log("ys_labels: ",ys_labels)
+    }
+    function latest_datapoint(k) {
+        const chartData = myChart.data;
+        // get column number by name
+        const datasetIndex = chartData.datasets.findIndex(d => d.label === k);
+        // get last row with a value in that column
+        let lastDataPoint
+        let lookback = -1
+        while (lookback-- > -6) {
+            lastDataPoint = chartData.datasets[datasetIndex].data.slice(lookback)[0]
+            if (lastDataPoint == null || isNaN(lastDataPoint)) continue
+            break
+        }
+        return lastDataPoint
+    }
+    let label_height = 20
+    function num_distance(a,b) {
+        let s = b - a
+        if (s < 0) s *= -1
+        return s
+    }
+    function spread_ys_labels(ys_labels) {
+        // sort by y
+        ys_labels = ys_labels.sort((a,b) => a.y - b.y)
+        map((lab,i) => {
+            // keep their index inside so we can pass lab around
+            lab.i = i
+        }, ys_labels)
+        // needy may get way behind lab.y when lab are too bunched
+        let squidge = (i,needy) => {
+            let lab = ys_labels[i]
+            if (!lab) return
+            if (needy && needy > lab.y) {
+                // we are told lab.y needs to be further
+                lab.further = needy - lab.y
+                lab.y = needy
+            }
+            // next one should be...
+            needy = lab.y + label_height
+            squidge(i+1,needy)
+        }
+        
+        squidge(0,0)
+
+        console.log("ys_labels: ",map(lab => sex({},lab,'y,further'),ys_labels))
+        return ys_labels
     }
 
 
