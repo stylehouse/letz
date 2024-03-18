@@ -239,7 +239,11 @@
                 map((k) => {
                     let wob = getwobble([de[k],sizehop[k]])
                     if (isNaN(wob)) debugger
-                    let far = wob > de[k]/4
+                    let difference = de[k] - sizehop[k]
+                    // increasing is more important
+                    let sensitivity = difference > 0 ? 9 : 6
+                    let allowed = de[k] / sensitivity
+                    let far = wob > allowed
                     if (far) close_enough = 0
                 }, ks)
                 if (close_enough) {
