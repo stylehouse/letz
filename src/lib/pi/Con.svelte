@@ -355,12 +355,23 @@
 
     // flash a background colour
     let givenbg = tweened(0,{duration:300,easing:linear})
+    let givenbgUnsubscribe:Function
+    onDestroy(() => {
+        givenbgUnsubscribe && givenbgUnsubscribe();
+    });
+    onMount(() => {
+        givenbgUnsubscribe = givenbg.subscribe(value => {
+            value = dec(value,2)
+            sleeve.style.borderLeft = `1em solid hsla(120, 100%, 75%, ${value})`;
+        });
+    });
     function itisgiven() {
         givenbg.set(1, { hard: true })
         .then(() => {
-            givenbg.set(0);
+            givenbg.set(0.0);
         });
     }
+    let sleeve:HTMLElement
     
 
     // refreshing the process, when children want to adjust things
@@ -398,6 +409,14 @@
     ">
     <!--  -->
 
+    <sleeve bind:this={sleeve}
+    style="width:cal(100% + 6px);height:100%;position:absolute;
+    border-left:1em solid hsla(120, 100%, 75%, 0);
+    border-radius: 0.3em;
+    top:-3px;
+    left:-3px;
+    "></sleeve>
+    
     <!-- display:table-row;
     width:100%; -->
 {#if geometricating}
@@ -430,12 +449,6 @@
                display:table-cell;
                "
         title="{C.t}-{C.c.pi}/{n.t}-{n.c.pi}">
-        <sleeve style="width:cal(100% + 6px);height:100%;position:absolute;
-            border-left:1em solid hsla(120, 100%, 75%, {$givenbg});
-            border-radius: 0.3em;
-            top:-3px;
-            left:-3px;
-            "></sleeve>
         <takerto >
             <svelte:component on:reCon="{reCon}" this={pis[n.c.pi]} C={n}/>
         </takerto>
