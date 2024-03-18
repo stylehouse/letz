@@ -310,8 +310,8 @@
         // whether we came from afterUpdate or by reverb
         if (ttl) ge.reverb = ttl
         // the wrapper
-        ge.x = ge.width
-        ge.y = ge.height
+        ge.wrapperx = ge.width
+        ge.wrappery = ge.height
 
         // model chaos
         change && 
