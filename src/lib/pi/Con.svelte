@@ -60,9 +60,9 @@
     
     // track space, maybe
     // the div|space that wraps everything in Con
-    let wrapper
+    let wrapper:HTMLElement
 
-    let spacer
+    let spacer:HTMLElement
     // is fed from wrapper:
     let spacerHeight = tweened(0, {
         duration: 300,
@@ -72,7 +72,19 @@
         duration: 300,
         easing: quintOut
     });
-
+    let spacerHeightUnsubscribe:Function, spacerWidthUnsubscribe:Function;
+    onDestroy(() => {
+        spacerHeightUnsubscribe && spacerHeightUnsubscribe();
+        spacerWidthUnsubscribe && spacerWidthUnsubscribe();
+    });
+    onMount(() => {
+        spacerHeightUnsubscribe = spacerHeight.subscribe(value => {
+            spacer.style.height = `${value}px`;
+        });
+        spacerWidthUnsubscribe = spacerWidth.subscribe(value => {
+            spacer.style.width = `${value}px`;
+        });
+    });
 
     // Con update version?
     let spam = {C,began:now(),vers:0,N:[]}
@@ -101,7 +113,7 @@
     let geometricate = (ge) => {
         let oldness = now() - (confusospam.asat||0)
         // about 5% of the time?
-        if (oldness < 0.15) return verbose && console.log("freshness")
+        if (oldness < 0.25) return verbose && console.log("freshness")
         confusospam.asat = now()
         spam.vers ++
         
@@ -369,7 +381,8 @@
 </script>
 <nondual style="position: relative; width:100%; display:{displaymode};" >
     <!--  -->
-<div id="spacer" bind:this={spacer} style="width: {$spacerWidth||0}px; height: {$spacerHeight||0}px;"></div>
+<div id="spacer" bind:this={spacer} style=""></div>
+<!-- width: {$spacerWidth||0}px; height: {$spacerHeight||0}px; -->
 <div
     id="wrapper"
     bind:this={wrapper}
