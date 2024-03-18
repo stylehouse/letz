@@ -78,11 +78,12 @@
         spacerWidthUnsubscribe && spacerWidthUnsubscribe();
     });
     onMount(() => {
+        let nonspacer = spacer
         spacerHeightUnsubscribe = spacerHeight.subscribe(value => {
-            spacer.style.height = `${value}px`;
+            nonspacer.style.height = `${value}px`;
         });
         spacerWidthUnsubscribe = spacerWidth.subscribe(value => {
-            spacer.style.width = `${value}px`;
+            nonspacer.style.width = `${value}px`;
         });
     });
 
@@ -264,14 +265,17 @@
             // give Chart what we decided
             ex(ge,de)
             if (geometricating) {
-                console.log("good_size: "+sizehopped,de)
+                // console.log("good_size: "+sizehopped,de)
             }
             return de
         }
     
+    let animalsize = {}
     let animalsizing = async (ge) => {
-        spaciness = 'absolute'
-        look_selected = 0
+        if (spaciness != 'absolute') {
+            spaciness = 'absolute'
+        }
+        // look_selected = 0
         if (ge?.width == null) throw "!ge"
 
         // desired shape of spacer, given recent turmoil
@@ -279,19 +283,23 @@
         // ex({},ge)
         // 
         
-        // animated transition
-        spacerWidth.set(de.width)
-        spacerHeight.set(de.height)
+        let change = !heq(animalsize,sex({},de,'width,height'))
+        sex(animalsize,de,'width,height')
+        if (change) {
+            // animated transition
+            spacerWidth.set(de.width)
+            spacerHeight.set(de.height)
+            itisgiven()
+        }
         
         
         // sample the animated transition
-        ex(ge,{
-            he:dec($spacerHeight,0),
-            wi:dec($spacerWidth,0)
-        })
+        // ex(ge,{
+        //     he:dec($spacerHeight,0),
+        //     wi:dec($spacerWidth,0)
+        // })
         // console.log("animalsizing "+slupath(C),ge)
 
-        itisgiven()
     }
     // low level - ripple
     let unique_animal
@@ -303,6 +311,7 @@
 
     let animalsizing_loop = async (uniquely,ttl=null,was=null) => {
         // tidy parallel trails of this
+        geometricating && ttl && console.log("geomettl "+ttl)
         if (unique_animal != uniquely) return
         if (!C.sc.animal) return
         // if (C.c.d <3) return
@@ -330,7 +339,7 @@
         ge.wrappery = ge.height
 
         // model chaos
-        change && 
+        // change && 
             await animalsizing(ge)
         
         await geometricating && geometricate(ge)
@@ -343,11 +352,12 @@
 
         // reverb - keep going a few times
         ttl ||= 0
-        if (ttl < 3) {
+        if (ttl < 15) {
+            let next_ttl = ttl + 1
             let was = ex({},sizing)
             setTimeout(() => {
-                animalsizing_loop(uniquely,ttl+1,was),
-                500
+                animalsizing_loop(uniquely,next_ttl,was),
+                1500
             })
         }
     }
@@ -360,9 +370,10 @@
         givenbgUnsubscribe && givenbgUnsubscribe();
     });
     onMount(() => {
+        let nonsleeve = sleeve
         givenbgUnsubscribe = givenbg.subscribe(value => {
             value = dec(value,2)
-            sleeve.style.borderLeft = `1em solid hsla(120, 100%, 75%, ${value})`;
+            nonsleeve.style.borderLeft = `1em solid hsla(120, 100%, 75%, ${value})`;
         });
     });
     function itisgiven() {
@@ -416,7 +427,7 @@
     top:-3px;
     left:-3px;
     "></sleeve>
-    
+
     <!-- display:table-row;
     width:100%; -->
 {#if geometricating}
