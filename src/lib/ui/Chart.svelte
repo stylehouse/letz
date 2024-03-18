@@ -142,8 +142,8 @@
             const yAxis = myChart.scales['y'];
             const yPixel = yAxis.getPixelForValue(lastDataPoint);
 
-            // Calculate a reasonable x-position within the chart for the key
-            const xPixel = canvasRect.width - 100
+            // hang off the right end?
+            const xPixel = canvasRect.width + 10
 
             return {
                 x: xPixel, y: yPixel,
@@ -165,7 +165,7 @@
         // get last row with a value in that column
         let lastDataPoint
         let lookback = -1
-        while (lookback-- > -6) {
+        while (lookback-- > -999) {
             lastDataPoint = chartData.datasets[datasetIndex].data.slice(lookback)[0]
             if (lastDataPoint == null || isNaN(lastDataPoint)) continue
             break
@@ -176,11 +176,7 @@
     function spread_ys_labels(ys_labels) {
         // sort by y
         ys_labels = ys_labels.sort((a,b) => a.y - b.y)
-        map((lab,i) => {
-            // keep their index inside so we can pass lab around
-            lab.i = i
-        }, ys_labels)
-        // needy may get way behind lab.y when lab are too bunched
+        // needy may get ahead of lab.y when lab are too bunched
         let squidge = (i,needy) => {
             let lab = ys_labels[i]
             if (!lab) return
