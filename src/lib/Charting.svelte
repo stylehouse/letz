@@ -12,12 +12,31 @@
         return g
     }
     let charts = []
-    g.update = () => charts = havs(g.charts)
-    // they have a collection of charts.$t = spam
+    let updated = 0
+    // sweep together (delay and singularise) calls to g.update()
+    let updating = null
+    let updatingHz = 2
+    g.update = (to) => {
+        if (!updating || updating != to) {
+            if (!updating) {
+                // the first call comes back:
+                updating = {}
+                setTimeout(() => { g.update(updating) }, 1000/updatingHz)
+            }
+        }
+        else {
+            updating = null
+            charts = havs(g.charts)
+            updated++
+        }
+    }
+
+    // they have a collection of C%charts.$t = spam
     let list_charts = (C) => havs(C.sc.charts)
 </script>
+
 <biggroup>
-    <h1 on:click={() => g.update()}>Charting</h1>
+    <h1 on:click={() => g.update()}>Charting v{updated}</h1>
 
     {#each charts as n (n.t)}
         <h2>{n.t} -></h2>

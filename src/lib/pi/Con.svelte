@@ -117,7 +117,7 @@
     let geometricate = (ge) => {
         let oldness = now() - (confusospam.asat||0)
         // about 5% of the time?
-        if (oldness < 0.25) return verbose && console.log("freshness")
+        if (oldness < 0.02) return verbose && console.log("freshness")
         confusospam.asat = now()
         spam.vers ++
         
@@ -364,7 +364,7 @@
             let was = ex({},sizing)
             setTimeout(() => {
                 animalsizing_loop(uniquely,next_ttl,was),
-                1500
+                400
             })
         }
     }
