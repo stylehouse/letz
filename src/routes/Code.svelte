@@ -8,6 +8,7 @@
     import TestBetimes from './t/TestBetimes.svelte'
     import CompileLite from './t/CompileLite.svelte'
     import Diring from "$lib/Diring.svelte"
+    import Charting from "$lib/Charting.svelte"
     import { whatsthis,graphwhats,resume_selection_state } from "$lib/Le"
     import Codemirror from './Codemirror.svelte'
     import Coning from '$lib/Coning.svelte'
@@ -22,8 +23,10 @@
     //   have its ioing from a mind interpreting things
     //   usually a code
     //   higher levels sprout
-    // store state
+    // store state, using G.ts - a prototype for internode coms
     setContext('storage',[])
+    // as above but for many things, eg Names.Charts and their io
+    setContext('Names',{})
     
     let b = {}
     console.log("<Code/>")
@@ -119,6 +122,7 @@
 </div>
 
 <div class="mi" style="left:{sizer}%;width:{100-sizer}%;">
+        <Charting />
         <Diring />
         {#if graph} 
             <BigGroup>

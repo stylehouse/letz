@@ -1,4 +1,4 @@
-
+// to navigate the gap between nodes
 import type { SvelteComponent } from 'svelte';
 import { get_current_component, tick, setContext,getContext } from 'svelte/internal';
 
@@ -6,12 +6,33 @@ import { ac, ahsk,ahk,theone,hak,haks,havs, dec,dig, sha256,sex,ex,nex,now,grep,
 import { pit,C_,i_,o_,pito,o_path,o_up,inlace } from "$lib/St"
 import {diff,enj,enL,deL,indents} from "$lib/Y/Text"
 
-# < GOING? these are A
-# *.svelte do: g = G()
-    export function G(t, co) {
+# *.svelte do: g = Named("Such")
+    export function Named(t, co) {
+        fatal.iske(t)
         co ||= get_current_component()
-        $g = co.G
-        
+        $g = co.G || {}
+        $Names = getContext('Names')
+        $old = Names[t]
+        Names[t] = g
+        old and ex(g,old)
+        g.t = t
+        return g
+    }
+# *.svelte do: g = Send("Such",C)
+    export function Send(t, C) {
+        $Names = getContext('Names')
+        $Ag = Names[t]
+        !Ag and return {}
+        !Ag.input and debugger
+        Ag.input(C)
+        # give them the telephone?
+        return {update: () => Ag.update && Ag.update()}
+    }
+
+
+
+
+    function G(t, co) {
         # failed permanence.
         # < having Record take its C from something else we can keep across HMR...
         #   it should pull...

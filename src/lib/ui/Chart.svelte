@@ -206,7 +206,7 @@
     <div class="key-container">b2lab</div>
     <div class="key-container">
         {#each ys_labels as lab} 
-            <div class="color-key" style="position: absolute; top: {lab.y}px; left: {lab.x}px; background-color: {lab.colour}">
+            <div class="color-key" style="position: absolute; top: {lab.y}px; left: 100%; background-color: {lab.colour}">
                 {lab.label}
             </div>
         {/each}
@@ -221,10 +221,6 @@
     }
     div p {
         position:absolute;
-    }
-    div canvas {
-        width: 42em;
-        height: 9em;
     }
     .key-container {
         position: absolute;

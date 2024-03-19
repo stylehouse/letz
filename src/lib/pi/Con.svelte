@@ -4,8 +4,9 @@
     import { tweened } from 'svelte/motion';
     import { flip } from 'svelte/animate';
     import {onMount, afterUpdate, onDestroy, getContext} from 'svelte'
+    import {Send}  from '$lib/Gap'
     import {slupath}  from '$lib/treeing/Betimes'
-    import {sex,now,map,dec,ex,heq,hak,haks,joint,sum}  from '$lib/Y/Pic'
+    import {sex,now,map,dec,ex,heq,hak,haks,ahk,joint,sum}  from '$lib/Y/Pic'
     import {o_,o_up}  from '$lib/St'
     import {sip_wiree, reConstruct}  from '$lib/Co'
     import Coning from '$lib/Coning.svelte';
@@ -15,7 +16,6 @@
     import Dir from '$lib/pi/Dir.svelte';
     import Rec from '$lib/pi/Rec.svelte';
     import Kom from '$lib/pi/Kom.svelte';
-    import Chart from '$lib/ui/Chart.svelte';
     let pis = {Cont, Conz, Dir, Rec,Kom}
     // our instructions: (-Con/(-Cont|-Conz))**
     export let C
@@ -88,7 +88,7 @@
     });
 
     // Con update version?
-    let spam = {C,began:now(),vers:0,N:[]}
+    let spam = {C,t:'geo',began:now(),vers:0,N:[]}
     // are we charting
     let is_geometricating = () => {
         let geometricating = 1 && C.t.startsWith('kommi')
@@ -110,6 +110,9 @@
     }
     let geometricating = is_geometricating()
     let verbose = 1 && geometricating
+    // send us over to Charting
+    //  Send (contains getContext()) must be called inside component initialization
+    let Chart = geometricating && Send("Chart",C)
     let confusospam = spam
     let geometricate = (ge) => {
         let oldness = now() - (confusospam.asat||0)
@@ -120,6 +123,10 @@
         
         ge.time = dec(spam.asat - spam.began,3)
         confusospam.N.push(ge)
+
+        // attach charts to us, we eventually Charting
+        ahk(C.sc,'charts',"geo",spam)
+        Chart && Chart.update && Chart.update()
 
         // if (spam.vers == 42) debugger
         // console.log("geometricate ")
@@ -428,13 +435,6 @@
     left:-3px;
     "></sleeve>
 
-    <!-- display:table-row;
-    width:100%; -->
-{#if geometricating}
-    <span id="geom">
-        <Chart {spam} /> 
-    </span>
-{/if}
  
 <span style="display:table-cell;
     background: hsla(255,255,255,255)" >
