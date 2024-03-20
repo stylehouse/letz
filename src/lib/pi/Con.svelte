@@ -422,6 +422,10 @@
          position:{spaciness};
     ">
     <!--  -->
+    <liner 
+    style="width:100%;height:100%;position:absolute;
+    "></liner>
+
 
     <sleeve bind:this={sleeve}
     style="width:cal(100% + 6px);height:100%;position:absolute;
@@ -476,9 +480,10 @@
 </nondual>
 
 <style>
-    #geom {
-        position: absolute;
-        left: 42em;
-        background: hsla(hue, saturation, lightness, alpha)
+    div#spacer {
+        border:2px dashed black;
+    }
+    div#wrapper liner {
+        border:2px dashed white;
     }
 </style>
