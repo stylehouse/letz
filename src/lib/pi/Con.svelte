@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { fly,slide,scale,crossfade } from 'svelte/transition'
 	import { quintOut,linear } from 'svelte/easing';
-    import { tweened } from 'svelte/motion';
+    import { spring } from 'svelte/motion';
     import { flip } from 'svelte/animate';
     import {onMount, afterUpdate, onDestroy, getContext} from 'svelte'
     import {Send}  from '$lib/Gap'
@@ -64,14 +64,8 @@
 
     let spacer:HTMLElement
     // is fed from wrapper:
-    let spacerHeight = tweened(0, {
-        duration: 300,
-        easing: quintOut
-    });
-    let spacerWidth = tweened(0, {
-        duration: 300,
-        easing: quintOut
-    });
+    let spacerHeight = spring(0)
+    let spacerWidth = spring(0)
     let spacerHeightUnsubscribe:Function, spacerWidthUnsubscribe:Function;
     onDestroy(() => {
         spacerHeightUnsubscribe && spacerHeightUnsubscribe();
@@ -371,7 +365,7 @@
 
 
     // flash a background colour
-    let givenbg = tweened(0,{duration:300,easing:linear})
+    let givenbg = spring(0)
     let givenbgUnsubscribe:Function
     onDestroy(() => {
         givenbgUnsubscribe && givenbgUnsubscribe();
@@ -382,12 +376,14 @@
             value = dec(value,2)
             nonsleeve.style.borderLeft = `1em solid hsla(120, 100%, 75%, ${value})`;
         });
+        // givenbg.set(0, { hard: true })
     });
     function itisgiven() {
+        // if (verbose) debugger
         givenbg.set(1, { hard: true })
-        .then(() => {
-            givenbg.set(0.0);
-        });
+        // .then(() => {
+            givenbg.set(0);
+        // });
     }
     let sleeve:HTMLElement
     
