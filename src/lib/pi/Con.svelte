@@ -64,8 +64,11 @@
 
     let spacer:HTMLElement
     // is fed from wrapper:
-    let spacerHeight = spring(0)
-    let spacerWidth = spring(0)
+    let springiness = {
+        stiffness: 0.1, damping: 0.96,
+    }
+    let spacerHeight = spring(0,ex({},springiness))
+    let spacerWidth = spring(0,ex({},springiness))
     let spacerHeightUnsubscribe:Function, spacerWidthUnsubscribe:Function;
     onDestroy(() => {
         spacerHeightUnsubscribe && spacerHeightUnsubscribe();
@@ -159,7 +162,7 @@
 
     // record of recent geometries
         let sizefield = []
-        let sizefield_agelimit = 4.3
+        let sizefield_agelimit = 1.3
         let sizefield_poplimit = 77
         let sizehop = {}
         function add_size(ge) {
@@ -280,7 +283,8 @@
         if (ge?.width == null) throw "!ge"
 
         // desired shape of spacer, given recent turmoil
-        let de = good_size(ge)
+        let de =
+        good_size(ge)
         // ex({},ge)
         // 
         
@@ -312,7 +316,7 @@
 
     let animalsizing_loop = async (uniquely,ttl=null,was=null) => {
         // tidy parallel trails of this
-        geometricating && ttl && console.log("geomettl "+ttl)
+        // geometricating && ttl && console.log("geomettl "+ttl)
         if (unique_animal != uniquely) return
         if (!C.sc.animal) return
         // if (C.c.d <3) return
@@ -360,6 +364,12 @@
                 animalsizing_loop(uniquely,next_ttl,was),
                 400
             })
+        }
+        else {
+            // datadump = 0
+            verbose && console.log("All done?",{again:() => {
+                animalsizing_loop(uniquely,ttl-1,was)
+            }})
         }
     }
 

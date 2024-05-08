@@ -22,7 +22,6 @@ def http_moodbar():
     opusfile = request.files['opusdata']
 
     webpdata = moodbar(opusfile)
-    print("yay, webpdata is "+str(len(webpdata)))
     # Return webpdata as image/webp response
     return webpdata, 200, {'Content-Type': 'image/webp'}
     
@@ -34,7 +33,6 @@ def moodbar(opusfile):
         opusfile.save(temp_opus_file.name)
 
         mime_type = magic.from_file(temp_opus_file.name, mime=True)
-        print("mime_type: "+mime_type)
         # file for .rgb output
         with tempfile.NamedTemporaryFile(suffix='.rgb') as temp_rgb_file:
             # moodbar program
