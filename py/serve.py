@@ -13,8 +13,10 @@ from flask_cors import CORS
 import json
 import re
 import time
+from moodbar.serve import moodbar_blueprint
 
 app = Flask(__name__)
+app.register_blueprint(moodbar_blueprint)
 app.debug = True  # Enable verbose mode and auto reload on code changes
 CORS(app)
 semaphore = threading.Semaphore(2)  # Limit to two parallel media conversions
