@@ -1,0 +1,15 @@
+FROM perl:latest
+
+# Install dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        libuuid-perl \
+        libyaml-syck-perl \
+        libmojolicious-perl \
+        libjson-xs-perl \
+        libfile-slurp-perl \
+        liblist-moreutils-perl && \
+    rm -rf /var/lib/apt/lists/*
+
+# Set working directory
+WORKDIR /app

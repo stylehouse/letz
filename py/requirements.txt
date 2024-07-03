@@ -1,5 +1,6 @@
 # for pyt container, in which runs serve.py
 flask
 flask-cors
+numpy<2
 opencv-python
 pillow

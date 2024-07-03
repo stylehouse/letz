@@ -1,0 +1,64 @@
+x-defaults: &defaults
+  stdin_open: true
+  tty: true
+  restart: always
+
+services:
+  cos:
+    build:
+      context: .
+      dockerfile: Containerfile
+    volumes:
+      - .:/app:exec
+    ports:
+      - "3000:3000"
+    command: bash -ci 'npm run dev -- --port 3000 --host 0.0.0.0'
+    container_name: cos1
+    <<: *defaults
+  cos-bitz:
+    build:
+      context: .
+      dockerfile: Containerfile
+    volumes:
+      - ../bitzliten:/app:exec
+    ports:
+      - "9000:3000"
+    command: bash -ci 'npm run dev -- --port 3000 --host 0.0.0.0'
+    container_name: cos-bitz
+    <<: *defaults
+
+  py:
+    build: 
+      context: py
+      dockerfile: Containerfile
+    volumes:
+      - ~/v:/v:ro
+      - .:/app:exec
+    ports:
+      - "5000:5000"
+    command: bash -c 'python py/serve.py'
+    container_name: py1
+    <<: *defaults
+  py2:
+    build: 
+      context: py
+      dockerfile: Containerfile
+    volumes:
+      - .:/app:exec
+    ports:
+      - "8000:8000"
+    command: bash -c 'python py/ipfs.py'
+    container_name: py2
+    <<: *defaults
+
+  pl:
+    build: 
+      context: pl
+      dockerfile: Containerfile
+    volumes:
+      - ../stylehouse:/app:exec
+    ports:
+      - "1812:1812"
+    command: ./serve.pl
+    container_name: pl1
+    <<: *defaults
