@@ -1,6 +1,6 @@
 x-defaults: &defaults
-  stdin_open: true
-  tty: true
+  #stdin_open: true
+  #tty: true
   restart: always
 
 services:
