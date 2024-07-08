@@ -1,0 +1,19 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+      {
+          "type": "node",
+          "request": "attach",
+          "name": "Attach to cos container",
+          "address": "localhost",
+          "port": 9229,
+          "localRoot": "${workspaceFolder}",
+          "remoteRoot": "/app",
+          "protocol": "inspector",
+          "restart": true,
+          "sourceMaps": true,
+          "outFiles": ["${workspaceFolder}/.svelte-kit/**/*.js"],
+          "skipFiles": ["<node_internals>/**"]
+      }
+  ]
+}

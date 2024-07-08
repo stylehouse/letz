@@ -12,9 +12,12 @@ services:
       - .:/app:exec
     ports:
       - "3000:3000"
-    command: bash -ci 'npm run dev -- --port 3000 --host 0.0.0.0'
+      - "9229:9229"
+    command: bash -ci 'node --inspect=0.0.0.0:9229 node_modules/.bin/vite dev --port 3000 --host 0.0.0.0'
     container_name: cos1
     <<: *defaults
+  
+  # a sideproject about sound looping
   cos-bitz:
     build:
       context: .
