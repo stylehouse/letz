@@ -1,6 +1,6 @@
 
 import type { SvelteComponent } from 'svelte';
-import { get_current_component, tick, setContext,getContext } from 'svelte/internal';
+import { tick, setContext,getContext } from 'svelte';
 
 import { ac, ahsk,ahk,theone,hak,haks,havs, dec,dig, sha256,sex,ex,nex,now,grep,grop,armap,map,sum,ksaf,hashkv,flatten,fatal,heq,reverse } from "$lib/Y/Pic.ts"
 import { pit,C_,i_,o_,pito,o_path,o_up,inlace } from "$lib/St"
@@ -9,7 +9,7 @@ import {diff,enj,enL,deL,indents} from "$lib/Y/Text"
 # < GOING? these are A
 # *.svelte do: g = G()
     export function G(t, co) {
-        co ||= get_current_component()
+        if (!co) throw "G !co"
         $g = co.G
         
         # failed permanence.
@@ -121,7 +121,7 @@ import {diff,enj,enL,deL,indents} from "$lib/Y/Text"
         this.i(setC)
         this.notlive and return
         # make this recoverable after HMR that might recreate the component
-        if (this.old_G) {
+        if (this.old_G?.C) {
             console.log("Recovering olde C:"+this.name)
             this.C = this.old_G.C
             # < should we tick()?

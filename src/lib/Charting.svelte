@@ -1,10 +1,11 @@
 
 <script lang="ts">
-    import { Named } from "$lib/Gap";
+    import { Named } from "$lib/Gap.svelte";
     import { havs } from "$lib/Y/Pic";
     import Chart from '$lib/ui/Chart.svelte';
 
-    let g = Named("Chart")
+    let co = {}
+    let g = Named("Chart",co)
     g.charts ||= {}
     g.input = (C) => {
         g.charts[C.t] = C

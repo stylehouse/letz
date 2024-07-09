@@ -1,6 +1,6 @@
 // to navigate the gap between nodes
 import type { SvelteComponent } from 'svelte';
-import { get_current_component, tick, setContext,getContext } from 'svelte/internal';
+import { tick, setContext,getContext } from 'svelte';
 
 import { ac, ahsk,ahk,theone,hak,haks,havs, dec,dig, sha256,sex,ex,nex,now,grep,grop,armap,map,sum,ksaf,hashkv,flatten,fatal,heq,reverse } from "$lib/Y/Pic.ts"
 import { pit,C_,i_,o_,pito,o_path,o_up,inlace } from "$lib/St"
@@ -9,7 +9,7 @@ import {diff,enj,enL,deL,indents} from "$lib/Y/Text"
 # *.svelte do: g = Named("Such")
     export function Named(t, co) {
         fatal.iske(t)
-        co ||= get_current_component()
+        if (!co) throw "Named !co"
         $g = co.G || {}
         $Names = getContext('Names')
         $old = Names[t]

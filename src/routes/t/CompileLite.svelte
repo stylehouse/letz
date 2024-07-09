@@ -42,6 +42,7 @@
     <But {b} />
 
 <pre><table style="word-wrap:break-word; max-width:80%;">
+    <tbody>
     {#each Object.entries(compiled) as [k,v]}
     <tr>
         <td><h1>{k}</h1></td>
@@ -57,6 +58,7 @@
     </tr>
     <!-- <hr colspan="2"/> -->
     {/each}
+    </tbody>
 </table></pre>
 </biggroup>
 <style>

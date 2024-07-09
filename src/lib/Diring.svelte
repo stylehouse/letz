@@ -9,7 +9,8 @@
     import { G } from './G';
     
     export let C = C_('/',1,{pi:'Dir',rootdir:1})
-    let g = G(2)
+    let co = {}
+    let g = G(2,co)
     g.haveC(C,s => C = s)
     g.send("storage")
 

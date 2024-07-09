@@ -74,7 +74,8 @@
                     <img on:click={(e)=>animg(e,f)}
                         srcset={`${new URL(f.src)} 1200w, ${new URL(f.full_src)} 2100w`}
                          alt="pretty"/>
-                    <!-- <img src={formlink('thv',dir,f.f)+'.gif'} alt="pretty"/> </p> -->
+                    <!-- <img src={formlink('thv',dir,f.f)+'.gif'} alt="pretty"/>  -->
+                </p>
                 {#if f.interest}
                     <button on:click={() => gist_thumb(f)} class='large'>unique frames</button>
                 {/if}

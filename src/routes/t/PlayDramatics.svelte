@@ -187,7 +187,7 @@
         reset_tocon()
         tocon(dat)
         // repeated bleep()s version negatively (then dat.i -> 1,2,3...)
-        conver = conver < 0 ? conver - 1 : -1
+        conver = ((conver < 0) ? conver - 1 : -1)
         con = con
         refresh = 0
     }

@@ -118,7 +118,8 @@
     recur(() => {
         focus = view.hasFocus;
     });
-    G(2)
+    let co = {}
+    G(2,co)
 </script>
 
 <div class="Codemirror" bind:this={ele} />

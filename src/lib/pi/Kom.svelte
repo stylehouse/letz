@@ -15,7 +15,8 @@
 	const dispatch = createEventDispatcher();
     // Reco we know about, eg from a remote. changes slower than Rec.
     let N = []
-    let g = G(1)
+    let co = {}
+    let g = G(1,co)
 
     // we are in a -Con(s-Rec)/-Kom:C
     export let C

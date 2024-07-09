@@ -69,7 +69,8 @@
 
 
     // storage
-    G(4)
+    let co = {}
+    G(4,co)
     
     async function resume(C) {
         resume_selection_state(cm.view,C)

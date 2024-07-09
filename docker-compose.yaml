@@ -26,9 +26,10 @@ services:
       - ../bitzliten:/app:exec
     ports:
       - "9000:3000"
-    command: bash -ci 'npm run dev -- --port 3000 --host 0.0.0.0'
+    command: npm run dev -- --port 3000 --host 0.0.0.0
     container_name: cos-bitz
     <<: *defaults
+
 
   py:
     build: 

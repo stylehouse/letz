@@ -14,12 +14,13 @@
     import { map,grep,ac, ahsk,ahk,havs,haks,hak,coint,joint, dig, sha256,sex,ex,nex,now,ispi,fatal } from "$lib/Y/Pic.ts"
 
 
-    import { getContext, get_current_component, onDestroy, onMount, setContext, tick } from 'svelte/internal';
+    import { onMount, setContext, tick, untrack } from 'svelte';
     import Grabber from "$lib/ui/Grabber.svelte";
     import BigGroup from "$lib/ui/BigGroup.svelte";
 
     // this puts our name out there (Record), which others g.send() to
-    let g = G(3)
+    let co = {}
+    let g = G(3,co)
     g.I_am("storage")
   // compute(s)
     // how deep in Record** to wake
@@ -55,8 +56,12 @@
         reConstruct(Con)
     }
   // C
-    export let C = C_('Record',1,{pi:'Rec'})
-    g.haveC(C,s => C = s)
+    let {C} = $props()
+    C ||= C_('Record',1,{pi:'Rec'})
+    if (!C) debugger
+    g.haveC(C,s => {
+        C = s
+    })
     // init these so we can partition compute by them sooner
     pito(C,'bloube','-Rec')
     pito(C,'treeh','-Rec',{real:1})
@@ -64,7 +69,7 @@
     pito(C,'been','-Rec',{been:1})
 
     // wasteful compute of the entire C**, should only happen when its small
-    $: C.y.wake = async () => {
+    C.y.wake = async () => {
         console.log("wake Record")
         await tick(); ring()
     }
@@ -227,7 +232,7 @@
     C.y.theB = B
     let items = pito(B,'items','-Kom')
     let times = pito(B,'times','-Kom')
-    let BD
+    let BD = $state()
     let BI = {
         // Con spawn their sc&pi, resolve etc is all figured out (somewhere)
         Pi:1,
@@ -255,9 +260,13 @@
         BD = Construct({I:BI,s:B,D:BD})
     }
 
-    onMount(() => {
-        ring()
-        bop()
+    $effect(() => {
+        console.log("Effecting Record")
+        untrack(() => {
+            ring()
+            bop()
+
+        })
     })
 
     let b = {ring,bop,

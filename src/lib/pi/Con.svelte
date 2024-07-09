@@ -4,7 +4,7 @@
     import { spring } from 'svelte/motion';
     import { flip } from 'svelte/animate';
     import {onMount, afterUpdate, onDestroy, getContext} from 'svelte'
-    import {Send}  from '$lib/Gap'
+    import {Send}  from '$lib/Gap.svelte'
     import {slupath}  from '$lib/treeing/Betimes'
     import {sex,now,map,dec,ex,heq,hak,haks,ahk,joint,sum}  from '$lib/Y/Pic'
     import {o_,o_up}  from '$lib/St'
@@ -420,7 +420,7 @@
 </script>
 <nondual style="position: relative; width:100%; display:{displaymode};" >
     <!--  -->
-<div id="spacer" bind:this={spacer} style=""></div>
+<div id="spacer" bind:this={spacer} style="border:2px dashed black;"></div>
 <!-- width: {$spacerWidth||0}px; height: {$spacerHeight||0}px; -->
 <div
     id="wrapper"
@@ -432,8 +432,9 @@
          position:{spaciness};
     ">
     <!--  -->
-    <liner 
+    <liner
     style="width:100%;height:100%;position:absolute;
+        border:2px dashed white;
     "></liner>
 
 
@@ -490,10 +491,4 @@
 </nondual>
 
 <style>
-    div#spacer {
-        border:2px dashed black;
-    }
-    div#wrapper liner {
-        border:2px dashed white;
-    }
 </style>
