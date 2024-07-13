@@ -3,7 +3,7 @@
 	import { quintOut,linear } from 'svelte/easing';
     import { spring } from 'svelte/motion';
     import { flip } from 'svelte/animate';
-    import {onMount, afterUpdate, onDestroy, getContext} from 'svelte'
+    import {onDestroy, getContext, untrack} from 'svelte'
     import {Send}  from '$lib/Gap.svelte'
     import {slupath}  from '$lib/treeing/Betimes'
     import {sex,now,map,dec,ex,heq,hak,haks,ahk,joint,sum}  from '$lib/Y/Pic'
@@ -18,8 +18,8 @@
     import Kom from '$lib/pi/Kom.svelte';
     let pis = {Cont, Conz, Dir, Rec,Kom}
     // our instructions: (-Con/(-Cont|-Conz))**
-    export let C
-    let boost = C.c.boost || 0
+    let {C} = $props()
+    let boost = $state(C.c.boost || 0)
     
     // only changes when we are sent an update specifically
     let update:number
@@ -43,7 +43,7 @@
     
 
     // label from above (key into here - Cont%Ct is the s.t on the inside)
-    let t
+    let t = $state()
     let sip
     let quee
     function upto() {
@@ -52,9 +52,11 @@
         sip = C.c.ip.join('.')
         C.y.boosting = boosting
     }
-    $: upto(C,boost)
+    $effect(() => {
+        upto(C,boost)
+    })
 
-    onMount(() => {
+    $effect(() => {
         //if (sip == '1.2.1.2.2') debugger
     });
     
@@ -74,7 +76,8 @@
         spacerHeightUnsubscribe && spacerHeightUnsubscribe();
         spacerWidthUnsubscribe && spacerWidthUnsubscribe();
     });
-    onMount(() => {
+    $effect(() => {
+
         let nonspacer = spacer
         spacerHeightUnsubscribe = spacerHeight.subscribe(value => {
             nonspacer.style.height = `${value}px`;
@@ -153,7 +156,7 @@
         await new Promise(resolve => setTimeout(resolve, wait||43));
     }
     // wrapper's positioning mode, becomes absolute
-    let spaciness = 'relative'
+    let spaciness = $state('relative')
     // < how folded up the nodules should be
     //  default is display:table-row
     let foldfactor = 0
@@ -308,7 +311,7 @@
     }
     // low level - ripple
     let unique_animal
-    afterUpdate(async () => {
+    $effect(() => {
         // await hmm()
         animalsizing_loop(unique_animal = {})
     })
@@ -337,7 +340,7 @@
         }
         ex(sizing,ge)
         let change = !heq(was,sizing)
-        // whether we came from afterUpdate or by reverb
+        // whether we came from $effect or by reverb
         if (ttl) ge.reverb = ttl
         // the wrapper
         ge.wrapperx = ge.width
@@ -380,14 +383,14 @@
     onDestroy(() => {
         givenbgUnsubscribe && givenbgUnsubscribe();
     });
-    onMount(() => {
+    $effect(() => {untrack(() => {
         let nonsleeve = sleeve
         givenbgUnsubscribe = givenbg.subscribe(value => {
             value = dec(value,2)
             nonsleeve.style.borderLeft = `1em solid hsla(120, 100%, 75%, ${value})`;
         });
         // givenbg.set(0, { hard: true })
-    });
+    })});
     function itisgiven() {
         // if (verbose) debugger
         givenbg.set(1, { hard: true })
@@ -406,7 +409,7 @@
     let datadump
     
     // avoid stating this twice (as Con.t and Cont%Ct)
-    let no_label = false
+    let no_label = $state(false)
     if (C.sc.avoid_restating_Ct) {
         no_label = true
     }
@@ -414,8 +417,7 @@
     if (C.sc.animal) {
         duration = 491
     }
-    let backgroundism
-    $: backgroundism = look_selected ? "#ffc2" : "none"
+    let backgroundism = $derived(look_selected ? "#ffc2" : "none")
     let displaymode = C.c.d == 0 ? 'table' : 'table-cell'
 </script>
 <nondual style="position: relative; width:100%; display:{displaymode};" >

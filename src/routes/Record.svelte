@@ -272,7 +272,7 @@
     let b = {ring,bop,
         showC: (a) => tog('showC'),
     }
-    let togs = {}
+    let togs = $state({})
     let tog = t => togs[t] = !togs[t]
 </script>
 <biggroup>
@@ -282,11 +282,13 @@
     {#if togs.showC && D}
         <BigGroup>
             <!-- <Coning t="theD" C={D} /> -->
+            D:
             <Con C={D} />
         </BigGroup>
     {/if}
     {#if 1 && BD}
         <BigGroup>
+            BD:
             <Con C={BD} />
         </BigGroup>
     {/if}
