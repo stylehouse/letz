@@ -12,6 +12,7 @@
     let co = {}
     let g = G(2,co)
     g.haveC(C,s => C = s)
+    g.name = "Diring"
     g.send("storage")
 
     let D

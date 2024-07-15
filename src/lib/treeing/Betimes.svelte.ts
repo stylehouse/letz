@@ -192,7 +192,8 @@ export { Recolink,Recolink_stillness,host_Recolink_stillness,makeso,slupath};
         # these times/* are from kommit/*
         $one = N[0]
         $ori = oney&be
-        $kommit = oriy&up
+        $kommit2 = oriy&up
+        kommit2 != kommit and throw "kommitsen?"
         $desired_number = 6
         # how to change times/*
         $add = []
@@ -288,6 +289,7 @@ export { Recolink,Recolink_stillness,host_Recolink_stillness,makeso,slupath};
             ss&goable = now()
             # delete from kommit/*
             $ko = bey&up
+            #  takes a C:be to find in z/*
             grop(be,kos&z)
         },remove)
 

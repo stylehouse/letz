@@ -5,7 +5,7 @@
     import {cull_around,Recolink,Recolink_stillness,host_Recolink_stillness,
         Recollect,Aroundiness,
         makeso,Betime,Betimes
-     } from "$lib/treeing/Betimes";
+     } from "$lib/treeing/Betimes.svelte";
     import {mkReco} from "$lib/treeing/data";
     import But from "$lib/ui/But.svelte";
     import Con from "$lib/pi/Con.svelte"
@@ -74,7 +74,7 @@
         await tick(); ring()
     }
     // output of our encoding process
-    let D
+    let D = $state()
     // our process
     let wake = (s) => {
         // if it's on the screen somewhere

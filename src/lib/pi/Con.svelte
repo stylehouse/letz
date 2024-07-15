@@ -5,7 +5,7 @@
     import { flip } from 'svelte/animate';
     import {onDestroy, getContext, untrack} from 'svelte'
     import {Send}  from '$lib/Gap.svelte'
-    import {slupath}  from '$lib/treeing/Betimes'
+    import {slupath}  from '$lib/treeing/Betimes.svelte'
     import {sex,now,map,dec,ex,heq,hak,haks,ahk,joint,sum}  from '$lib/Y/Pic'
     import {o_,o_up}  from '$lib/St'
     import {sip_wiree, reConstruct}  from '$lib/Co'
@@ -436,7 +436,7 @@
     <!--  -->
     <liner
     style="width:100%;height:100%;position:absolute;
-        border:2px dashed white;
+        border:2px dashed white; pointer-events:none;
     "></liner>
 
 

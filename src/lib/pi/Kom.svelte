@@ -5,7 +5,7 @@
     import { pit,o_up } from "$lib/St"
     import { Construct } from "$lib/Co"
     import { G } from "$lib/G";
-    import { Recollect,Aroundiness } from "$lib/treeing/Betimes";
+    import { Recollect,Aroundiness } from "$lib/treeing/Betimes.svelte";
     import But from "$lib/ui/But.svelte";
     import Coning from "$lib/Coning.svelte";
     import Knob from '$lib/ui/Knob.svelte';
