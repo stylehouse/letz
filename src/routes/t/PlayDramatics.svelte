@@ -3,8 +3,8 @@
     import But from '$lib/ui/But.svelte';
     import { goto } from '$app/navigation'
     import { page } from '$app/stores'
-    import {TheA,C_,A_,i_,inlace,o_path,o_up} from "$lib/St"
-    import { Construct, sip_dispatch } from "$lib/Co"
+    import {TheA,C_,A_,i_,inlace,o_path,o_up} from "$lib/St.svelte"
+    import { Construct, sip_dispatch } from "$lib/Co.svelte"
     import Con from '$lib/pi/Con.svelte'
 
 //#region the main functions, mocked up -

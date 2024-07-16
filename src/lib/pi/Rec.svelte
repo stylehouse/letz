@@ -1,9 +1,9 @@
 <script>
     import { createEventDispatcher, onMount } from 'svelte'
     import { hak,ex } from "$lib/Y/Pic"
-    import { pit,o_up } from "$lib/St"
-    import { Construct } from "$lib/Co"
-    import { G } from "$lib/G";
+    import { pit,o_up } from "$lib/St.svelte"
+    import { Construct } from "$lib/Co.svelte"
+    import { G } from "$lib/G.svelte";
     import { Recollect,Aroundiness } from "$lib/treeing/Betimes.svelte";
     import But from "$lib/ui/But.svelte";
     import Coning from "$lib/Coning.svelte";

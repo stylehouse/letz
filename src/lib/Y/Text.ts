@@ -2,7 +2,7 @@
 #  copied from from Planet|Ying|G/ive/Text
 # oh yeah! things! boot? bitsies!!
 import { isar,isst,isC,num,numf,ex,hak,haks,grepout,peel,depeel } from "$lib/Y/Pic"
-import { C_ } from "$lib/St"
+import { C_ } from "$lib/St.svelte"
 import DiffMatchPatch from "diff-match-patch"
 
 # export default self, so users import {deL,oleak,me} from 'Tex'

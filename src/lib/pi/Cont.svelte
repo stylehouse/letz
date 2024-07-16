@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount } from 'svelte'
-    import {sip_wiree}  from '$lib/Co'
+    import {sip_wiree}  from '$lib/Co.svelte'
     export let C
     sip_wiree(C, v => {
         C = v

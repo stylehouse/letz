@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { Construct, sip_dispatch } from "$lib/Co";
+    import { Construct, sip_dispatch } from "$lib/Co.svelte";
     import Con from "$lib/pi/Con.svelte";
     export let style = "";
     export let t = "Coning";

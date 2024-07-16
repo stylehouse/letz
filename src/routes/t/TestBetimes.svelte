@@ -1,6 +1,6 @@
 <script lang="ts">
     import { createEventDispatcher, onMount, tick, untrack } from "svelte";
-    import { G, TheG } from "$lib/G";
+    import { G, TheG } from "$lib/G.svelte";
     import {
         cull_around,
         Recolink,
@@ -16,8 +16,8 @@
     import BigGroup from "$lib/ui/BigGroup.svelte";
     import But from "$lib/ui/But.svelte";
     import Con from "$lib/pi/Con.svelte";
-    import { Construct, reConstruct } from "$lib/Co";
-    import { C_, pito, o_up, o_, i_, o_path } from "$lib/St";
+    import { Construct, reConstruct } from "$lib/Co.svelte";
+    import { C_, pito, o_up, o_, i_, o_path } from "$lib/St.svelte";
     import {
         map,
         grep,

@@ -86,7 +86,7 @@ import type { EditorState } from "@codemirror/state"
 
 
 
-import { pit,C_,i_,o_,o_path,inlace } from "$lib/St"
+import { pit,C_,i_,o_,o_path,inlace } from "$lib/St.svelte.ts"
 import { me,indent,textfilter } from "$lib/Y/Text"
 import { isar,ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak,reverse,slant } from "$lib/Y/Pic"
 
@@ -261,12 +261,13 @@ import { isar,ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak,re
         $verticality = &tNch{
             c ||= {order:1,align:1}
             h = h ? 'horizontal' : 'vertical'
+            $leinri
             if (c.order) {
-                $leinri = i_(s,C_(t+'-order','-cycons',{type:'relativePlacementConstraint',axis:h}))
+                leinri = i_(s,C_(t+'-order','-cycons',{type:'relativePlacementConstraint',axis:h}))
                 map(&n{ i_(leinri,n) }, N)
             }
             if (c.align) {
-                $leinri = i_(s,C_(t+'-align','-cycons',{type:'alignmentConstraint',axis:h}))
+                leinri = i_(s,C_(t+'-align','-cycons',{type:'alignmentConstraint',axis:h}))
                 map(&n{ i_(leinri,n) }, N)
             }
         }
@@ -304,7 +305,7 @@ import { isar,ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak,re
         places = uniq(places).sort((a,b) => a-b)
 
         $text = i_(s,C_('text','-cycat',{da:{dir:1}}))
-        $from = null
+        from = null
         each i,to places {
             # sacrifice first to to be a from, do the rest in pairs
             from == null and from = to; continue
@@ -557,23 +558,25 @@ import { isar,ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak,re
         o_path(look,['top','dir','qua']) .map(({dir,qua}) => {
             dir.t == 'state' and return
             if (ispi(dir,'cycons')) {
+                $ar
+                $node
                 if (dirc&type == 'alignmentConstraint') {
                     # for alignmentConstraint: {vertical: [['n1', 'n2', 'n3'], ['n4', 'n5']], horizontal: [['n2', 'n4']]},
                     # eg dir = C-cycons:parent-upwards {type:'alignmentConstraint',axis:'vertical'}
                     #    qua = C-nodule elsewhere
                     # constraint/nodegroup/node
-                    $ar = ahsk(concon,dirc&type,dirc&axis)
+                    ar = ahsk(concon,dirc&type,dirc&axis)
                     !ar and ar = ahk(concon,dirc&type,dirc&axis,[])
                     # add a nodegroup per dir
                     dir != la_dir and ar.push([])
                     $N = ar.slice(-1)[0]
-                    $node = C_to_node(qua)
+                    node = C_to_node(qua)
                     node and N.push(node.id)
                     else console.log("node!! ",node)
                 }
                 elsif (dirc&type == 'relativePlacementConstraint') {
                     # for relativePlacementConstraint: [{"top": "r1","bottom": "r2","gap": 150}]
-                    $ar = concon[dirc&type] ||= []
+                    ar = concon[dirc&type] ||= []
                     # quas become the top,bottom or left,right depending on dirc&axis
                     $two = dirc&axis == 'vertical' ? ['top','bottom'] : ['left','right']
                     # two quas per constraint
@@ -590,7 +593,7 @@ import { isar,ispi,fatal,pex,ex,sex,tax, ahk,ahsk,map,grep,grop,grap,uniq,hak,re
                     co.gap = dirc&gap || 32
 
                     $k = co[two[0]] ? two[1] : two[0]
-                    $node = C_to_node(qua)
+                    node = C_to_node(qua)
                     node and co[k] = node.id
                     else console.log("node!! ",node)
                 }

@@ -2,9 +2,9 @@
     import { createEventDispatcher, onMount } from 'svelte'
     import { hak,ex,dex,map,haks,joint } from "$lib/Y/Pic"
     import { enj } from "$lib/Y/Text"
-    import { pit,o_up } from "$lib/St"
-    import { Construct } from "$lib/Co"
-    import { G } from "$lib/G";
+    import { pit,o_up } from "$lib/St.svelte"
+    import { Construct } from "$lib/Co.svelte"
+    import { G } from "$lib/G.svelte";
     import { Recollect,Aroundiness } from "$lib/treeing/Betimes.svelte";
     import But from "$lib/ui/But.svelte";
     import Coning from "$lib/Coning.svelte";

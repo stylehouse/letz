@@ -7,8 +7,8 @@
     import {Send}  from '$lib/Gap.svelte'
     import {slupath}  from '$lib/treeing/Betimes.svelte'
     import {sex,now,map,dec,ex,heq,hak,haks,ahk,joint,sum}  from '$lib/Y/Pic'
-    import {o_,o_up}  from '$lib/St'
-    import {sip_wiree, reConstruct}  from '$lib/Co'
+    import {o_,o_up}  from '$lib/St.svelte'
+    import {sip_wiree, reConstruct}  from '$lib/Co.svelte'
     import Coning from '$lib/Coning.svelte';
     // < look into https://github.com/kaisermann/svelte-loadable to name these at runtime
     import Cont from '$lib/pi/Cont.svelte';

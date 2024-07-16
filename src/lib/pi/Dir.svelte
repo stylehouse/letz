@@ -1,6 +1,6 @@
 <script>
     import { createEventDispatcher, onMount } from 'svelte'
-    import { pit,o_up } from "$lib/St"
+    import { pit,o_up } from "$lib/St.svelte"
 	const dispatch = createEventDispatcher();
 
     // we are in a -Con(s)/-Dir:C

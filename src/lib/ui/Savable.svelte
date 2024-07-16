@@ -2,7 +2,7 @@
     import { onMount, tick } from 'svelte';
     import {enL,deL,indents} from "$lib/Y/Text"
     import {isst} from "$lib/Y/Pic"
-    import {inlace} from "$lib/St"
+    import {inlace} from "$lib/St.svelte"
     import { indentLess } from "@codemirror/commands";
     import But from './But.svelte';
     //import {inlace} from "$lib/St"

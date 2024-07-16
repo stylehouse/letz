@@ -8,7 +8,7 @@
 #   bits of ive/Index might fit too
 # < relegate R-ism?
 #    its ugly in the interspheres.
-import {TheC,o_} from '$lib/St.ts'
+import {TheC,o_} from '$lib/St.svelte.ts'
 # these used to create global variables
 let self = {}
 let window = self

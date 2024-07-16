@@ -9,7 +9,7 @@
     import CompileLite from './t/CompileLite.svelte'
     import Diring from "$lib/Diring.svelte"
     import Charting from "$lib/Charting.svelte"
-    import { whatsthis,graphwhats,resume_selection_state } from "$lib/Le"
+    import { whatsthis,graphwhats,resume_selection_state } from "$lib/Le.svelte"
     import Codemirror from './Codemirror.svelte'
     import Coning from '$lib/Coning.svelte'
     import { writable } from 'svelte/store'
@@ -17,7 +17,7 @@
     import { onMount, setContext, tick } from "svelte";
     import Record from "./Record.svelte";
     
-    import { G } from "$lib/G";
+    import { G } from "$lib/G.svelte";
     
     // < be the W we are currently in
     //   have its ioing from a mind interpreting things

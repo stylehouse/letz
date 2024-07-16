@@ -3,7 +3,7 @@
 <script lang="ts">
     import But from "$lib/ui/But.svelte"
     import Coning from '$lib/Coning.svelte'
-    import { recur } from "$lib/Sv";
+    import { recur } from "$lib/Sv.svelte";
     import { onMount, onDestroy, createEventDispatcher } from "svelte";
     import { EditorState, Compartment, StateField } from "@codemirror/state";
     import { EditorView, keymap, ViewUpdate } from "@codemirror/view";
@@ -16,7 +16,7 @@
     import { basicSetup } from "codemirror";
     import { javascriptLanguage, istho } from "$lib/lang/istho"
     import { stho,simpleLezerLinter } from "$lib/lang/stho"
-    import { G } from "$lib/G";
+    import { G } from "$lib/G.svelte";
     //import { sthovascript } from "$lib/lang/lang-javascript/src/index"
     // < change this properly, requires cm-buildhelper
     //({jsx:true,typescript:true}

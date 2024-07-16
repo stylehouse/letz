@@ -1,7 +1,7 @@
 <script lang="ts">
     import Coning from "$lib/Coning.svelte";
     import { G,TheG,
-     } from "$lib/G";
+     } from "$lib/G.svelte";
     import {cull_around,Recolink,Recolink_stillness,host_Recolink_stillness,
         Recollect,Aroundiness,
         makeso,Betime,Betimes
@@ -9,8 +9,8 @@
     import {mkReco} from "$lib/treeing/data";
     import But from "$lib/ui/But.svelte";
     import Con from "$lib/pi/Con.svelte"
-    import { Construct, reConstruct } from '$lib/Co'
-    import { C_,pito,o_up,o_,i_,o_path } from '$lib/St'
+    import { Construct, reConstruct } from '$lib/Co.svelte'
+    import { C_,pito,o_up,o_,i_,o_path } from '$lib/St.svelte'
     import { map,grep,ac, ahsk,ahk,havs,haks,hak,coint,joint, dig, sha256,sex,ex,nex,now,ispi,fatal } from "$lib/Y/Pic.ts"
 
 

@@ -1,6 +1,6 @@
 // < comments that start with '<' are TODOs, except this one
 import {isst,isnu,isnum,isar,isspace,hak,havs,haks,ex,ahk,ahsk,map} from '$lib/Y/Pic.ts'
-import {C_,i_,o_,VA_ip,detect_type,inlace,TheC,TheA,o_up} from '$lib/St'
+import {C_,i_,o_,VA_ip,detect_type,inlace,TheC,TheA,o_up} from '$lib/St.svelte'
 
 // toCon a dumper for the A** tree
 

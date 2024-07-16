@@ -3,8 +3,8 @@
 <script lang="ts">
 	import { slide } from 'svelte/transition'
     import {hak,uniq,map}  from '$lib/Y/Pic'
-    import {o_}  from '$lib/St'
-    import {sip_wiree}  from '$lib/Co'
+    import {o_}  from '$lib/St.svelte'
+    import {sip_wiree}  from '$lib/Co.svelte'
     import Con from '$lib/pi/Con.svelte'
 
     export let C
