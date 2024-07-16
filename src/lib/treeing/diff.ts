@@ -9,7 +9,9 @@ export function generate_diff(a,b) {
     # .t unioned
     #  ie /$t/$i/$Reco, with the x.i treated like an array for the pair
     $by_ti = {}
+    $null_from_to = null
     map(&si{
+        !s and return null_from_to = i
         $Recotreeh = Recolink_lookup(sy&be)
         Recolink_discovery(Recotreeh)
             .map(link => {
@@ -20,6 +22,15 @@ export function generate_diff(a,b) {
                 ahk(by_ti, link.t,i, Recobloube)
             })
     }, [a,b])
+
+    # fill in the blank in the datastructure,
+    #  so [null,$b] doesn't become N=[$b]
+    if (null_from_to != null) {
+        $present_t = haks(by_ti)[0]
+        present_t == null and throw "diff none"
+        ahk(by_ti, present_t,null_from_to, null)
+
+    }
 
     # C:$t /C:new|gone|same with c&s='text'
     return armap(&Nt{

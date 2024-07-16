@@ -135,11 +135,10 @@
         // note this picture|moment|configuration of treeh** as a kommit
         i_kommit(treeh, Reco);
 
+
         // < we should Betime() before we Betimes(), using %%waits or so
         //   so the latest patch is known when we are squashing commits in Betimes()
-        D = untrack(() => Construct({ I, s: C, D }));
-
-        stuff = stuff;
+        bop();
     };
 
     // the story plays out...
@@ -274,6 +273,7 @@
         {#if D}
             <Con C={D} />
         {/if}
-        <Coning t="the stuff" C={stuff} />
+        <Coning t="the stuff" C={stuff} 
+            style="filter: hue-rotate(80deg);"/>
     </BigGroup>
 </biggroup>

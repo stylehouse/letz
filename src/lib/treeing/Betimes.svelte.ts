@@ -144,9 +144,7 @@ export { Recolink,Recolink_stillness,host_Recolink_stillness,makeso,slupath};
         else {
             # find previous real commit
             prev = timeses_prev_realthing(s)
-        }
-        if (prev) {
-            # to the previous (parent commit)
+            # make a diff from that or null
             # < make specific to -Kom somehow...
             o_times_Kom__pairwise(prev,s)
         }
@@ -155,7 +153,7 @@ export { Recolink,Recolink_stillness,host_Recolink_stillness,makeso,slupath};
     function o_times_Kom__pairwise(prev,s) {
         # time difference
         # times/*%delta = pairwise *//@be%time 
-        let [a,b] = grep(map(s => beof(s).sc.time, [prev,s]))
+        let [a,b] = grep(map(s => s && beof(s).sc.time, [prev,s]))
         a && b and s.sc.delta = dec(b - a,0)
 
         # text difference
@@ -212,7 +210,7 @@ export { Recolink,Recolink_stillness,host_Recolink_stillness,makeso,slupath};
         $would_cull = times_cullable(look)
         $couldda_culled = would_cull
 
-        # see if those rules alproduce enough squishing
+        # see if those rules produce enough squishing
         $desired_reduction = hak(look) - desired_number
         if (hak(would_cull) < desired_reduction) {
             # subbranch
