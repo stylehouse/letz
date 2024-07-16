@@ -180,9 +180,9 @@ export function stylehouse_lite (source,filename,agent) {
                     inValues.unshift(value);
                 }
         
-                const s = `for (var ${key} in ${from}) {`;
+                const s = `for (let ${key} in ${from}) {`;
                 const v = more ? value + 'v' : value;
-                const assignment = `var ${v} = ${from}[${key}];`;
+                const assignment = `let ${v} = ${from}[${key}];`;
                 const checkObject = `if (typeof ${v} !== 'object') { continue; }`;
         
                 const code = [s, ind + '    ' + assignment];
