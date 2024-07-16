@@ -98,11 +98,11 @@ import { isst, isob, sha256, isnum, isar, isspace, hak, havs, haks, ex, map } fr
                     return createResponse({ error: err.message }, 400);  
                 }
 
-                result = await db.get(`INSERT INTO ipfs (t,s,ts_heartbeat)
+                result = await db.get(`INSERT OR REPLACE INTO ipfs (t,s,ts_heartbeat)
                     VALUES (?,?,strftime('%s', 'now'))`, t,s)
                 each i,ot z {
                     // console.log("PUT links: "+ot)
-                    await db.get(`INSERT INTO ipfs_in (t,ot)
+                    await db.get(`INSERT OR REPLACE INTO ipfs_in (t,ot)
                         VALUES (?,?)`, t,ot)
                 }
                 try {
