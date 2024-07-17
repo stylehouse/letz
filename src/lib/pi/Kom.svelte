@@ -4,7 +4,6 @@
     import { enj } from "$lib/Y/Text"
     import { pit,o_up } from "$lib/St.svelte"
     import { Construct } from "$lib/Co.svelte"
-    import { G } from "$lib/G.svelte";
     import { Recollect,Aroundiness } from "$lib/treeing/Betimes.svelte";
     import But from "$lib/ui/But.svelte";
     import Coning from "$lib/Coning.svelte";
@@ -15,8 +14,6 @@
 	const dispatch = createEventDispatcher();
     // Reco we know about, eg from a remote. changes slower than Rec.
     let N = []
-    let co = {}
-    let g = G(1,co)
 
     // we are in a -Con(s-Rec)/-Kom:C
     export let C

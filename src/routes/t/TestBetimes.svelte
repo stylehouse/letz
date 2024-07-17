@@ -1,6 +1,5 @@
 <script lang="ts">
     import { createEventDispatcher, onMount, tick, untrack } from "svelte";
-    import { G, TheG } from "$lib/G.svelte";
     import {
         cull_around,
         Recolink,

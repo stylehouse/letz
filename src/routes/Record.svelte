@@ -1,7 +1,5 @@
 <script lang="ts">
     import Coning from "$lib/Coning.svelte";
-    import { G,TheG,
-     } from "$lib/G.svelte";
     import {cull_around,Recolink,Recolink_stillness,host_Recolink_stillness,
         Recollect,Aroundiness,
         makeso,Betime,Betimes
@@ -17,11 +15,10 @@
     import { onMount, setContext, tick, untrack } from 'svelte';
     import Grabber from "$lib/ui/Grabber.svelte";
     import BigGroup from "$lib/ui/BigGroup.svelte";
+    import { Named } from "$lib/Gap.svelte";
 
-    // this puts our name out there (Record), which others g.send() to
-    let co = {}
-    let g = G(3,co)
-    g.I_am("storage")
+    // this puts our name out there (Record), which others Send() to
+    let g = Named("Record")
   // compute(s)
     // how deep in Record** to wake
     // C|B indifferent (except for vaguely unused se)
@@ -36,11 +33,8 @@
         // what Record/*:se/...s is wanting to think
         let se = section_upward(s)
         let goer = computable_upward(s)
-        if (goer == C && !C.y.C) {
+        if (goer == C || !C.y.C) {
             // we should be along soon...
-            if (se.t != 'bloube') {
-                debugger
-            }
             return
         }
         // a place we have Constructed before
@@ -59,9 +53,6 @@
     let {C} = $props()
     C ||= C_('Record',1,{pi:'Rec'})
     if (!C) debugger
-    g.haveC(C,s => {
-        C = s
-    })
     // init these so we can partition compute by them sooner
     pito(C,'bloube','-Rec')
     pito(C,'treeh','-Rec',{real:1})
@@ -113,24 +104,32 @@
     async function ring() {
         D = Construct({I,s:C,D})
     }
-    // < resolve $n each This properly
-    //   one thing per g.name atm
+    // < resolve $n each C properly
     //   will be easy to path everything if we Con Code**
-    // Record <- Diring C
-    g.receive = (This:TheG) => {
+    // eg Record <- Diring C
+    g.input = (s) => {
         // Record/bloube-Rec:host/Diring-Rec:guest
         let host = pito(C,'bloube','-Rec')
-        let guest = pito(host,This.name,'-Rec')
+        let guest = pito(host,s.t,'-Rec')
 
         // write on this sphere
         //  guest would encode itself but instead does c&This
-        ex(guest.c,{The:g,This})
-
+        ex(guest.c,{This:s})
         // a "click save" interface for This, see send_places()
         guest.y.compute = () => { compute(guest) }
         guest.y.compute()
-        return guest
+        // < unify the above and below with bracken:
+        // < eg, Charting.svelte does this:
+        // g.update()
+        return g
     }
+    // Send()-able Named() things want to be able to push updates
+    //  we used to differentiate these and use guest.y.compute(), which the sender had
+    g.update = () => {
+        let host = pito(C,'bloube','-Rec')
+        compute(host)
+    }
+
     g.o_done = async (s) => {
         // what Record/*:se/...s is done thinking
         let se = section_upward(s)

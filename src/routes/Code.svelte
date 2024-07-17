@@ -17,14 +17,10 @@
     import { onMount, setContext, tick } from "svelte";
     import Record from "./Record.svelte";
     
-    import { G } from "$lib/G.svelte";
-    
     // < be the W we are currently in
     //   have its ioing from a mind interpreting things
     //   usually a code
     //   higher levels sprout
-    // store state, using G.ts - a prototype for internode coms
-    setContext('storage',[])
     // as above but for many things, eg Names.Charts and their io
     setContext('Names',{})
     
@@ -66,11 +62,6 @@
     let cm = null
 
 
-
-
-    // storage
-    let co = {}
-    G(4,co)
     
     async function resume(C) {
         resume_selection_state(cm.view,C)

@@ -57,8 +57,9 @@ import {C_,i_,o_,VA_ip,detect_type,inlace,TheC,TheA,o_up} from '$lib/St.svelte'
         # originating G sends again, in case of news
         # < trust versioning done in here.
         #   atm it is the basic el=1|9 of C**, not their properties
-        $g = d.I.sent_places
-        g and g.send_places()
+        each ig d.I.sent_places {
+            g && g.update && g.update()
+        }
 
         return d.C
     }

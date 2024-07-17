@@ -1,7 +1,7 @@
 <script lang="ts">
     import Coning from "$lib/Coning.svelte";
     import But from "$lib/ui/But.svelte";
-    import {G,locate_ev} from "$lib/G.svelte";
+    import {locate_ev} from "$lib/Gap.svelte";
 
     let on = 0
     function enL() {

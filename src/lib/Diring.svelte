@@ -1,23 +1,21 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
+    import { onMount, untrack } from 'svelte';
     import But from './ui/But.svelte';
     import { C_ } from "$lib/St.svelte"
     import Con from "$lib/pi/Con.svelte"
     import { Construct } from "$lib/Co.svelte"
     import { inlace } from "$lib/St.svelte"
     import Coning from '$lib/Coning.svelte'
-    import { G } from './G.svelte';
+    import { Send } from '$lib/Gap.svelte';
     
-    export let C = C_('/',1,{pi:'Dir',rootdir:1})
-    let co = {}
-    let g = G(2,co)
-    g.haveC(C,s => C = s)
-    g.name = "Diring"
-    g.send("storage")
+    let {C} = $props()
+    C ||= C_('/',1,{pi:'Dir',rootdir:1})
+    let Record = Send("Record",C)
 
-    let D
+    let D = $state()
     async function ring() {
-        D = Construct({I:{Pi:1,sent_places:g},s:C,D})
+        let notD = untrack(() => D);
+        D = Construct({I:{Pi:1,sent_places:[Record]},s:C,D:notD})
     }
     let dumped
     async function dumpD() {
@@ -27,7 +25,7 @@
     let b = {ring,dumpD}
 
     
-    onMount(() => {
+    $effect(() => {
       // Fetch?
       ring()
     });

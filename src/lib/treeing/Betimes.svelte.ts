@@ -1,5 +1,5 @@
 
-import { ac, ahsk,ahk,theone,hak,haks,havs, dec,dig, sha256,sex,ex,nex,now,grep,grop,armap,map,sum,ksaf,hashkv,flatten,fatal,heq,reverse } from "$lib/Y/Pic.ts"
+import { ac,isC, ahsk,ahk,theone,hak,haks,havs, dec,dig, sha256,sex,ex,nex,now,grep,grop,armap,map,sum,ksaf,hashkv,flatten,fatal,heq,reverse } from "$lib/Y/Pic.ts"
 import { pit,C_,i_,o_,pito,o_path,o_up,inlace } from "$lib/St.svelte"
 import {diff,enj,enL,deL,indents} from "$lib/Y/Text"
 
@@ -11,11 +11,11 @@ import { upload_to_ipfs} from "$lib/treeing/ipfs";
 export { Recolink,Recolink_stillness,host_Recolink_stillness,makeso,slupath};
 
 # Recollect Reco <- guest ...
-    # Rec.svelte may be given Record/in/$guest-Rec
+    # Rec.svelte may be given Record/in/$guest-Rec:s
     # g is Record, and it is Construct()ing around this:
     export async function Recollect(g,s) {
         $This = sc&This
-        $C = This?.C || s
+        $C = isC(This) && This || s
         # always encode the latest thing (working dir state -> staging)
         $Reco = await mkReco(C)
         # pool it in sy&collect/-Reco, picking one to be now
