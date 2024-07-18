@@ -1,9 +1,9 @@
 <script lang="ts">
+    // import autoAnimate from '@formkit/auto-animate';
 	import { fly,slide,scale,crossfade } from 'svelte/transition'
 	import { quintOut,linear } from 'svelte/easing';
     import { spring } from 'svelte/motion';
     import { flip } from 'svelte/animate';
-    import {onDestroy, getContext, untrack, afterUpdate} from 'svelte'
     import {Send}  from '$lib/Gap.svelte'
     import {slupath}  from '$lib/treeing/Betimes.svelte'
     import {sex,now,map,dec,ex,heq,hak,haks,ahk,joint,sum}  from '$lib/Y/Pic'
@@ -101,13 +101,11 @@
         duration = 491
     }
     let displaymode = C.c.d == 0 ? 'table' : 'table-cell'
-    let version = 1
-    $effect(() => {
-        version++
-    })
 </script>
 <nondual style="position: relative; width:100%;
-     display:{displaymode};" >
+     display:{displaymode};"
+      >
+     <!-- use:autoAnimate -->
 {#snippet middle()}
     <span style="display:table-cell;
         background: hsla(255,255,255,255)" >
@@ -151,7 +149,7 @@
 {/snippet}
 
     {#if geometricating}
-        <Congeo {C} {middle} {version}/>
+        <Congeo {C} {middle}/>
     {:else}
         {@render middle()}
     {/if}

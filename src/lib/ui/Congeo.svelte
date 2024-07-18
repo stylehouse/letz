@@ -361,7 +361,6 @@
         left:-3px;
         "></sleeve>
 
-        etcetc
         {@render middle()}
     </div>
         
