@@ -7,7 +7,6 @@
     import { Send } from '$lib/Gap.svelte';
     import {sex,now,map,dec,ex,heq,hak,haks,ahk,joint,sum}  from '$lib/Y/Pic'
     let {C,middle,version} = $props()
-    console.log("DOING IT")
 
     // track space, maybe
     // the div|space that wraps everything in Con

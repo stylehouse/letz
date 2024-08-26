@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { createEventDispatcher, onMount, tick, untrack } from "svelte";
+    import { createEventDispatcher, onMount, setContext, tick, untrack } from "svelte";
     import {
         cull_around,
         Recolink,
@@ -55,6 +55,16 @@
         Pi: 1,
         do_Pi_early: (C, s, d) => {
             Betime({ C, s, d, times });
+            C.t == 'kommit'
+            s.sc.uninlineablelabelable = 1
+        },
+        do_Pi_later: function (C,s) {
+            // mark as Construct()ed
+            let D = C.y.D
+            if (D) {
+                sex(C.y,D.y,'el_giverto,el_takerto')
+            }
+            console.log("Yuppers",C)
         },
     };
     let D = $state();
@@ -255,14 +265,23 @@
     let reset = () => resetself && resetself();
     let asap = () => (asapily = !asapily);
 
-    let b = { bop, tock, play, reset, asap };
+    let b = $state({ bop, tock, play, reset, asap });
+
+    // API to load buttons from -Con**
+    let add_button = (more_b) => {
+        ex(b,more_b)
+    }
+    setContext('ui',{add_button})
+
 </script>
 
 <biggroup>
     <h1>TestBetimes</h1>
 
     <panel class="big">
+        {#key joint(haks(b))}
         <But {b} />
+        {/key}
         <span class="numero dial">{conver}.{refresh}</span>
     </panel>
 

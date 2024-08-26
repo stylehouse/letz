@@ -6,7 +6,7 @@
     import { flip } from 'svelte/animate';
     import {Send}  from '$lib/Gap.svelte'
     import {slupath}  from '$lib/treeing/Betimes.svelte'
-    import {sex,now,map,dec,ex,heq,hak,haks,ahk,joint,sum}  from '$lib/Y/Pic'
+    import {sex,isC,now,map,dec,ex,heq,hak,haks,ahk,joint,sum}  from '$lib/Y/Pic'
     import {o_,o_up}  from '$lib/St.svelte'
     import {sip_wiree, reConstruct}  from '$lib/Co.svelte'
     import Coning from '$lib/Coning.svelte';
@@ -17,6 +17,9 @@
     import Rec from '$lib/pi/Rec.svelte';
     import Kom from '$lib/pi/Kom.svelte';
     import Congeo from '$lib/ui/Congeo.svelte';
+    import {uninlineablelabelable} from '$lib/ui/Congeo.svelte.ts';
+    import { getContext } from 'svelte';
+    import GiveTake from '$lib/ui/GiveTake.svelte';
     let pis = {Cont, Conz, Dir, Rec,Kom}
     // our instructions: (-Con/(-Cont|-Conz))**
     let {C} = $props()
@@ -101,6 +104,33 @@
         duration = 491
     }
     let displaymode = C.c.d == 0 ? 'table' : 'table-cell'
+
+    let unin = $state(0)
+    $effect(() =>{
+    if (C.c.s?.sc?.uninlineablelabelable) {
+        let see_what = () => {
+            // returns true if Conz is now uninlined, handles the style change
+            let well = uninlineablelabelable(C)
+            if (well == null) {
+                console.log("Missing some C/n.y.el_*erto !!")
+            }
+            else {
+                unin = well
+            }
+        }
+        let ui = getContext('ui')
+
+        
+        setTimeout(()=>{
+            if (C.t == 'kommit') {
+                // let this be triggered by a button
+                ui && ui.add_button({kommit_geo:see_what})
+                // and do it now
+                see_what()
+            }
+        },300)
+    }
+    })
 </script>
 <nondual style="position: relative; width:100%;
      display:{displaymode};"
@@ -113,27 +143,18 @@
     {#if !no_label}<span style="color:deepskyblue" on:pointerdown={(e) => boosting(e)}>{t}</span>{/if}
     {#if boost} <span style="color:blueviolet" on:pointerdown={(e) => boosting(e,'negate')}>+{boost}</span>{/if}
     {#if C.c.unwired} <span style="color:red">!wired</span>{/if}
+    {#if unin} <span style="color:red">UIN</span>{/if}
+
+
     <!-- <c_sip style="font-size:70%" on:pointerdown={(e) => datadump = 1}> {sip} </c_sip> -->
     <!-- <revision style="color:darkcyan; text-decoration:underline">{quee}</revision> -->
     </span>
 
     {#each o_(C) as n (n.t)}
     <!-- fly,slide,scale,crossfade -->
-        <giverto
-            in:slide={{ duration:333,easing:quintOut,opacity:1 }}
-            out:scale={{ duration:222,easing:quintOut,opacity:1 }}
-            style="display:inline-block; vertical-align: middle;
-                border: 3px solid gainsboro;
-                border-right:none; padding: 0 3px; margin: 0 3px;
-                border-radius: 3px;
-                position: relative;
-                display:table-cell;
-                "
-            title="{C.t}-{C.c.pi}/{n.t}-{n.c.pi}">
-            <takerto >
-                <svelte:component on:reCon="{reCon}" this={pis[n.c.pi]} C={n}/>
-            </takerto>
-        </giverto>
+        <GiveTake {C} {n}>
+            <svelte:component on:reCon="{reCon}" this={pis[n.c.pi]} C={n}/>
+        </GiveTake>
         <!-- 
                 display:table-cell;
                 wdith:100%; -->
