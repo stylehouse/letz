@@ -6,7 +6,7 @@
     import {onDestroy, getContext, untrack} from 'svelte'
     import { Send } from '$lib/Gap.svelte';
     import {sex,now,map,dec,ex,heq,hak,haks,ahk,joint,sum}  from '$lib/Y/Pic'
-    let {C,middle,version} = $props()
+    let {C,middle} = $props()
 
     // track space, maybe
     // the div|space that wraps everything in Con
@@ -188,7 +188,6 @@
                     // keep it how it is...
                     sizehopped = 'keep'
                     map((k) => {
-
                         de['void_'+k] = de[k]
                         de[k] = sizehop[k]
                     },ks)
@@ -241,7 +240,6 @@
     // low level - ripple
     let unique_animal
     $effect(() => {
-        version && 1
         // await hmm()
         animalsizing_loop(unique_animal = {})
     })

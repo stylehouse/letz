@@ -17,7 +17,7 @@
     import Rec from '$lib/pi/Rec.svelte';
     import Kom from '$lib/pi/Kom.svelte';
     import Congeo from '$lib/ui/Congeo.svelte';
-    import {uninlineablelabelable} from '$lib/ui/Congeo.svelte.ts';
+    import {uninlineablelabelable} from '$lib/ui/GiveTake.svelte.ts';
     import { getContext } from 'svelte';
     import GiveTake from '$lib/ui/GiveTake.svelte';
     let pis = {Cont, Conz, Dir, Rec,Kom}
@@ -104,27 +104,35 @@
         duration = 491
     }
     let displaymode = C.c.d == 0 ? 'table' : 'table-cell'
-
     let unin = $state(0)
     $effect(() =>{
     if (C.c.s?.sc?.uninlineablelabelable) {
         let see_what = () => {
             // returns true if Conz is now uninlined, handles the style change
-            let well = uninlineablelabelable(C)
+            let well = uninlineablelabelable(C,unin)
             if (well == null) {
                 console.log("Missing some C/n.y.el_*erto !!")
             }
             else {
-                unin = well
+                // make this permanent once on
+                //  since with our adjustment it stops triggering inlining
+                unin = unin || well
+                // < how to decide to get back?
             }
         }
         let ui = getContext('ui')
 
         
         setTimeout(()=>{
-            if (C.t == 'kommit') {
-                // let this be triggered by a button
-                ui && ui.add_button({kommit_geo:see_what})
+            if (C.t == 'kommit'
+                || C.t == 'times'
+                || C.t == 'TestBetimes') {
+                if (ui) {
+                    // let this be triggered by a button
+                    let buts = {}
+                    buts[C.t+"_geo"] = see_what
+                    ui && ui.add_button(buts)
+                }
                 // and do it now
                 see_what()
             }

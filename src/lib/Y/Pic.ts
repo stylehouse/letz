@@ -1465,7 +1465,9 @@ let window = self
         return h
     };
     # hashes are identical
-    $heq = &sd{
+    $heq = &sdc{
+        # c: only this subset of them
+        c and s = sex({},s,c); d = sex({},d,c);
         return !hakd(s,d).length
     };
     # keys of differing values

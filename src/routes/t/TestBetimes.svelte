@@ -58,14 +58,6 @@
             C.t == 'kommit'
             s.sc.uninlineablelabelable = 1
         },
-        do_Pi_later: function (C,s) {
-            // mark as Construct()ed
-            let D = C.y.D
-            if (D) {
-                sex(C.y,D.y,'el_giverto,el_takerto')
-            }
-            console.log("Yuppers",C)
-        },
     };
     let D = $state();
 
