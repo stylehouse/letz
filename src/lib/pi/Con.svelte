@@ -103,7 +103,7 @@
     if (C.sc.animal) {
         duration = 491
     }
-    let displaymode = C.c.d == 0 ? 'table' : 'table-cell'
+    let displaymode = 0 && C.c.d == 0 ? 'table' : 'table-cell'
     let unin = $state(0)
     $effect(() =>{
     if (C.c.s?.sc?.uninlineablelabelable) {
@@ -125,6 +125,7 @@
         
         setTimeout(()=>{
             if (C.t == 'kommit'
+                || C.t == 'treeh'
                 || C.t == 'times'
                 || C.t == 'TestBetimes') {
                 if (ui) {
@@ -151,7 +152,6 @@
     {#if !no_label}<span style="color:deepskyblue" on:pointerdown={(e) => boosting(e)}>{t}</span>{/if}
     {#if boost} <span style="color:blueviolet" on:pointerdown={(e) => boosting(e,'negate')}>+{boost}</span>{/if}
     {#if C.c.unwired} <span style="color:red">!wired</span>{/if}
-    {#if unin} <span style="color:red">UIN</span>{/if}
 
 
     <!-- <c_sip style="font-size:70%" on:pointerdown={(e) => datadump = 1}> {sip} </c_sip> -->
