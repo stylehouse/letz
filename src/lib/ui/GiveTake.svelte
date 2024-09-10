@@ -6,7 +6,7 @@
     // box model inner|outer size finder
     // Con:C invoked us, for one of its:
     //  /Cont|Kom|Conz:n
-    let {C,n,children} = $props()
+    let {C,n,newline=0,children} = $props()
     
     let givetake = $state({})
     type ageo = { width:number, height:number }
@@ -51,6 +51,17 @@
             ob.disconnect()
         }, obs)
     });
+
+    let cssmode = $state({})
+    $effect(() => {
+        if (newline) {
+            // the <giverto> should appear under and indented from the parent
+            cssmode = {dis:'block',     ml:'1em'}
+        }
+        else {
+            cssmode = {dis:'table-cell',ml:'none'}
+        }
+    })
 </script>
 
 
@@ -63,7 +74,8 @@
         border-right:none; padding: 0 3px; margin: 0 3px;
         border-radius: 3px;
         position: relative;
-        display:table-cell;
+        display:{cssmode.dis};
+        margin-left:{cssmode.ml};
         "
     title="{C.t}-{C.c.pi}/{n.t}-{n.c.pi}">
 

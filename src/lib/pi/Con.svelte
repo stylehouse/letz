@@ -104,51 +104,24 @@
         duration = 491
     }
     let displaymode = 0 && C.c.d == 0 ? 'table' : 'table-cell'
-    let unin = $state(0)
-    $effect(() =>{
-    if (C.c.s?.sc?.uninlineablelabelable) {
-        let see_what = () => {
-            // returns true if Conz is now uninlined, handles the style change
-            let well = uninlineablelabelable(C,unin)
-            if (well == null) {
-                console.log("Missing some C/n.y.el_*erto !!")
-            }
-            else {
-                // make this permanent once on
-                //  since with our adjustment it stops triggering inlining
-                unin = unin || well
-                // < how to decide to get back?
-            }
-        }
-        let ui = getContext('ui')
-
-        
-        setTimeout(()=>{
-            if (C.t == 'kommit'
-                || C.t == 'treeh'
-                || C.t == 'times'
-                || C.t == 'TestBetimes') {
-                if (ui) {
-                    // let this be triggered by a button
-                    let buts = {}
-                    buts[C.t+"_geo"] = see_what
-                    ui && ui.add_button(buts)
-                }
-                // and do it now
-                see_what()
-            }
-        },300)
-    }
-    })
+    // < global action buttons?
+    // let ui = getContext('ui')
+    //         if (ui) {
+    //             // let this be triggered by a button
+    //             let buts = {}
+    //             buts[C.t+"_geo"] = see_what
+    //             ui && ui.add_button(buts)
+    //         }
+    
 </script>
 <nondual style="position: relative; width:100%;
-     display:{displaymode};"
+     display:{displaymode};
+     "
       >
      <!-- use:autoAnimate -->
 {#snippet middle()}
     <span style="display:table-cell;
         background: hsla(255,255,255,255)" >
-        ~
     {#if !no_label}<span style="color:deepskyblue" on:pointerdown={(e) => boosting(e)}>{t}</span>{/if}
     {#if boost} <span style="color:blueviolet" on:pointerdown={(e) => boosting(e,'negate')}>+{boost}</span>{/if}
     {#if C.c.unwired} <span style="color:red">!wired</span>{/if}

@@ -55,8 +55,6 @@
         Pi: 1,
         do_Pi_early: (C, s, d) => {
             Betime({ C, s, d, times });
-            C.t == 'kommit'
-            s.sc.uninlineablelabelable = 1
         },
     };
     let D = $state();
