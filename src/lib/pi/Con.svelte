@@ -116,6 +116,10 @@
 </script>
 <nondual style="position: relative; width:100%;
      display:{displaymode};
+     background: linear-gradient(to bottom, 
+        rgba(128, 128, 0, 0.5), 
+        rgba(0, 49, 83, 0.5)
+     ); 
      "
       >
      <!-- use:autoAnimate -->

@@ -8,7 +8,7 @@
     let gone = tally(grep(n => n.t == 'gone',diff))
 
     let textfilter = (s) => {
-        s = s.replace(/^\s+|\s+$/g,"")
+        // s = s.replace(/^\s+|\s+$/g,"")
         // escape html
         //  turns out {@html string} will not get that element name's styles
         //   as they are instead put in a class, that this element we hid in here doesn't get
@@ -47,6 +47,7 @@
         border: 0.12em dotted rgb(114, 250, 159);
         border-radius: calc(max(0.2em, 15%));
         font-size: 86%;
+        display: block;
     }
     ztab { color: rgb(160, 86, 17); margin: 0.1em; }
     .same { color: rgb(21, 31, 21); margin: 0.7em; }
