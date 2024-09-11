@@ -8,7 +8,8 @@
     let gone = tally(grep(n => n.t == 'gone',diff))
 
     let textfilter = (s) => {
-        // s = s.replace(/^\s+|\s+$/g,"")
+        // < messily, appending to Lines has the \n on the new
+        s = s.replace(/^\n/,"")
         // escape html
         //  turns out {@html string} will not get that element name's styles
         //   as they are instead put in a class, that this element we hid in here doesn't get
@@ -26,21 +27,22 @@
             <!-- <code>x{n.c.s.length}</code> -->
         {:else}
     <zo class={n.t}>
-            <code>
             {#each textfilter(n.c.s).split("\t") as s,i}
                 {#if i > 0}
                     <ztab>␉</ztab>
                 {/if}
-                {s}
+                {#if s.length > 0}
+                    <texto>{s}</texto>
+                {/if}
             {/each}
-            </code>
     </zo>
         {/if}
     {/each}
 
 <style>
-    code {
+    zo texto {
         white-space: pre;
+        font-family: monospace;
     }
     zo {
         background-color: rgba(12, 15, 34, 0.418);
